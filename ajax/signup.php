@@ -9,7 +9,7 @@
 	}else{
 		echo 'false';
 	}
-	exit(); 
+	exit();  
 	
 ?>
 
