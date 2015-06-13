@@ -1,0 +1,1 @@
+/* global javascript file, contains core functions */

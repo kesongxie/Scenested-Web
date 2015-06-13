@@ -1,0 +1,232 @@
+/*
+	css style sheet that is included by all the pages
+*/
+
+*{
+	margin-top: 0px;
+	margin-left:0px;
+	color:#777777;
+}
+
+body{
+	font-family: Times New Roman, Times, serif;
+	font-size: 15px;
+	position: relative;
+	min-width:1070px;
+	background-color:#fff;
+	margin: 0px auto;
+	line-height: 1.45;
+	-webkit-font-smoothing: subpixel-antialiased;
+	height:100vh;
+	min-height:640px;
+}
+
+div img{
+	border-radius:2px;
+}
+
+input{
+	outline:none;
+	font-family: Times New Roman, Times, serif;
+  	font-size: 13px;
+}
+.plain-lk{
+	text-decoration:none;
+}
+.plain-lk:hover{
+	text-decoration:underline;
+}
+
+.hdn{
+	display:none;
+}
+.animate-opacity{
+	opacity:0.6;
+}
+
+.animate-opacity:hover{
+	opacity:1;
+}
+
+.pointer{
+	cursor:pointer;
+}
+.inline-blk{
+	display:inline-block;
+	vertical-align:top;
+}
+
+.loading-container-wrapper{
+	width:100%;
+	height:100%;
+	position:absolute;
+	top:0px;
+	left:0px;
+	text-align:center;
+	z-index:1;
+}
+
+.loading-container-wrapper .loading-container{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+	background:#fff;
+	opacity:0.7;
+	z-index:-1;
+}
+
+.loading-container-wrapper img{
+	width: 29%;
+}
+
+.left-bar{
+	float:left;
+}
+
+.right-bar{
+	float:right;
+}
+
+.left-align{
+	text-align:left;
+}
+.right-align{
+	text-align:right;
+}
+
+
+.red-textarea {
+  border: 2px solid #c4140e;
+  font-size: 12px;
+  width: 90%;
+  border-radius: 3px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.hgt-input:focus{
+	border:2px solid #c4140e;
+	border-radius:3px;
+}
+
+.hovering:hover{
+	opacity:1;
+}
+
+.gradient-red-background{
+	background: #780000;
+	background: -webkit-linear-gradient(#a13030, #780000);
+	background: -o-linear-gradient(#a13030,#780000);
+	background: -moz-linear-gradient(#a13030,#780000);
+	background: linear-gradient(#a13030,#780000);
+}
+
+.light-gray-shadow{
+  	border: 1px solid #f0f0f0;
+	box-shadow:1px 1px 10px #f0f0f0;
+}
+
+#logo{
+	box-shadow: 1px 1px 10px gray;
+	border-radius: 5px;
+	text-align: center;
+	padding: 6px 10px;
+	color: #fff;
+	font-size: 19px;
+	font-weight:bold;
+}
+
+.vertical-center{
+	position: relative;
+  	top: 50%;
+  	-webkit-transform: translateY(-50%);
+  	transform: translateY(-50%);
+  	-o-transform: translateY(-50%);
+  	-ms-transform: translateY(-50%);
+  	-moz-transform: translateY(-50%);
+}
+
+/*begins dialog template*/
+.dialog-header{
+	color:#fff;
+	background: #780000;
+	background: -webkit-linear-gradient(#a13030, #780000);
+	background: -o-linear-gradient(#a13030,#780000);
+	background: -moz-linear-gradient(#a13030,#780000);
+	background: linear-gradient(#a13030,#780000);
+}
+.dialog-header .dialog-header-inner{
+	height:100%;
+	margin:0px 0px 0px 16px;
+}
+
+.dialog-header .dialog-header-inner .dialog-header-left-item{
+	width:48.9%;
+	height:100%;
+}
+
+.dialog-header .dialog-header-inner .dialog-header-right-item{
+	width:49%;
+	height:100%;
+	text-align:right;
+}
+.dialog-header .dialog-header-inner .dialog-header-right-item .dialog-header-bar-option{
+	height:100%;
+	width:34%;
+	text-align:center;
+}
+.dialog-header .dialog-header-inner .dialog-header-right-item .dialog-header-bar-option div{
+	color:#fff;
+	font-weight:bold;
+	font-size:15px;
+}
+
+
+.dialog-header .dialog-header-inner .bar-title{
+	color:#fff;
+	font-weight:bold;
+}
+
+
+.dialog-header .inline-blk .dialog-header-bar-option:hover{
+	background-color:#8a0000;
+}
+
+.dialog-body{
+	background:#fff;	
+}
+
+.dialog-footer{
+	background:#fff;
+}
+
+/*ends dialog  template*/
+
+
+.light-gray-button{
+	text-shadow: 1px 1px 1px black;
+	box-shadow: 1px 1px 5px black;
+	font-family: Arial,Times New Roman,Georgia;
+	font-weight: bold;
+	text-align: center;
+	background: #f5f5f5;
+	background: -webkit-linear-gradient(#f5f5f5, gray);
+	background: -o-linear-gradient(#f5f5f5, gray);
+	background: -moz-linear-gradient(#f5f5f5, gray);
+	background: linear-gradient(#f5f5f5, gray);
+	opacity: 0.7;
+}
+
+
+#frag-footer{
+	text-align: center;
+	font-size: 13px;
+}
+#frag-footer #footer-item-wrapper{
+	margin-bottom:4px;
+}
+#frag-footer .footer-item{
+	margin-right:20px;
+}

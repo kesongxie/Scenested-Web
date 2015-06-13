@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Lsere</title>
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="css/core.css">
+		<link rel="stylesheet" type="text/css" href="css/login.css">
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/core.js"></script>
+		<script type="text/javascript" src="js/login.js"></script>
+
+		<!--[if lt IE 9]>
+		<script src="dist/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div id="login-header">
+			<div id="login-header-inner">
+				<div id="logo" class="gradient-red-background left-bar inline-blk">
+				L'sere
+				</div>
+				<div class="inline-blk right-bar">
+					<span id="prompt-sign-up-header-top" class="pointer"><img class="right-bar-item" src="<?php echo IMGDIR ?>lock.png"  title="login" />Sign in</span>
+					<span id="prompt-log-in-header-top" class="pointer" ><img  id="signup-icon" class="right-bar-item" src="<?php echo IMGDIR ?>signup_icon.jpg"  title="signUp">Sign up</span>
+				</div>
+			</div>
+		</div>
+		
+		<div id="login-body">
+			<div id="login-body-inner">
+				<div class="left-bar">
+					<img src="<?php echo IMGDIR ?>introduction.png" height="400" width="400">
+				</div>
+				<div class="right-bar">
+					<div id="login-form" class="light-gray-shadow dialog">
+						<div id="login-form-header" class="dialog-header">
+							<div class="dialog-header-inner">
+								<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center">Login to Lsere</div></div>
+								<div class="inline-blk right-align dialog-header-right-item pointer"><div id="prompt-sign-up" class="bar-title dialog-header-bar-option inline-blk"><div class="vertical-center" title="Sign Up">Sign up</div></div></div>
+							</div>
+						</div>
+						<div id="login-form-body" class="dialog-body">
+							<div id="login-field-wrapper" class="inline-blk vertical-center">
+								<input id="login-iden" type="text" class="text" placeholder="enter your email address">
+								<input id="login-password" type="password" class="text" placeholder="enter your password">
+							</div>
+							<div id="login-button-wrapper" class="inline-blk vertical-center">
+								<input id="login-button" class="light-gray-button login-action-button pointer hovering" type="button" value="Login" style="width:94%;"> 
+							</div>
+						</div>
+						<div id="login-form-footer" class="dialog-footer">
+							<div class="vertical-center">
+								<input id="login-remember" type="checkbox">
+								<label for="login-remember" >Remember Me</label>
+								<a class="plain-lk animate-opacity" style="margin-left:100px;" href="#">Forgot Password?</a>
+							</div>
+						</div>
+					</div>
+					
+					
+					<div id="signup-form" class="light-gray-shadow dialog hdn">
+						<div id="signup-form-header" class="dialog-header">
+							<div class="dialog-header-inner">
+								<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center">Sign up on Lsere</div></div>
+								<div class="inline-blk right-align dialog-header-right-item pointer"><div  id="prompt-log-in" class="bar-title dialog-header-bar-option inline-blk"><div class="vertical-center" title="Log in">Log in</div></div></div>
+							</div>
+						</div>
+						<form id="signup-data-form">
+							<div style="position:relative;">
+							<div id="signup-form-body" class="dialog-body">
+								<div id="signup-field-wrapper" style="margin-top:20px;" >
+									<div><input id="signup-iden" type="text" name="signup-iden" class="text" placeholder="enter your email address"></div>
+									<div><input id="signup-re-iden" type="text"  name="signup-re-iden" class="text" placeholder="re-enter your email address"></div>
+									<div><input id="signup-firstname" type="text" name="signup-firstname" class="text" placeholder="enter your first name"></div>
+									<div><input id="signup-lastname" type="text" name="signup-lastname" class="text" placeholder="enter your last name"></div>
+									<div><input id="signup-password" type="password" name="signup-password" class="text" placeholder="create your password"></div>
+									<div><input id="signup-re-password" type="password" name="signup-re-password" class="text" placeholder="re-enter your password"></div>
+								</div>
+							
+							</div>
+							<div id="signup-form-footer" class="dialog-footer">
+								<div id="signup-gender" class="left-bar" style="width:60%;margin-left:4px;position:relative">	
+									<input type="radio" name="signup-gender" value="1"><label for="sign-up-f">Female</label>	
+									<input type="radio" name="signup-gender" value="2" style="margin-left:4px;"><label for="sign-up-m">Male</label>	
+									<div id="signup-term-prompt">By clicking the sign up button, you agree with our <a href="terms.php" class="plain-lk" style="color:rgb(8, 39, 187)">term of use</a></div>
+								</div>
+								<div id="signup-button-wrapper" class="right-bar" style="width:30%;min-width:86.7px;max-width:90px;margin-right:4px;"  >
+									<input id="signup-button" class="light-gray-button login-action-button pointer hovering" type="submit" value="SignUp">
+								</div>
+							</div>
+						</form>
+						<div class="loading-container-wrapper hdn">
+								<div class="loading-container" >
+								</div>
+								<div class="vertical-center" style="margin-top:-26px;">
+									<img src="<?php echo LOADING_GIF;?>">
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+			</div>
+		</div>
+		
+		<div id="login-footer" style="border-top:1px solid #f0f0f0;">
+			<?php require_once 'phtml/footer.phtml'; ?>
+		</div>
+		
+		</div>
+	</body>
+</html>
