@@ -107,10 +107,11 @@
 #login-body #login-body-inner .right-bar #signup-form{
 	width:70%;
 	margin:80px 0px 0px 60px;
+	min-height:300px;
 }
 
 #login-body #login-body-inner .right-bar #signup-form-body{
-	height:220px;
+	height:230px;
 }
 
 
@@ -126,6 +127,15 @@
 	text-align:left;
 }
 
+#login-body #login-body-inner .right-bar #signup-form #signup_succeed img{
+	height:20px;
+	width:20px;
+	float:left;
+}
+#login-body #login-body-inner .right-bar #signup-form div{
+	line-height:1.4;
+}
+
 #login-body #login-body-inner .right-bar #signup-form #signup-form-body #signup-field-wrapper{
 	text-align:center;
 }
@@ -135,7 +145,7 @@
 }
 
 #login-body #login-body-inner .right-bar #signup-form #signup-form-body #signup-field-wrapper .text{
-	margin-bottom:8px;
+	margin-bottom:10px;
 	width:86%;
 }
 
@@ -157,8 +167,6 @@
 	font-size:12px;
 	opacity:0.8;
 }
-
-
 
 
 #login-footer{

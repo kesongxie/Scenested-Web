@@ -13,12 +13,13 @@ body{
 	font-size: 15px;
 	position: relative;
 	min-width:1070px;
+	max-width:1750px;
 	background-color:#fff;
 	margin: 0px auto;
 	line-height: 1.45;
 	-webkit-font-smoothing: subpixel-antialiased;
 	height:100vh;
-	min-height:640px;
+	min-height:720px;
 }
 
 div img{
@@ -40,12 +41,17 @@ input{
 .hdn{
 	display:none;
 }
+
+.hdn-input{
+	width:0px;
+	height:0px;
+}	
 .animate-opacity{
-	opacity:0.6;
+	opacity:1;
 }
 
 .animate-opacity:hover{
-	opacity:1;
+	opacity:0.8;
 }
 
 .pointer{
@@ -54,6 +60,13 @@ input{
 .inline-blk{
 	display:inline-block;
 	vertical-align:top;
+}
+
+	
+.txt_ofl{
+	white-space: nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis
 }
 
 .loading-container-wrapper{
@@ -77,6 +90,8 @@ input{
 	z-index:-1;
 }
 
+
+
 .loading-container-wrapper img{
 	width: 29%;
 }
@@ -96,6 +111,13 @@ input{
 	text-align:right;
 }
 
+.overlay{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+}
 
 .red-textarea {
   border: 2px solid #c4140e;
@@ -123,6 +145,15 @@ input{
 	background: linear-gradient(#a13030,#780000);
 }
 
+.gradient-red-background-hover:hover{
+	background: #780000;
+	background: -webkit-linear-gradient(#a13030, #780000);
+	background: -o-linear-gradient(#a13030,#780000);
+	background: -moz-linear-gradient(#a13030,#780000);
+	background: linear-gradient(#a13030,#780000);
+	color:white;
+}
+
 .light-gray-shadow{
   	border: 1px solid #f0f0f0;
 	box-shadow:1px 1px 10px #f0f0f0;
@@ -136,6 +167,9 @@ input{
 	color: #fff;
 	font-size: 19px;
 	font-weight:bold;
+	position:absolute;
+	left: 64px;
+ 	top: 10px;
 }
 
 .vertical-center{
@@ -146,6 +180,109 @@ input{
   	-o-transform: translateY(-50%);
   	-ms-transform: translateY(-50%);
   	-moz-transform: translateY(-50%);
+}
+
+.n_r_s{
+	position:absolute;
+	width:20px;
+	height:20px;
+	border-radius:25px;
+	color:white;
+	background-color:#8f1414;
+	box-shadow:1px 1px 6px gray;
+	font-size:12px;
+	padding-top:1px;
+	font-weight:bold;
+	text-align:center;
+	right:0px;
+	top:0px;
+	z-index:3;
+}
+
+.header{
+  	width: 100%;
+  	position:relative;
+  	background-color: #fff;
+  	height: 60px;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.header #global-search-bar{
+	position: absolute;
+	top: 20px;
+	left: 334px;
+	width: 376px;
+	
+}
+
+.header #global-search-bar  #global-search-bar-inner{
+	position:relative;
+	width:100%;
+}
+.header #global-search-bar  #global-search-bar-inner label{
+	position:absolute;
+	right:-6px;
+	top:3px;
+	z-index:1;
+}
+.header #global-search-bar  #global-search-bar-inner input{
+	position:absolute;
+	border-radius: 4px;
+	padding: 4px;
+	border: 1px solid #EAEAEA;
+	width:100%;
+}
+
+
+.header #loggedin-menu {
+	position: absolute;
+	top: 14px;
+	right: 100px;
+}
+
+
+.header #loggedin-menu .header-navi-item {
+	margin-left: 10px;
+	font-weight: bold;
+	font-size: 13px;
+	color: #646464;
+}
+.header #loggedin-menu #index-noti-red-spot{
+	top: -18px;
+  	left: 13px;
+}
+
+.header #loggedin-menu #loggin-user-icon {
+  margin-left: 20px;
+}
+
+
+.header #loggedin-menu #setting-menu {
+	position:absolute;
+	right:0px;
+	top:40px;
+	background: #fff;
+	box-shadow: 1px 1px 12px #DBDBDB;
+	padding: 6px;
+	border-radius: 4px;
+	width: 120px;
+	display:none;
+}
+.header #loggedin-menu #setting-menu .setting-menu-item{
+	font-size:13px;
+	padding:7px;
+	border-bottom:1px solid #f0f0f0;
+}
+
+
+
+#side-bar-notification-center{
+	position:absolute;
+	right:-26%;
+	height:80vh;
+	width:26%;
+	background-color:#f0f0f0;
+	border-radius:10px 0px 0px 10px;
 }
 
 /*begins dialog template*/
@@ -172,6 +309,7 @@ input{
 	height:100%;
 	text-align:right;
 }
+
 .dialog-header .dialog-header-inner .dialog-header-right-item .dialog-header-bar-option{
 	height:100%;
 	width:34%;
@@ -218,6 +356,7 @@ input{
 	background: linear-gradient(#f5f5f5, gray);
 	opacity: 0.7;
 }
+
 
 
 #frag-footer{

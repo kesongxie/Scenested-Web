@@ -1,0 +1,165 @@
+#profile-global-container{
+	width:90%;
+	margin:10px auto;
+	min-height:100vh;
+}
+
+#profile-sider-bar-left{
+	position:relative;
+	width:20%;
+	min-width:182px;
+}
+
+#profile-sider-bar-left #avator-wrapper{
+	position: relative;
+	height:230px;
+	width: 100%;
+	min-width: 180px;
+	box-shadow: 1px 1px 10px #EAEAEA;
+	z-index: 1;
+	overflow: hidden;
+	border-radius: 4px 4px 2px 2px;
+	background:#fff;
+}
+
+#profile-sider-bar-left #avator-wrapper .avator-inner-top{
+	position:relative;
+	height:50%;
+	width:100%;
+	background-color:#fff;
+	overflow:hidden;
+}
+
+#profile-sider-bar-left #avator-wrapper .avator-inner-top img{
+	width:100%;
+}
+
+#profile-sider-bar-left #avator-wrapper .avator-inner-top label{
+	padding:4px 10px;
+	font-size:13px;
+	color:#fff;
+	position:absolute;
+	right:0px;
+	bottom:-50px;
+	background:#000;
+	font-weight:bold;
+	border-radius:4px;
+}
+
+
+#profile-sider-bar-left #avator-wrapper .avator-inner-bottom{
+	position:relative;
+	width:100%;
+	text-align:left;
+
+}
+
+#profile-sider-bar-left #avator-wrapper .avator-inner-bottom label{
+  	margin-top: -30px;
+  	margin-left: 10px;
+    display: inline-block;
+}
+
+#profile-sider-bar-left #avator-wrapper .avator-inner-bottom label .avator-picture-wrapper{
+	position:relative;
+	text-align:center;
+	width:60px;
+	height:60px;
+	overflow:hidden;
+	border-radius:50%;
+	box-shadow: 1px 1px 3px #777777;
+}
+
+#profile-sider-bar-left #avator-wrapper .avator-inner-bottom label .profile-image{
+	width: 60px;
+	margin: 0px 6px 0px 0px;
+}
+
+
+
+
+#profile-sider-bar-left #avator-wrapper .avator-inner-bottom label #upload-profile{
+	opacity: 0;
+}
+
+#profile-sider-bar-left #avator-wrapper .avator-inner-bottom .avator-name{
+	font-size: 16px;
+	color: #000;
+	font-weight: bold;
+	display: inline-block;
+	margin: 10px;
+	position: relative;
+	top: -3px;
+	text-align:center;
+}
+
+
+.picture-upload-black-overlay{
+	background: #000;
+	opacity: 0.6;
+	cursor: pointer;
+}
+
+.avator-upload-inner-wrapper{
+	height: 60px;
+	width: 60px;
+	border-radius: 50%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display:none;
+}
+
+.loading-icon-wrapper{
+	height: 60px;
+	width: 60px;
+	border-radius: 50%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background:#fff;
+	opacity:0.6;
+	display:none;
+}
+
+
+
+#profile-sider-bar-right{
+	width:60%;
+}
+
+
+
+
+
+.pf_i_w_2 {
+  position: relative;
+  top: 27px;
+  width: 100%;
+  min-width: 693px;
+  float: left;
+  left: 8px;
+  border-bottom: 1px solid #EEEEEE;
+}
+
+.navi_item {
+  position: relative;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 6px 24px;
+  text-align: center;
+  display: inline-block;
+}
+.active_navi {
+  color: rgb(0, 0, 0);
+  border-bottom: 3px solid rgb(10, 43, 138);
+  border-radius: 0px;
+}
+
+.sub_text {
+  font-size: 10px;
+  font-weight: normal;
+}
+
+

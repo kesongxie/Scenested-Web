@@ -1,0 +1,30 @@
+<div class="header">
+	<div class="header-inner" >
+		<div id="logo" class="gradient-red-background">
+		L'sere
+		</div>
+		<div id="global-search-bar">
+			<div id="global-search-bar-inner">
+				<label><img src="<?php echo IMGDIR ?>search_icon.png"  title="search" style="z-index:1;height:18px; width:18px;cursor:pointer"></label>
+				<input autocomplete="off" type="text" name="search_box" placeholder="Search your friend or event...">
+			</div>
+		</div>
+		<div id="loggedin-menu">
+			<div style="position:relative">
+				<ul>
+					<a href="<?php echo ROOTDIR; ?>index.php" style="text-decoration:none;"><span class="header-navi-item"><img src="<?php echo IMGDIR ?>home_icon.png" id="home_icon" class="animate-opacity" height="25" width="25" title="Home"><span>Home</span></span></a>
+					<span id="header-notification-delegate" class="header-navi-item pointer">
+					<span style="position:relative">
+						<img src="<?php echo IMGDIR ?>notification.png" class="animate-opacity" height="24" width="24" title="Notifications">
+						<span id="index-noti-red-spot" class="n_r_s">1</span>
+					</span>
+					</span>
+				<span id="loggin-user-icon"><img src="<?php echo $session_user_profile_image_url; ?>" width="30" height="30" style="cursor:pointer" ></span></ul>
+				<div id="setting-menu" class="popover" >
+					<a href="<?php echo USER_PROFILE_ROOT.$session_user_access_url; ?>" class="plain-lk"><div class="setting-menu-item gradient-red-background-hover pointer">My Profile</div></a>
+					<a href="<?php echo ROOTDIR; ?>logout.php" class="plain-lk"><div class="setting-menu-item gradient-red-background-hover pointer">Log Out</div></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

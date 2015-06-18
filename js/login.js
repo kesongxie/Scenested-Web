@@ -1,6 +1,3 @@
-var SIGNUP_ALERT_MESSAGE = new Array();
-var DOCUMENT_ROOT = "http://localhost:8888/lsere/";
-var AJAX_DIR = DOCUMENT_ROOT+"ajax/"
 var SIGNUP_ERROR = '';
 /*Alert Messages for sign up form, keys are the input elements' ids, values are the messages*/
 SIGNUP_ALERT_MESSAGE["signup-iden"] = "Please enter your email address";
@@ -28,19 +25,50 @@ $(document).ready(function(){
 		}
 	},'#prompt-log-in, #prompt-sign-up-header-top');
 	
+	$('#login-data-form').on("submit",function(event){
+		event.preventDefault();
+		var data = $(this).serialize();
+		var thisE = $(this);
+		$.ajax({
+			url: AJAX_DIR + 'login.php',
+			method: 'post',
+			data:{data:data},
+			success:function(resp){
+				console.log(resp);
+				if(resp == '0'){
+					window.location.href = INDEX_PAGE;
+				}else{
+					thisE.css('-webkit-animation',"shake 0.3s").css('animation',"shake 0.3s");
+					setTimeout(function(){
+						thisE.css('-webkit-animation',"").css('animation',"");
+					},1000);
+				}
+			}
+		});
+	});
+	
+	
+	
+	
+	
 	$('#signup-data-form').on("submit",function(event){
 		event.preventDefault();
 		var data = $(this).serialize();
+		var loadingDiv = $('#signup-form .loading-container-wrapper');
+		loadingDiv.removeClass('hdn');
 		$.ajax({
 			url: AJAX_DIR+ 'signup.php',
 			method: 'post',
 			data:{data:data},
 			success:function(resp){
-				alert(resp);
+				loadingDiv.addClass('hdn');
+				$('#signup-data-form .sign-up-alert').remove();
 				if(resp == '0'){
-					alert("Signed up Successfully");
+					//animate successfully sign up
+					$('#signup_succeed #signup-success-on').html($('#signup-iden').val().trim().toLowerCase());
+					$('#signup_succeed').show();
+					$('#signup-body-footer-wrapper').remove();
 				}else{
-					$('#signup-data-form .sign-up-alert').remove();
 					switch (resp){
 						case '1': $('#signup-iden').parent('div').prepend('<span class="sign-up-alert">Please enter your email address</span>');break;
 						case '2': $('#signup-iden').parent('div').prepend('<span class="sign-up-alert">The email address you entered seems invalid');break;
@@ -109,7 +137,7 @@ $(document).ready(function(){
 					});
 				}
 				else if(fieldId == 'signup-re-iden'){
-					if($(this).val().trim() != $('#signup-iden').val().trim() ){
+					if($(this).val().trim().toLowerCase() != $('#signup-iden').val().trim().toLowerCase() ){
 						$('#signup-field-wrapper .sign-up-alert').remove();
 						errorMessage = "The emails you entered don't match";
 					}

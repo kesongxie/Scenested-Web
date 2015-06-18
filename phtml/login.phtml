@@ -3,12 +3,13 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Lsere</title>
-		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="css/core.css">
-		<link rel="stylesheet" type="text/css" href="css/login.css">
-		<script type="text/javascript" src="js/jquery.js"></script>
-		<script type="text/javascript" src="js/core.js"></script>
-		<script type="text/javascript" src="js/login.js"></script>
+		<link rel="shortcut icon" type="image/x-icon" href="<?php echo ROOTDIR; ?>favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/core.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/animate.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/login.css">
+		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/jquery.js"></script>
+		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/core.js"></script>
+		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/login.js"></script>
 
 		<!--[if lt IE 9]>
 		<script src="dist/html5shiv.js"></script>
@@ -34,28 +35,30 @@
 				</div>
 				<div class="right-bar">
 					<div id="login-form" class="light-gray-shadow dialog">
-						<div id="login-form-header" class="dialog-header">
-							<div class="dialog-header-inner">
-								<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center">Login to Lsere</div></div>
-								<div class="inline-blk right-align dialog-header-right-item pointer"><div id="prompt-sign-up" class="bar-title dialog-header-bar-option inline-blk"><div class="vertical-center" title="Sign Up">Sign up</div></div></div>
+						<form id="login-data-form">
+							<div id="login-form-header" class="dialog-header">
+								<div class="dialog-header-inner">
+									<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center">Login to Lsere</div></div>
+									<div class="inline-blk right-align dialog-header-right-item pointer"><div id="prompt-sign-up" class="bar-title dialog-header-bar-option inline-blk"><div class="vertical-center" title="Sign Up">Sign up</div></div></div>
+								</div>
 							</div>
-						</div>
-						<div id="login-form-body" class="dialog-body">
-							<div id="login-field-wrapper" class="inline-blk vertical-center">
-								<input id="login-iden" type="text" class="text" placeholder="enter your email address">
-								<input id="login-password" type="password" class="text" placeholder="enter your password">
+							<div id="login-form-body" class="dialog-body">
+								<div id="login-field-wrapper" class="inline-blk vertical-center">
+									<input id="login-iden" type="text" name="login-iden" class="text" placeholder="enter your email address">
+									<input id="login-password" type="password" name="login-password" class="text" placeholder="enter your password">
+								</div>
+								<div id="login-button-wrapper" class="inline-blk vertical-center">
+									<input id="login-button" class="light-gray-button login-action-button pointer hovering" type="submit" value="Login" style="width:94%;"> 
+								</div>
 							</div>
-							<div id="login-button-wrapper" class="inline-blk vertical-center">
-								<input id="login-button" class="light-gray-button login-action-button pointer hovering" type="button" value="Login" style="width:94%;"> 
+							<div id="login-form-footer" class="dialog-footer">
+								<div class="vertical-center">
+									<input id="login-remember" name="login-remember" type="checkbox">
+									<label for="login-remember" >Remember Me</label>
+									<a class="plain-lk animate-opacity" style="margin-left:100px;" href="#">Forgot Password?</a>
+								</div>
 							</div>
-						</div>
-						<div id="login-form-footer" class="dialog-footer">
-							<div class="vertical-center">
-								<input id="login-remember" type="checkbox">
-								<label for="login-remember" >Remember Me</label>
-								<a class="plain-lk animate-opacity" style="margin-left:100px;" href="#">Forgot Password?</a>
-							</div>
-						</div>
+						</form>
 					</div>
 					
 					
@@ -66,9 +69,14 @@
 								<div class="inline-blk right-align dialog-header-right-item pointer"><div  id="prompt-log-in" class="bar-title dialog-header-bar-option inline-blk"><div class="vertical-center" title="Log in">Log in</div></div></div>
 							</div>
 						</div>
-						<form id="signup-data-form">
-							<div style="position:relative;">
-							<div id="signup-form-body" class="dialog-body">
+						<div id="signup_succeed" class="hdn" style="padding:20px;">
+							<img src="<?php echo IMGDIR ?>check_icon.png" style="margin-right:10px;">
+							<div style="line-height:1.6">We have sent you a validation email to your email address <span id="signup-success-on" style="color:#1C23AE;line-height:1.6;"></span></div>
+						</div>
+						
+						<div id="signup-body-footer-wrapper" style="position:relative;">
+							<form id="signup-data-form">
+								<div id="signup-form-body" class="dialog-body">
 								<div id="signup-field-wrapper" style="margin-top:20px;" >
 									<div><input id="signup-iden" type="text" name="signup-iden" class="text" placeholder="enter your email address"></div>
 									<div><input id="signup-re-iden" type="text"  name="signup-re-iden" class="text" placeholder="re-enter your email address"></div>
@@ -79,7 +87,7 @@
 								</div>
 							
 							</div>
-							<div id="signup-form-footer" class="dialog-footer">
+								<div id="signup-form-footer" class="dialog-footer">
 								<div id="signup-gender" class="left-bar" style="width:60%;margin-left:4px;position:relative">	
 									<input type="radio" name="signup-gender" value="1"><label for="sign-up-f">Female</label>	
 									<input type="radio" name="signup-gender" value="2" style="margin-left:4px;"><label for="sign-up-m">Male</label>	
@@ -89,8 +97,8 @@
 									<input id="signup-button" class="light-gray-button login-action-button pointer hovering" type="submit" value="SignUp">
 								</div>
 							</div>
-						</form>
-						<div class="loading-container-wrapper hdn">
+							</form>
+							<div class="loading-container-wrapper hdn">
 								<div class="loading-container" >
 								</div>
 								<div class="vertical-center" style="margin-top:-26px;">

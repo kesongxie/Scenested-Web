@@ -15,14 +15,15 @@
 		
 		
 		public function deleteRowByUserId($id){
-			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `user_id` = ? LIMIT 1");
-			$stmt->bind_param('i', $id);
-			if($stmt->execute()){
-				$stmt->close();
-				return true;
-			}else{
-				return false;
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `user_id` = ? ");
+			if($stmt){
+				$stmt->bind_param('i', $id);
+				if($stmt->execute()){
+					$stmt->close();
+					return true;
+				}
 			}
+			return false;
 		}
 		
 		public function deleteRowById($id){
@@ -31,9 +32,129 @@
 			if($stmt->execute()){
 				$stmt->close();
 				return true;
-			}else{
-				return false;
 			}
+			return false;
 		}
+		
+		/*	$selector_column is the unique identifier that is in each row
+			$selector_value is the value of the unique identifier
+			this function requires $selector_column to be of none numeric type, such as string
+		*/
+		public function deleteRowBySelector($selector_column, $selector_value){
+			$selector_column = $this->connection->escape_string($selector_column);
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('s', $selector_value);
+				if($stmt->execute()){
+					$stmt->close();
+					return true;
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+		
+		public function getColumnById($column,$id){
+			$column = $this->connection->escape_string($column);
+			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` = ? LIMIT 1 ");
+			$stmt->bind_param('i',$id);
+			if($stmt->execute()){
+				 $result = $stmt->get_result();
+				 if($result !== false && $result->num_rows == 1){
+				 	$row = $result->fetch_assoc();
+				 	$stmt->close();
+					return $row[$column];
+				 }
+			}
+			return false;
+		}
+		
+		
+		public function getColumnByUserId($column,$user_id){
+			$column = $this->connection->escape_string($column);
+			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `user_id` = ?  ORDER BY `id` DESC LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('i', $user_id);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$row = $result->fetch_assoc();
+						$stmt->close();
+						return $row[$column];
+					 }
+				}
+			}
+			return false;
+		}
+		
+		public function getColumnBySelector($column, $selector_column, $selector_value){
+			$column = $this->connection->escape_string($column);
+			$selector_column = $this->connection->escape_string($selector_column);
+			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1 ");
+			if($stmt){
+				$stmt->bind_param('s', $selector_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$row = $result->fetch_assoc();
+						$stmt->close();
+						return $row[$column];
+					 }
+				}
+			}
+			return false;
+		}
+		
+	
+		public function setColumnById($column, $value, $id){
+			$column = $this->connection->escape_string($column);
+			$stmt = $this->connection->prepare("UPDATE `$this->table_name` SET `$column`=? WHERE `id` = ? LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('si', $value, $id);
+				if($stmt->execute()){
+					$stmt->close();
+					return true;
+				}			
+			}
+			return false;
+		}
+		
+		public function setColumnByUserId($column, $value, $id){
+			$column = $this->connection->escape_string($column);
+			$stmt = $this->connection->prepare("UPDATE `$this->table_name` SET `$column`=? WHERE `user_id` = ? LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('si', $value, $id);
+				if($stmt->execute()){
+					$stmt->close();
+					return true;
+				}			
+			}
+			return false;
+		}
+		
+		/*
+			$value needs to be a string type
+		*/
+		public function isStringValueExistingForColumn($value, $column){
+			$column = $this->connection->escape_string($column);
+			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('s', $value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result->num_rows == 1){
+						return true;
+					 }
+				}
+			}
+			return false;
+		}
+		
+		
+		
+		
+		
 	}
 ?>
