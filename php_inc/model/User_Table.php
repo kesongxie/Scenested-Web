@@ -77,6 +77,10 @@
 			return false;
 		}
 		
+		public function getUserFirstNameByUserIden($user_iden){
+			return $this->getUserInfoByUserIden('firstname',$user_iden);
+		}
+		
 		
 		public function getUserFullnameByUserIden($user_iden){
 			$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname FROM `$this->table_name` WHERE (`id` = ? || `user_iden` = ? ) LIMIT 1  ");
@@ -92,6 +96,15 @@
 				}
 			}
 			return false;
+		}
+		
+		public function getWhatShouldCallForUser($user_iden){
+			$gender = $this->getUserInfoByUserIden('gender',$user_iden);
+			if($gender == '1'){
+				return 'she';
+			}else{
+				return 'he';
+			}
 		}
 		
 		

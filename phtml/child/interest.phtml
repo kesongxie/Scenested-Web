@@ -1,0 +1,65 @@
+<!---interest page-->
+<?php if($page_own): //allow editing ?>
+	<div id="add-new-interest-wrapper" class="inline-blk" style="margin-left:10px;width:78%">
+	<div id="add-new-interest" class="inline-blk hdn" style="width:58%">
+		<div class="dialog-header"><div class="title">Add New Interest</div></div>
+		<div class="dialog-body">
+			<label class="pointer" title="Upload a picture label for your interest">
+				<div class="picture-upload-wrapper">
+						<img class="target-image hdn" height="36" width="36" src="">
+						<div class="picture-upload-black-overlay"></div>
+						<div class="camera-center vertical-center" ><img class="camera-icon"  src="<?php echo IMGDIR ?>camera.png"  height="18" width="18"></div>
+				</div>
+				<form method="POST" enctype="multipart/form-data">
+					<input id="new-interest-picture" class="hdn-input" type="file" name="profile-pic" title="Upload a picture label for your interest">
+				</form>
+			</label>
+	
+			<div class="in-name-input-wrapper">
+				<input class="in-ed-input in-txt-n" type="text" maxlength="32" placeholder="Add a name for your interest" title="Add Interest Name">
+			</div>
+			<textarea class="in-ed-input" style="height:80px;margin-top:3px;" placeholder="Let your friends know more about your interest, like experience, favoriate event, etc... "></textarea>
+			<div style="text-align:right;padding:10px 0px">
+				<select class="ep">
+					<option>Add your experience</option>
+					<option>less than 1 Year</option>
+					<option>1 Year</option>
+					<option>2 Years</option>
+					<option>3 Years</option>
+					<option>4 Years</option>
+					<option>5 Years</option>
+					<option>6 Years</option>
+					<option>7 Years</option>
+					<option>8 Years</option>
+					<option>9 Years</option>
+					<option>10 Years</option>
+					<option>more than 10 years</option>
+				</select>
+			</div>	
+			<div style="text-align:right;border-top:1px solid #f0f0f0;padding-top:10px;margin-top:4px">
+<!-- 
+				<div class="inline-blk cancel-button">Clear</div>
+-->
+				<div id="add-interest" class="inline-blk action-button" style="margin-left:4px;" >Add Interest</div>
+			</div>
+		</div>
+
+	</div>	
+	</div>
+<?php endif; ?>
+
+<div class="inline-blk" style="text-align:right;width:20%;">
+	<?php if($page_own): //allow editing ?>
+		<div class="interest-sider-navi pointer" style="margin-bottom:10px;"><span style="position: relative;top: 0px;left: 0px;height: 24px;color: #062AA3;font-weight:bold;">Add Interest</span></div>
+	<?php endif; ?>
+	
+</div>
+
+<?php if(!$page_own): //allow editing ?>
+<div style="background:#fff; padding:20px;">
+	<?php
+		echo $request_user_page_firstname.' is so lazy that '.$request_user_page_gender_call.' hasn\'t added any interests yet '
+	?>
+	<span href="" class="plain-lk pointer" style="color:#062AA3">Know what <?php echo $request_user_page_gender_call ?> likes?</span>
+</div>
+<?php endif; ?>

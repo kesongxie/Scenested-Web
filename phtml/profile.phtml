@@ -29,19 +29,19 @@
 								<form method="POST" style="position:absolute;top:0px;width:0px;height:0px;" enctype="multipart/form-data">
 									<input id="upload-cover" class="hdn-input" type="file" name="profile-pic">
 								</form>
-								<div class="overlay hdn" style="background:#fff;opacity:0.5;text-align:center;"><div class="vertical-center"><img class="loading-icon" style="width:60px;height:40px;" src="<?php echo IMGDIR; ?>loading_icon.gif"></div></div>
+								<div class="overlay hdn"><div class="vertical-center"><img class="loading-icon" style="width:60px;height:40px;" src="<?php echo IMGDIR; ?>loading_icon.gif"></div></div>
 							<?php endif; ?>
 						</div>
 						<div class="avator-inner-bottom">
 							<?php if($page_own): //allow changing ?>
-								<label id="avator-upload-label" for="upload-profile" class="pointer">
+								<label id="avator-upload-label" for="upload-profile" class="pointer" title="upload profile image">
 										<div class="avator-picture-wrapper">
 											<img class="profile-image" src="<?php echo $session_user_profile_image_url; ?>" />
 											<div class="picture-upload-black-overlay avator-upload-inner-wrapper"></div>
 											<div class="avator-upload-inner-wrapper"><div class="vertical-center"><img class="camera-icon" src="<?php echo IMGDIR ?>camera.png" height="20" width="20"></div></div>
 											<div class="loading-icon-wrapper"><div class="vertical-center"><img class="loading-icon" src="<?php echo IMGDIR; ?>loading_icon.gif" height="40" width="40"></div></div>
 										</div>
-									<form method="POST" style="position:absolute;top:0px;width:0px;height:0px;" enctype="multipart/form-data">
+									<form method="POST" class="hdn-form hdn-input" enctype="multipart/form-data">
 										<input id="upload-profile" class="hdn-input" type="file" name="profile-pic" title="upload profile image">
 									</form>
 								</label>
@@ -59,14 +59,22 @@
 			</div>
 			
 			<div id="profile-sider-bar-right" class="inline-blk">
-					<div class="pf_i_w_2">
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/interests'; ?>"><div  class="navi_item<?php if(!isset($_GET['s'])||($_GET['s']!='launched' && $_GET['s']!='friends'&& $_GET['s']!='moments' && $_GET['s']!='about' && $_GET['s']!='photos' && $_GET['s']!='status')){echo ' active_navi';}else{echo ' deactive_navi';}?>"   >Interests<div  class="sub_text" style="left:15px;">interests & circles</div></div></a>
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/launched'; ?>" ><div   class="navi_item<?php if(isset($_GET['s']) && $_GET['s']=='launched'){echo ' active_navi';}else{echo ' deactive_navi';}?>">Launched<div class="sub_text" style="left:15px;" >events launched</div></div></a>
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/pined'; ?>"><div class="navi_item<?php if(isset($_GET['s']) && $_GET['s']=='moments'){echo ' active_navi';}else{echo ' deactive_navi';}?>"  >Pined<div  class="sub_text" style="left:21px;" >beloved moments</div></div></a>
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/friends'; ?>"><div   class="navi_item<?php if(isset($_GET['s']) && $_GET['s']=='friends'){echo ' active_navi';}else{echo ' deactive_navi';}?>" >Friends<div  class="sub_text" style="left:15px;">connections</div></div></a>
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/photos';?>"><div class="navi_item<?php if(isset($_GET['s']) && $_GET['s']=='photos'){echo ' active_navi';}else{echo ' deactive_navi';}?>" >Photos<div  class="sub_text" style="left:11px;">want to share</div></div></a>
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/about'; ?>"><div class="navi_item<?php if(isset($_GET['s']) && $_GET['s']=='about'){echo ' active_navi';}else{echo ' deactive_navi';}?>"  >About<div  class="sub_text" style="left:11px;"><?php echo $user->getUserFullnameByUserIden($request_user_page_id); ?></div></div></a>
+					<div id="profile-navigation-bar">
+						<a href="<?php echo $_SERVER['REQUEST_URI'].'/interests'; ?>"><div  class="navi-item<?php if(!isset($_GET['s'])||($_GET['s']!='launched' && $_GET['s']!='friends'&& $_GET['s']!='moments' && $_GET['s']!='about' && $_GET['s']!='photos' && $_GET['s']!='status')){echo ' active-navi';}else{echo ' deactive-navi';}?>"   >Interests<div  class="sub-text" style="left:15px;">interests & circles</div></div></a>
+						<a href="<?php echo $_SERVER['REQUEST_URI'].'/events'; ?>" ><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='launched'){echo ' active-navi';}else{echo ' deactive-navi';}?>">Events<div class="sub-text" style="left:15px;" >launched & joined</div></div></a>
+						<a href="<?php echo $_SERVER['REQUEST_URI'].'/pined'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='moments'){echo ' active-navi';}else{echo ' deactive-navi';}?>"  >Pined<div  class="sub-text" style="left:21px;" >beloved moments</div></div></a>
+						<a href="<?php echo $_SERVER['REQUEST_URI'].'/friends'; ?>"><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='friends'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Friends<div  class="sub-text" style="left:15px;">connections</div></div></a>
+						<a href="<?php echo $_SERVER['REQUEST_URI'].'/photos';?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='photos'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Photos<div  class="sub-text" style="left:11px;">want to share</div></div></a>
+						<a href="<?php echo $_SERVER['REQUEST_URI'].'/about'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='about'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >About<div  class="sub-text" style="left:11px;"><?php echo ((strlen($request_user_page_fullname) < 16)?$request_user_page_fullname:substr($request_user_page_fullname,0,27).'...') ?></div></div></a>
 					</div>
+					
+					<div id="profile-mid-content">
+						<?php require_once 'child/interest.phtml'; ?>
+					
+					
+					</div>
+					
+					
 			</div>
 			
 		</div>

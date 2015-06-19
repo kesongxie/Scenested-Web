@@ -5,7 +5,10 @@
 *{
 	margin-top: 0px;
 	margin-left:0px;
-	color:#777777;
+	/* 
+color:#777777;
+	
+ */color:#6B6B6B
 }
 
 body{
@@ -22,15 +25,25 @@ body{
 	min-height:720px;
 }
 
-div img{
-	border-radius:2px;
+div{
+	outline:none;
 }
 
-input{
+
+div img{
+	border-radius:2px;
+	border:none;
+}
+
+input,textarea, select{
 	outline:none;
 	font-family: Times New Roman, Times, serif;
   	font-size: 13px;
 }
+textarea{
+	resize:none;
+}
+
 .plain-lk{
 	text-decoration:none;
 }
@@ -39,13 +52,19 @@ input{
 }
 
 .hdn{
-	display:none;
+	display:none !important;
 }
 
 .hdn-input{
 	width:0px;
 	height:0px;
 }	
+.hdn-form{
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+
 .animate-opacity{
 	opacity:1;
 }
@@ -338,6 +357,46 @@ input{
 
 .dialog-footer{
 	background:#fff;
+}
+
+.action-button{
+	cursor:pointer;
+	font-weight:bold;
+	color:#fff;
+	padding:7px 6px;
+	border-radius:2px;
+	font-size:13px;
+	border:1px solid #f0f0f0;
+	background: #780000;
+	background: -webkit-linear-gradient(#a13030, #780000);
+	background: -o-linear-gradient(#a13030,#780000);
+	background: -moz-linear-gradient(#a13030,#780000);
+	background: linear-gradient(#a13030,#780000);
+	color:white;
+	box-shadow:2px 0px 3px #EAEAEA;
+}
+.action-button:hover{
+	background-color:#8a0000;
+	opacity:0.92;
+
+}
+
+.cancel-button{
+	cursor:pointer;
+	background:#F6F6F6;
+	background: -webkit-linear-gradient(#F6F6F6,#f0f0f0);
+	background: -o-linear-gradient(#F6F6F6,#f0f0f0);
+	background: -moz-linear-gradient(#F6F6F6,#f0f0f0);
+	background: linear-gradient(#F6F6F6,#f0f0f0);
+	padding:7px 6px;
+	border-radius:2px;
+	font-size:13px;
+	border:1px solid #f0f0f0;
+	border-radius:0px;
+}
+
+.cancel-button:hover{
+	border:1px solid #EAEAEA;
 }
 
 /*ends dialog  template*/

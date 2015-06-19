@@ -4,6 +4,20 @@
 	min-height:100vh;
 }
 
+.camera-icon:hover{
+	-webkit-transform:scale(1.08);
+	-ms-transform:scale(1.08);
+	-moz-transform:scale(1.08);
+	-o-transofrm:scale(1.08);
+	transform:scale(1.08);
+}
+
+.camera-center{
+	position:absolute;
+	text-align:center;
+	width:100%;height:18px;
+}
+
 #profile-sider-bar-left{
 	position:relative;
 	width:20%;
@@ -58,6 +72,11 @@
   	margin-top: -30px;
   	margin-left: 10px;
     display: inline-block;
+    width:60px;
+	height:60px;
+    overflow:hidden;
+	border-radius:50%;
+	box-shadow: 1px 1px 3px #777777;
 }
 
 #profile-sider-bar-left #avator-wrapper .avator-inner-bottom label .avator-picture-wrapper{
@@ -65,9 +84,6 @@
 	text-align:center;
 	width:60px;
 	height:60px;
-	overflow:hidden;
-	border-radius:50%;
-	box-shadow: 1px 1px 3px #777777;
 }
 
 #profile-sider-bar-left #avator-wrapper .avator-inner-bottom label .profile-image{
@@ -97,6 +113,11 @@
 .picture-upload-black-overlay{
 	background: #000;
 	opacity: 0.6;
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
 	cursor: pointer;
 }
 
@@ -125,24 +146,21 @@
 
 
 #profile-sider-bar-right{
-	width:60%;
+	width:63%;
+	vertical-align:top;
+	min-width:700px;
+	margin-left:10px;
 }
 
-
-
-
-
-.pf_i_w_2 {
+#profile-sider-bar-right #profile-navigation-bar {
   position: relative;
-  top: 27px;
+  margin:32px 0px 16px 0px;
   width: 100%;
   min-width: 693px;
-  float: left;
-  left: 8px;
   border-bottom: 1px solid #EEEEEE;
 }
 
-.navi_item {
+#profile-sider-bar-right #profile-navigation-bar .navi-item {
   position: relative;
   font-size: 15px;
   cursor: pointer;
@@ -151,15 +169,70 @@
   text-align: center;
   display: inline-block;
 }
-.active_navi {
+#profile-sider-bar-right #profile-navigation-bar .active-navi {
   color: rgb(0, 0, 0);
   border-bottom: 3px solid rgb(10, 43, 138);
   border-radius: 0px;
 }
 
-.sub_text {
+#profile-sider-bar-right #profile-navigation-bar .navi-item .sub-text {
   font-size: 10px;
   font-weight: normal;
+}
+
+#profile-mid-content{
+	width:99%;
+}
+#add-new-interest{
+	box-shadow:1px 1px 10px #E8E8E8
+}
+
+#add-new-interest .dialog-header{
+	border-radius:3px 3px 0px 0px;
+}
+
+#add-new-interest .dialog-header .title{
+	margin-left:12px;
+	padding: 11px 0px 10px 0px;
+	font-size: 15px;
+	color: white;
+	font-weight: bold;
+}
+#add-new-interest .dialog-body{
+	padding:10px 12px 10px 8px;
+}
+
+#add-new-interest .dialog-body label{
+	width:36px;
+	height:36px;
+	float:right;
+	border-radius:50%;
+	overflow:hidden;
+}
+
+#add-new-interest .dialog-body label .picture-upload-black-overlay{
+	display:none;
+	opacity:0.8;
+}
+
+.dialog-body .picture-upload-wrapper{
+	text-align:center;
+	width:36px;
+	height:36px;
+	position:relative;
+	background:#E2E2E2;
+}
+
+.dialog-body .in-ed-input {
+	width: 95%;
+	font-size: 13px;
+	padding: 6px 4px;
+	border: 0px;	
+}
+
+.dialog-body .in-name-input-wrapper{
+	border-bottom:1px solid #EAEAEA;
+	width:79%;
 }
 
 

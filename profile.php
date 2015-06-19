@@ -29,6 +29,8 @@
 	
 	$page_own = ($request_user_page_id == $_SESSION['id']);
 	$request_user_page_fullname = $user->getUserFullnameByUserIden($request_user_page_id);	
+	$request_user_page_firstname = $user->getUserFirstNameByUserIden($request_user_page_id);
+	$request_user_page_gender_call = $user->getWhatShouldCallForUser($request_user_page_id);
 	require_once 'phtml/profile.phtml';
 	
 ?>
