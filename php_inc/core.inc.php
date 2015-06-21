@@ -20,4 +20,6 @@
 		return strtolower(pathinfo(basename($file["name"]),PATHINFO_EXTENSION));
 	}
 	
+		
+	
 ?>

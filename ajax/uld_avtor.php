@@ -10,7 +10,7 @@
 			exit();	
 		}	
 		$user_profile = new User_Profile_Picture();
-		$user_profile->uploadProfilePictureForUser($_FILES['profile-pic'],$_SESSION['id']);
+		$user_profile->uploadMediaForUser($_FILES['profile-pic'],$_SESSION['id']);
 	}
 	
 

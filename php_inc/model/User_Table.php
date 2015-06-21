@@ -136,7 +136,17 @@
 			return false;
 		}
 		
+		public function getLatestCoverForuser($user_id){
+			include_once 'User_Profile_Cover.php';
+			$cover = new User_Profile_Cover($user_id);
+			return $cover->getLatestProfileImageForUser($user_id);
+		}
 		
+		public function getLatestProfilePictureForuser($user_id){
+			include_once 'User_Profile_Picture.php';
+			$profile = new User_Profile_Picture();
+			return $profile->getLatestProfileImageForUser($user_id);
+		}
 		
 		
 		

@@ -1,8 +1,8 @@
 <?php
 	include_once 'core_table.php';
-	include_once 'User_Profile_Base.php';
+	include_once 'User_Media_Base.php';
 
-	class User_Profile_Picture extends User_Profile_Base{
+	class User_Profile_Picture extends User_Media_Base{
 		var $table_name = "user_profile_picture";
 		
 		public function __construct(){

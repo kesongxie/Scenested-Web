@@ -21,7 +21,7 @@
 #profile-sider-bar-left{
 	position:relative;
 	width:20%;
-	min-width:182px;
+	min-width:230px;
 }
 
 #profile-sider-bar-left #avator-wrapper{
@@ -132,8 +132,8 @@
 }
 
 .loading-icon-wrapper{
-	height: 60px;
-	width: 60px;
+	height: 100%;
+	width: 100%;
 	border-radius: 50%;
 	position: absolute;
 	top: 0px;
@@ -153,35 +153,37 @@
 }
 
 #profile-sider-bar-right #profile-navigation-bar {
-  position: relative;
-  margin:32px 0px 16px 0px;
-  width: 100%;
-  min-width: 693px;
-  border-bottom: 1px solid #EEEEEE;
+	position: relative;
+	margin:32px 0px 16px 0px;
+	width: 100%;
+	min-width: 693px;
+	border-bottom: 1px solid #EEEEEE;
 }
 
 #profile-sider-bar-right #profile-navigation-bar .navi-item {
-  position: relative;
-  font-size: 15px;
-  cursor: pointer;
-  font-weight: bold;
-  padding: 6px 24px;
-  text-align: center;
-  display: inline-block;
+	position: relative;
+	font-size: 15px;
+	cursor: pointer;
+	font-weight: bold;
+	padding: 6px 24px;
+	text-align: center;
+	display: inline-block;
 }
+
 #profile-sider-bar-right #profile-navigation-bar .active-navi {
-  color: rgb(0, 0, 0);
-  border-bottom: 3px solid rgb(10, 43, 138);
-  border-radius: 0px;
+	color: rgb(0, 0, 0);
+	border-bottom: 3px solid rgb(10, 43, 138);
+	border-radius: 0px;
 }
 
 #profile-sider-bar-right #profile-navigation-bar .navi-item .sub-text {
-  font-size: 10px;
-  font-weight: normal;
+	font-size: 10px;
+	font-weight: normal;
 }
 
 #profile-mid-content{
-	width:99%;
+	width:100%;
+	margin-left:12px;
 }
 #add-new-interest{
 	box-shadow:1px 1px 10px #E8E8E8
@@ -199,7 +201,7 @@
 	font-weight: bold;
 }
 #add-new-interest .dialog-body{
-	padding:10px 12px 10px 8px;
+	padding:10px 10px 0px 8px;
 }
 
 #add-new-interest .dialog-body label{
@@ -213,6 +215,16 @@
 #add-new-interest .dialog-body label .picture-upload-black-overlay{
 	display:none;
 	opacity:0.8;
+}
+
+
+#add-new-interest-navi span{
+	position: relative;
+	top: 0px;
+	left: 0px;
+	height: 24px;
+	color: #062AA3;
+	font-weight:bold;
 }
 
 .dialog-body .picture-upload-wrapper{

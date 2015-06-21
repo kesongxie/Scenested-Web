@@ -21,22 +21,22 @@
 		<div id="profile-global-container" >
 			<div id="profile-sider-bar-left" class="inline-blk">
 					<div id="avator-wrapper">
-						<div class="avator-inner-top">
-							<img class="profile-image" src="<?php echo $user_profile_cover->getLatestProfileImageForUser($request_user_page_id); ?>">
+						<div class="avator-inner-top"  style="z-index:1">
+							<img class="profile-image" src="<?php echo $user->getLatestCoverForuser($request_user_page_id); ?>">
 							
 							<?php if($page_own):  //allow changing ?>
-								<label for="upload-cover" id="avator-change-cover-label" class="pointer"  title="upload cover photo">Change Cover</label>
+								<label for="upload-cover" id="avator-change-cover-label"  class="pointer"  title="upload cover photo">Change Cover</label>
 								<form method="POST" style="position:absolute;top:0px;width:0px;height:0px;" enctype="multipart/form-data">
-									<input id="upload-cover" class="hdn-input" type="file" name="profile-pic">
+									<input id="upload-cover" class="hdn-input" type="file" name="profile-pic" title="upload cover photo">
 								</form>
-								<div class="overlay hdn"><div class="vertical-center"><img class="loading-icon" style="width:60px;height:40px;" src="<?php echo IMGDIR; ?>loading_icon.gif"></div></div>
+								<div class="overlay hdn" style="text-align:center;opacity:0.45;background:#fff;"><div class="vertical-center"><img class="loading-icon" style="width:60px;height:40px;" src="<?php echo IMGDIR; ?>loading_icon.gif"></div></div>
 							<?php endif; ?>
 						</div>
-						<div class="avator-inner-bottom">
+						<div class="avator-inner-bottom" style="z-index:2">
 							<?php if($page_own): //allow changing ?>
-								<label id="avator-upload-label" for="upload-profile" class="pointer" title="upload profile image">
+								<label id="avator-upload-label"  for="upload-profile" class="pointer" title="upload profile image">
 										<div class="avator-picture-wrapper">
-											<img class="profile-image" src="<?php echo $session_user_profile_image_url; ?>" />
+											<img class="profile-image"  src="<?php echo $session_user_profile_image_url; ?>" />
 											<div class="picture-upload-black-overlay avator-upload-inner-wrapper"></div>
 											<div class="avator-upload-inner-wrapper"><div class="vertical-center"><img class="camera-icon" src="<?php echo IMGDIR ?>camera.png" height="20" width="20"></div></div>
 											<div class="loading-icon-wrapper"><div class="vertical-center"><img class="loading-icon" src="<?php echo IMGDIR; ?>loading_icon.gif" height="40" width="40"></div></div>
@@ -48,12 +48,12 @@
 							<?php else: ?>
 								<label>
 									<div class="avator-picture-wrapper">
-											<img class="profile-image" src="<?php echo  $user_profile_pic->getLatestProfileImageForUser($request_user_page_id); ?>" />
+											<img class="profile-image" src="<?php echo  $user->getLatestProfilePictureForuser($request_user_page_id); ?>" />
 									</div>
 								</label>
 							<?php endif; ?>
 							
-							<div class="avator-name"><?php echo $request_user_page_fullname; ?></div>
+							<div class="avator-name"><?php echo htmlentities($request_user_page_fullname); ?></div>
 						</div>
 					</div>
 			</div>
@@ -65,24 +65,30 @@
 						<a href="<?php echo $_SERVER['REQUEST_URI'].'/pined'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='moments'){echo ' active-navi';}else{echo ' deactive-navi';}?>"  >Pined<div  class="sub-text" style="left:21px;" >beloved moments</div></div></a>
 						<a href="<?php echo $_SERVER['REQUEST_URI'].'/friends'; ?>"><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='friends'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Friends<div  class="sub-text" style="left:15px;">connections</div></div></a>
 						<a href="<?php echo $_SERVER['REQUEST_URI'].'/photos';?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='photos'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Photos<div  class="sub-text" style="left:11px;">want to share</div></div></a>
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/about'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='about'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >About<div  class="sub-text" style="left:11px;"><?php echo ((strlen($request_user_page_fullname) < 16)?$request_user_page_fullname:substr($request_user_page_fullname,0,27).'...') ?></div></div></a>
+						<a href="<?php echo $_SERVER['REQUEST_URI'].'/about'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='about'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >About<div  class="sub-text" style="left:11px;"><?php echo htmlentities(((strlen($request_user_page_fullname) < 16)?$request_user_page_fullname:substr($request_user_page_fullname,0,27).'...')) ?></div></div></a>
 					</div>
 					
 					<div id="profile-mid-content">
 						<?php require_once 'child/interest.phtml'; ?>
-					
-					
 					</div>
-					
-					
 			</div>
-			
 		</div>
 		
 		<!-- 
 <div id="side-bar-notification-center" ></div>
 		
  -->
+	<div id="dialog-popup-overlay" class="overlay hdn"></div>	
+	<div id="popup-dialog-wrapper" class="vertical-center hdn"style="position:absolute;width:100%;margin-top:-40px;z-index:10000;text-align:center;">
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	</body>
