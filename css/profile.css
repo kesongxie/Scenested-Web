@@ -200,9 +200,6 @@
 	color: white;
 	font-weight: bold;
 }
-#add-new-interest .dialog-body{
-	padding:10px 10px 0px 8px;
-}
 
 #add-new-interest .dialog-body label{
 	width:36px;
@@ -261,7 +258,13 @@
 	margin-right:6px;
 }
 
-
+.interest-profile .interest-profile-edit label{
+	width: 36px;
+	height: 36px;
+	float: right;
+	border-radius:50%;
+	overflow: hidden;
+}
 
 
 

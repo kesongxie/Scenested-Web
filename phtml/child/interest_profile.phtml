@@ -2,36 +2,118 @@
 	  include_once SCRIPT_INCLUDE_BASE.'php_inc/global_constant.php'; 
 ?>
 
-<div class="inetrest-profile">
-	<div class="dialog-header">
-		<div class="dialog-header-inner">
-			<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center" title="<?php echo $interest['name'] ?>"><?php echo htmlentities($interest['name']); ?></div></div>
-			<div class="inline-blk right-align dialog-header-right-item">
-			<div class="bar-title dialog-header-bar-option inline-blk pointer"><div class="vertical-center" >Post</div></div>
-			<div class="bar-title dialog-header-bar-option inline-blk pointer"><div class="vertical-center" ><img src="<?php  echo IMGDIR ?>menu_navi_icon.png" width="20" height="13"></div></div>
+<div class="interest-profile">
+	<div class="interest-profile-intro">
+		<div class="dialog-header">
+			<div class="dialog-header-inner">
+				<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center" title="<?php echo $interest['name'] ?>"><?php echo htmlentities($interest['name']); ?></div></div>
+
+				<div class="inline-blk right-align dialog-header-right-item">
+				<?php  if($interest['user_id'] == $_SESSION['id']): ?>
+					<div class="bar-title dialog-header-bar-option inline-blk pointer" style="width:34%"><div class="vertical-center" >Post</div></div>
+				<?php  endif; ?>
+				<div class="bar-title dialog-header-bar-option inline-blk pointer option" style="width:34%"><div class="vertical-center" ><img src="<?php  echo IMGDIR ?>menu_navi_icon.png" width="20" height="13"></div></div>
+				</div>
+			</div>
+		</div>
+		<div class="dialog-body">
+			<div class="in_con_opt_w popover" style="top:6px;right:0px;">
+			<?php  if($interest['user_id'] == $_SESSION['id']): ?>
+					<div class="in_con_w_opt_it edit_interest">Edit</div>
+			<?php  endif; ?>	
+					<div class="in_con_w_opt_it edit_interest">Interest Friends</div>
+			<?php  if($interest['user_id'] == $_SESSION['id']): ?>
+					<div class="in_con_w_opt_it remove_interest">Remove This Interest</div>
+			<?php  endif; ?>
+			</div>
+			<div class="visible-post-scope">
+				<div class="visible-content limit-height">
+					<?php if($interest_label_image !== false && file_exists(SCRIPT_INCLUDE_BASE.MEDIA_U.$interest_label_image)): ?>
+						<div class="interest-image-label">
+							<img src="<?php echo U_IMGDIR.$interest_label_image ?>" />
+						</div>
+					<?php  endif;?>
+		
+					<?php if(substr($interest['description'],1,1)!=' ') :?>
+						<span  class="first-cap" style="position:relative;top:0px;margin-right:-3px;"><?php echo strtoupper(substr($interest['description'],0,1))?></span>
+					<?php else: ?>
+						<span class="first-cap" ><?php echo strtoupper(substr($interest['description'],0,1))?></span>
+					<?php endif; ?>
+					<span><?php echo htmlentities(substr($interest['description'],1)); ?></span>
+				</div>
+			</div>
+		
+			<div class="clr right-align exp" style="margin:0px 20px 16px 0px">
+				<?php echo $experience; ?>
 			</div>
 		</div>
 	</div>
-	<div class="dialog-body">
-		<div class="visible-post-scope">
-			<div class="visible-content limit-height">
-				<?php if($interest_label_image !== false && file_exists(SCRIPT_INCLUDE_BASE.MEDIA_U.$interest_label_image)): ?>
-					<div class="interest-image-label">
-						<img src="<?php echo U_IMGDIR.$interest_label_image ?>" />
+	
+	<div class="interest-profile-edit hdn">
+		
+		<div class="dialog-header">
+			<div class="dialog-header-inner">
+				<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center" title="Guitar and Music">Edit Interest</div></div>
+
+				<div class="inline-blk right-align dialog-header-right-item">
+						<div class="bar-title dialog-header-bar-option inline-blk pointer" style="width:40%;"><div class="vertical-center" style="font-size:13px;">Event</div></div>
+						<div class="bar-title dialog-header-bar-option inline-blk pointer" style="width:50%"><div class="vertical-center" style="font-size:13px;">Moment</div></div>
+
+				</div>
+			</div>
+		</div>
+		<div class="dialog-body">
+			<div style="margin:10px 10px 0px 8px;">
+				<label class="pointer" title="Upload a picture label for your interest">
+					<div class="picture-upload-wrapper">
+						<?php $hasInterestLabelImage = $interest_label_image !== false && file_exists(SCRIPT_INCLUDE_BASE.MEDIA_U.$interest_label_image); ?>
+							<?php if($hasInterestLabelImage): ?>
+									<img class="target-image"  src="<?php echo U_IMGDIR.$interest_label_image ?>" height="36" width="36">
+							<?php else: ?>
+									<img class="target-image hdn"  src="" height="36" width="36">
+							<?php  endif;?>
+							
+							<div class="picture-upload-black-overlay"></div>
+							<div class="camera-center vertical-center" ><img class="camera-icon"  src="<?php echo IMGDIR ?>camera.png"  height="18" width="18"></div>
+							<div class="loading-icon-wrapper"><div class="vertical-center"><img class="loading-icon" src="<?php  echo IMGDIR ?>loading_icon.gif" height="40" width="40"></div></div>
 					</div>
-				<?php  endif;?>
-		
-				<?php if(substr($interest['description'],1,1)!=' ') :?>
-					<span  class="first-cap" style="position:relative;top:0px;margin-right:-3px;"><?php echo strtoupper(substr($interest['description'],0,1))?></span>
-				<?php else: ?>
-					<span class="first-cap" ><?php echo strtoupper(substr($interest['description'],0,1))?></span>
-				<?php endif; ?>
-				<span><?php echo htmlentities(substr($interest['description'],1)); ?></span>
+					<form method="POST" enctype="multipart/form-data">
+						<input class="interest-picture hdn-input" data-key="<?php echo $interest['id'] ?>"  type="file" name="picture-label" title="Upload a picture label for your interest">
+					</form>
+				
+				</label>
+	
+				<div class="in-name-input-wrapper">
+					<input type="text"  class="in-ed-input in-txt-n" value="<?php echo htmlentities($interest['name']); ?>" maxlength="32" placeholder="Add a name for your interest" title="add an name for your interest">
+				</div>
+				<textarea class="in-ed-input" style="height:80px;margin-top:3px;" placeholder="Let your friends know more about your interest, like experience, favoriate event, etc... "  title="add some descriptions about your interest"><?php echo htmlentities($interest['description']); ?>
+				</textarea>
+				<div style="text-align:right;padding:10px 0px">
+					<select class="ep">
+						
+						<option data-option="-1" <?php echo (($interest['experience']==-1)?'selected':'')  ?>>Add your experience</option>
+						<option data-option="0" <?php echo (($interest['experience']==0)?'selected':'')  ?>>less than 1 Year</option>
+						<option data-option="1" <?php echo (($interest['experience']==1)?'selected':'')  ?>>1 Year</option>
+						<?php
+							for($i = 2; $i<=10; $i++){
+								if($i == $interest['experience']){
+									echo '<option data-option="'.$i.'" selected>'.$i.' Years</option>';
+								}else{
+									echo '<option data-option="'.$i.'">'.$i.' Years</option>';
+								}
+							}
+						?>
+						<option data-option="11" <?php echo (($interest['experience']==11)?'selected':'')  ?>>more than 10 years</option>
+					</select>
+				</div>	
+				<div class="edit-dialog-footer">
+						<div class="inline-blk cancel-button">Cancel</div>
+					<div class="inline-blk action-button" style="margin-left:4px;" >Update</div>
+				</div>
 			</div>
 		</div>
-		
-		<div class="clr right-align exp">
-			<?php echo $experience; ?>
-		</div>
+	
 	</div>
+	
+	
 </div>

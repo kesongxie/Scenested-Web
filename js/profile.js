@@ -197,10 +197,9 @@ $(document).ready(function(){
 						var mid_content = $($.parseHTML(resp)).filter('#node-mid-content');								
 						var side_content = $($.parseHTML(resp)).filter('#node-side-content');			
 						$('#interest-content-wrapper').append(mid_content.html()).removeClass('hdn');
+						side_content.children('.interest-side-label').css('-webkit-animation',' bounceInUp 1s');
 						$('#interest-navi').append(side_content.html());
-						side_content.children('').css('-webkit-animation',' bounceInUp 1s');
 
-						
 						setVisibleContent();
 						//reset elements
 						parentDiv.find('input, textarea, select').val('');
@@ -284,7 +283,32 @@ $(document).ready(function(){
 		}
 	},'.interest-side-label');
 	
-		
+	
+	$('body').on({
+		click:function(){
+			$(this).parents('.interest-profile').find('.in_con_opt_w').toggle();
+			return false;
+		}
+	
+	},'.interest-profile .option');
+	
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.interest-profile');
+			parentDiv.find('.interest-profile-intro').css('-webkit-animation',"flipOutY 0.4s").css('animation',"flipOutY 0.4s").addClass('hdn');
+			var edit_wrapper = parentDiv.find('.interest-profile-edit');
+			edit_wrapper.css('-webkit-animation',"flipInY 0.4s").css('animation',"flipInY 0.4s").removeClass('hdn');
+			edit_wrapper.find('.in-txt-n').focus();
+			setTimeout(function(){
+				edit_wrapper.css('-webkit-animation',"").css('animation',"");
+			
+			},200);
+
+		}
+	
+	},'.interest-profile .edit_interest');
+	
 	
 	
 	
