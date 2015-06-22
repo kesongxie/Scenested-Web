@@ -16,6 +16,7 @@
 	define("MEDIA_U","media_u/");
 	define("SCRIPT_INCLUDE_BASE",$_SERVER['DOCUMENT_ROOT'].'/lsere/');
 	
+	
 	define("USER_PROFILE_ROOT", ROOTDIR.'user/'); //user profile page root
 	
 	define("PHP_INC_MODEL_ROOT_REF","php_inc/model/");
@@ -29,7 +30,8 @@
 	define("MAXIMUM_UPLOAD_IMAGE_SIZE",5000000);
 	define("DEFAULT_PROFILE_IMAGE",DEFAULT_IMAGE."default_profile_100pl.png");
 	define("DEFAULT_COVER_IMAGE",DEFAULT_IMAGE."beach-230.jpg");
-
+	define("DEFAULT_INTEREST_LABEL_IMAGE_PREFIX",DEFAULT_IMAGE.'interest-label-');
+	define("MAX_INTEREST_LABEL_COLOR_RANDOM_INDEX", 6);
 	
 	
 	

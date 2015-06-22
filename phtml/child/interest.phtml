@@ -59,21 +59,17 @@
 	
 	<?php if($user_interests !== false): ?>
 	<?php foreach($user_interests as $user_interest): //start display navi interests label ?>
-				<div class="interest-side-label interest-sider-navi pointer" data-labelfor="<?php echo $user_interest['id'];?>" style="height:30px;margin-bottom:10px;" title="<?php echo $user_interest['name'];?>"><div class="vertical-center"><img src="<?php echo U_IMGDIR.$_USER_MEDIA_PREFIX.$user_interest['picture_url'];  ?>" style="box-shadow: 1px 1px 3px #777777;height:24px;width:24px;border-radius:50%;margin-right:6px;"><div class="inline-blk txt_ofl" style="width:95px;margin-top:2px;"><?php echo htmlentities($user_interest['name']);?></div></div></div>	
+				<?php
+				 if($user_interest['picture_url'] != ''){
+				  		$label_url = U_IMGDIR.$_USER_MEDIA_PREFIX.$user_interest['picture_url'];
+				  }else{
+				  		$label_url =getDefaultInterestLabelImageByNum($defualr_label_image->getLabelImageUrllByInterestId($user_interest['id']));
+				  }
+				 ?>
+				<div class="interest-side-label interest-sider-navi pointer" data-labelfor="<?php echo $user_interest['id'];?>"  title="<?php echo htmlentities($user_interest['name']);?>"><div class="vertical-center"><img src="<?php echo $label_url; ?>"><div class="inline-blk txt_ofl" style="width:95px;margin-top:2px;"><?php echo htmlentities($user_interest['name']);?></div></div></div>	
  	<?php  endforeach;  //end display side ?>
 	
-	
-	
-	
-	<!-- 
-<div class="interest-sider-navi pointer" style="height:30px;margin-bottom:10px;"><div class="vertical-center"><img src="http://localhost:8888/lsere/media/default_image/interest-label-1.png" style="box-shadow: 1px 1px 3px #777777;height:24px;width:24px;border-radius:50%;margin-right:6px;"><div class="inline-blk txt_ofl" style="width:95px;margin-top:2px;"><?php echo 'Hangout'?></div></div></div>	
-	<div class="interest-sider-navi pointer" style="height:30px;margin-bottom:10px;"><div class="vertical-center"><img src="http://localhost:8888/lsere/media/default_image/interest-label-2.png" style="box-shadow: 1px 1px 3px #777777;height:24px;width:24px;border-radius:50%;margin-right:6px;"><div class="inline-blk txt_ofl" style="width:95px;margin-top:2px;"><?php echo 'Hangout'?></div></div></div>	
-	<div class="interest-sider-navi pointer" style="height:30px;margin-bottom:10px;"><div class="vertical-center"><img src="http://localhost:8888/lsere/media/default_image/interest-label-3.png" style="box-shadow: 1px 1px 3px #777777;height:24px;width:24px;border-radius:50%;margin-right:6px;"><div class="inline-blk txt_ofl" style="width:95px;margin-top:2px;"><?php echo 'Hangout'?></div></div></div>	
-	<div class="interest-sider-navi pointer" style="height:30px;margin-bottom:10px;"><div class="vertical-center"><img src="http://localhost:8888/lsere/media/default_image/interest-label-4.png" style="box-shadow: 1px 1px 3px #777777;height:24px;width:24px;border-radius:50%;margin-right:6px;"><div class="inline-blk txt_ofl" style="width:95px;margin-top:2px;"><?php echo 'Hangout'?></div></div></div>		
-	<div class="interest-sider-navi pointer" style="height:30px;margin-bottom:10px;"><div class="vertical-center"><img src="http://localhost:8888/lsere/media/default_image/interest-label-5.png" style="box-shadow: 1px 1px 3px #777777;height:24px;width:24px;border-radius:50%;margin-right:6px;"><div class="inline-blk txt_ofl" style="width:95px;margin-top:2px;"><?php echo 'Hangout'?></div></div></div>	
-	<div class="interest-sider-navi pointer" style="height:30px;margin-bottom:10px;"><div class="vertical-center"><img src="http://localhost:8888/lsere/media/default_image/interest-label-6.png" style="box-shadow: 1px 1px 3px #777777;height:24px;width:24px;border-radius:50%;margin-right:6px;"><div class="inline-blk txt_ofl" style="width:95px;margin-top:2px;"><?php echo 'Hangout'?></div></div></div>	
-	
- -->
+
 	<?php endif ?>
 </div>
 

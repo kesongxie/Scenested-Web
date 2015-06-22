@@ -3,10 +3,12 @@
 	include_once PHP_INC_MODEL_ROOT_REF.'Auth_Tokens.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'User_Table.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'Interest.php';
+	include_once PHP_INC_MODEL_ROOT_REF.'Default_User_Interest_Label_Image.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'User_Media_Prefix.php';
 	
 	$user = new User_Table();
 	$interest = new Interest();
+	$defualr_label_image = new Default_User_Interest_Label_Image();
 	$media_prefix = new User_Media_Prefix();
 	
 	$auth_tokens = new Auth_Tokens();
@@ -28,10 +30,10 @@
 	$request_user_page_firstname = $user->getUserFirstNameByUserIden($request_user_page_id);
 	$request_user_page_gender_call = $user->getWhatShouldCallForUser($request_user_page_id);
 	
-	$request_user_page_interest = $interest->getUserFirstInterestByUserId($request_user_page_id);
-	$request_user_page_has_interest = ($request_user_page_interest !== false)?true:false;
-	$content = $interest->initContentForInterest($request_user_page_id,false);
+	
+	$content = $interest->initContentForInterest($request_user_page_id,true);
 	//$interest_right_content
+	$request_user_page_has_interest = ($content !== false)?true:false;
 	
 	$user_interests =$interest->getUserInterestsLabel($request_user_page_id);
 	

@@ -2,6 +2,7 @@
 	include_once '../php_inc/core.inc.php';
 	include_once '../php_inc/Media_Validation.php';
 	include_once PHP_INC_MODEL.'Interest.php';
+	include_once PHP_INC_MODEL.'User_Media_Prefix.php';
 	
 	if(isset($_FILES["image-label"])){
 		$validator = new Media_Validation();
@@ -37,9 +38,19 @@
 	$image_label = ((isset($_FILES["image-label"]))?$_FILES["image-label"]:null);
 	
 	$content = $interest->addInterestForUser($_SESSION['id'], $name, $description, $experience, $image_label);
-	
+	$url = $interest->getLabelImageUrl();
 	if($content !== false){
-		echo $content;
+		echo '<div id="node-mid-content">'.$content.'</div>';
+		
+		if($image_label == null){
+			$url = getDefaultInterestLabelImageByNum($url);
+		}else{
+			$mediaPrefix = new User_Media_Prefix();
+			$url = U_IMGDIR.$mediaPrefix->getUserMediaPrefix($_SESSION['id']).'/'.$url;
+		}
+		echo '<div id="node-side-content"><div class="interest-side-label interest-sider-navi pointer" data-labelfor="'.$interest->new_interest_id.'" title="'.htmlentities($name).'" ><div class="vertical-center"><img src="'.$url.'"><div class="inline-blk txt_ofl" style="width:95px;margin-top:2px;">'.htmlentities($name).'</div></div></div></div>';
+
+		
 	}
 	
 	

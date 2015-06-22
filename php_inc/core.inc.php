@@ -20,6 +20,9 @@
 		return strtolower(pathinfo(basename($file["name"]),PATHINFO_EXTENSION));
 	}
 	
+	function getDefaultInterestLabelImageByNum($num){
+		return DEFAULT_INTEREST_LABEL_IMAGE_PREFIX.$num.'.png';
+	}
 		
 	
 ?>

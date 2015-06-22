@@ -247,4 +247,26 @@
 	width:79%;
 }
 
+#interest-navi .interest-sider-navi{
+	height:30px;
+	margin-bottom:10px;
+}
+
+
+#interest-navi .interest-sider-navi img{
+	box-shadow: 1px 1px 3px #777777;
+	height:24px;
+	width:24px;
+	border-radius:50%;
+	margin-right:6px;
+}
+
+
+
+
+
+
+
+
+
 

@@ -52,7 +52,7 @@
 					$stmt->bind_param('iss',$assoc_id, $picture_url, $time);
 					if($stmt->execute()){
 						$stmt->close();
-						return true;
+						return $picture_url;
 					}
 				}
 			}

@@ -4,7 +4,7 @@
 
 	class User_Interest_Label_Image extends User_Media_Base{
 		var $table_name = "user_interest_label_image";
-		
+		var $url = null;
 		public function __construct(){
 			parent::__construct($this->table_name);
 		}

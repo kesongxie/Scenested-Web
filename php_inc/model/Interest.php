@@ -5,6 +5,7 @@
 	class Interest extends Core_Table{
 		var $table_name = "interest";
 		var $interest_label_image = null;
+		var $new_interest_id = null; //new interest rows being added;
 		public function __construct(){
 			parent::__construct($this->table_name);
 			$this->interest_label_image = new User_Interest_Label_Image();
@@ -39,20 +40,35 @@
 			$stmt->bind_param('issis',$user_id, $name, $description, $experience, $create_time);
 			if($stmt->execute()){
 				$interest_id = $this->connection->insert_id;
+				$label_image_url = "";
 				if($label_image_file !== null){
 					//upload image
-					$upload = $this->interest_label_image->uploadMediaForAssocColumn($label_image_file,$user_id, 'interest_id', $interest_id);
-					if($upload !== true){
+					$label_image_url = $this->interest_label_image->uploadMediaForAssocColumn($label_image_file,$user_id, 'interest_id', $interest_id);
+					if($label_image_url === false){
 						$this->deleteRowById($interest_id);
+						$stmt->close();
+						return false;
 					}
+				}else{
+					//random generate label image url
+					include_once  'Default_User_Interest_Label_Image.php';
+					$defualt_label_image = new Default_User_Interest_Label_Image();
+					$random = rand(1,MAX_INTEREST_LABEL_COLOR_RANDOM_INDEX);
+					$label_image_url = $random;
+					$defualt_label_image->addDefaultInterestLabelImageForInterestId($interest_id,$label_image_url);
 				}	
-			
+				$this->new_interest_id = $interest_id;
 				$stmt->close();
-				//render main block
-				return $this->initContentForInterest($user_id,false);
-				//render side block
+				$this->interest_label_image->url = $label_image_url;
+				return  $this->initContentForInterest($user_id,false);
+				
 			}
 			return false;
+		}
+		
+		
+		public function getLabelImageUrl(){
+			return $this->interest_label_image->url;
 		}
 		
 		public function interestExistForUser($interest_name, $user_id){
@@ -104,6 +120,9 @@
 		}
 		
 		
+		
+		
+		
 		public function translateExperienceByNumber($exp){
 			if($exp >= 0){
 				$experience= "";
@@ -126,7 +145,8 @@
 			SELECT interest.name, interest.id, user_interest_label_image.picture_url
 			FROM interest 
 			LEFT JOIN user_interest_label_image
-			ON interest.id=user_interest_label_image.interest_id  WHERE `user_id` = ? ORDER BY interest.id");
+			ON interest.id=user_interest_label_image.interest_id  WHERE `user_id` = ? ORDER BY `id` ASC
+			");
 			if($stmt){
 				$stmt->bind_param('i',$user_id);
 				if($stmt->execute()){
@@ -138,6 +158,7 @@
 					 }
 				}
 			}
+			echo  $this->connection->error;
 			return false;
 		}
 		

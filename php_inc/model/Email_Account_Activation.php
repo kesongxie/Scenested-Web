@@ -10,10 +10,12 @@
 		public function insertRegisterEntry($user_id, $code){
 			if($this->deleteRowByUserId($user_id)){
 				$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`code`) VALUES(?, ?)");
-				$stmt->bind_param('is',$user_id,$code);
-				if($stmt->execute()){
-					$stmt->close();
-					return true;
+				if($stmt){
+					$stmt->bind_param('is',$user_id,$code);
+					if($stmt->execute()){
+						$stmt->close();
+						return true;
+					}
 				}
 			}
 			return false;
