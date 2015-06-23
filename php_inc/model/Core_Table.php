@@ -244,6 +244,35 @@
 		}
 		
 		
+		public function setColumnByNumericSelector($column, $value, $selector_column, $selector_value ){
+			$column = $this->connection->escape_string($column);
+			$selector_column = $this->connection->escape_string($selector_column);
+			$stmt = $this->connection->prepare("UPDATE `$this->table_name` SET `$column`=? WHERE `$selector_column`= ?  LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('si', $value, $selector_value);
+				if($stmt->execute()){
+					$stmt->close();
+					return true;
+				}			
+			}
+			return false;
+		}
+		
+		public function setColumnByStringSelector($column, $value, $selector_column, $selector_value ){
+			$column = $this->connection->escape_string($column);
+			$selector_column = $this->connection->escape_string($selector_column);
+			$stmt = $this->connection->prepare("UPDATE `$this->table_name` SET `$column`=? WHERE `$selector_column`= ?  LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('ss', $value, $selector_value);
+				if($stmt->execute()){
+					$stmt->close();
+					return true;
+				}			
+			}
+			return false;
+		}
+		
+		
 		
 		
 	

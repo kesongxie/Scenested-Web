@@ -13,5 +13,10 @@
 			 return  $this->getColumnBySelector('picture_url', 'interest_id', $interest_id);
 		}
 		
+		public function getLabelImageFirstRowIdByInterestId($interest_id){
+			return 	 $this->getColumnBySelector('id', 'interest_id', $interest_id);
+
+		}
+		
 	}		
 ?>

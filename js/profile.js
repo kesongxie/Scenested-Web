@@ -1,3 +1,24 @@
+function doneWithInterestEditing(editingDiv){
+	var parentDiv = editingDiv.parents('.interest-profile');
+	editingDiv.css('-webkit-animation',"flipOutY 0.4s").css('animation',"flipOutY 0.4s").addClass('hdn');
+	parentDiv.find('.interest-profile-intro').css('-webkit-animation',"flipInY 0.4s").css('animation',"flipInY 0.4s").removeClass('hdn');
+	return parentDiv;
+}
+
+function renderVisibleScope(desc,src){
+	desc = desc.trim();
+	var description = "";
+	if(desc.substr(1,1) != ' '){
+		description+='<span  class="first-cap" style="position:relative;top:0px;margin-right:-3px;">'+desc.substr(0,1)+'</span>';
+	}else{
+		description+='<span class="first-cap" >'+desc.substr(0,1)+'</span>';
+	}
+	description+='<span>'+desc.substr(1)+'</span>';
+	return '<div class="visible-content limit-height"><div class="interest-image-label"><img src='+src+'></div>'+description+'</div>';
+}
+
+
+
 $(document).ready(function(){
 
 	var in_navi_count = 0;
@@ -5,8 +26,6 @@ $(document).ready(function(){
 		in_navi_count++;
 		$(this).css('-webkit-animation',' bounceInUp '+(in_navi_count*0.5)+'s');
 	});
-
-
 
 
 	$('.avator-inner-bottom').on({
@@ -104,6 +123,33 @@ $(document).ready(function(){
 		});
 		
 	});
+	
+	
+	$('body').on({
+		change:function(){
+				var imgTarget = $(this).parents('.interest-profile-edit').find('.target-image');
+				var data=new FormData();
+				data.append('profile-pic',$(this)[0].files[0]);
+				var thisE = this;
+				$.ajax({
+					url:AJAX_DIR+'validate_image_label.php',
+					type:'POST',
+					processData: false,
+					contentType: false,
+					data:data,
+					success:function(resp){
+						if(resp == '1'){
+							presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
+							return false;
+						}
+						$(thisE).attr('data-set','true');
+						readURL(thisE,imgTarget);
+						imgTarget.removeClass("hdn");
+					}
+				});
+		}
+	},'.interest-picture');
+	
 	
 	
 	
@@ -310,6 +356,92 @@ $(document).ready(function(){
 	},'.interest-profile .edit_interest');
 	
 	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.interest-profile-edit');
+			var image_label =parentDiv.find('.target-image');
+			var updated_image_src = image_label.attr('src');
+			
+			//elements
+			var image_file = parentDiv.find('input[type=file]');
+			var name_input =parentDiv.find('input[type=text]');
+			var description_txtarea = parentDiv.find('textarea');
+			var select = parentDiv.find('select'); //experience select
+			
+			//values
+			var name = name_input.val().trim();
+			if(name == ''){
+				presentPopupDialog("Need a Name", "Please add a name for your interest", "Got it", "", null, null );
+				return false;
+			}
+			var imageSet = image_file.attr('data-set');
+			var key = image_file.attr('data-key');
+			var description = description_txtarea.val();
+			var exp = parentDiv.find('select').val();
+			var experience = $('option:selected', select).attr('data-option');
+			var data=new FormData();
+			data.append('image-label',$(image_file)[0].files[0]);
+			data.append('key', key);
+			data.append('name', name);
+			data.append('imageSet', imageSet);
+			data.append('description',description);
+			data.append('experience',experience);
+			
+			$.ajax({
+				url:AJAX_DIR+'update_interest.php',
+				type:'POST',
+				processData: false,
+				contentType: false,
+				data:data,
+				success:function(resp){
+					if(resp == '1'){
+						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
+					}else if(resp == '2'){
+						presentPopupDialog("Need a Name", "Please add a name for your interest", "Got it", "", null, null );
+					}else if(resp == '3'){
+						presentPopupDialog("Interest Existed",'The interest <span class="plain-lk pointer" style="color:#062AA3">'+ name + '</span> has already existed', "Got it", "", null, null );
+					}else{	
+						var sideBarParent = $('#interest-navi').find('.interest-side-label[data-labelfor='+key+']');
+						//modify the side bar
+						sideBarParent.find('img').attr('src',updated_image_src);
+						sideBarParent.find('.txt_ofl').text(name).attr('title',name);
+						sideBarParent.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
+						var intro = doneWithInterestEditing(parentDiv).find('.interest-profile-intro');
+						setTimeout(function(){
+							sideBarParent.css('-webkit-animation',"").css('animation',"");
+						},200);
+						//modify the intro
+						intro.find('.main-title').text(name);
+						intro.find('.exp').text(exp);
+						intro.find('.visible-content').html(renderVisibleScope(description,updated_image_src ));
+						setVisibleContent();
+					}
+				}
+			});
+		
+		}
+	
+	},'.interest-profile .interest-profile-edit .update_interest');
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.interest-profile-edit');
+			doneWithInterestEditing(parentDiv);
+		}
+	},'.interest-profile .interest-profile-edit .cancel-button');
+	
+	$('body').on({
+		mouseover:function(){
+			var control = $(this).find('.visible-control');
+			control.css('color','#2459B6');
+			
+		},
+		mouseleave:function(){
+			var control = $(this).find('.visible-control');
+			control.css('color','#949494');
+			
+		}
+	},'.interest-profile');
 	
 	
 });

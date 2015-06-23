@@ -60,6 +60,8 @@ function setVisibleContent(){
 			if($(this).parents('.visible-post-scope').find('.visible-control').length < 1){
 				$(this).parents('.visible-post-scope').append('<div class="visible-control plain-lk pointer inline-blk rdm" >Read more</div>');
 			}
+		}else{
+			$(this).parents('.visible-post-scope').find('.visible-control ').remove();
 		}
 	});
 }
@@ -128,19 +130,6 @@ $(document).ready(function(){
 		}
 	},'.dismiss');
 	
-	
-	$('body').on({
-		mouseover:function(){
-			var control = $(this).parent().find('.visible-control');
-			control.css('color','#2459B6');
-			
-		},
-		mouseleave:function(){
-			var control = $(this).parent().find('.visible-control');
-			control.css('color','#949494');
-			
-		}
-	},'.inetrest-profile');
 	
 	
 	$('body').on({

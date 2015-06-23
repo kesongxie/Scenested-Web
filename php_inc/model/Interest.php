@@ -1,7 +1,7 @@
 <?php
 	include_once 'core_table.php';
 	include_once 'User_Interest_Label_Image.php';
-
+	
 	class Interest extends Core_Table{
 		var $table_name = "interest";
 		var $interest_label_image = null;
@@ -67,6 +67,43 @@
 		}
 		
 		
+		public function updateInterestForUserByInterestId($interest_id, $user_id, $name, $description, $experience, $label_image_file){
+			$user_id_for_interest_id = $this->getColumnById('user_id',$interest_id);
+			if($user_id_for_interest_id !== false && $user_id_for_interest_id == $user_id){
+				//the same, then allow editing
+				if($name !== false){
+					$this->setColumnById('name', $name, $interest_id);
+				}
+				if($description !== false){
+					$this->setColumnById('description', $description, $interest_id);
+				}
+				if($experience !== false){
+					$this->setColumnById('experience', $experience, $interest_id);
+				}
+				
+				
+				if($label_image_file != null){
+					$old_image_url = $this->interest_label_image->getLabelImageUrllByInterestId($interest_id);
+					$old_image_row_id =  $this->interest_label_image->getLabelImageFirstRowIdByInterestId($interest_id);
+					$label_image_url = $this->interest_label_image->uploadMediaForAssocColumn($label_image_file,$user_id, 'interest_id', $interest_id);
+					if($label_image_url === false){
+						$stmt->close();
+						return false;
+					}
+					include_once '../php_inc/File_Manager.php';
+					$flile_m = new File_Manager();
+					//remove the old record after successfully update the new media file
+					$flile_m->removeMediaFileForUser($old_image_url, $user_id);
+					$this->interest_label_image->deleteRowById($old_image_row_id);
+					return true;
+				}
+			}
+			echo   $this->connection->error;
+			return false;
+		}
+		
+		
+		
 		public function getLabelImageUrl(){
 			return $this->interest_label_image->url;
 		}
@@ -90,6 +127,19 @@
 			return $this->loadInterestBlockByInterestResource($interestRow);
 			
 		}
+		
+		public function getInterestNameByInterestId($interest_id){
+			return $this->getColumnById('name',$interest_id);
+		}
+		
+		public function getInterestDescriptionByInterestId($interest_id){
+			return $this->getColumnById('description',$interest_id);
+		}
+		
+		public function getInterestExperienceByInterestId($interest_id){
+			return $this->getColumnById('experience',$interest_id);
+		}
+		
 		
 		public function loadInterestBlockByInterestResource($interestRow){
 			if($interestRow !== false){
@@ -158,7 +208,6 @@
 					 }
 				}
 			}
-			echo  $this->connection->error;
 			return false;
 		}
 		
