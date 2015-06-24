@@ -49,8 +49,7 @@
 			$url = U_IMGDIR.$mediaPrefix->getUserMediaPrefix($_SESSION['id']).'/'.$url;
 		}
 		echo '<div id="node-side-content"><div class="interest-side-label interest-sider-navi pointer" data-labelfor="'.$interest->new_interest_id.'" title="'.htmlentities($name).'" ><div class="vertical-center"><img src="'.$url.'"><div class="inline-blk txt_ofl" style="width:95px;margin-top:2px;">'.htmlentities($name).'</div></div></div></div>';
-
-		
+	
 	}
 	
 	

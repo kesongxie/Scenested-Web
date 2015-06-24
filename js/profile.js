@@ -1,7 +1,15 @@
 function doneWithInterestEditing(editingDiv){
 	var parentDiv = editingDiv.parents('.interest-profile');
 	editingDiv.css('-webkit-animation',"flipOutY 0.4s").css('animation',"flipOutY 0.4s").addClass('hdn');
-	parentDiv.find('.interest-profile-intro').css('-webkit-animation',"flipInY 0.4s").css('animation',"flipInY 0.4s").removeClass('hdn');
+	var introDiv = parentDiv.find('.interest-profile-intro');
+	introDiv.css('-webkit-animation',"flipInY 0.4s").css('animation',"flipInY 0.4s").removeClass('hdn');
+	
+	setTimeout(function(){
+		editingDiv.css('-webkit-animation',"").css('animation',"");
+		introDiv.css('-webkit-animation',"").css('animation',"");
+		
+	},200);
+	
 	return parentDiv;
 }
 
@@ -17,6 +25,18 @@ function renderVisibleScope(desc,src){
 	return '<div class="visible-content limit-height"><div class="interest-image-label"><img src='+src+'></div>'+description+'</div>';
 }
 
+
+function deleteInterest(sender){
+	var key = sender.parents('.interest-content-inner-wrapper').attr('data-key');
+	$.ajax({
+		url:AJAX_DIR+'deleteInterest.php',
+		method:'post',
+		data: {key:key},
+		success:function(resp){
+			console.log(resp);
+		}	
+	});
+}
 
 
 $(document).ready(function(){
@@ -91,7 +111,6 @@ $(document).ready(function(){
 		var parentLabel = $(this).parents('label');
 		var imgTarget = parentLabel.find('.target-image');
 		var old_src = imgTarget.attr('src');
-		var loading_icon = parentLabel.find('.loading-icon-wrapper');
 		var camera = parentLabel.find('.camera-center');
 		parentLabel.find('.picture-upload-black-overlay').hide();
 		var thisE = this;
@@ -116,9 +135,7 @@ $(document).ready(function(){
 					}
 				}
 				imgTarget.removeClass("hdn");
-				loading_icon.show();
 				camera.hide();
-				loading_icon.hide();
 			}
 		});
 		
@@ -199,6 +216,13 @@ $(document).ready(function(){
 	$('#add-new-interest').on({
 		click:function(){
 			var parentDiv = $('#add-new-interest');
+			
+			var loading_wrapper = parentDiv.find('.loading-icon-wrapper');
+			loading_wrapper.show();
+			var actionButton = parentDiv.find('.edit-dialog-footer .action-button');
+			actionButton.text("Loading...");
+			
+			
 			var image_label =parentDiv.find('.target-image');
 			
 			//elements
@@ -236,6 +260,8 @@ $(document).ready(function(){
 					}else if(resp == '3'){
 						presentPopupDialog("Interest Existed",'The interest <span class="plain-lk pointer" style="color:#062AA3">'+ name + '</span> has already existed', "Got it", "", null, null );
 					}else{	
+						loading_wrapper.hide();
+						actionButton.text("Add Interest");
 						$('#add-new-interest-wrapper').css('-webkit-animation',"zoomOut 0.5s").css('animation',"zoomOut 0.5s").addClass('hdn');
 						$('.interest-content-inner-wrapper').addClass('hdn');
 						
@@ -307,6 +333,7 @@ $(document).ready(function(){
 				thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
 				$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
 				inner_wrapper.removeClass('hdn').addClass('blk');
+				setVisibleContent();
 			}else{
 				//load
 				$.ajax({
@@ -350,10 +377,23 @@ $(document).ready(function(){
 				edit_wrapper.css('-webkit-animation',"").css('animation',"");
 			
 			},200);
-
 		}
 	
 	},'.interest-profile .edit_interest');
+	
+	
+	$('body').on({
+		click:function(){
+			presentPopupDialog("Delete Interest",'Are you sure to delete this interest?<div style="color:#c4140e;font-size:13px;">*Note, all the interest posts and friends and other relavant data in this interest will lost, and the removal can not be recovered</div>', "Cancel", "Delete", deleteInterest, $(this) );
+		}
+	
+	},'.interest-profile .remove_interest');
+	
+	
+	
+	
+	
+	
 	
 	
 	$('body').on({
@@ -387,6 +427,9 @@ $(document).ready(function(){
 			data.append('description',description);
 			data.append('experience',experience);
 			
+			parentDiv.find('.loading-icon-wrapper').show();
+			var actionButton = parentDiv.find('.edit-dialog-footer .action-button');
+			actionButton.text("Updating...");
 			$.ajax({
 				url:AJAX_DIR+'update_interest.php',
 				type:'POST',
@@ -401,6 +444,8 @@ $(document).ready(function(){
 					}else if(resp == '3'){
 						presentPopupDialog("Interest Existed",'The interest <span class="plain-lk pointer" style="color:#062AA3">'+ name + '</span> has already existed', "Got it", "", null, null );
 					}else{	
+						parentDiv.find('.loading-icon-wrapper').hide();
+						actionButton.text("Update");
 						var sideBarParent = $('#interest-navi').find('.interest-side-label[data-labelfor='+key+']');
 						//modify the side bar
 						sideBarParent.find('img').attr('src',updated_image_src);
@@ -415,6 +460,7 @@ $(document).ready(function(){
 						intro.find('.exp').text(exp);
 						intro.find('.visible-content').html(renderVisibleScope(description,updated_image_src ));
 						setVisibleContent();
+						
 					}
 				}
 			});
@@ -442,6 +488,15 @@ $(document).ready(function(){
 			
 		}
 	},'.interest-profile');
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 });

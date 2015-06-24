@@ -1,10 +1,18 @@
 <?php
 	include_once 'core_table.php';
 	include_once 'User_Media_Prefix.php';
+	include_once SCRIPT_INCLUDE_BASE.'/php_inc/File_Manager.php';
+
+
 
 	class User_Media_Base extends Core_Table{
+		private $file_m = null;
+		private $table_name;
+		
 		public function __construct($table_name){
 			parent::__construct($table_name);
+			$this->table_name = $table_name;
+			$this->file_m = new File_Manager();
 		}
 		
 		public function uploadMediaForUser($file,$user_id){
@@ -15,9 +23,7 @@
 			}
 			
 			if($prefix !== false){
-				include_once '../php_inc/File_Manager.php';
-				$flile_m = new File_Manager();
-				$picture_url = $flile_m->upload_File_To_Dir($file, $prefix);
+				$picture_url = $this->flile_m->upload_File_To_Dir($file, $prefix);
 				if($picture_url !== false){
 					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`picture_url`,`upload_time`) VALUES(?, ?, ?)");
 					$time = date("Y-m-d H:i:s");
@@ -43,9 +49,7 @@
 			}
 			
 			if($prefix !== false){
-				include_once '../php_inc/File_Manager.php';
-				$flile_m = new File_Manager();
-				$picture_url = $flile_m->upload_File_To_Dir($file, $prefix);
+				$picture_url = $this->file_m->upload_File_To_Dir($file, $prefix);
 				if($picture_url !== false){
 					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`$assoc_name`,`picture_url`,`upload_time`) VALUES(?, ?, ?)");
 					$time = date("Y-m-d H:i:s");
@@ -57,6 +61,10 @@
 				}
 			}
 			return false;	
+		}
+		
+		public function deleteMediaByPictureUrl($url, $user_id){
+			return $this->file_m->removeMediaFileForUser($url, $user_id);
 		}
 		
 		

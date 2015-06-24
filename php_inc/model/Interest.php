@@ -3,9 +3,9 @@
 	include_once 'User_Interest_Label_Image.php';
 	
 	class Interest extends Core_Table{
-		var $table_name = "interest";
-		var $interest_label_image = null;
-		var $new_interest_id = null; //new interest rows being added;
+		private  $table_name = "interest";
+		public $interest_label_image = null;
+		public $new_interest_id = null; //new interest rows being added;
 		public function __construct(){
 			parent::__construct($this->table_name);
 			$this->interest_label_image = new User_Interest_Label_Image();
@@ -210,6 +210,12 @@
 			}
 			return false;
 		}
+		public function deleteInterestForUserByInterestId($user_id, $interest_id){
+			if($this->deleteRowForUserById($user_id, $interest_id)){
+				return $this->interest_label_image->deleteLabelImageForUserByInterestId($user_id, $interest_id);
+			}
+		}
+		
 		
 		
 		

@@ -1,10 +1,11 @@
 <?php
+	require_once  $_SERVER['DOCUMENT_ROOT'].'/lsere/php_inc/global_constant.php';
 	require_once 'Database_Connection.php';
 	/*
 		core_table is the base class for other table class
 	*/
 	class core_table{
-		public $table_name;
+		private $table_name;
 		public $connection;
 		
 		public function __construct($t){
@@ -26,6 +27,16 @@
 			return false;
 		}
 		
+		public function deleteRowForUserById($user_id, $id){
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `id` = ?  AND `user_id`=? LIMIT 1");
+			$stmt->bind_param('ii', $id, $user_id);
+			if($stmt->execute()){
+				$stmt->close();
+				return true;
+			}
+			return false;
+		}
+		
 		public function deleteRowById($id){
 			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `id` = ? LIMIT 1");
 			$stmt->bind_param('i', $id);
@@ -42,7 +53,7 @@
 		*/
 		public function deleteRowBySelector($selector_column, $selector_value){
 			$selector_column = $this->connection->escape_string($selector_column);
-			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1");
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? ");
 			if($stmt){
 				$stmt->bind_param('s', $selector_value);
 				if($stmt->execute()){
@@ -50,7 +61,6 @@
 					return true;
 				}
 			}
-			echo $this->connection->error;
 			return false;
 		}
 		

@@ -477,7 +477,7 @@ textarea{
 	min-height:60px;
 }
 .popup-dialog .dialog-body .body-text{
-	margin:10px 16px;
+	margin:10px;
 	font-size:16px;
 }
 .popup-button{
@@ -517,13 +517,17 @@ textarea{
 	opacity: 0.7;
 }
 /* starts with interest profile template*/
+.interest-profile{
+	background:#fff;
+	position:relative;
+	box-shadow:1px 1px 10px #E8E8E8
+}
 .interest-profile .dialog-header{
 	height:44px;
 	border-radius:3px 3px 0px 0px;
 }
 
 .interest-profile .dialog-body{
-	box-shadow:1px 1px 10px #E8E8E8;
 	border-radius:0px 0px 3px 3px;
 	overflow:hidden;
 }

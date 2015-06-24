@@ -1,7 +1,7 @@
 <?php
 	include_once 'core_table.php';
 	class Email_Account_Activation extends Core_Table{
-		var $table_name = "email_account_activation";
+		public $table_name = "email_account_activation";
 	
 		public function __construct(){
 			parent::__construct($this->table_name);

@@ -4,14 +4,12 @@
 	<div id="add-new-interest" class="inline-blk" style="width:58%">
 		<div class="dialog-header"><div class="title">Add New Interest</div></div>
 		<div class="dialog-body">
-			<div style="margin:10px 10px 0px 8px;">
+			<div style="margin:10px 10px 0px 8px;position:relative" >
 				<label class="pointer" title="Upload a picture label for your interest">
 					<div class="picture-upload-wrapper">
 							<img class="target-image hdn"  src="" height="36" width="36">
 							<div class="picture-upload-black-overlay"></div>
 							<div class="camera-center vertical-center" ><img class="camera-icon"  src="<?php echo IMGDIR ?>camera.png"  height="18" width="18"></div>
-							<div class="loading-icon-wrapper"><div class="vertical-center"><img class="loading-icon" src="<?php  echo IMGDIR ?>loading_icon.gif" height="40" width="40"></div></div>
-
 					</div>
 					<form method="POST" enctype="multipart/form-data">
 						<input id="new-interest-picture" class="hdn-input" type="file" name="profile-pic" title="Upload a picture label for your interest">
@@ -42,6 +40,10 @@
 					<?php endif; ?>
 					<div id="add-interest" class="inline-blk action-button" style="margin-left:4px;" >Add Interest</div>
 				</div>
+				
+				<div class="loading-icon-wrapper" style="border-radius:0px;"><div class="vertical-center" style="text-align:center;"><img class="loading-icon" src="<?php  echo IMGDIR ?>loading_icon.gif" height="40" width="40"></div></div>
+
+				
 			</div>
 		</div>
 	</div>	
