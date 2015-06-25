@@ -19,13 +19,14 @@ function readURL(input,tg) {
 
 
 
-function resetDialog(parentElement){
+function resetDialog(){
 	$('#dialog-popup-overlay').addClass('hdn');
 	$('#popup-dialog-wrapper').addClass('hdn');
-	parentElement.find('.dialog-header .bar-title').text('');
-	parentElement.find('.dialog-body .body-text').html('');
-	parentElement.find('.dialog-footer .dismiss').text('');
-	parentElement.find('.dialog-footer .action-button').text('').addClass('hdn');
+	var dialogParent = $('#resetDialog');
+	dialogParent.find('.dialog-header .bar-title').text('');
+	dialogParent.find('.dialog-body .body-text').html('');
+	dialogParent.find('.dialog-footer .dismiss').text('');
+	dialogParent.find('.dialog-footer .action-button').text('').addClass('hdn');
 }
 
 //sender is the element which triggered the popup dialog
@@ -71,12 +72,15 @@ function setVisibleContent(){
 		}
 	});
 }
+$(function() {
+    $( ".add-date" ).datepicker({ dateFormat: 'mm-dd-yy' });
+});
 
 
 $(document).keyup(function(evt){
 	if(evt.keyCode==27)
 	{	
-		resetDialog($('#popup-dialog'));
+		resetDialog();
 	}
 });
 
@@ -136,6 +140,21 @@ $(document).ready(function(){
 		}
 	},'.dismiss');
 	
+	$('body').on({
+		focus:function(){
+			$(this).css('cursor','text');
+			$(this).attr('rows','3');
+		},
+		blur:function(){
+			var text=$(this).val();
+			if(text==''){
+				$(this).css('cursor','pointer');
+				$(this).attr('rows','2');
+			}
+		}
+	},'.fcy_txt');
+
+	
 	
 	
 	$('body').on({
@@ -152,6 +171,32 @@ $(document).ready(function(){
 		}
 	},'.visible-control');
 	
+	
+	
+	$('body').on({
+		mouseover:function(){
+			$(this).find('.toggle-operation').removeClass('hdn');
+		},
+		mouseleave:function(){
+			$(this).find('.toggle-operation').addClass('hdn');;
+		}
+	},'.post-wrapper');
+	
+	
+	$('body').on({
+		click:function(){
+			$(this).parents('.post-wrapper').find('.popover').toggle();
+			return false;
+		
+		}
+	},'.post-wrapper .toggle-operation');
+	
+	
+	$('body').on({
+		click:function(){
+			$(this).parents('.content').find('.comment-block').toggleClass('hdn');
+		}
+	},'.post-wrapper .content .toggle-comment');
 	
 	
 });

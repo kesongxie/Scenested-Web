@@ -33,16 +33,66 @@ function deleteInterest(sender){
 		method:'post',
 		data: {key:key},
 		success:function(resp){
-			console.log(resp);
+			resetDialog();
+			var inner_wrapper = $('#interest-content-wrapper .interest-content-inner-wrapper[data-key='+key+']');
+			inner_wrapper.css('-webkit-animation',"bounceOutDown 1s").css('animation',"bounceOutDown 1s");
+			var side_label = $('#interest-navi .interest-side-label[data-labelfor='+key+']');
+			side_label.css('-webkit-animation',"bounceOutDown 1s").css('animation',"bounceOutDown 1s");
+			setTimeout( function() {
+				inner_wrapper.remove();
+				side_label.remove();
+			}, 500);
+			setTimeout( function() {
+				var labels =  $('#interest-navi').find('.interest-side-label');
+				if(labels.length >= 1){
+					var firstInterestLabel = labels.first();
+					loadInterest(firstInterestLabel);
+				}else{
+					$('#interest-content-wrapper').addClass('hdn');
+					$('#add-new-interest-wrapper').removeClass('hdn');
+				}
+			}, 600);
 		}	
 	});
 }
 
 
+function loadInterest(thisE){
+	var  label_key = thisE.attr('data-labelfor');
+	var inner_wrapper = $('#interest-content-wrapper').find('.interest-content-inner-wrapper[data-key='+label_key+']'); //block for selected interest
+	$('#add-new-interest-wrapper').addClass('hdn'); //hide the interest edit div
+	$('#interest-content-wrapper').removeClass('hdn'); //show the interest content div
+	if(inner_wrapper.length > 0){
+		//show
+		thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
+		$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
+		inner_wrapper.removeClass('hdn').addClass('blk');
+		setVisibleContent();
+	}else{
+		//load
+		$.ajax({
+			url: AJAX_DIR+'ld_interest.php',
+			method:'post',
+			data:{label_key:label_key},
+			success:function(resp){
+				if(resp != '1'){
+					thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
+					$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
+					$('#interest-content-wrapper').append(resp);
+					setVisibleContent();
+				}
+			}
+		});
+	}
+	setTimeout(function(){
+		thisE.css('-webkit-animation',"").css('animation',"");
+	},200);
+}
+
 $(document).ready(function(){
 
 	var in_navi_count = 0;
-	$('.interest-sider-navi').each(function(){
+	$('.interest-side-label').each(function(){
 		in_navi_count++;
 		$(this).css('-webkit-animation',' bounceInUp '+(in_navi_count*0.5)+'s');
 	});
@@ -170,6 +220,62 @@ $(document).ready(function(){
 	
 	
 	
+	
+	
+	
+	$('body').on({
+		change:function(){
+			var postDiv = $(this).parents('.interest-profile-post');
+			var imgTarget =postDiv.find('.target-image');
+			var previewContainer = postDiv.find('.preview-container');
+			var targetConatiner = previewContainer.find('.target-container');
+			var data=new FormData();
+			data.append('profile-pic',$(this)[0].files[0]);
+			var thisE = this;
+			var preview_loading_wrapper = previewContainer.find('.preview-loading-wrapper');
+			previewContainer.removeClass('hdn');
+			preview_loading_wrapper.removeClass('hdn');
+
+			$.ajax({
+				url:AJAX_DIR+'validate_image_label.php',
+				type:'POST',
+				processData: false,
+				contentType: false,
+				data:data,
+				success:function(resp){
+					if(resp == '1'){
+						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
+						previewContainer.addClass('hdn');
+						preview_loading_wrapper.addClass('hdn');
+						return false;
+					}
+					readURL(thisE,imgTarget);
+					setTimeout(function(){
+ 						targetConatiner.removeClass('hdn');
+ 						preview_loading_wrapper.addClass('hdn');
+ 					},500);
+				}
+			});
+		}
+		
+	},'.interest-profile-post .edit-dialog-footer .attched-photo');
+	
+	
+	$('body').on({
+		click:function(){
+			var postDiv = $(this).parents('.interest-profile-post');
+			var previewContainer = $(this).parents('.preview-container');
+			var imgTarget = previewContainer.find('.target-image');
+			postDiv.find('.edit-dialog-footer .attched-photo').val('');
+			previewContainer.addClass('hdn');
+			imgTarget.attr('src','');
+		}
+		
+	},'.interest-profile-post .preview-container .cross');
+	
+	
+	
+	
 	$('#profile-sider-bar-left').on({
 		mouseover:function(){
 			$(this).find('label').animate({
@@ -262,10 +368,9 @@ $(document).ready(function(){
 					}else{	
 						loading_wrapper.hide();
 						actionButton.text("Add Interest");
-						$('#add-new-interest-wrapper').css('-webkit-animation',"zoomOut 0.5s").css('animation',"zoomOut 0.5s").addClass('hdn');
+						var add_interest_wrapper = $('#add-new-interest-wrapper');
+						add_interest_wrapper.css('-webkit-animation',"zoomOut 0.5s").css('animation',"zoomOut 0.5s").addClass('hdn');
 						$('.interest-content-inner-wrapper').addClass('hdn');
-						
-						
 						var mid_content = $($.parseHTML(resp)).filter('#node-mid-content');								
 						var side_content = $($.parseHTML(resp)).filter('#node-side-content');			
 						$('#interest-content-wrapper').append(mid_content.html()).removeClass('hdn');
@@ -278,6 +383,9 @@ $(document).ready(function(){
 						parentDiv.find('.camera-center').show();
 						image_label.attr('src','').addClass('hdn');
 						
+						setTimeout(function(){
+							add_interest_wrapper.css('-webkit-animation',"").css('animation',"");
+						},200);
 					}
 				}
 			});
@@ -323,36 +431,7 @@ $(document).ready(function(){
 	
 	$('#interest-navi').on({
 		click:function(){
-			var  label_key = $(this).attr('data-labelfor');
-			var inner_wrapper = $('#interest-content-wrapper').find('.interest-content-inner-wrapper[data-key='+label_key+']'); //block for selected interest
-			var thisE = $(this);
-			$('#add-new-interest-wrapper').addClass('hdn'); //hide the interest edit div
-			$('#interest-content-wrapper').removeClass('hdn'); //show the interest content div
-			if(inner_wrapper.length > 0){
-				//show
-				thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
-				$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
-				inner_wrapper.removeClass('hdn').addClass('blk');
-				setVisibleContent();
-			}else{
-				//load
-				$.ajax({
-					url: AJAX_DIR+'ld_interest.php',
-					method:'post',
-					data:{label_key:label_key},
-					success:function(resp){
-						if(resp != '1'){
-							thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
-							$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
-							$('#interest-content-wrapper').append(resp);
-							setVisibleContent();
-						}
-					}
-				});
-			}
-			setTimeout(function(){
-				thisE.css('-webkit-animation',"").css('animation',"");
-			},200);
+			loadInterest($(this));
 		}
 	},'.interest-side-label');
 	
@@ -392,6 +471,17 @@ $(document).ready(function(){
 	
 	
 	
+	
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.interest-profile');
+			parentDiv.find('.interest-profile-intro').css('-webkit-animation',"flipOutY 0.4s").css('animation',"flipOutY 0.4s").addClass('hdn');
+			parentDiv.find('.interest-profile-post').css('-webkit-animation',"flipInY 0.4s").css('animation',"flipInY 0.4s").removeClass('hdn');
+
+		}
+	
+	},'.interest-profile-intro .dialog-header .post');
 	
 	
 	
@@ -471,10 +561,10 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
-			var parentDiv = $(this).parents('.interest-profile-edit');
+			var parentDiv = $(this).parents('.sub');
 			doneWithInterestEditing(parentDiv);
 		}
-	},'.interest-profile .interest-profile-edit .cancel-button');
+	},'.interest-profile .sub .cancel-button');
 	
 	$('body').on({
 		mouseover:function(){
@@ -487,8 +577,79 @@ $(document).ready(function(){
 			control.css('color','#949494');
 			
 		}
-	},'.interest-profile');
+	},'.post');
 	
+	
+	$('body').on({
+		click:function(){
+			var inner_wrapper = $(this).parents('.interest-content-inner-wrapper');
+			
+			var parentDiv = $(this).parents('.interest-profile-post');
+			var image_label =parentDiv.find('.target-image');
+			var updated_image_src = image_label.attr('src');
+			
+			//elements
+			var image_file = parentDiv.find('input[type=file]');
+			var description_txtarea = parentDiv.find('.desc');
+			var date_input = parentDiv.find('.add-date');
+			
+			
+			//values
+			key = inner_wrapper.attr('data-key').trim();
+			if(key == ''){
+				return false;
+			}
+			
+			var desc = description_txtarea.val().trim();
+			if(desc == ''){
+				presentPopupDialog("Need Some Descriptions", "Please add some descriptions about your moment", "Got it", "", null, null );
+				return false;
+			}
+			
+			var date =  date_input.val().trim();
+			
+			if( date == ''){
+				presentPopupDialog("Need A Date", "Please add a date for your moment", "Got it", "", null, null );
+				return false;
+			}
+			var data=new FormData();
+			data.append('attached-picture',$(image_file)[0].files[0]);
+			data.append('description',desc);
+			data.append('date', date);
+			data.append('key',key);
+			
+			//parentDiv.find('.loading-icon-wrapper').show();
+			var actionButton = parentDiv.find('.edit-dialog-footer .action-button');
+			//actionButton.text("Loading...");
+			$.ajax({
+				url:AJAX_DIR+'post_moment.php',
+				type:'POST',
+				processData: false,
+				contentType: false,
+				data:data,
+				success:function(resp){
+					// console.log(resp);
+					if(resp == '1'){
+						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
+						return false;
+					}else if(resp == '2'){
+						return false;
+					}else if(resp == '3'){
+						presentPopupDialog("Interest Existed",'The interest <span class="plain-lk pointer" style="color:#062AA3">'+ name + '</span> has already existed', "Got it", "", null, null );
+					}else{	
+						parentDiv.find('.preview-container').addClass('hdn');
+						image_label.attr('src','');
+						image_file.val('');
+						description_txtarea.val('');
+						date_input.val('');
+						doneWithInterestEditing(parentDiv);
+						inner_wrapper.find('.interest-content-right').html(resp);
+					}
+				}
+			});
+		}
+	
+	},'.post-moment')
 	
 	
 	

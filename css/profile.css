@@ -266,10 +266,42 @@
 	overflow: hidden;
 }
 
+.interest-profile .desc{
+	height:88px;
+	width:100%;
+	border:0px;
+}
+
+.interest-profile .add-date{
+	width:100%;
+	border:0px;
+}
+.interest-profile .preview-container{
+	margin-top:10px;
+	border-top:1px solid #f0f0f0;
+	padding-top:10px;
+	width:100%;
+}
+
+.interest-profile .preview-container .inner{
+	position:relative;
+	width:100%;
+	min-height:160px;
+}
 
 
+.interest-profile .preview-container .cross{
+	position:absolute;
+	right:2px;
+	top:2px;
+	height:16px;
+	width:16px;
+}
 
-
-
-
+.interest-profile .edit-dialog-footer .photo-camera{
+	float:left;
+	overflow:hidden;
+	width:22px;
+	height:22px;
+}
 

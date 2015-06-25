@@ -26,6 +26,9 @@
 			return false;
 		}
 		
+		public function deleteLabelImageForUserByInterestId($user_id, $interest_id){
+			$this->deleteRowBySelector('interest_id', $interest_id);
+		}
 		
 		
 		

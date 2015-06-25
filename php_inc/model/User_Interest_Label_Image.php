@@ -9,7 +9,7 @@
 			parent::__construct($this->table_name);
 		}
 		
-		public function getLabelImageUrllByInterestId($interest_id){
+		public function getLabelImageUrlByInterestId($interest_id){
 			 return  $this->getColumnBySelector('picture_url', 'interest_id', $interest_id);
 		}
 		

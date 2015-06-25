@@ -1,14 +1,21 @@
 <?php
 	include_once 'core_table.php';
+	include_once 'Interest_Activity.php';
 	include_once 'User_Interest_Label_Image.php';
+	include_once 'Default_User_Interest_Label_Image.php';
 	
 	class Interest extends Core_Table{
 		private  $table_name = "interest";
+		private $interest_activity = null;
 		public $interest_label_image = null;
+		public $default_label_image = null;
 		public $new_interest_id = null; //new interest rows being added;
+		
 		public function __construct(){
 			parent::__construct($this->table_name);
 			$this->interest_label_image = new User_Interest_Label_Image();
+			$this->default_label_image = new Default_User_Interest_Label_Image();
+			$this->interest_activity = new Interest_Activity();
 		}
 
 
@@ -51,11 +58,9 @@
 					}
 				}else{
 					//random generate label image url
-					include_once  'Default_User_Interest_Label_Image.php';
-					$defualt_label_image = new Default_User_Interest_Label_Image();
 					$random = rand(1,MAX_INTEREST_LABEL_COLOR_RANDOM_INDEX);
 					$label_image_url = $random;
-					$defualt_label_image->addDefaultInterestLabelImageForInterestId($interest_id,$label_image_url);
+					$this->default_label_image->addDefaultInterestLabelImageForInterestId($interest_id,$label_image_url);
 				}	
 				$this->new_interest_id = $interest_id;
 				$stmt->close();
@@ -83,7 +88,7 @@
 				
 				
 				if($label_image_file != null){
-					$old_image_url = $this->interest_label_image->getLabelImageUrllByInterestId($interest_id);
+					$old_image_url = $this->interest_label_image->getLabelImageUrlByInterestId($interest_id);
 					$old_image_row_id =  $this->interest_label_image->getLabelImageFirstRowIdByInterestId($interest_id);
 					$label_image_url = $this->interest_label_image->uploadMediaForAssocColumn($label_image_file,$user_id, 'interest_id', $interest_id);
 					if($label_image_url === false){
@@ -95,6 +100,7 @@
 					//remove the old record after successfully update the new media file
 					$flile_m->removeMediaFileForUser($old_image_url, $user_id);
 					$this->interest_label_image->deleteRowById($old_image_row_id);
+					$this->default_label_image->deleteLabelImageForUserByInterestId($user_id, $interest_id);
 					return true;
 				}
 			}
@@ -141,19 +147,18 @@
 		}
 		
 		
-		public function loadInterestBlockByInterestResource($interestRow){
-			if($interestRow !== false){
-				$interest = $interestRow[0];
+		public function loadInterestBlockByInterestResource($interest){
+			if($interest !== false){
 				//get interest profile
 				$left_content = "";
 				$right_content = "";
 				$user_media_prefix = new User_Media_Prefix();
 				$prefix = $user_media_prefix->getUserMediaPrefix($interest['user_id']).'/';
-				$interest_label_image = $this->interest_label_image->getLabelImageUrllByInterestId($interest['id']);
-				//var_dump($interest_label_image);
+				$interest_label_image = $this->interest_label_image->getLabelImageUrlByInterestId($interest['id']);
 				if($interest_label_image !== false){
 					$interest_label_image = $prefix.$interest_label_image;
 				}
+				
 				$experience = $this->translateExperienceByNumber($interest['experience']);
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.'phtml/child/interest_profile.phtml');
@@ -161,6 +166,17 @@
 				$left_content = $interest_profile;
 				//end getting interest profile
 				
+				$count = 1;
+				$idCollection = $this->interest_activity->getActivityIdCollectionByInterestId($interest['id']);
+				if($idCollection !== false && sizeof($idCollection) > 0){
+					foreach($idCollection as $row ){
+						if(++$count % 2 == 0){
+							$right_content.=$this->interest_activity->getInterestActivityBlockByActivityId($row['id']);
+						}else{
+							$left_content.=$this->interest_activity->getInterestActivityBlockByActivityId($row['id']);
+						}
+					}
+				}
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.'phtml/child/interest_unit.phtml');
 				$content = ob_get_clean();
@@ -212,11 +228,18 @@
 		}
 		public function deleteInterestForUserByInterestId($user_id, $interest_id){
 			if($this->deleteRowForUserById($user_id, $interest_id)){
+				$this->default_label_image->deleteLabelImageForUserByInterestId($user_id, $interest_id);
 				return $this->interest_label_image->deleteLabelImageForUserByInterestId($user_id, $interest_id);
 			}
 		}
 		
-		
+		public function isInterestEditableByUser($interest_id, $user_id){
+			$user_id_for_interest_id = $this->getColumnById('user_id',$interest_id);
+			if($user_id_for_interest_id !== false && $user_id_for_interest_id == $user_id){
+				return true;
+			}
+			return false;
+		}
 		
 		
 		

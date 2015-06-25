@@ -113,7 +113,7 @@
 				$stmt->bind_param('i', $user_id);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows == 1){
+					 if($result !== false && $result->num_rows >= 1){
 						$row = $result->fetch_assoc();
 						$stmt->close();
 						return $row[$column];
@@ -123,6 +123,24 @@
 			return false;
 		}
 		
+		
+		public function getAllRowsColumnBySelector($column, $selector_column, $selector_value){
+			$column = $this->connection->escape_string($column);
+				$selector_column = $this->connection->escape_string($selector_column);
+				$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ");
+				if($stmt){
+					$stmt->bind_param('s', $selector_value);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							return $row;
+						 }
+					}
+				}
+				return false;
+		}
 		
 		
 		public function getColumnBySelector($column, $selector_column, $selector_value){
@@ -137,6 +155,25 @@
 						$row = $result->fetch_assoc();
 						$stmt->close();
 						return $row[$column];
+					 }
+				}
+			}
+			return false;
+		}
+		
+		public function getMultipleColumnsBySelector($column_array, $selector_column, $selector_value){
+			$selector_column = $this->connection->escape_string($selector_column);
+			$targets = implode('`,`',$column_array);
+			$targets = '`'.$targets.'`';
+			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1 ");
+			if($stmt){
+				$stmt->bind_param('s', $selector_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row[0];
 					 }
 				}
 			}
@@ -176,11 +213,10 @@
 					 if($result !== false && $result->num_rows == 1){
 						$row = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						return $row;
+						return $row[0];
 					 }
 				}
 			}
-			echo $this->connection->error;
 			return false;
 		}
 		
@@ -221,10 +257,10 @@
 				$stmt->bind_param('i', $user_id);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows >= 1){
+					 if($result !== false && $result->num_rows == 1){
 						$row = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						return $row;
+						return $row[0];
 					 }
 				}
 			}
@@ -243,10 +279,10 @@
 				$stmt->bind_param('i', $user_id);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows >= 1){
+					 if($result !== false && $result->num_rows == 1){
 						$row = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						return $row;
+						return $row[0];
 					 }
 				}
 			}
