@@ -1,6 +1,6 @@
-<div class="post-wrapper post">
-	<a href="#"><img class="post-owner-picture" src="<?php echo $post_owner_pic; ?>"></a>
-	<a class="plain-lk" href="#"><span class="profile-name pointer"><?php echo htmlentities($fullname) ?></span></a>
+<div class="post-wrapper post" data-key="<?php echo $hash ?>">
+	<a href="<?php echo $user_page_redirect; ?>"><img class="post-owner-picture" src="<?php echo $post_owner_pic; ?>"></a>
+	<a class="plain-lk" href="<?php echo $user_page_redirect; ?>"><span class="profile-name pointer"><?php echo htmlentities($fullname) ?></span></a>
 	<img src="<?php echo IMGDIR ?>down_arrow_icon.png" class="toggle-operation pointer hdn">
 	<div style="margin-left: 10px; color: #969696;"><?php echo $post_time ?></div>
 	<div class="content">
@@ -22,17 +22,27 @@
 		
 		
 		<div style="margin-top:10px">
-			<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer toggle-comment" src="<?php echo IMGDIR ?>ci.png"  title="Comment" height="16" width="16" ><div class="inline-blk" style="margin-top:-3px;"></div></div>
+			<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer toggle-comment" src="<?php echo IMGDIR ?>ci.png"  title="Comment" height="16" width="16" ><div class="inline-blk cmt-num" style="margin:-3px 8px 0px 0px"><?php echo $comment_number; ?></div></div>
 			<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>favor_icon.png"  title="Pin" height="18" width="18"><div class="inline-blk" style="margin-top:-1px;"></div></div>
 		</div>
 		<div class="comment-block hdn">
-			<textarea class="fcy_txt" placeholder="Write down your thoughts..."></textarea>
+			<textarea class="fcy-txt comment-txt" placeholder="Write down your thoughts..." data-key="<?php echo $hash ?>"></textarea>
+			<div class="comment-container" style="margin-top:20px;">
+				<?php echo $comment_block; ?>
+			</div>
 		</div>
+		
+		
 	</div>
 	
 	
 	<div class="in_con_opt_w popover" style="top:34px;right:12px;">
-		<div class="in_con_w_opt_it remove_interest">Remove This Moment</div>
+		<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
+			<div class="in_con_w_opt_it remove_activity">Remove This Moment</div>
+		<?php  endif;?>
+		<?php  if($interest_activity['user_id'] != $_SESSION['id']): ?>
+			<div class="in_con_w_opt_it remove_activity">Block this Post</div>
+		<?php endif; ?>
 	</div>
 </div>
 		

@@ -92,10 +92,12 @@ function loadInterest(thisE){
 $(document).ready(function(){
 
 	var in_navi_count = 0;
-	$('.interest-side-label').each(function(){
-		in_navi_count++;
-		$(this).css('-webkit-animation',' bounceInUp '+(in_navi_count*0.5)+'s');
-	});
+	if($(document).scrollTop() == 0){
+		$('.interest-side-label').each(function(){
+			in_navi_count++;
+			$(this).css('-webkit-animation',' bounceInUp '+(in_navi_count*0.5)+'s');
+		});
+	}	
 
 
 	$('.avator-inner-bottom').on({
@@ -643,7 +645,8 @@ $(document).ready(function(){
 						description_txtarea.val('');
 						date_input.val('');
 						doneWithInterestEditing(parentDiv);
-						inner_wrapper.find('.interest-content-right').html(resp);
+						inner_wrapper.find('.interest-content-right').prepend(resp);
+						setVisibleContent();
 					}
 				}
 			});

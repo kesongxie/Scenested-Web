@@ -5,6 +5,7 @@
 	if($auth_tokens->auth_token_valified()){
 		header('location:'.HOME_PAGE);
 	}
+	
 	include_once 'phtml/login.phtml';
 	
 

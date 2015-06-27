@@ -40,6 +40,19 @@
 			return $this->getMultipleColumnsBySelector($column_array, 'interest_activity_id', $this->activity_id);	
 		}
 		
+		public function deleteMomentForUserByActivityId($user_id){
+			//delete photos in this moment
+			$moment_id = $this->getColumnBySelector('id', 'interest_activity_id', $this->activity_id);
+			$this->moment_photo->deleteMomentPhotoForUserByMomentId($user_id, $moment_id);
+			
+			//delete comments in this moment
+			
+			//delete the row itself
+			$this->deleteRowByNumericSelector('interest_activity_id', $this->activity_id);
+			
+
+		}
+		
 
 	}
 ?>

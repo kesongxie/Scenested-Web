@@ -21,8 +21,8 @@ body{
 	margin: 0px auto;
 	line-height: 1.5;
 	-webkit-font-smoothing: subpixel-antialiased;
-	height:100vh;
 	min-height:720px;
+	padding-bottom:80px;
 }
 
 div{
@@ -100,7 +100,7 @@ textarea{
 	text-overflow:ellipsis
 }
 
-.fcy_txt{
+.fcy-txt{
 	position: relative;
 	border: 2px solid #c4140e;
 	font-size: 12px;
@@ -346,6 +346,7 @@ div.ui-datepicker{
 	padding: 6px;
 	border-radius: 4px;
 	width: 120px;
+	z-index:99;
 	display:none;
 }
 .header #loggedin-menu #setting-menu .setting-menu-item{
@@ -497,7 +498,7 @@ div.ui-datepicker{
 	min-height:60px;
 }
 .popup-dialog .dialog-body .body-text{
-	margin:10px;
+	margin:10px 12px;
 	font-size:16px;
 }
 .popup-button{
@@ -518,6 +519,7 @@ div.ui-datepicker{
 
 #dialog-popup-overlay{
 	background:rgb(43,43,43);
+	position:fixed !important;
 }
 
 /*ends popup dialog template*/
@@ -540,6 +542,7 @@ div.ui-datepicker{
 .interest-profile{
 	background:#fff;
 	position:relative;
+	margin-bottom:12px;
 	box-shadow:1px 1px 10px #E8E8E8
 }
 .interest-profile .dialog-header{
@@ -580,6 +583,11 @@ div.ui-datepicker{
 	max-height:114px;
 }
 
+.comment .limit-height{
+	overflow:hidden;
+	max-height:84px;
+}
+
 .interest-profile .dialog-body .exp{
 	font-weight:bold;
 	color:#000;
@@ -617,7 +625,6 @@ div.ui-datepicker{
 	box-shadow: 1px 1px 10px #E8E8E8;
 	padding: 14px;
 	margin-bottom: 10px;
-	min-height:300px;
 	background:#fff;
 	position:relative;
 }
@@ -657,8 +664,60 @@ div.ui-datepicker{
 	opacity:0.6;
 }
 
+.comment-block .comment{
+	border-top: 1px solid #f0f0f0;
+  	padding-top: 10px;
+  	margin-top: 10px;	
+}
+	
+.comment-block .comment .comment-from-picture{
+	position:absolute;
+	width:30px;
+	height:30px;
+	border-radius:9%;
+}
 
 
+.comment-block .comment .inner{
+	margin-left:36px;
+	background-color:#fff;
+	position:relative;
+	padding:2px;
+	top:-6px;
+	line-height:1.4;
+}
+
+.comment-block .comment .react{
+	opacity: 0.7;
+}
+
+.comment-block .comment .trashcan{
+	opacity: 0.7;
+	position: relative;
+	margin-left: 10px;
+	top: 3px;
+}
+.comment-block .comment .trash-comment:hover{
+	opacity:1;
+}
+
+.comment-block .comment .reply-comment{
+	margin-left: 20px;
+}
+.comment-block .comment .reply-comment:hover{
+	opacity:0.9;
+}
+.comment-block .comment .thumb{
+	opacity:0.3;
+	margin-left: 10px;
+	position: relative;
+	top: 2px;
+	cursor: pointer;
+}
+
+.comment-block .comment .thumb:hover{
+	opacity:0.4;
+}
 
 /*ends with user post template*/
 

@@ -64,6 +64,21 @@
 			return false;
 		}
 		
+		public function deleteRowByNumericSelector($selector_column, $selector_value){
+			$selector_column = $this->connection->escape_string($selector_column);
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? ");
+			if($stmt){
+				$stmt->bind_param('i', $selector_value);
+				if($stmt->execute()){
+					$stmt->close();
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		
+		
 		
 		
 		public function getColumnById($column,$id){
@@ -124,10 +139,15 @@
 		}
 		
 		
-		public function getAllRowsColumnBySelector($column, $selector_column, $selector_value){
+		public function getAllRowsColumnBySelector($column, $selector_column, $selector_value, $asc = false){
 			$column = $this->connection->escape_string($column);
 				$selector_column = $this->connection->escape_string($selector_column);
-				$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ");
+				if($asc){
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ");
+				}else{
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC");
+
+				}
 				if($stmt){
 					$stmt->bind_param('s', $selector_value);
 					if($stmt->execute()){
@@ -290,6 +310,30 @@
 		}
 		
 		
+		public function getRowsNumberForNumericColumn($column, $column_value){
+			$column = $this->connection->escape_string($column);
+			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? ");
+			if($stmt){
+				$stmt->bind_param('i', $column_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false){
+						return $result->num_rows;
+					 }
+				}
+			}
+			return false;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		public function setColumnByNumericSelector($column, $value, $selector_column, $selector_value ){
 			$column = $this->connection->escape_string($column);
 			$selector_column = $this->connection->escape_string($selector_column);
@@ -348,6 +392,8 @@
 			return false;
 		}
 		
+		
+		
 		/*
 			$value needs to be a string type
 		*/
@@ -366,7 +412,19 @@
 			return false;
 		}
 		
+		public function generateUniqueHash(){
+			$unique_hash = "";
+			do{
+				$unique_hash = getRandomString();
+				$found = $this->isStringValueExistingForColumn($unique_hash, 'hash');
+			}while($found);
+			return $unique_hash;
+		}
 		
+		public function getRowIdByHashkey($key){
+			return $this->getColumnBySelector('id', 'hash', $key);
+
+		}
 		
 		
 		

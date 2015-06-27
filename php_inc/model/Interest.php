@@ -241,6 +241,10 @@
 			return false;
 		}
 		
+		public function deletePostForUserByActivityId($user_id, $activity_id){
+			return $this->interest_activity->deleteActivityForUserByActivityId($user_id, $activity_id);
+		}
+		
 		
 		
 

@@ -12,7 +12,7 @@
 	$media_prefix = new User_Media_Prefix();
 	
 	$auth_tokens = new Auth_Tokens();
-	if(!isset($_SESSION['id']) && $auth_tokens->auth_token_valified()){
+	if(!isset($_SESSION['id']) && !$auth_tokens->auth_token_valified()){
 		header('location:'.LOGIN_PAGE);
 	}
 	$session_user_profile_image_url = $user->getLatestProfilePictureForuser($_SESSION['id']);

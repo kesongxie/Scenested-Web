@@ -15,8 +15,10 @@
 		
 		public function deleteMomentPhotoForUserByMomentId($user_id, $moment_id){
 			$url = $this->getMomentPhotoUrlByMomentId($moment_id);
-			$this->deleteMediaByPictureUrl($url, $user_id);
-			$this->deleteRowBySelector('moment_id', $moment_id);
+			if($url != false){
+				$this->deleteMediaByPictureUrl($url, $user_id);
+				$this->deleteRowBySelector('moment_id', $moment_id);
+			}
 		}
 		
 		

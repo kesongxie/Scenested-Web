@@ -8,7 +8,6 @@
 	define("DEFAULT_IMAGE",IMGDIR.'default_image/');
 	define("U_IMGDIR",ROOTDIR."media_u/");
 	
-	
 	//paths for php file system
 	define("DOCUMENT_ROOT",'../');
 	define("U_MEDAI_FOLDER_DIR",DOCUMENT_ROOT.'media_u/');
@@ -23,7 +22,7 @@
 	define("PHP_INC_MODEL","../".PHP_INC_MODEL_ROOT_REF);
 	define("LOADING_GIF",IMGDIR."loading.gif");
 	
-	define("LOGIN_PAGE","login.php");
+	define("LOGIN_PAGE",ROOTDIR."login.php");
 	define("HOME_PAGE","index.php");
 	define("ERROR_PAGE","404.php");
 	define("COOKIE_EXPIRE_TIME",time()+ 90 * 86400);
