@@ -23,7 +23,7 @@
 			}
 			
 			if($prefix !== false){
-				$picture_url = $this->flile_m->upload_File_To_Dir($file, $prefix);
+				$picture_url = $this->file_m->upload_File_To_Dir($file, $prefix);
 				if($picture_url !== false){
 					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`picture_url`,`upload_time`) VALUES(?, ?, ?)");
 					$time = date("Y-m-d H:i:s");
@@ -62,6 +62,30 @@
 			}
 			return false;	
 		}
+		
+		public function uploadCaptionableMediaForAssocColumn($file,$user_id, $caption, $assoc_name, $assoc_id){
+			$user_media_prefix = new User_Media_Prefix();
+			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
+			if($prefix === false){
+				$prefix = $user_media_prefix->createMediaPrefixForUser($user_id);
+			}
+			
+			if($prefix !== false){
+				$picture_url = $this->file_m->upload_File_To_Dir($file, $prefix);
+				if($picture_url !== false){
+					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`$assoc_name`,`picture_url`,`upload_time`,`caption`) VALUES(?, ?, ?, ?)");
+					$time = date("Y-m-d H:i:s");
+					$stmt->bind_param('isss',$assoc_id, $picture_url, $time, $caption);
+					if($stmt->execute()){
+						$stmt->close();
+						return $picture_url;
+					}
+				}
+			}
+			return false;	
+		}
+		
+		
 		
 		public function deleteMediaByPictureUrl($url, $user_id){
 			return $this->file_m->removeMediaFileForUser($url, $user_id);

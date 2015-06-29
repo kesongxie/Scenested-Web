@@ -1,7 +1,7 @@
 <?php
 	include_once 'core_table.php';
 	class User_Table extends Core_Table{
-		var $table_name = "user";
+		private $table_name = "user";
 	
 		public function __construct(){
 			parent::__construct($this->table_name);
@@ -129,9 +129,11 @@
 			return the user id if the $request_page is valid
 		*/
 		public function requestUserPageValid($request_page){
-			$user_id = $this->getColumnBySelector('id', 'user_access_url', $request_page);	
+			$request_info = explode('/',trim($request_page,'/'));
+			$access_url = $request_info[2]; //when is site is live, should change this to request_info[1]
+			$user_id = $this->getColumnBySelector('id', 'user_access_url', $access_url);	
 			if($user_id !== false && $this->getUserInfoByUserIden('activated',$user_id) == 1){
-				return $user_id;
+				return array("id"=>$user_id, "access_url"=>$access_url);
 			}
 			return false;
 		}

@@ -22,8 +22,12 @@
 		}
 		
 		
-		public function uploadMomentPhotoByMomentId($photo_file, $user_id, $moment_id){
-			return $this->uploadMediaForAssocColumn($photo_file, $user_id, 'moment_id' , $moment_id);
+		public function uploadMomentPhotoByMomentId($photo_file, $user_id, $moment_id, $caption){
+			return $this->uploadCaptionableMediaForAssocColumn($photo_file, $user_id, $caption, 'moment_id' , $moment_id);
+		}
+		
+		public function getMomentPhotoCaptionByMomentId($moment_id){
+			return $this->getColumnBySelector('caption', 'moment_id',$moment_id);
 		}
 		
 		

@@ -45,7 +45,14 @@
 	
 	
 	$attached_picture = ((isset($_FILES["attached-picture"]))?$_FILES["attached-picture"]:null);
-	$moment = $interest_activity->addMomentInterestActivityForUserByInterestId($_SESSION['id'],$key, $description, $date, $attached_picture);
+	if($attached_picture !== null){
+		$caption = '';
+		if(isset($_POST['caption']) && !empty($_POST['caption'])){
+			$caption = $_POST['caption'];
+		}
+	}
+	
+	$moment = $interest_activity->addMomentInterestActivityForUserByInterestId($_SESSION['id'],$key, $description, $date, $attached_picture, $caption);
 	if($moment !== false){
 		echo $moment;
 	}

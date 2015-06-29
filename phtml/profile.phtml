@@ -62,16 +62,22 @@
 			
 			<div id="profile-sider-bar-right" class="inline-blk">
 					<div id="profile-navigation-bar">
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/interests'; ?>"><div  class="navi-item<?php if(!isset($_GET['s'])||($_GET['s']!='launched' && $_GET['s']!='friends'&& $_GET['s']!='moments' && $_GET['s']!='about' && $_GET['s']!='photos' && $_GET['s']!='status')){echo ' active-navi';}else{echo ' deactive-navi';}?>"   >Interests<div  class="sub-text" style="left:15px;">interests & circles</div></div></a>
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/events'; ?>" ><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='launched'){echo ' active-navi';}else{echo ' deactive-navi';}?>">Events<div class="sub-text" style="left:15px;" >launched & joined</div></div></a>
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/pined'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='moments'){echo ' active-navi';}else{echo ' deactive-navi';}?>"  >Pined<div  class="sub-text" style="left:21px;" >beloved moments</div></div></a>
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/friends'; ?>"><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='friends'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Friends<div  class="sub-text" style="left:15px;">connections</div></div></a>
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/photos';?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='photos'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Photos<div  class="sub-text" style="left:11px;">want to share</div></div></a>
-						<a href="<?php echo $_SERVER['REQUEST_URI'].'/about'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='about'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >About<div  class="sub-text" style="left:11px;"><?php echo htmlentities(((strlen($request_user_page_fullname) < 16)?$request_user_page_fullname:substr($request_user_page_fullname,0,27).'...')) ?></div></div></a>
+						<a href="<?php echo $user_profile_url.'/interests'; ?>"><div  class="navi-item<?php if(!isset($_GET['s'])||($_GET['s']!='events' && $_GET['s']!='pined'&& $_GET['s']!='moments' && $_GET['s']!='friends' && $_GET['s']!='photos' && $_GET['s']!='about')){echo ' active-navi';}else{echo ' deactive-navi';}?>"   >Interests<div  class="sub-text" style="left:15px;">events & moments</div></div></a>
+						<a href="<?php echo $user_profile_url.'/events'; ?>" ><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='events'){echo ' active-navi';}else{echo ' deactive-navi';}?>">Events<div class="sub-text" style="left:15px;" >upcomings & joined</div></div></a>
+						<a href="<?php echo $user_profile_url.'/pined'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='pined'){echo ' active-navi';}else{echo ' deactive-navi';}?>"  >Pined<div  class="sub-text" style="left:21px;" >beloved moments</div></div></a>
+						<a href="<?php echo $user_profile_url.'/friends'; ?>"><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='friends'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Friends<div  class="sub-text" style="left:15px;">connections</div></div></a>
+						<a href="<?php echo $user_profile_url.'/photos';?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='photos'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Photos<div  class="sub-text" style="left:11px;">want to share</div></div></a>
+						<a href="<?php echo $user_profile_url.'/about'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='about'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >About<div  class="sub-text" style="left:11px;"><?php echo htmlentities(((strlen($request_user_page_fullname) < 16)?$request_user_page_fullname:substr($request_user_page_fullname,0,27).'...')) ?></div></div></a>
 					</div>
 					
 					<div id="profile-mid-content">
-						<?php require_once 'child/interest.phtml'; ?>
+						<?php 
+							if(isset($_GET['s']) && $_GET['s'] == 'events'){
+								require_once 'child/event.phtml';
+							}else{
+								require_once 'child/interest.phtml';
+							}
+						?>
 					</div>
 			</div>
 		</div>

@@ -17,6 +17,9 @@
 		<div style="margin-top:10px;">
 			<?php if(isMediaDisplayable($moment_photo)): ?>
 			<img style="max-width:100%;" src="<?php echo U_IMGDIR.$moment_photo ?>">
+			<?php if($caption !== false && $caption !== null && !empty($caption)):?>
+			<div style="text-align:right;"><span title="<?php echo htmlentities($caption); ?>" style="opacity:0.6;font-size:13px"><?php echo ((strlen($caption)>30)?substr($caption,0,30).'...':$caption) ?><span></div>
+			<?php endif;?>
 			<?php endif; ?>
 		</div>
 		
@@ -28,7 +31,7 @@
 		<div class="comment-block hdn">
 			<textarea class="fcy-txt comment-txt" placeholder="Write down your thoughts..." data-key="<?php echo $hash ?>"></textarea>
 			<div class="comment-container" style="margin-top:20px;">
-				<?php echo $comment_block; ?>
+				
 			</div>
 		</div>
 		

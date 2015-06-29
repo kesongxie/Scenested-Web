@@ -1,6 +1,7 @@
 <?php
-	require_once  $_SERVER['DOCUMENT_ROOT'].'/lsere/php_inc/global_constant.php';
 	require_once 'Database_Connection.php';
+	require_once  $_SERVER['DOCUMENT_ROOT'].'/lsere/php_inc/global_constant.php';
+
 	/*
 		core_table is the base class for other table class
 	*/
@@ -146,7 +147,6 @@
 					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ");
 				}else{
 					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC");
-
 				}
 				if($stmt){
 					$stmt->bind_param('s', $selector_value);
@@ -160,6 +160,30 @@
 					}
 				}
 				return false;
+		}
+		
+		public function getAllRowsMultipleColumnsBySelector($column_array, $selector_column, $selector_value, $asc = false){
+			$selector_column = $this->connection->escape_string($selector_column);
+			$targets = implode('`,`',$column_array);
+			$targets = '`'.$targets.'`';
+				if($asc){
+					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? ");
+				}else{
+					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC");
+				}if($stmt){
+				$stmt->bind_param('s', $selector_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			
+			echo $this->connection->error;
+			return false;
 		}
 		
 		
@@ -199,6 +223,8 @@
 			}
 			return false;
 		}
+		
+		
 		
 		
 		
@@ -327,13 +353,6 @@
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
 		public function setColumnByNumericSelector($column, $value, $selector_column, $selector_value ){
 			$column = $this->connection->escape_string($column);
 			$selector_column = $this->connection->escape_string($selector_column);
@@ -425,6 +444,9 @@
 			return $this->getColumnBySelector('id', 'hash', $key);
 
 		}
+		
+		
+		
 		
 		
 		

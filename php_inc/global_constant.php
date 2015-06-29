@@ -24,7 +24,7 @@
 	
 	define("LOGIN_PAGE",ROOTDIR."login.php");
 	define("HOME_PAGE","index.php");
-	define("ERROR_PAGE","404.php");
+	define("ERROR_PAGE",ROOTDIR."404.php");
 	define("COOKIE_EXPIRE_TIME",time()+ 90 * 86400);
 	define("MAXIMUM_UPLOAD_IMAGE_SIZE",5000000);
 	define("DEFAULT_PROFILE_IMAGE",DEFAULT_IMAGE."default_profile_100pl.png");

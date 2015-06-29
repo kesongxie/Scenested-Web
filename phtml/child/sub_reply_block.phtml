@@ -1,4 +1,4 @@
-<div class="comment cmt" data-key="<?php echo $hash; ?>">
+<div class="reply-wrapper comment cmt" data-key="<?php echo $hash; ?>">
 	<a href="<?php echo $user_page_redirect ?>"><img src="<?php  echo $post_owner_pic ?>" class="comment-from-picture"></a>
 	<div class="inner">
 		<div class="inner-container">
@@ -6,6 +6,8 @@
 				<div class="visible-content limit-height">
 				<a class="profile-name plain-lk" href="<?php echo $user_page_redirect ?>"><?php echo htmlentities($fullname); ?>:</a>
 				<span><?php echo htmlentities($text) ?></span>
+				<div class="inline-blk"><a class="plain-lk profile-name pointer" style="font-size: 12px;
+  font-weight: normal;">@<?php echo $at_fullname ?></a></div>
 				</div>
 			</div>
 			<div style="position:relative;top:2px;left:-2px">
@@ -15,16 +17,13 @@
 				<?php endif; ?>
 				<img src="<?php echo IMGDIR ?>thumb_icon.png" class="thumb" title="like" height="16" width="16"> <span></span>
 				<?php if($user_id == $_SESSION['id'] || $post_owner_id == $_SESSION['id']): ?>
-					<img src="<?php echo IMGDIR ?>trashcan_icon.png" class="react pointer trash-comment trashcan hdn"  height="16" width="16" title="delete this comment">
+					<img src="<?php echo IMGDIR ?>trashcan_icon.png" class="react pointer trashcan trash-reply hdn"  height="16" width="16" title="delete this comment">
 				<?php  endif; ?>
 			</div>
 		</div>
 		<?php if($user_id != $_SESSION['id']): ?>
-			<textarea class="fcy-txt comment-reply hdn" data-key="<?php echo $hash; ?>" placeholder="Reply to <?php echo $fullname ?>..."></textarea>
-		<?php endif; ?>
-		<div class="reply-block">
-			<?php echo $reply_block; ?>
-		</div>
+			<textarea class="fcy-txt sub-reply hdn" data-key="<?php echo $hash; ?>" placeholder="Reply to <?php echo $fullname ?>..."></textarea>
+		<?php  endif;?>
 	</div>
 </div>
 

@@ -1,26 +1,32 @@
 <?php
-	include_once 'core_table.php';
-	class Comment_Base extends Core_Table{
-		private $table_name;
-		private $template_path;
-		public function __construct($table_name, $template_path){
+	include_once 'Noti_Sendable.php';
+	class Comment_Base extends Noti_Sendable{
+		public function __construct($table_name){
 			parent::__construct($table_name);
-			$this->table_name = $table_name;
-			$this->template_path = $template_path;
-			
 		}
 		
 		
-		
-		public function getSelfIdCollectionByTargetId($target_id){
-			return $this->getAllRowsColumnBySelector('id', 'target_id', $target_id);
+		public function getPostUserIdByActivityId($activity_id){
+			include_once 'Interest_Activity.php';
+			$activity = new Interest_Activity();
+			return $activity->getColumnById('user_id',$activity_id);
 		}
 		
 		
-		public function getCommentNumberForTarget($target_id){
-			 $num = $this->getRowsNumberForNumericColumn('target_id', $target_id);
-			 return ($num !== false)?$num:0;
+		public function getTargetIdByRowId($row_id){
+			return $this->getColumnById('target_id',$row_id);
 		}
+		
+		
+		// public function getSelfIdCollectionByTargetId($target_id){
+// 			return $this->getAllRowsColumnBySelector('id', 'target_id', $target_id);
+// 		}
+// 		
+		
+	// 	public function getCommentNumberForTarget($target_id){
+// 			 $num = $this->getRowsNumberForNumericColumn('target_id', $target_id);
+// 			 return ($num !== false)?$num:0;
+// 		}
 		
 		
 		public function deleteCommentForUserByKey($user_id, $key){
@@ -33,11 +39,7 @@
 			return false;
 		}	
 		
-		public function deleteAllCommentsForTarget($target_id){
-			$this->deleteRowBySelector('target_id', $target_id);
-		}
+		
 		
 	}
-	
-	
-?>	
+?>

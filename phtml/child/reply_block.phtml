@@ -14,12 +14,14 @@
 					<span class="reply-comment react pointer">Reply</span>
 				<?php endif; ?>
 				<img src="<?php echo IMGDIR ?>thumb_icon.png" class="thumb" title="like" height="16" width="16"> <span></span>
-				<?php if($user_id == $_SESSION['id']): ?>
+				<?php if($user_id == $_SESSION['id'] || $post_owner_id == $_SESSION['id']): ?>
 					<img src="<?php echo IMGDIR ?>trashcan_icon.png" class="react pointer trashcan trash-reply hdn"  height="16" width="16" title="delete this comment">
 				<?php  endif; ?>
 			</div>
 		</div>
-		<textarea class="fcy-txt comment-reply hdn" data-key="<?php echo $hash; ?>" placeholder="Reply to <?php echo $fullname ?>..."></textarea>
+		<?php if($user_id != $_SESSION['id']): ?>
+			<textarea class="fcy-txt sub-reply hdn" data-key="<?php echo $hash; ?>" placeholder="Reply to <?php echo $fullname ?>..."></textarea>
+		<?php  endif;?>
 	</div>
 </div>
 

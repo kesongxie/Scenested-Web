@@ -9,8 +9,7 @@
 			exit();
 		}
 		
-		
-		$reply_block = $reply->addReplyToComment($_POST['keyForComment'], $_SESSION['id'], $_POST['text']);
+		$reply_block = $reply->addSubReplyToReply($_POST['keyForComment'], $_SESSION['id'], $_POST['text']);
 		if($reply_block !== false)
 		{
 			echo  $reply_block;

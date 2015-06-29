@@ -120,6 +120,7 @@ function removeReply(sender){
 		method:'post',
 		data: {key:key},
 		success:function(resp){
+			console.log(resp);
 			if(resp!='1'){
 				reply_wrapper.remove();
 				var remainedCommentNum = comment_block.find('.cmt').length;
@@ -130,6 +131,22 @@ function removeReply(sender){
 		}
 	});
 }
+
+// 
+// var body = document.body,
+//     timer;
+
+// window.addEventListener('scroll', function() {
+//   clearTimeout(timer);
+//   if(!body.classList.contains('disable-hover')) {
+//     body.classList.add('disable-hover')
+//   }
+//   
+//   timer = setTimeout(function(){
+//     body.classList.remove('disable-hover')
+//   },500);
+// }, false);
+
 
 
 $(document).keyup(function(evt){
@@ -151,9 +168,32 @@ $(document).click(function(){
 });
 
 
+ $.fn.scrollStopped = function(callback) {
+	var $this = $(this), self = this;
+	$this.scroll(function(){
+		if ($this.data('scrollTimeout')) {
+		  clearTimeout($this.data('scrollTimeout'));
+		}
+		$this.data('scrollTimeout', setTimeout(callback,100,self));
+	});
+ };
+
+
+
 
 $(document).ready(function(){
 	setVisibleContent();
+	
+	$(window).scroll(function(){
+		if(!$('body').hasClass('disable-hover'))
+			$('body').addClass('disable-hover');
+	});
+	
+	
+	$(window).scrollStopped(function(){
+		if($('body').hasClass('disable-hover'))
+    		$('body').removeClass('disable-hover');
+	});
 	
 	$('body').on({
  		mouseover:function(){
@@ -225,6 +265,7 @@ $(document).ready(function(){
  					method:'post',
  					data:{keyForPost:keyForPost,keyForComment:keyForComment,text:text},
  					success:function(resp){
+ 						console.log(resp);
  						if(resp != '1'){
  							postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length + 1);
  							postWrapper.find('.comment-container').prepend(resp);
@@ -263,6 +304,7 @@ $(document).ready(function(){
  					method:'post',
  					data:{keyForTarget:keyForTarget,keyForComment:keyForComment,text:text},
  					success:function(resp){
+ 						console.log(resp);
  						if(resp != '1'){
  							postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length + 1);
  							replyBlock.prepend(resp);
@@ -271,10 +313,7 @@ $(document).ready(function(){
  							
  							//collapse the textarea
 							parent.find('.reply-comment').text('Reply');
-							
-							
- 							
- 						}
+						}
  					}
  				});
  			}
@@ -282,6 +321,47 @@ $(document).ready(function(){
  		}
 	},'.comment-reply');
 	
+	
+	
+	$('body').on({
+		keypress:function(e){
+ 			if(e.keyCode == 10 || e.keyCode == 13){
+ 				e.preventDefault();
+ 				var txtarea = $(this);
+ 				var text = txtarea.val().trim();
+ 				var postWrapper = $(this).parents('.post');
+ 				var commentBlock = postWrapper.find('.comment-block');
+				var parent = txtarea.parents('.comment');
+				var replyBlock = parent.find('.reply-block');
+ 				var keyForTarget = parent.attr('data-key');
+ 				var keyForComment = $(this).attr('data-key');
+ 				if(keyForTarget != keyForComment){
+ 					return false;	
+ 				}
+ 				if(text == ''){
+ 					return false;
+ 				}
+ 				
+ 				$.ajax({
+ 					url:AJAX_DIR+'sub_reply.php',
+ 					method:'post',
+ 					data:{keyForTarget:keyForTarget,keyForComment:keyForComment,text:text},
+ 					success:function(resp){
+ 					console.log(resp);
+ 						if(resp != '1'){
+ 							postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length + 1);
+ 							replyBlock.prepend(resp);
+ 							txtarea.val('').blur().addClass('hdn');
+ 							setVisibleContent();
+ 							//collapse the textarea
+							parent.find('.reply-comment').text('Reply');
+						}
+ 					}
+ 				});
+ 			}
+ 			
+ 		}
+	},'.sub-reply');
 	
 	
 	
@@ -343,7 +423,23 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
-			$(this).parents('.content').find('.comment-block').toggleClass('hdn');
+			var postWrapper = $(this).parents('.post');
+			var key = postWrapper.attr('data-key');
+			var commentBlock = postWrapper.find('.comment-block');
+			if(commentBlock.hasClass('hdn')){
+				//load
+				$.ajax({
+ 					url:AJAX_DIR+'load_comment_block.php',
+ 					method:'post',
+ 					data:{key:key},
+ 					success:function(resp){
+ 						commentBlock.find('.comment-container').html(resp);
+ 						postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length);
+ 					}
+ 				});
+			}
+			
+			commentBlock.toggleClass('hdn');
 			setVisibleContent();
 		}
 	},'.post-wrapper .content .toggle-comment');
@@ -369,7 +465,9 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
-			var textarea = $(this).parents('.inner').find('textarea').first();
+			var inner = $(this).parents('.inner').first();
+			
+			textarea = inner.find('textarea').first();
 			if(textarea.hasClass('hdn')){
 				$(this).text('Hide');
 			}else{

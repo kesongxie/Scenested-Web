@@ -4,7 +4,7 @@
 
 	if( isset($_POST['key']) && !empty(trim($_POST['key'])) ){
 		$reply = new Reply();
-		$delete = $reply->deleteCommentForUserByKey($_SESSION['id'], $_POST['key']);
+		$delete = $reply->deleteReply($_SESSION['id'], $_POST['key']);
 		if($delete === false){
 			echo '1';
 		}

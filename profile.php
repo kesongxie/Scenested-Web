@@ -6,6 +6,9 @@
 	include_once PHP_INC_MODEL_ROOT_REF.'Default_User_Interest_Label_Image.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'User_Media_Prefix.php';
 	
+	
+	
+	
 	$user = new User_Table();
 	$interest = new Interest();
 	$defualr_label_image = new Default_User_Interest_Label_Image();
@@ -18,13 +21,17 @@
 	$session_user_profile_image_url = $user->getLatestProfilePictureForuser($_SESSION['id']);
 	$session_user_access_url = $user->getUserAccessUrl($_SESSION['id']);
 	
-	$request_path = pathinfo($_SERVER['REQUEST_URI']);
 	
-	$request_user_page_id = $user->requestUserPageValid($request_path['basename']);
-	if($request_user_page_id === false){
+	$request_info = $user->requestUserPageValid($_SERVER['REQUEST_URI']);
+
+	
+	if($request_info === false){
 		header('location:'.ERROR_PAGE);
 		exit();
 	}
+	$request_user_page_id = $request_info['id'];	
+	$user_profile_url = USER_PROFILE_ROOT.$request_info['access_url'];
+			
 	$page_own = ($request_user_page_id == $_SESSION['id']); // if it's true, allow editting
 	$request_user_page_fullname = $user->getUserFullnameByUserIden($request_user_page_id);	
 	$request_user_page_firstname = $user->getUserFirstNameByUserIden($request_user_page_id);

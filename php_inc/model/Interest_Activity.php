@@ -14,7 +14,7 @@
 			$this->comment = new Comment();
 		}
 		
-		public function addMomentInterestActivityForUserByInterestId($user_id,$interest_id, $description, $date, $attached_picture){
+		public function addMomentInterestActivityForUserByInterestId($user_id,$interest_id, $description, $date, $attached_picture, $caption){
 			//the interest is editable by the given user
 			$unique_hash = $this->generateUniqueHash();
 			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`interest_id`,`type`,`post_time`,`hash`) VALUES(?, ?, ?, ?, ?)");
@@ -25,7 +25,7 @@
 				if($stmt->execute()){
 					$interest_activity_id = $this->connection->insert_id;
 					$this->moment = new Moment($interest_activity_id);
-					if($this->moment->addMomentForUser($user_id, $description, $date, $attached_picture) === false){
+					if($this->moment->addMomentForUser($user_id, $description, $date, $attached_picture, $caption) === false){
 						//failed
 						$this->deleteRowById($interest_activity_id);
 						return false;
@@ -68,8 +68,9 @@
 						$moment_photo = $prefix->getUserMediaPrefix($interest_activity['user_id']).'/'.$moment_photo;
 					}
 					
+					$caption =  $this->moment->moment_photo->getMomentPhotoCaptionByMomentId($moment['id']);
 					
-					$comment_block = $this->getCommentBlockByActivityId($activity_id);
+					//$comment_block = $this->getCommentBlockByActivityId($activity_id);
 					$comment_number = $this->comment->getCommentNumberForTarget($activity_id);
 					ob_start();
 					include(SCRIPT_INCLUDE_BASE.'phtml/child/post_moment_block.phtml');
@@ -93,6 +94,14 @@
 			}
 			return $comment_block;
 		}
+		
+		public function getCommentBlockByActivityKey($key){
+			$activity_id = $this->getRowIdByHashkey($key);
+			if($activity_id !== false){
+				return $this->getCommentBlockByActivityId($activity_id);
+			}
+		}
+		
 		
 		
 		public function getActivityIdCollectionByInterestId($interest_id){

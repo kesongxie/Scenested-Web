@@ -25,6 +25,7 @@ body{
 	padding-bottom:80px;
 }
 
+
 div{
 	outline:none;
 	word-wrap: break-word;
@@ -60,6 +61,7 @@ textarea{
 	display:none !important;
 }
 
+
 .hdn-input{
 	width:0px;
 	height:0px;
@@ -70,6 +72,9 @@ textarea{
 	left:0px;
 }
 
+.disable-hover {
+  pointer-events: none;
+}
 .clr{
 	clear:both;
 }
@@ -702,14 +707,14 @@ div.ui-datepicker{
 }
 
 .comment-block .comment .reply-comment{
-	margin-left: 20px;
+	margin-left:20px;
 }
 .comment-block .comment .reply-comment:hover{
 	opacity:0.9;
 }
 .comment-block .comment .thumb{
 	opacity:0.3;
-	margin-left: 10px;
+	margin-left:10px;
 	position: relative;
 	top: 2px;
 	cursor: pointer;

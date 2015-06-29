@@ -124,6 +124,7 @@ $(document).ready(function(){
 			contentType: false,
 			data:data,
 			success:function(resp){
+				console.log(resp);
 				if(resp == '1'){
 					presentPopupDialog("Bad Image", BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 					imgTarget.attr('src',old_src);
@@ -326,9 +327,7 @@ $(document).ready(function(){
 			var parentDiv = $('#add-new-interest');
 			
 			var loading_wrapper = parentDiv.find('.loading-icon-wrapper');
-			loading_wrapper.show();
 			var actionButton = parentDiv.find('.edit-dialog-footer .action-button');
-			actionButton.text("Loading...");
 			
 			
 			var image_label =parentDiv.find('.target-image');
@@ -354,6 +353,10 @@ $(document).ready(function(){
 			data.append('description',description);
 			data.append('experience',experience);
 			
+			loading_wrapper.show();
+			actionButton.text("Loading...");
+			
+			
 			$.ajax({
 				url:AJAX_DIR+'add_interest.php',
 				type:'POST',
@@ -361,6 +364,8 @@ $(document).ready(function(){
 				contentType: false,
 				data:data,
 				success:function(resp){
+					loading_wrapper.hide();
+					actionButton.text("Add Interest");
 					if(resp == '1'){
 						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 					}else if(resp == '2'){
@@ -368,8 +373,6 @@ $(document).ready(function(){
 					}else if(resp == '3'){
 						presentPopupDialog("Interest Existed",'The interest <span class="plain-lk pointer" style="color:#062AA3">'+ name + '</span> has already existed', "Got it", "", null, null );
 					}else{	
-						loading_wrapper.hide();
-						actionButton.text("Add Interest");
 						var add_interest_wrapper = $('#add-new-interest-wrapper');
 						add_interest_wrapper.css('-webkit-animation',"zoomOut 0.5s").css('animation',"zoomOut 0.5s").addClass('hdn');
 						$('.interest-content-inner-wrapper').addClass('hdn');
@@ -594,7 +597,7 @@ $(document).ready(function(){
 			var image_file = parentDiv.find('input[type=file]');
 			var description_txtarea = parentDiv.find('.desc');
 			var date_input = parentDiv.find('.add-date');
-			
+			var caption_input = parentDiv.find('.caption-input');
 			
 			//values
 			key = inner_wrapper.attr('data-key').trim();
@@ -614,8 +617,11 @@ $(document).ready(function(){
 				presentPopupDialog("Need A Date", "Please add a date for your moment", "Got it", "", null, null );
 				return false;
 			}
+			
+			var caption = caption_input.val().trim();
 			var data=new FormData();
 			data.append('attached-picture',$(image_file)[0].files[0]);
+			data.append('caption',caption);
 			data.append('description',desc);
 			data.append('date', date);
 			data.append('key',key);
@@ -630,7 +636,7 @@ $(document).ready(function(){
 				contentType: false,
 				data:data,
 				success:function(resp){
-					// console.log(resp);
+					console.log(resp);
 					if(resp == '1'){
 						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 						return false;

@@ -3,7 +3,7 @@
 	include_once 'User_Media_Base.php';
 
 	class User_Profile_Cover extends User_Media_Base{
-		var $table_name = "user_profile_cover";
+		private $table_name = "user_profile_cover";
 		
 		public function __construct(){
 			parent::__construct($this->table_name);

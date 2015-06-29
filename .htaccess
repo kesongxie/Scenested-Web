@@ -5,47 +5,26 @@ ErrorDocument 404 http://localhost:8888/lsere/404.php
 
 
 
-#profile.php?u=kesongxie&s=photos
-
-#http://localhost:8888/lsere/kesongxie/photos/pre/3
-
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase /lsere/
-	RewriteRule ^([a-zA-Z0-9]+)/notification$ notification.php [NC,L]
-</IfModule>
-
-
-
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase /lsere/
-	RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ profile.php?u=$1&s=$2&i=$3 [NC,L]
-</IfModule>
-
-
-
-
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase /lsere/
-	RewriteRule ^([a-zA-Z0-9]+)/photos/pre/([a-zA-Z0-9]+)$ photo.php?u=$1&p=$2 [NC,L]
-</IfModule>
-
-
-
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase /lsere/
-	RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ profile.php?u=$1&s=$2 [NC,L]
-</IfModule>
-
-
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	RewriteBase /lsere/
 	RewriteRule ^user/([a-zA-Z0-9]+).([a-zA-Z0-9]+)$ profile.php?f=$1&l=$2 [NC,L]
 </IfModule>
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /lsere/
+	RewriteRule ^user/([a-zA-Z0-9]+).([a-zA-Z0-9]+)/$ profile.php?f=$1&l=$2 [NC,L]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /lsere/
+	RewriteRule ^user/([a-zA-Z0-9]+).([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ profile.php?f=$1&l=$2&s=$3 [NC,L]
+</IfModule>
+
+
+
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On

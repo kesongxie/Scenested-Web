@@ -1,7 +1,7 @@
 <?php
 	include_once 'core_table.php';
 	class User_Media_Prefix extends Core_Table{
-		var $table_name = "user_media_prefix";
+		private $table_name = "user_media_prefix";
 	
 		public function __construct(){
 			parent::__construct($this->table_name);

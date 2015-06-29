@@ -65,8 +65,7 @@ $(document).ready(function(){
 				$('#signup-data-form .sign-up-alert').remove();
 				if(resp == '0'){
 					//animate successfully sign up
-					$('#signup_succeed #signup-success-on').html($('#signup-iden').val().trim().toLowerCase());
-					$('#signup_succeed').show();
+					$('#signup_succeed #signup-success-on').html($('#signup-iden').val().trim().toLowerCase()).removeClass('hdn');
 					$('#signup-body-footer-wrapper').remove();
 				}else{
 					switch (resp){

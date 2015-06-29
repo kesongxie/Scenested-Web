@@ -1,0 +1,29 @@
+<?php
+	include_once 'core_table.php';
+	include_once 'Noti_Sendable.php';
+	
+	class Reply_Notify_Post_User extends Noti_Sendable{
+		private  $table_name = "reply_notify_post_user";
+		public function __construct(){
+			parent::__construct($this->table_name);
+		}
+		
+		public function addReplyNotiForUser($user_id_get, $reply_id, $sent_time,$hash){
+			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id_get`,`reply_id`,`sent_time`,`hash`) VALUES(?, ?, ?, ?)");
+			$stmt->bind_param('ssis',$user_id_get, $reply_id, $sent_time, $hash);
+			if($stmt->execute()){
+				$stmt->close();
+				$noti_id = $this->connection->insert_id;
+				$this->noti_queue->addNotificationQueueForUser($user_id_get, $noti_id);
+			}
+			return false;
+		}
+		
+		public function deleteNotiQueue($key){
+			$row_id = $this->deleteNotiQueueForKey($key); //remove from the noti queue
+			$this->deleteRowById($row_id); //delete the row
+		}
+		
+		
+	}
+?>

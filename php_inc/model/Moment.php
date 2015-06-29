@@ -12,14 +12,14 @@
 			$this->moment_photo = new Moment_Photo();
 		}
 		
-		public function addMomentForUser($user_id, $description, $date, $photoFile){
+		public function addMomentForUser($user_id, $description, $date, $photoFile, $caption){
 			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`interest_activity_id`,`description`,`date`) VALUES(?, ?, ?)");
 			if($stmt){
 				$stmt->bind_param('iss',$this->activity_id,$description,$date);
 				if($stmt->execute()){
 					if($photoFile != null){
 						$moment_id = $this->connection->insert_id;
-						$moment_photo_url = $this->moment_photo->uploadMomentPhotoByMomentId($photoFile, $user_id, $moment_id);
+						$moment_photo_url = $this->moment_photo->uploadMomentPhotoByMomentId($photoFile, $user_id, $moment_id, $caption);
 						if($moment_photo_url === false){
 							$this->deleteRowById($moment_id);
 							$stmt->close();

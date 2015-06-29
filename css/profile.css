@@ -88,6 +88,7 @@
 
 #profile-sider-bar-left #avator-wrapper .avator-inner-bottom label .profile-image{
 	width: 60px;
+	min-height:60px;
 	margin: 0px 6px 0px 0px;
 }
 
@@ -146,7 +147,7 @@
 
 
 #profile-sider-bar-right{
-	width:63%;
+	width:67%;
 	vertical-align:top;
 	min-width:700px;
 	margin-left:10px;
