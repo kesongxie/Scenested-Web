@@ -18,7 +18,7 @@
 		}
 		
 		public function deleteLabelImageForUserByInterestId($user_id, $interest_id){
-			$url = $this->getLabelImageUrllByInterestId($interest_id);
+			$url = $this->getLabelImageUrlByInterestId($interest_id);
 			$this->deleteMediaByPictureUrl($url, $user_id);
 			$this->deleteRowBySelector('interest_id', $interest_id);
 		}

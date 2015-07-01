@@ -100,8 +100,8 @@
 }
 
 #profile-sider-bar-left #avator-wrapper .avator-inner-bottom .avator-name{
-	font-size: 16px;
-	color: #000;
+	font-size: 15px;
+	color: #323232;
 	font-weight: bold;
 	display: inline-block;
 	margin: 10px;
@@ -147,7 +147,7 @@
 
 
 #profile-sider-bar-right{
-	width:67%;
+	width:70%;
 	vertical-align:top;
 	min-width:700px;
 	margin-left:10px;
@@ -155,7 +155,7 @@
 
 #profile-sider-bar-right #profile-navigation-bar {
 	position: relative;
-	margin:32px 0px 16px 0px;
+	margin:22px 0px 16px 0px;
 	width: 100%;
 	min-width: 693px;
 	border-bottom: 1px solid #EEEEEE;
@@ -163,7 +163,7 @@
 
 #profile-sider-bar-right #profile-navigation-bar .navi-item {
 	position: relative;
-	font-size: 15px;
+	font-size: 13px;
 	cursor: pointer;
 	font-weight: bold;
 	padding: 6px 24px;
@@ -172,7 +172,7 @@
 }
 
 #profile-sider-bar-right #profile-navigation-bar .active-navi {
-	color: rgb(0, 0, 0);
+	color: rgb(18, 18, 18);
 	border-bottom: 3px solid rgb(10, 43, 138);
 	border-radius: 0px;
 }
@@ -267,6 +267,7 @@
 	overflow: hidden;
 }
 
+
 .interest-profile .desc{
 	height:88px;
 	width:100%;
@@ -306,3 +307,9 @@
 	height:22px;
 }
 
+
+.interest-profile .interest-profile-post .in-ed-dashed-top{
+	border-top:1px dashed #f0f0f0;
+	width:100%;
+	padding-top:4px;		
+}

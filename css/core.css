@@ -12,14 +12,14 @@ color:#777777;
 }
 
 body{
-	font-family: Times New Roman, Times, serif;
-	font-size: 15px;
+	font-size:14px;
 	position: relative;
-	min-width:1070px;
+	min-width: 1150px;
 	max-width:1750px;
 	background-color:#fff;
 	margin: 0px auto;
 	line-height: 1.5;
+	font-family:Gill, Helvetica, sans-serif;
 	-webkit-font-smoothing: subpixel-antialiased;
 	min-height:720px;
 	padding-bottom:80px;
@@ -98,6 +98,9 @@ textarea{
 	text-align:center;
 }
 
+.normal-font{
+	font-weight:normal !important;
+}
 	
 .txt_ofl{
 	white-space: nowrap;
@@ -117,6 +120,9 @@ textarea{
 	padding: 5px;
 }
 
+.default-message{
+	color:rgb(129, 128, 128);
+}
 .loading-container-wrapper{
 	width:100%;
 	height:100%;
@@ -387,7 +393,7 @@ div.ui-datepicker{
 }
 .dialog-header .dialog-header-inner{
 	height:100%;
-	margin:0px 0px 0px 12px;
+	margin:0px 0px 0px 16px;
 }
 
 .dialog-header .dialog-header-inner .dialog-header-left-item{
@@ -409,15 +415,16 @@ div.ui-datepicker{
 .dialog-header .dialog-header-inner .dialog-header-right-item .dialog-header-bar-option div{
 	color:#fff;
 	font-weight:bold;
-	font-size:15px;
+	font-size:13px;
 }
 
 
 .dialog-header .dialog-header-inner .bar-title{
 	color:#fff;
-	font-weight:bold;
+	font-weight:600;
 	white-space: nowrap;
 	overflow:hidden;
+	font-size:14px;
 	text-overflow:ellipsis
 }
 
@@ -433,7 +440,8 @@ div.ui-datepicker{
 	width:100%;
 }
 .dialog-body .visible-post-scope{
-	margin:10px 16px;
+	margin:8px 16px 10px 16px;
+	line-height: 1.48;
 }
 
 
@@ -452,9 +460,9 @@ div.ui-datepicker{
 	cursor:pointer;
 	font-weight:bold;
 	color:#fff;
-	padding:7px 6px;
+	padding:6px 16px;
 	border-radius:2px;
-	font-size:13px;
+	font-size:12px;
 	border:1px solid #f0f0f0;
 	background: #780000;
 	background: -webkit-linear-gradient(#a13030, #780000);
@@ -478,9 +486,9 @@ div.ui-datepicker{
 	background: -o-linear-gradient(#F6F6F6,#f0f0f0);
 	background: -moz-linear-gradient(#F6F6F6,#f0f0f0);
 	background: linear-gradient(#F6F6F6,#f0f0f0);
-	padding:7px 6px;
+	padding:6px 16px;
 	border-radius:2px;
-	font-size:13px;
+	font-size:12px;
 	border:1px solid #f0f0f0;
 	border-radius:0px;
 }
@@ -503,14 +511,14 @@ div.ui-datepicker{
 	min-height:60px;
 }
 .popup-dialog .dialog-body .body-text{
-	margin:10px 12px;
-	font-size:16px;
+	margin:10px 16px;
+	font-size:15px;
 }
 .popup-button{
-	padding:3px 4px;
+	padding:4px 6px;
 	min-width:60px;
 	text-align:center;
-	font-size:14px;
+	font-size:13px;
 	border:1px solid #EAEAEA;
 }
 
@@ -547,7 +555,7 @@ div.ui-datepicker{
 .interest-profile{
 	background:#fff;
 	position:relative;
-	margin-bottom:12px;
+	margin-bottom:14px;
 	box-shadow:1px 1px 10px #E8E8E8
 }
 .interest-profile .dialog-header{
@@ -561,9 +569,13 @@ div.ui-datepicker{
 }
 
 .interest-profile .dialog-body .first-cap{
-	font-size:20px;
-	color:#000;
-	font-weight:bold;
+	font-size: 20px;
+	color: #000;
+	font-weight: bold;
+	vertical-align: bottom;
+	margin-top: 0px;
+	position: relative;
+	top: 4px;
 }
 
 
@@ -572,20 +584,21 @@ div.ui-datepicker{
 }
 
 .interest-profile .dialog-body .interest-image-label img{
-	height:36px;
-	width:36px;
+	height:40px;
+	width:40px;
 	border-radius:50%;
-	margin:6px 10px 0px 0px;
+	margin:4px 10px 0px 0px;
 	
 }
 
 .interest-profile .dialog-body .limit-height{
 	overflow:hidden;
-	max-height:120px;
+	max-height:92px;
 }
+
 .post-text .limit-height{
 	overflow:hidden;
-	max-height:114px;
+	max-height:108px;	/* max-height:124px; */
 }
 
 .comment .limit-height{
@@ -595,7 +608,7 @@ div.ui-datepicker{
 
 .interest-profile .dialog-body .exp{
 	font-weight:bold;
-	color:#000;
+	color:#5F5F5F;
 	margin:6px 0px;
 }
 
@@ -622,31 +635,32 @@ div.ui-datepicker{
 	cursor: pointer;
 	margin-right: 6px;
 	float: left;
-	height: 40px;
-	width: 40px;
+	height: 44px;
+	width: 44px;
 	box-shadow: 1px 1px 1px #D9D9D9;
 }
 .post-wrapper{
 	box-shadow: 1px 1px 10px #E8E8E8;
-	padding: 14px;
+	padding: 12px;
 	margin-bottom: 10px;
 	background:#fff;
 	position:relative;
+	border:1px solid #EAEAEA;
 }
 
 .profile-name{
 	color: #1C23AE;
-	font-weight: bold;
+	font-weight: 600;
 }
 .post-wrapper .content{
-	margin-top:12px;
+	margin-top:18px;
 }
-.post-wrapper .content .moment-date{
+.post-wrapper .moment-date{
 	text-align: right;
-	margin-right: 10px;
-	color: black;
-	font-weight: bold;
-	margin-top: 6px;
+	margin-right: 6px;
+	color: #0D0D0D;
+	font-weight: 600;
+	margin-top: 12px;
 }
 
 .post-operation-icon{
@@ -726,4 +740,101 @@ div.ui-datepicker{
 
 /*ends with user post template*/
 
+/*starts time picker*/
 
+.asct {
+  background: #f0f0f0;
+}
+.time_picker_outer_wrapper{
+	position:absolute;
+	border-radius: 4px;
+	display:none;
+	z-index:2;
+	box-shadow: -1px -1px 17px #B6B6B6;
+}
+
+.time_picker_inner_header{
+	background:#f0f0f0;
+	padding:4px;
+	 background: -webkit-linear-gradient(#f0f0f0, #bfbdbd); /* For Safari */
+	background: -o-linear-gradient(#f0f0f0,#bfbdbd); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#f0f0f0,#bfbdbd); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#f0f0f0,#bfbdbd); 
+	border-radius: 4px 4px 0px 0px ;
+	text-align:center;
+	font-size:13px;
+}
+
+.time_picker_inner_wrapper{
+	position:relative;
+	height:150px;
+	border:1px solid #f0f0f0;
+	z-index:10;
+	width:100px;
+	font-size:12px;
+	background: #fff;
+	border-radius: 0px 0px 4px 4px;
+}
+
+.time_picker_item,.ampm_part_item{
+	padding:2px;
+	cursor:pointer;
+}
+
+.time_picker_item:hover,.ampm_part_item:hover{
+	background:#f0f0f0;
+}
+
+
+.time_picker_time_part {
+	float:left;
+	border-right:1px solid #f0f0f0;
+	text-align:center;
+	overflow-y:scroll;
+	width:60%;
+	height:100%;
+}
+
+.time_picker_ampm_part{
+	float:left;
+	text-align:center;
+	width:38%;
+}
+/*ends time picker*/
+
+
+
+/*starts with evt-block template*/
+
+
+.evt-block{
+	padding:0px;
+}
+.evt-block .title{
+	text-align:center;
+	font-weight:500;
+	margin:10px 0px;
+	/* color:rgb(114, 113, 113); */
+	color:rgb(89, 89, 89);
+	font-size:20px;
+}
+
+.evt-block .moment-date{
+	text-align:center !important;
+	padding:10px 14px;
+}
+
+.evt-block .evt-action-button {
+  background-color: #3E7FF5;
+  color: #fff;
+  padding: 8px 34px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.evt-block .evt-action-button:hover{
+	background-color:#2C68D3;
+
+}
+/*ends with evt-block template*/

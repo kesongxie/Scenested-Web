@@ -16,13 +16,22 @@ function doneWithInterestEditing(editingDiv){
 function renderVisibleScope(desc,src){
 	desc = desc.trim();
 	var description = "";
-	if(desc.substr(1,1) != ' '){
-		description+='<span  class="first-cap" style="position:relative;top:0px;margin-right:-3px;">'+desc.substr(0,1)+'</span>';
+	
+	if(desc != ''){
+		if(desc.substr(1,1) != ' '){
+			description+='<span  class="first-cap" style="position:relative;top:0px;margin-right:-3px;">'+desc.substr(0,1).toUpperCase()+'</span>';
+		}else{
+			description+='<span class="first-cap" >'+desc.substr(0,1).toUpperCase()+'</span>';
+		}
+		description+='<span> '+desc.substr(1)+'</span>';
 	}else{
-		description+='<span class="first-cap" >'+desc.substr(0,1)+'</span>';
+		description = '<span class="default-message">There is no description available for this interest yet</span>';
 	}
-	description+='<span>'+desc.substr(1)+'</span>';
-	return '<div class="visible-content limit-height"><div class="interest-image-label"><img src='+src+'></div>'+description+'</div>';
+	
+	if(src != ''){
+		return '<div class="interest-image-label"><img src='+src+'></div>'+description;
+	}
+	return  description;
 }
 
 
@@ -64,6 +73,7 @@ function loadInterest(thisE){
 	$('#interest-content-wrapper').removeClass('hdn'); //show the interest content div
 	if(inner_wrapper.length > 0){
 		//show
+		$(window).scrollTop(0);
 		thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
 		$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
 		inner_wrapper.removeClass('hdn').addClass('blk');
@@ -76,6 +86,7 @@ function loadInterest(thisE){
 			data:{label_key:label_key},
 			success:function(resp){
 				if(resp != '1'){
+					$(window).scrollTop(0);
 					thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
 					$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
 					$('#interest-content-wrapper').append(resp);
@@ -193,6 +204,26 @@ $(document).ready(function(){
 		});
 		
 	});
+	
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.interest-content-inner-wrapper');
+			parentDiv.find('.interest-profile-moment').addClass('hdn').css('-webkit-animation',"").css('animation','');
+			parentDiv.find('.interest-profile-event').removeClass('hdn');
+		
+		}
+	
+	},'.bar-evt');
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.interest-content-inner-wrapper');
+			parentDiv.find('.interest-profile-event').addClass('hdn');
+			parentDiv.find('.interest-profile-moment').removeClass('hdn');
+		}
+	},'.bar-moment');
+	
 	
 	
 	$('body').on({
@@ -400,6 +431,7 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
+			$(window).scrollTop(0);
 			var activelabelFor = $('#interest-content-wrapper .blk').attr('data-key');
 			var thisO = $(this);
 			var activeSideBarLabel = $('#interest-navi').find('.interest-sider-navi[data-labelfor='+activelabelFor+']');
@@ -437,6 +469,7 @@ $(document).ready(function(){
 	$('#interest-navi').on({
 		click:function(){
 			loadInterest($(this));
+			
 		}
 	},'.interest-side-label');
 	
@@ -475,14 +508,11 @@ $(document).ready(function(){
 	
 	
 	
-	
-	
-	
 	$('body').on({
 		click:function(){
 			var parentDiv = $(this).parents('.interest-profile');
 			parentDiv.find('.interest-profile-intro').css('-webkit-animation',"flipOutY 0.4s").css('animation',"flipOutY 0.4s").addClass('hdn');
-			parentDiv.find('.interest-profile-post').css('-webkit-animation',"flipInY 0.4s").css('animation',"flipInY 0.4s").removeClass('hdn');
+			parentDiv.find('.interest-profile-moment').css('-webkit-animation',"flipInY 0.4s").css('animation',"flipInY 0.4s").removeClass('hdn');
 
 		}
 	
@@ -511,7 +541,7 @@ $(document).ready(function(){
 			}
 			var imageSet = image_file.attr('data-set');
 			var key = image_file.attr('data-key');
-			var description = description_txtarea.val();
+			var description = description_txtarea.val().trim();
 			var exp = parentDiv.find('select').val();
 			var experience = $('option:selected', select).attr('data-option');
 			var data=new FormData();
@@ -543,7 +573,9 @@ $(document).ready(function(){
 						actionButton.text("Update");
 						var sideBarParent = $('#interest-navi').find('.interest-side-label[data-labelfor='+key+']');
 						//modify the side bar
-						sideBarParent.find('img').attr('src',updated_image_src);
+						if(imageSet != 'false'){
+							sideBarParent.find('img').attr('src',updated_image_src);
+						}
 						sideBarParent.find('.txt_ofl').text(name).attr('title',name);
 						sideBarParent.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
 						var intro = doneWithInterestEditing(parentDiv).find('.interest-profile-intro');
@@ -552,7 +584,9 @@ $(document).ready(function(){
 						},200);
 						//modify the intro
 						intro.find('.main-title').text(name);
-						intro.find('.exp').text(exp);
+						if(experience != '-1'){
+							intro.find('.exp').text(exp);
+						}
 						intro.find('.visible-content').html(renderVisibleScope(description,updated_image_src ));
 						setVisibleContent();
 						
@@ -626,9 +660,9 @@ $(document).ready(function(){
 			data.append('date', date);
 			data.append('key',key);
 			
-			//parentDiv.find('.loading-icon-wrapper').show();
+			parentDiv.find('.loading-icon-wrapper').show();
 			var actionButton = parentDiv.find('.edit-dialog-footer .action-button');
-			//actionButton.text("Loading...");
+			actionButton.text("Loading...");
 			$.ajax({
 				url:AJAX_DIR+'post_moment.php',
 				type:'POST',
@@ -644,6 +678,9 @@ $(document).ready(function(){
 						return false;
 					}else if(resp == '3'){
 						presentPopupDialog("Interest Existed",'The interest <span class="plain-lk pointer" style="color:#062AA3">'+ name + '</span> has already existed', "Got it", "", null, null );
+					}else if(resp == '4'){
+						presentPopupDialog("Need a Date",'Please add a date for your moment', "Got it", "", null, null );
+
 					}else{	
 						parentDiv.find('.preview-container').addClass('hdn');
 						image_label.attr('src','');
@@ -658,9 +695,99 @@ $(document).ready(function(){
 			});
 		}
 	
-	},'.post-moment')
+	},'.post-moment');
 	
 	
+	
+	
+	
+	$('body').on({
+		click:function(){
+			var inner_wrapper = $(this).parents('.interest-content-inner-wrapper');
+			
+			var parentDiv = $(this).parents('.interest-profile-post');
+			var image_label =parentDiv.find('.target-image');
+			var updated_image_src = image_label.attr('src');
+			
+			//elements
+			var image_file = parentDiv.find('input[type=file]');
+			var title_input = parentDiv.find('.evt-title');
+			var description_txtarea = parentDiv.find('.evt-desc');
+			var location_input =  parentDiv.find('.evt-loca');
+			var date_input = parentDiv.find('.evt-date');
+			var time_input = parentDiv.find('.evt-time');
+			var caption_input = parentDiv.find('.caption-input');
+			
+			//key
+			key = inner_wrapper.attr('data-key').trim();
+			if(key == ''){
+				return false;
+			}
+			
+			var title = title_input.val().trim();
+			if(title == ''){
+				presentPopupDialog("Need a Title", "Please add a title for your event", "Got it", "", null, null );
+				return false;
+			}
+			
+			var desc = description_txtarea.val().trim();
+			if(desc == ''){
+				presentPopupDialog("Need Some Descriptions", "Please add some descriptions about your event", "Got it", "", null, null );
+				return false;
+			}
+			
+			
+			
+			var location = location_input.val().trim();
+			var date =  date_input.val().trim();
+			var time = time_input.val().trim();
+			var caption = caption_input.val().trim();
+			var data=new FormData();
+			data.append('attached-picture',$(image_file)[0].files[0]);
+			data.append('caption',caption);
+			data.append('title',title);
+			data.append('location',location);
+			data.append('description',desc);
+			data.append('date', date);
+			data.append('time', time);
+			data.append('key',key);
+			
+			parentDiv.find('.loading-icon-wrapper').show();
+			var actionButton = parentDiv.find('.edit-dialog-footer .action-button');
+			actionButton.text("Loading...");
+			
+			$.ajax({
+				url:AJAX_DIR+'post_event.php',
+				type:'POST',
+				processData: false,
+				contentType: false,
+				data:data,
+				success:function(resp){
+					console.log(resp);
+					if(resp == '1'){
+						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
+						return false;
+					}else if(resp == '2'){
+						return false;
+					}else if(resp == '3'){
+						presentPopupDialog("Need a Ttile",'Please add a title for your event', "Got it", "", null, null );
+					}else if(resp == '4'){
+						presentPopupDialog("Need some descriptions",'Please add some descriptions about your event', "Got it", "", null, null );
+					}else if(resp == '5'){
+						presentPopupDialog("Date",'It seems the date is not quite right', "Got it", "", null, null );
+					}else{	
+						parentDiv.find('.preview-container').addClass('hdn');
+						image_label.attr('src','');
+						parentDiv.find('.interest-profile-event input').val('');
+						doneWithInterestEditing(parentDiv);
+						inner_wrapper.find('.interest-content-right').prepend(resp);
+						setVisibleContent();
+					}
+				}
+			});
+		}
+	
+	},'.post-event');
 	
 	
 	

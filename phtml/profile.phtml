@@ -22,8 +22,8 @@
 		<?php require_once 'child/loggedin_header.phtml'; ?>
 		<div id="profile-global-container" >
 			<div id="profile-sider-bar-left" class="inline-blk">
-					<div id="avator-wrapper">
-						<div class="avator-inner-top"  style="z-index:1">
+					<div id="avator-wrapper" style="height:230px;">
+						<div class="avator-inner-top"  style="height:54%;z-index:1">
 							<img class="profile-image" src="<?php echo $user->getLatestCoverForuser($request_user_page_id); ?>">
 							
 							<?php if($page_own):  //allow changing ?>
@@ -58,6 +58,32 @@
 							<div class="avator-name"><?php echo htmlentities($request_user_page_fullname); ?></div>
 						</div>
 					</div>
+					
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+					<div style="padding:10px;margin-top:20px;">
+						<div style="color:#000;font-weight:bold;font-size:16px;">Upcomings</div>
+						<div style="background:#fff;" class="hdn"> 
+	Kesong has no upcoming events 	<span href="" class="plain-lk pointer" style="color:#062AA3">Know what he is willing to join?</span>
+</div>
+
+	<div style="background:#fff;">
+	You have no upcoming events 	<span href="" class="plain-lk pointer" style="color:#062AA3">Add what you are willing to join</span>
+</div>
+					</div>
+					
+				
+				
 			</div>
 			
 			<div id="profile-sider-bar-right" class="inline-blk">
@@ -86,18 +112,29 @@
 <div id="side-bar-notification-center" ></div>
 		
  -->
+ 	<div class="time_picker_outer_wrapper popover">
+		<div class="time_picker_inner_header">
+			Select Time
+		</div>
+		<div class="time_picker_inner_body">
+			<div class="time_picker_inner_wrapper">
+				<div class="time_picker_time_part">
+				<div class="time_picker_item">00:30</div><div class="time_picker_item asct">01:00</div><div class="time_picker_item">01:30</div><div class="time_picker_item">02:00</div><div class="time_picker_item">02:30</div><div class="time_picker_item">03:00</div><div class="time_picker_item">03:30</div><div class="time_picker_item">04:00</div><div class="time_picker_item">04:30</div><div class="time_picker_item">05:00</div><div class="time_picker_item">05:30</div><div class="time_picker_item">06:00</div><div class="time_picker_item">06:30</div><div class="time_picker_item">07:00</div><div class="time_picker_item">07:30</div><div class="time_picker_item">08:00</div><div class="time_picker_item">08:30</div><div class="time_picker_item">09:00</div><div class="time_picker_item">09:30</div><div class="time_picker_item">10:00</div><div class="time_picker_item">10:30</div><div class="time_picker_item">11:00</div><div class="time_picker_item">11:30</div><div class="time_picker_item">12:00</div></div>
+				
+				<div class="time_picker_ampm_part">
+					<div class="ampm_part_item asct">AM</div>
+					<div class="ampm_part_item">PM</div>
+				</div>
+			</div>
+		</div>
+	</div>
+ 
 	<div id="dialog-popup-overlay" class="overlay hdn"></div>	
 	<div id="popup-dialog-wrapper" class="vertical-center hdn"style="position:fixed;width:100%;margin-top:-40px;z-index:10000;text-align:center;">
 	</div>
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
 	</body>
+	
 </html>

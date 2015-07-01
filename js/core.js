@@ -61,7 +61,7 @@ function setVisibleContent(){
 	$('.visible-content').each(function(){
 		if($(this)[0].scrollHeight > $(this).innerHeight() ){
 			if($(this).parents('.visible-post-scope').find('.visible-control').length < 1){
-				$(this).parents('.visible-post-scope').append('<div class="visible-control plain-lk pointer inline-blk rdm" >Read more</div>');
+				$(this).parents('.visible-post-scope').find('.visible-content').after('<div class="visible-control plain-lk pointer inline-blk rdm" >Read more</div>');
 			}
 		}else{
 			$(this).parents('.visible-post-scope').find('.visible-control').remove();
@@ -200,7 +200,7 @@ $(document).ready(function(){
  			$(this).datepicker({ dateFormat: "mm-dd-yy" });
  		},
  		focus:function(){
- 			$(this).datepicker({ dateFormat: "mm-dd-yy" });
+ 		 	$(this).datepicker({ dateFormat: "mm-dd-yy" });
  		}
  	},'.add-date');
 
@@ -365,11 +365,6 @@ $(document).ready(function(){
 	
 	
 	
-	
-	
-	
-	
-	
 	$('body').on({
 		focus:function(){
 			$(this).css('cursor','text');
@@ -493,6 +488,39 @@ $(document).ready(function(){
 		}
 	},'.comment-block .comment .trash-reply');
 	
+	
+	/*time picker*/
+	
+	$('body').on({
+		click:function(){
+			var pos = $(this).offset();
+			$('.time_picker_outer_wrapper').css('top',pos.top+30).css('left',pos.left).show();
+			return false;		
+		},
+		blur:function(){
+			var parObj = $(this);
+			$('.time_picker_outer_wrapper').find('.time_picker_item').on('click',function(){
+				var tm=$(this).text().trim();
+				parObj.val(tm+" "+$('.time_picker_ampm_part .asct').text().trim());
+				$('.time_picker_item').removeClass('asct');
+				$(this).addClass('asct');
+				return false;
+			});
+			$('.time_picker_outer_wrapper').find('.ampm_part_item').on('click',	function(){
+				var ampm=$(this).text().trim();
+				parObj.val($('.time_picker_time_part .asct').text().trim()+" "+ampm);
+				$('.ampm_part_item').removeClass('asct');
+				$(this).addClass('asct');
+			});
+			if(parObj.val().trim() != ''){
+				parObj.val($('.time_picker_time_part .asct').text().trim()+' '+$('.time_picker_ampm_part .asct').text().trim());
+			}
+		}
+		
+	
+	},'.evt_tm');
+	
+
 	
 	
 	

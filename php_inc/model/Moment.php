@@ -25,8 +25,6 @@
 							$stmt->close();
 							return false;
 						}
-						$activity_id = $moment_id;
-						
 					}
 					$stmt->close();
 					return $this->activity_id;

@@ -24,13 +24,16 @@
 							<img src="<?php echo U_IMGDIR.$interest_label_image ?>" />
 						</div>
 					<?php  endif;?>
-		
+					<?php  if($interest['description'] != ''):?>
 					<?php if(substr($interest['description'],1,1)!=' ') :?>
-						<span  class="first-cap" style="position:relative;top:0px;margin-right:-3px;"><?php echo strtoupper(substr($interest['description'],0,1))?></span>
+						<span  class="first-cap" style="margin-right:-3px;"><?php echo strtoupper(substr($interest['description'],0,1))?></span>
 					<?php else: ?>
 						<span class="first-cap" ><?php echo strtoupper(substr($interest['description'],0,1))?></span>
 					<?php endif; ?>
 					<span><?php echo htmlentities(substr($interest['description'],1)); ?></span>
+					<?php else: ?>
+						<span class="default-message">There is no description available for this interest yet</span>
+					<?php endif; ?>
 				</div>
 			</div>
 		
@@ -83,8 +86,7 @@
 					<div class="in-name-input-wrapper">
 						<input type="text"  class="in-ed-input in-txt-n" value="<?php echo htmlentities($interest['name']); ?>" maxlength="32" placeholder="Add a name for your interest" title="add an name for your interest">
 					</div>
-					<textarea class="in-ed-input" style="height:80px;margin-top:3px;" placeholder="Let your friends know more about your interest, like experience, favoriate event, etc... "  title="add some descriptions about your interest"><?php echo htmlentities($interest['description']); ?>
-					</textarea>
+					<textarea class="in-ed-input" style="height:80px;margin-top:3px;" placeholder="Let your friends know more about your interest, like experience, favoriate event, etc... "  title="add some descriptions about your interest"><?php echo htmlentities($interest['description']); ?></textarea>
 					<div style="text-align:right;padding:10px 0px">
 						<select class="ep">
 						
@@ -121,10 +123,9 @@
 			<div class="dialog-header-inner">
 				<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center" title="Guitar and Music"><?php echo htmlentities($interest['name']);  ?></div></div>
 				<div class="inline-blk right-align dialog-header-right-item">
-						<!-- 
-<div class="bar-title dialog-header-bar-option inline-blk pointer" style="width:40%;"><div class="vertical-center" style="font-size:13px;">Event</div></div>
+						<div class="bar-title dialog-header-bar-option inline-blk pointer bar-evt" style="width:40%;"><div class="vertical-center" style="font-size:13px;">Event</div></div>
 						
- --><div class="bar-title dialog-header-bar-option inline-blk pointer" style="width:50%;background-color:#8a0000;"><div class="vertical-center" style="font-size:13px;">Moment</div></div>
+<div class="bar-title dialog-header-bar-option inline-blk pointer" style="width:50%;background-color:#8a0000;"><div class="vertical-center" style="font-size:13px;">Moment</div></div>
 				</div>
 			</div>
 		</div>
@@ -134,7 +135,7 @@
 					<textarea class="desc" placeholder="How's your <?php echo htmlentities($interest['name']); ?> going..."></textarea>
 				</div>
 				<div style="border-top:1px dashed #f0f0f0;width:100%;" class="pointer center-align">
-					<input class="add-date" placeholder="Add a date for this moment">
+					<input type="text" class="add-date" placeholder="Add a date for this moment">
 				</div>
 				<div class="preview-container hdn">
 					<div class="inner" style="background:#f0f0f0;">
@@ -167,6 +168,64 @@
 
 	
 	
-	
+	<div class="interest-profile-event interest-profile-post hdn sub">
+		<div class="dialog-header">
+			<div class="dialog-header-inner">
+				<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center" title="Guitar and Music"><?php echo htmlentities($interest['name']);  ?></div></div>
+				<div class="inline-blk right-align dialog-header-right-item">
+						<div class="bar-title dialog-header-bar-option inline-blk pointer" style="width:40%;background-color:#8a0000;"><div class="vertical-center" title="Post an event you had experienced or a new hangout" style="font-size:13px;">Event</div></div>
+						
+<div class="bar-title dialog-header-bar-option inline-blk pointer bar-moment" style="width:50%;"><div class="vertical-center" style="font-size:13px;">Moment</div></div>
+				</div>
+			</div>
+		</div>
+		<div class="dialog-body">
+			<div style="margin:10px 10px 0px 8px;position:relative">
+				<div style="width:100%;">
+					<input type="text" class="in-ed-input evt-title" placeholder="Add a title for you event...">
+				</div>
+				<div class="in-ed-dashed-top pointer">
+					<textarea class="desc evt-desc" placeholder="Add some description about your event..."></textarea>
+				</div>
+				<div class="in-ed-dashed-top"  style="width:100%;">
+					<input type="text" class="in-ed-input evt-loca" placeholder="Add a location for your event...">
+				</div>
+				<div class="in-ed-dashed-top"  style="width:100%;">
+					<input type="text" class="add-date in-ed-input evt-date" placeholder="Add a date for your event...">
+				</div>
+				<div class="in-ed-dashed-top"  style="width:100%;">
+					<input type="text" class="evt_tm add-time in-ed-input evt-time" placeholder="Add a time for your event...">
+				</div>
+				
+				
+				
+				<div class="preview-container hdn">
+					<div class="inner" style="background:#f0f0f0;">
+						<div class="preview-loading-wrapper hdn" style="position:absolute;top:0px;left:0px;width:100%;height:100%;background:#fff;opacity:0.6;">
+							<div class="center-align vertical-center"><img src="<?php echo IMGDIR; ?>animated-loading-bar.gif" width="22" height="22"></div>
+						</div>
+						<div class="target-container hdn" style="background:#fff;"><img src="" class="target-image" style="width:100%;"></div>
+						<img class="cross pointer animate-opacity" src="<?php echo IMGDIR; ?>c_icon.png" title="Remove this image" />
+					</div>
+					<div style="border-top:1px dashed #f0f0f0;margin-top:6px;">
+						<input type="text" class="caption-input" style="width:100%;border:0px;" placeholder="Caption you photo...">
+					</div>
+				</div>
+			
+				<div class="edit-dialog-footer" style="height:36px;">
+					<label class="pointer vertical-center photo-camera" >
+						<form method="POST" class="hdn-input" enctype="multipart/form-data">
+							<input class="hdn-input attched-photo"  type="file" name="file">
+						</form>
+						<img src="<?php echo IMGDIR; ?>camera.png"title="Attach an image" height="20" width="20">
+					</label>
+					<div class="inline-blk cancel-button">Cancel</div>
+					<div class="inline-blk action-button center-align post-event" style="margin-left:4px;min-width:34px;">Post</div>
+				</div>
+				<div class="loading-icon-wrapper" style="border-radius:0px;"><div class="vertical-center" style="text-align:center;"><img class="loading-icon" src="<?php  echo IMGDIR ?>loading_icon.gif" height="50" width="50"></div></div>
+
+			</div>
+		</div>
+	</div>
 	
 </div>

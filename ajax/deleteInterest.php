@@ -4,8 +4,7 @@
 	
 	if(isset($_POST['key']) && !empty(trim($_POST['key']))){
 		$interest = new Interest();
-		var_dump($interest->deleteInterestForUserByInterestId($_SESSION['id'], $_POST['key']));
-		
+		$interest->deleteInterestForUserByInterestId($_SESSION['id'], $_POST['key']);
 	}
 	
 	
