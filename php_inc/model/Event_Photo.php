@@ -14,7 +14,7 @@
 		
 		
 		public function deleteEventPhotoForUserByEventId($user_id, $event_id){
-			$url = $this->getEventPhotoUrlByMomentId($event_id);
+			$url = $this->getEventPhotoUrlByEventId($event_id);
 			if($url != false){
 				$this->deleteMediaByPictureUrl($url, $user_id);
 				$this->deleteRowBySelector('event_id', $event_id);

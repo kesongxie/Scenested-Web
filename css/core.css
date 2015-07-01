@@ -17,6 +17,7 @@ body{
 	min-width: 1150px;
 	max-width:1750px;
 	background-color:#fff;
+/* 	background-color:#FBFBFB */
 	margin: 0px auto;
 	line-height: 1.5;
 	font-family:Gill, Helvetica, sans-serif;
@@ -228,9 +229,9 @@ textarea{
 	box-shadow: 1px 1px 10px gray;
 	border-radius: 5px;
 	text-align: center;
-	padding: 6px 10px;
+	padding: 8px 14px;
 	color: #fff;
-	font-size: 19px;
+	font-size: 16px;
 	font-weight:bold;
 	position:absolute;
 	left: 64px;
@@ -553,10 +554,10 @@ div.ui-datepicker{
 }
 /* starts with interest profile template*/
 .interest-profile{
-	background:#fff;
 	position:relative;
-	margin-bottom:14px;
-	box-shadow:1px 1px 10px #E8E8E8
+	margin-bottom:20px;
+	box-shadow:1px 1px 10px #E8E8E8;
+	border:1px solid #EAEAEA;
 }
 .interest-profile .dialog-header{
 	height:44px;
@@ -603,12 +604,12 @@ div.ui-datepicker{
 
 .comment .limit-height{
 	overflow:hidden;
-	max-height:84px;
+	max-height:76px;
 }
 
 .interest-profile .dialog-body .exp{
 	font-weight:bold;
-	color:#5F5F5F;
+	color:#373737;
 	margin:6px 0px;
 }
 
@@ -637,20 +638,27 @@ div.ui-datepicker{
 	float: left;
 	height: 44px;
 	width: 44px;
-	box-shadow: 1px 1px 1px #D9D9D9;
+	box-shadow:1px 1px 3px #777777;
 }
 .post-wrapper{
 	box-shadow: 1px 1px 10px #E8E8E8;
 	padding: 12px;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 	background:#fff;
 	position:relative;
-	border:1px solid #EAEAEA;
+	border:1px solid #f0f0f0;
+	border-radius:4px;
 }
 
 .profile-name{
 	color: #1C23AE;
 	font-weight: 600;
+}
+.post-user-name{
+	color:#727272;
+}
+.post-user-name:hover{
+	color: rgb(36,89,182);
 }
 .post-wrapper .content{
 	margin-top:18px;
@@ -681,6 +689,10 @@ div.ui-datepicker{
 }
 .post-wrapper .toggle-operation:hover{
 	opacity:0.6;
+}
+
+.post-wrapper .post-inner-padding{
+	padding:14px 18px;
 }
 
 .comment-block .comment{
@@ -812,16 +824,22 @@ div.ui-datepicker{
 }
 .evt-block .title{
 	text-align:center;
-	font-weight:500;
+	font-weight:600;
 	margin:10px 0px;
-	/* color:rgb(114, 113, 113); */
-	color:rgb(89, 89, 89);
 	font-size:20px;
 }
 
-.evt-block .moment-date{
+.evt-block .evt-info-wrapper{
+	padding:20px 14px;
 	text-align:center !important;
-	padding:10px 14px;
+	margin-bottom:38px;
+	font-size:13px;
+}
+
+.evt-block .evt-info{
+	text-align:center;
+	font-weight:normal;
+	color:#6B6B6B;
 }
 
 .evt-block .evt-action-button {

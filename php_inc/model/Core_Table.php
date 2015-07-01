@@ -442,7 +442,6 @@
 		
 		public function getRowIdByHashkey($key){
 			return $this->getColumnBySelector('id', 'hash', $key);
-
 		}
 		
 		

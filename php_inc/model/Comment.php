@@ -94,8 +94,15 @@
 			if($comment_id !== false){
 				include_once 'Reply.php';
 				$reply = new Reply();
-				var_dump($reply->deleteAllReplysForCommentId($comment_id));
+				$reply->deleteAllReplysForCommentId($comment_id);
 			}
+		}
+		
+		public function deleteAllCommentsByActivityId($activity_id){
+			$this->deleteRowByNumericSelector('activity_id', $activity_id);
+			include_once 'Reply.php';
+			$reply = new Reply();
+			$reply->deleteAllReplyByActivityId($activity_id);
 		}
 		
 		public function getSelfIdCollectionByTargetId($target_id){

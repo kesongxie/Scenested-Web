@@ -84,8 +84,8 @@
 	$event = $interest_activity->addEventInterestActivityForUserByInterestId($_SESSION['id'],$key, $title,$description,$location, $date, $time, $attached_picture, $caption);
 	
 	
-	 if($moment !== false){
- 		echo $moment;
+	 if($event !== false){
+ 		echo $event;
  	}
  	
 	

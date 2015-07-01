@@ -40,7 +40,6 @@
 					return $this->activity_id;
 				}
 			}
-			echo $this->connection->error;
 			return false;
 		}
 		
@@ -51,5 +50,17 @@
 			return $this->getMultipleColumnsBySelector($column_array, 'interest_activity_id', $this->activity_id);	
 		}
 		
+		public function deleteEventForUserByActivityId($user_id){
+			//delete photos in this event
+			$event_id = $this->getColumnBySelector('id', 'interest_activity_id', $this->activity_id);
+			$this->event_photo->deleteEventPhotoForUserByEventId($user_id, $event_id);
+			
+			//delete comments in this moment
+			
+			//delete the row itself
+			$this->deleteRowByNumericSelector('interest_activity_id', $this->activity_id);
+			
+
+		}
 	}
 ?>

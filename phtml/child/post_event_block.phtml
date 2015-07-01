@@ -1,51 +1,76 @@
 <div class="post-wrapper post evt-block" data-key="<?php echo $hash; ?>">
-	<!-- 
-<div style="padding:16px 14px 20px 14px; "><a href="<?php echo $user_page_redirect; ?>"><img class="post-owner-picture" src="<?php echo $post_owner_pic; ?>"></a>
-	<a class="plain-lk" href="<?php echo $user_page_redirect; ?>"><span class="profile-name pointer"><?php echo htmlentities($fullname) ?></span></a>
-	<img src="<?php echo IMGDIR ?>down_arrow_icon.png" class="toggle-operation pointer hdn">
-	<div style="margin-left: 10px; color: #969696;"><?php echo $post_time ?></div>
+
+
+	<?php $displayable = isMediaDisplayable($event_photo); ?>
+
+	<?php if($displayable): ?>
+		<img src="<?php echo IMGDIR ?>white-down-arrow.png" style="float:none;position: absolute; right: 14px; top: 14px;"class="toggle-operation pointer hdn">
+		<div style="max-height:160px;overflow:hidden;background:#f0f0f0">
+			<img style="max-width:100%;" src="<?php echo U_IMGDIR.$event_photo ?>">
+		</div>
+	<?php else: ?>
+			<img src="<?php echo IMGDIR ?>down_arrow_icon.png" style="float:none;position: absolute; right: 10px; top: 10px;"class="toggle-operation pointer hdn">
+
+	<?php endif; ?>
 	
+	<?php if($displayable): ?>
+		<div style="padding:0px 14px 0px 14px; margin-top:-22px;">
+	<?php else: ?>
+		<div style="padding:20px 14px 0px 14px" ?>
+	<?php endif ?>
+			
+			<div class="inline-blk"><a href="<?php echo $user_page_redirect; ?>"><img class="post-owner-picture" style="float:none;width:50px;height:50px"src="<?php echo $post_owner_pic; ?>"></a></div>
+			<div class="inline-blk" style="vertical-align:bottom;padding-bottom:4px;">
+			<a class="plain-lk"  href="<?php echo $user_page_redirect; ?>">
+				<span class="profile-name pointer post-user-name"><?php echo htmlentities($fullname) ?></span>
+			</a>
+			<span style="margin-left: 10px; color: #969696;"><?php echo $post_time ?></span>
+		</div>
+	<img src="<?php echo IMGDIR ?>down_arrow_icon.png" class="toggle-operation pointer hdn">
+	
+	
+<!-- 
 
 		<div style="margin:10px 0px 0px 0px;color: #969696;"><?php 
 			//this is for upcoming post 
 			echo 'Kesong just planned a hangout';
 			//echo 'Shared one of his hangout';
 		 ?></div>
-
-		
-	</div> -->	
-
-	<?php if(isMediaDisplayable($event_photo)): ?>
-		<div style="max-height:200px;overflow:hidden;background:#f0f0f0">
-			<img style="max-width:100%;" src="<?php echo U_IMGDIR.$event_photo ?>">
-		</div>
-	<?php endif; ?>
+ -->
+	</div>	
+	
 
 	<div class="content">
-		<div class="post-text" style="padding:0px 18px;">
+		<div class="post-text" style="margin-top:30px;padding:0px 18px;">
 			<div class="visible-post-scope">
 				<div class="title"><?php echo $title; ?></div>
 				<div class="visible-content limit-height">
 					<div class="desc"><?php echo $description; ?></div>
 				</div>
-				<div class="moment-date" style="font-weight:normal;color:#6B6B6B"><?php echo $date ?><?php echo ', 2013 - Fri, 8:00 PM' ?></div>
-				<div style="text-align:center;font-weight:normal;color:#6B6B6B"><?php echo htmlentities($location) ?></div>
-
+				<div class="evt-info-wrapper">
+					<div class="evt-info"><?php echo $time; ?></div>
+					<div class="evt-info"><?php echo htmlentities($location) ?></div>
+				</div>
 			</div>
 		</div>
 		
-		
 		<div style="text-align:center; margin-bottom:10px;padding:10px;">
-			<div class="evt-action-button inline-blk">Details</div>
-		</div>
+
+		<?php if($isEventPassed): ?>
+			<!-- <div class="evt-action-button inline-blk">Details</div> -->
+			<div class="inline-blk plain-lk pointer" style="color:rgb(36, 89, 182)">View Moments</div>
+		<?php else: ?>
+			<div class="evt-action-button inline-blk">Join</div>
+		<?php endif;?>
+ 		</div>
 		
-		<div style="padding:0px 14px 14px 14px;">
+		<div class="post-inner-padding" style="padding-top:0px">
 			<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer toggle-comment" src="<?php echo IMGDIR ?>ci.png" title="Comment" height="16" width="16"><div class="inline-blk cmt-num" style="margin:-3px 8px 0px 0px"><?php echo $comment_number ?></div></div>
 			<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>favor_icon.png" title="Pin" height="18" width="18"><div class="inline-blk" style="margin-top:-1px;"></div></div>
 			<div class="inline-blk pointer" style="float:right;vertical-align:bottom"><img class="e_w_b_1_c_1_a" src="<?php echo IMGDIR ?>location_icon.png" height="17" width="17" title="Event Location"></div>
 		</div>
 	
-		<div class="comment-block hdn" style="padding:0px 14px 14px 14px;">
+		<div class="post-inner-padding comment-block hdn" style="padding-top:0px">
 			<textarea class="fcy-txt comment-txt" placeholder="Write down your thoughts..." data-key="<?php echo $hash; ?>"></textarea>
 			<div class="comment-container" style="margin-top:20px;">
 				

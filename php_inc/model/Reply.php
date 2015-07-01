@@ -175,6 +175,10 @@
 			}
 		}
 		
+		public function deleteAllReplyByActivityId($activity_id){
+			$this->deleteRowByNumericSelector('activity_id', $activity_id);
+		}
+		
 		
 		public function deleteAllReplysForCommentId($comment_id){
 			//select id and user_id_get

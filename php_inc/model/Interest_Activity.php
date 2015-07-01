@@ -52,25 +52,49 @@
 				include_once 'User_Table.php';
 				$user = new User_Table();
 				$fullname = $user->getUserFullnameByUserIden($interest_activity['user_id']);
-				$post_time = convertDateTimeToAgo($interest_activity['post_time'], true);	
+				$post_time = convertDateTimeToAgo($interest_activity['post_time'], false);	
 				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($interest_activity['user_id']);
 				$hash = $interest_activity['hash'];
 				
 				/*get data from the moment*/
 				$this->event = new event($activity_id);
 				$event = $this->event->loadEventResource();
-				$date = returnShortDate($event['date']);
-				$time = $event['time'];
+				$time = "";
+				if($event['date'] != null){
+					$time .= returnShortDate($event['date'],',').' - '.getWeekDayFromDate($event['date']);
+				}
+				
+				if($event['time'] != null){
+					if($event['date'] != null){
+						$time .= ', ';
+					}
+					$time .= convertTimeToAmPm($event['time']);
+				}
+				
+				
 				$title = $event['title'];
-				$location = $event['location'];
-
+				
+				$location = '';
+				if($event['location'] != null){
+					$location = $event['location'];
+				}
+				
+				$isEventPassed = (time() > strtotime($event['date'].$event['time']));				
 				$description = $event['description'];
 				include_once 'User_Media_Prefix.php';
 				$prefix = new User_Media_Prefix();
 				$event_photo = $this->event->event_photo->getEventPhotoUrlByEventId($event['id']);
-				if($event_photo !== false){
+				
+				$media_prefix = $prefix->getUserMediaPrefix($interest_activity['user_id']).'/';
+				if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo)){
 					$caption = $this->event->event_photo->getEventPhotoCaptionByPictureUrl($event_photo);
-					$event_photo = $prefix->getUserMediaPrefix($interest_activity['user_id']).'/'.$event_photo;
+					$event_photo = $media_prefix.$event_photo;
+				}else{
+					//get the label photo as the event cover
+					include_once 'User_Interest_Label_Image.php';
+					$label_image = new User_Interest_Label_Image();
+					$interest_id = $this->getColumnById('interest_id',$activity_id);
+					$event_photo = $media_prefix.$label_image->getLabelImageUrlByInterestId($interest_id);
 				}
 				
 				
@@ -127,7 +151,7 @@
 					include_once 'User_Table.php';
 					$user = new User_Table();
 					$fullname = $user->getUserFullnameByUserIden($interest_activity['user_id']);
-					$post_time = convertDateTimeToAgo($interest_activity['post_time'], true);	
+					$post_time = convertDateTimeToAgo($interest_activity['post_time'], false);	
 					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($interest_activity['user_id']);
 					$hash = $interest_activity['hash'];
 					
@@ -197,15 +221,25 @@
 		
 		
 		public function deleteActivityForUserByActivityId($user_id, $key){
-			 $activity_id = $this->getRowIdByHashkey($key);
-			 if($activity_id !== false){
-			 	if($this->deleteRowForUserById($user_id, $activity_id) !== false){
-			 		$this->moment = new Moment($activity_id);
-					$this->moment->deleteMomentForUserByActivityId($user_id);
-					$this->comment->deleteAllCommentsForTarget($activity_id);
+			$column_array = array('id','type');
+			$result = $this->getMultipleColumnsBySelector($column_array, 'hash', $key);
+			$activity_id = $result['id'];
+			$type = $result['type'];
+			if($activity_id !== false){
+				if($this->deleteRowForUserById($user_id, $activity_id) !== false){
+					if($type == 'm'){
+						$this->moment = new Moment($activity_id);
+						$this->moment->deleteMomentForUserByActivityId($user_id);
+					}else if($type == 'e'){
+						$this->event = new Event($activity_id);
+						$this->event->deleteEventForUserByActivityId($user_id);
+					}
+					$this->comment->deleteAllCommentsByActivityId($activity_id);
 				}
-			 }
+			}
 		}
+		
+		
 		
 		
 		

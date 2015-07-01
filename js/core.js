@@ -79,6 +79,7 @@ function removeActivity(sender){
 		method:'post',
 		data: {key:key},
 		success:function(resp){
+			console.log(resp);
 			postWrapper.css('-webkit-animation',"bounceOutDown 1s").css('animation',"bounceOutDown 1s");
 			setTimeout( function() {
 				postWrapper.remove();
@@ -430,12 +431,12 @@ $(document).ready(function(){
  					success:function(resp){
  						commentBlock.find('.comment-container').html(resp);
  						postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length);
- 					}
+ 						setVisibleContent();
+					}
  				});
 			}
-			
 			commentBlock.toggleClass('hdn');
-			setVisibleContent();
+			
 		}
 	},'.post-wrapper .content .toggle-comment');
 	

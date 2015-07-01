@@ -86,20 +86,57 @@
 				$text.=" ago";
 			}
    		}else{
-   			$text = 'just now';
+   			$text = 'Just now';
    		}
    		return $text;
     }
 		
+		
+	function getWeekDayFromDate($date){
+		$timestamp=strtotime($date);
+		$day_numeric= date('w',$timestamp);//0-6,Sun-Sat
+		switch ($day_numeric)
+		{
+		case 0:return 'Sun';break;
+		case 1:return 'Mon';break;
+		case 2:return 'Tue';break;
+		case 3:return 'Wed';break;
+		case 4:return'Thur';break;
+		case 5:return'Fri';break;
+		case 6:return'Sat';break;
+	
+		}
+	}	
+		
+	function convertTimeToAmPm($time){
+		$time=trim($time);
+		$h=(int)substr($time,0,2);
+		$m=substr($time,3,2);
+		if($h<12){
+			return $h.':'.$m.' AM';
+		}
+		else{
+			if($h==12){
+				return $h.':'.$m.' PM';
+			}
+			else if ($h>12){
+				$h-=12;
+				return $h.':'.$m.' PM';
+			}
+		}
+	}
+		
+		
+		
 	/*
 		for example, 2015 03 13 -> March 13 if the current year is the same, otherwise March 13 - 2013 
 	*/
-	function returnShortDate($date){
+	function returnShortDate($date, $delimeter = '-'){
 		$ts = strtotime($date);
 		if(date('Y',$ts) ==  date('Y'))
 			return date('M d',$ts);
 		else{
-			return date('M d - Y',$ts);
+			return date('M d '.$delimeter.' Y',$ts);
 		}
 	}		
 	
