@@ -122,7 +122,7 @@ textarea{
 }
 
 .default-message{
-	color:rgb(129, 128, 128);
+	color:rgb(158, 158, 158);
 }
 .loading-container-wrapper{
 	width:100%;
@@ -459,7 +459,7 @@ div.ui-datepicker{
 
 .action-button{
 	cursor:pointer;
-	font-weight:bold;
+	font-weight:500;
 	color:#fff;
 	padding:6px 16px;
 	border-radius:2px;
@@ -555,7 +555,7 @@ div.ui-datepicker{
 /* starts with interest profile template*/
 .interest-profile{
 	position:relative;
-	margin-bottom:20px;
+	margin-bottom:16px;
 	box-shadow:1px 1px 10px #E8E8E8;
 	border:1px solid #EAEAEA;
 }
@@ -609,7 +609,7 @@ div.ui-datepicker{
 
 .interest-profile .dialog-body .exp{
 	font-weight:bold;
-	color:#373737;
+	color:#0D0D0D;
 	margin:6px 0px;
 }
 
@@ -658,7 +658,7 @@ div.ui-datepicker{
 	color:#727272;
 }
 .post-user-name:hover{
-	color: rgb(36,89,182);
+	color: #1C23AE;
 }
 .post-wrapper .content{
 	margin-top:18px;
@@ -826,13 +826,12 @@ div.ui-datepicker{
 	text-align:center;
 	font-weight:600;
 	margin:10px 0px;
-	font-size:20px;
+	font-size:18px;
 }
 
 .evt-block .evt-info-wrapper{
 	padding:20px 14px;
 	text-align:center !important;
-	margin-bottom:38px;
 	font-size:13px;
 }
 
@@ -840,6 +839,7 @@ div.ui-datepicker{
 	text-align:center;
 	font-weight:normal;
 	color:#6B6B6B;
+	margin-bottom:10px;
 }
 
 .evt-block .evt-action-button {
@@ -856,3 +856,54 @@ div.ui-datepicker{
 
 }
 /*ends with evt-block template*/
+
+
+/*starts with chat template*/
+.chat-outer-wrapper{
+	border: 2px solid #f0f0f0;
+	background:#fff;
+	box-shadow: -10px 1px 10px #EAEAEA;
+	height: 84%;
+	min-width: 222px;
+	width: 17%;
+	background: white;
+	right: 0px;
+	bottom: 0px;
+	z-index: 96;
+	font-size: 12px;
+	position: fixed;
+	border-radius: 4px 0px 0px 0px;
+}
+
+
+
+
+
+.chat-outer-wrapper .chat-header{
+	padding: 10px 12px;
+	background-color: #3A3637;
+	position: relative;
+	font-weight: bold;
+	font-size: 15px;
+	border-radius: 4px 0px 0px 0px;
+}
+
+.chat-outer-wrapper .chat-header .title{
+	color: #fff;
+}
+
+.chat-outer-wrapper .chat-header #chat-search{
+	margin-left:10px;
+}
+/*ends with chat template*/
+
+.clip-text{
+    position: relative;
+}
+.clip-text::after{
+    position:absolute;
+    right:-1px;
+    bottom:0;
+    content:"..."
+}
+

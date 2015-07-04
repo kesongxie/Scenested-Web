@@ -115,6 +115,32 @@
 			return false;
 		}
 		
+		
+		public function getAllRowsColumnBySelectorForUser($column,$selector_column,$selector_value,$user_id, $asc = false){
+				$column = $this->connection->escape_string($column);
+				$selector_column = $this->connection->escape_string($selector_column);
+				if($asc){
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `user_id`=? AND `$selector_column` = ? ");
+				}else{
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE  `user_id`=? AND `$selector_column` = ? ORDER BY `id` DESC");
+				}
+				if($stmt){
+					$stmt->bind_param('is',$user_id, $selector_value);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							return $row;
+						 }
+					}
+				}
+				return false;
+		}
+		
+		
+		
+		
 		/*
 			result order by id ascend if $ascend is set to true
 		*/

@@ -62,24 +62,27 @@
 				
 				
 				
-				
-				
-				
-				
-				
-				
-				
-				
+				<!-- 
+
 				
 					<div style="padding:10px;margin-top:20px;">
+						<div style="color:#1E1E1E;font-weight:bold;font-size:16px;">Occupying</div>
+						<div style="background:#fff;" > 
+							Kesong hasn't updated what he is recently occupied with
+							<div href="" class="plain-lk pointer" style="color:#062AA3">Add what you are occupying recently</div>
+						</div>
+						
+					</div>
+ -->
+				
+				<div style="padding:10px;margin-top:20px;" >
 						<div style="color:#1E1E1E;font-weight:bold;font-size:16px;">Upcomings</div>
 						<div style="background:#fff;" class="hdn"> 
-	Kesong has no upcoming events 	<span href="" class="plain-lk pointer" style="color:#062AA3">Know what he is willing to join?</span>
-</div>
-
-	<div style="background:#fff;">
-	You have no upcoming events 	<span href="" class="plain-lk pointer" style="color:#062AA3">Add what you are willing to join</span>
-</div>
+							Kesong has no upcoming events <span href="" class="plain-lk pointer" style="color:#062AA3">Know what he is willing to join?</span>
+						</div>
+						<div style="background:#fff;">
+							You have no upcoming events <span href="" class="plain-lk pointer" style="color:#062AA3">Add what you are willing to join</span>
+						</div>
 					</div>
 					
 				
@@ -99,9 +102,9 @@
 					<div id="profile-mid-content">
 						<?php 
 							if(isset($_GET['s']) && $_GET['s'] == 'events'){
-								require_once 'child/event.phtml';
+								require_once 'child/event.php';
 							}else{
-								require_once 'child/interest.phtml';
+								require_once 'child/interest.php';
 							}
 						?>
 					</div>
@@ -112,6 +115,10 @@
 <div id="side-bar-notification-center" ></div>
 		
  -->
+ 
+ 	<?php include_once 'chat.php'; ?>
+ 
+ 
  	<div class="time_picker_outer_wrapper popover">
 		<div class="time_picker_inner_header">
 			Select Time
@@ -130,6 +137,13 @@
 	</div>
  
 	<div id="dialog-popup-overlay" class="overlay hdn"></div>	
+	
+	<div id="evt-preview" class="vertical-center hdn post evt-block" style="text-align:center;z-index:10000;position:fixed;width:100%;height:80%;">
+		<div class="inline-blk pht" style="border-radius:8px 0px 0px 8px;width:40%;background:#000;height:100%;"></div>
+		<div class="inline-blk ct" style="border-radius:0px 8px 8px 0px;width:30%;background:#fff;height:100%;"></div>
+
+	</div>
+	
 	<div id="popup-dialog-wrapper" class="vertical-center hdn"style="position:fixed;width:100%;margin-top:-40px;z-index:10000;text-align:center;">
 	</div>
 	

@@ -44,7 +44,6 @@
 		}
 		
 		
-		
 		public function loadEventResource(){
 			$column_array = array('id','title','description','location','date','time');
 			return $this->getMultipleColumnsBySelector($column_array, 'interest_activity_id', $this->activity_id);	

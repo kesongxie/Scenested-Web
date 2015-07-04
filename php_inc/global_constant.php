@@ -14,7 +14,10 @@
 	define("MEDIA_THUMBNAIL_PREFIX","thumb_");
 	define("MEDIA_U","media_u/");
 	define("SCRIPT_INCLUDE_BASE",$_SERVER['DOCUMENT_ROOT'].'/lsere/');
-	
+	define("TEMPLATE_PATH",SCRIPT_INCLUDE_BASE.'phtml/');
+	define("TEMPLATE_PATH_CHILD",TEMPLATE_PATH.'child/');
+	define("PHP_INC_PAHT",SCRIPT_INCLUDE_BASE.'php_inc/' );
+	define("MODEL_PATH",PHP_INC_PAHT.'model/');
 	
 	define("USER_PROFILE_ROOT", ROOTDIR.'user/'); //user profile page root
 	

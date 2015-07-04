@@ -1,0 +1,8 @@
+<div class="comment cmt<?php echo ($firstComment?' act':' hdn'); ?>">
+	<a href="<?php echo $user_page_redirect ?>"><img src="<?php  echo $post_owner_pic ?>" class="comment-from-picture"></a>
+	<div class="inner">
+		<a class="profile-name plain-lk normal-font"  href="<?php echo $user_page_redirect ?>"><?php echo htmlentities($fullname); ?>:</a>
+		<span><?php echo htmlentities($text) ?></span>
+	</div>
+</div>
+

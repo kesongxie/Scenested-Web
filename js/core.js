@@ -90,7 +90,7 @@ function removeActivity(sender){
 
 function removeComment(sender){
 	var parentDiv = sender.parents('.post');
-	var comment_block = sender.parents('.comment-block');
+	var comment_block = sender.parents('.comment-block .comment-container');
 	var comment = sender.parents('.comment');	
 	var key = comment.attr('data-key');
 	$.ajax({
@@ -113,7 +113,7 @@ function removeComment(sender){
 
 function removeReply(sender){
 	var parentDiv = sender.parents('.post');
-	var comment_block = sender.parents('.comment-block');
+	var comment_block = sender.parents('.comment-block .comment-container');
 	var reply_wrapper = sender.parents('.reply-wrapper');	
 	var key = reply_wrapper.attr('data-key');
 	$.ajax({
@@ -133,20 +133,70 @@ function removeReply(sender){
 	});
 }
 
-// 
-// var body = document.body,
-//     timer;
+function isElementInViewport (el) {
 
-// window.addEventListener('scroll', function() {
-//   clearTimeout(timer);
-//   if(!body.classList.contains('disable-hover')) {
-//     body.classList.add('disable-hover')
-//   }
-//   
-//   timer = setTimeout(function(){
-//     body.classList.remove('disable-hover')
-//   },500);
-// }, false);
+    //special bonus for those using jQuery
+    if (typeof jQuery === "function" && el instanceof jQuery) {
+        el = el[0];
+    }
+
+    var rect = el.getBoundingClientRect();
+
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+    );
+}
+
+function onVisibilityChange (el, callback) {
+    return function () {
+        /*stop the slideShow*/ console.log('visibility ' + isElementInViewport(el));
+    }
+}
+
+// function loadComment(thisE){
+// 	var postWrapper = thisE.parents('.post');
+// 	var key = postWrapper.attr('data-key');
+// 	var commentBlock = postWrapper.find('.comment-block');
+// 	if(commentBlock.hasClass('hdn')){
+// 		//load
+// 		$.ajax({
+// 			url:AJAX_DIR+'load_comment_block.php',
+// 			method:'post',
+// 			data:{key:key},
+// 			success:function(resp){
+// 				commentBlock.find('.comment-container').html(resp);
+// 				postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length);
+// 				setVisibleContent();
+// 			}
+// 		});
+// 	}
+// 	commentBlock.toggleClass('hdn');
+// }
+
+
+function loadComment(thisE){
+	var postWrapper = thisE.parents('.post');
+	var key = postWrapper.attr('data-key');
+	var commentBlock = postWrapper.find('.regular-comment-wrapper');
+	if(commentBlock.hasClass('hdn')){
+		//load
+		$.ajax({
+			url:AJAX_DIR+'load_comment_block.php',
+			method:'post',
+			data:{key:key},
+			success:function(resp){
+				commentBlock.find('.comment-container').html(resp);
+				postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length);
+				setVisibleContent();
+			}
+		});
+	}
+	commentBlock.toggleClass('hdn');
+}
+
 
 
 
@@ -268,8 +318,9 @@ $(document).ready(function(){
  					success:function(resp){
  						console.log(resp);
  						if(resp != '1'){
- 							postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length + 1);
- 							postWrapper.find('.comment-container').prepend(resp);
+ 							var comment_container = postWrapper.find('.comment-container');
+ 							postWrapper.find('.cmt-num').text( comment_container.find('.cmt').length + 1);
+ 							comment_container.prepend(resp);
  							txtarea.val('').blur();
  							setVisibleContent();
  						}
@@ -307,7 +358,9 @@ $(document).ready(function(){
  					success:function(resp){
  						console.log(resp);
  						if(resp != '1'){
- 							postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length + 1);
+ 							var comment_container = postWrapper.find('.comment-container');
+
+ 							postWrapper.find('.cmt-num').text( comment_container.find('.cmt').length + 1);
  							replyBlock.prepend(resp);
  							txtarea.val('').blur().addClass('hdn');
  							setVisibleContent();
@@ -350,7 +403,9 @@ $(document).ready(function(){
  					success:function(resp){
  					console.log(resp);
  						if(resp != '1'){
- 							postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length + 1);
+ 							var comment_container = postWrapper.find('.comment-container');
+
+ 							postWrapper.find('.cmt-num').text( comment_container.find('.cmt').length + 1);
  							replyBlock.prepend(resp);
  							txtarea.val('').blur().addClass('hdn');
  							setVisibleContent();
@@ -419,23 +474,7 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
-			var postWrapper = $(this).parents('.post');
-			var key = postWrapper.attr('data-key');
-			var commentBlock = postWrapper.find('.comment-block');
-			if(commentBlock.hasClass('hdn')){
-				//load
-				$.ajax({
- 					url:AJAX_DIR+'load_comment_block.php',
- 					method:'post',
- 					data:{key:key},
- 					success:function(resp){
- 						commentBlock.find('.comment-container').html(resp);
- 						postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length);
- 						setVisibleContent();
-					}
- 				});
-			}
-			commentBlock.toggleClass('hdn');
+			loadComment($(this));
 			
 		}
 	},'.post-wrapper .content .toggle-comment');

@@ -3,7 +3,7 @@
 	class Comment extends Comment_Base{
 		private $table_name = "comment";
 		private $template_path = "phtml/child/comment_block.phtml";
-
+		private $slid_show_template_path = "phtml/child/slideshow_comment_block.phtml";
 		public function __construct(){
 			parent::__construct($this->table_name);
 		}
@@ -52,6 +52,28 @@
 			$comment_block = ob_get_clean();
 			return $comment_block;
 		}
+		
+		
+		
+	 	public function renderSlideShowCommentBlockByCommentId($comment_id, $firstComment){
+			$column_array = array('activity_id','user_id','text');
+			$comment = $this->getMultipleColumnsById($column_array, $comment_id);
+			include_once 'User_Profile_Picture.php';
+			$profile = new User_Profile_Picture();
+			$post_owner_pic = $profile->getLatestProfileImageForUser($comment['user_id']);
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			$fullname = $user->getUserFullnameByUserIden($comment['user_id']);
+			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($comment['user_id']);
+			$text = $comment['text'];
+			//$reply_block = $this->getSlideShowReplyBlockByCommentId($comment_id);
+			ob_start();
+			include(SCRIPT_INCLUDE_BASE.$this->slid_show_template_path);
+			$comment_block = ob_get_clean();
+			return $comment_block;	
+		}
+		
+		
 		
 		
 		

@@ -69,16 +69,16 @@
 				  		$label_url =getDefaultInterestLabelImageByNum($defualr_label_image->getLabelImageUrllByInterestId($user_interest['id']));
 				  }
 				 ?>
-				<div class="interest-side-label interest-sider-navi pointer" data-labelfor="<?php echo $user_interest['id'];?>"  title="<?php echo htmlentities($user_interest['name']);?>"><div class="vertical-center"><img src="<?php echo $label_url; ?>"><div class="inline-blk txt_ofl" style="width:95px;margin-top:2px;"><?php echo htmlentities($user_interest['name']);?></div></div></div>	
+				<div class="interest-side-label interest-sider-navi pointer" data-labelfor="<?php echo $user_interest['id'];?>"  title="<?php echo htmlentities($user_interest['name']);?>"><div class="vertical-center"><img src="<?php echo $label_url; ?>"><div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;"><?php echo htmlentities($user_interest['name']);?></div></div></div>	
  	<?php  endforeach;  //end display side ?>
 	<?php endif ?>
 </div>
 
 <?php if(!$page_own && !$request_user_page_has_interest): ?>
-<div style="background:#fff; padding:20px;">
-	<?php
-		echo $request_user_page_firstname.' is so lazy that '.$request_user_page_gender_call.' hasn\'t added any interests yet '
-	?>
-	<span href="" class="plain-lk pointer" style="color:#062AA3">Know what <?php echo $request_user_page_gender_call ?> likes?</span>
-</div>
+	<div style="background:#fff; padding:20px;">
+		<?php
+			echo $request_user_page_firstname.' is so lazy that '.$request_user_page_gender_call.' hasn\'t added any interests yet '
+		?>
+		<span href="" class="plain-lk pointer" style="color:#062AA3">Know what <?php echo $request_user_page_gender_call ?> likes?</span>
+	</div>
 <?php endif; ?>

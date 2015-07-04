@@ -98,7 +98,7 @@
 				}
 				
 				
-				//$comment_block = $this->getCommentBlockByActivityId($activity_id);
+// 				$comment_block = $this->getCommentBlockByActivityId($activity_id);
 				$comment_number = $this->comment->getCommentNumberForTarget($activity_id);
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.'phtml/child/post_event_block.phtml');
@@ -109,8 +109,7 @@
 		}	
 		
 		
-		
-		
+	
 		
 		
 		
@@ -169,7 +168,6 @@
 					
 					$caption =  $this->moment->moment_photo->getMomentPhotoCaptionByMomentId($moment['id']);
 					
-					//$comment_block = $this->getCommentBlockByActivityId($activity_id);
 					$comment_number = $this->comment->getCommentNumberForTarget($activity_id);
 					ob_start();
 					include(SCRIPT_INCLUDE_BASE.'phtml/child/post_moment_block.phtml');
@@ -192,8 +190,11 @@
 			}else if($type == 'e'){
 				return $this->getEventInterestActivityBlockByActivityId($activity_id);
 			}
-		
 		}
+		
+		
+		
+		
 		
 		public function getCommentBlockByActivityId($activity_id){
 			$comment_block = '';
@@ -206,6 +207,22 @@
 			return $comment_block;
 		}
 		
+		
+		public function getSlideShowCommentBlockByActivityId($activity_id){
+			$comment_block = '';
+			$idCollection =$this->comment->getSelfIdCollectionByTargetId($activity_id);
+			if($idCollection !== false && sizeof($idCollection) > 0){
+				$count = 0;
+				foreach($idCollection as $row ){
+					$firstComment = ( $count++ == 0 );
+					$comment_block.= $this->comment->renderSlideShowCommentBlockByCommentId($row['id'], $firstComment);
+				}
+			}
+			return $comment_block;
+		}
+		
+		
+		
 		public function getCommentBlockByActivityKey($key){
 			$activity_id = $this->getRowIdByHashkey($key);
 			if($activity_id !== false){
@@ -217,6 +234,74 @@
 		
 		public function getActivityIdCollectionByInterestId($interest_id){
 			return $this->getAllRowsColumnBySelector('id', 'interest_id', $interest_id);
+		}
+		
+		
+		
+		public function loadPassedEventCollectionForUser($user_id){
+			$stmt = $this->connection->prepare("
+			SELECT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id,event.id AS event_id, event.title, event.description,event.date
+			FROM  event 
+			LEFT JOIN interest_activity
+			ON interest_activity.id = event.interest_activity_id  WHERE interest_activity.user_id = ? AND interest_activity.type = 'e' AND TIMESTAMP(event.date, event.time) < NOW() ORDER BY interest_activity.id DESC
+			");
+			if($stmt){
+				$stmt->bind_param('i',$user_id);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						if($rows !== false && sizeof($rows) > 0){
+							$left_content = "";
+							$right_content = "";
+							$count = 0;
+							foreach($rows as $row ){
+								$hash = $row['hash'];
+								
+								$title = $row['title'];
+								$description = $row['description'];  
+								
+								$prefix = new User_Media_Prefix();
+								$this->event = new event($row['activity_id']);
+								$event_photo = $this->event->event_photo->getEventPhotoUrlByEventId($row['event_id']);
+				
+								$media_prefix = $prefix->getUserMediaPrefix($row['user_id']).'/';
+								if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo)){
+									$caption = $this->event->event_photo->getEventPhotoCaptionByPictureUrl($event_photo);
+									$event_photo = $media_prefix.$event_photo;
+								}else{
+									//get the label photo as the event cover
+									include_once 'User_Interest_Label_Image.php';
+									$label_image = new User_Interest_Label_Image();
+									$event_photo = $media_prefix.$label_image->getLabelImageUrlByInterestId($row['interest_id']);
+								}
+								
+								$date = returnShortDate($row['date'],'-');
+								$comment_number = $this->comment->getCommentNumberForTarget($row['activity_id']);
+								$comment_block = $this->getSlideShowCommentBlockByActivityId($row['activity_id']);
+								ob_start();
+								include(TEMPLATE_PATH_CHILD.'passed_event_block.phtml');
+								$content = ob_get_clean();
+							
+								if($count++ % 2 == 0){
+									$left_content.= $content;
+								}else{
+									$right_content.= $content;
+								}
+							}
+			
+							ob_start();
+							include(TEMPLATE_PATH_CHILD.'event.phtml');
+							$content = ob_get_clean();
+							return $content;
+			 				}
+					 }
+				}
+			}
+			echo $this->connection->error;
+			
+			return false;
 		}
 		
 		

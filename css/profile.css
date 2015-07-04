@@ -147,7 +147,7 @@
 
 
 #profile-sider-bar-right{
-	width:70%;
+	width:64%;
 	vertical-align:top;
 	min-width:700px;
 	margin-left:10px;
@@ -166,9 +166,10 @@
 	font-size: 13px;
 	cursor: pointer;
 	font-weight: bold;
-	padding: 6px 24px;
+	padding: 6px 20px;
 	text-align: center;
 	display: inline-block;
+	color:rgb(135, 135, 135);
 }
 
 #profile-sider-bar-right #profile-navigation-bar .active-navi {
@@ -178,7 +179,7 @@
 }
 
 #profile-sider-bar-right #profile-navigation-bar .navi-item .sub-text {
-	font-size: 10px;
+	font-size: 9px;
 	font-weight: normal;
 }
 
@@ -197,7 +198,7 @@
 #add-new-interest .dialog-header .title{
 	margin-left:12px;
 	padding: 11px 0px 10px 0px;
-	font-size: 15px;
+	font-size: 14px;
 	color: white;
 	font-weight: bold;
 }
@@ -221,7 +222,7 @@
 	top: 0px;
 	left: 0px;
 	height: 24px;
-	color: #062AA3;
+	color: #797979;
 	font-weight:bold;
 }
 
