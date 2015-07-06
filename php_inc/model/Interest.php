@@ -50,7 +50,8 @@
 				$label_image_url = "";
 				if($label_image_file !== null){
 					//upload image
-					$label_image_url = $this->interest_label_image->uploadMediaForAssocColumn($label_image_file,$user_id, 'interest_id', $interest_id);
+					$hash = $this->interest_label_image->generateUniqueHash();
+					$label_image_url = $this->interest_label_image->uploadMediaForAssocColumn($label_image_file,$user_id, $hash,'interest_id', $interest_id);
 					if($label_image_url === false){
 						$this->deleteRowById($interest_id);
 						$stmt->close();
@@ -90,7 +91,8 @@
 				if($label_image_file != null){
 					$old_image_url = $this->interest_label_image->getLabelImageUrlByInterestId($interest_id);
 					$old_image_row_id =  $this->interest_label_image->getLabelImageFirstRowIdByInterestId($interest_id);
-					$label_image_url = $this->interest_label_image->uploadMediaForAssocColumn($label_image_file,$user_id, 'interest_id', $interest_id);
+					$label_image_url = $this->interest_label_image->uploadInterestLabelImage($label_image_file,$user_id, $interest_id);
+					
 					if($label_image_url === false){
 						$stmt->close();
 						return false;
@@ -211,7 +213,7 @@
 			SELECT interest.name, interest.id, user_interest_label_image.picture_url
 			FROM interest 
 			LEFT JOIN user_interest_label_image
-			ON interest.id=user_interest_label_image.interest_id  WHERE `user_id` = ? ORDER BY `id` ASC
+			ON interest.id=user_interest_label_image.interest_id AND interest.user_id = user_interest_label_image.user_id  WHERE interest.user_id = ? ORDER BY `id` ASC
 			");
 			if($stmt){
 				$stmt->bind_param('i',$user_id);
@@ -224,6 +226,7 @@
 					 }
 				}
 			}
+			echo $this->connection->error;
 			return false;
 		}
 		public function deleteInterestForUserByInterestId($user_id, $interest_id){

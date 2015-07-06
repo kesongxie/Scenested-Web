@@ -3,12 +3,9 @@
 */
 
 *{
-	margin-top: 0px;
-	margin-left:0px;
-	/* 
-color:#777777;
-	
- */color:#6B6B6B
+	margin:0px;
+	padding:0px;
+	color:#777777;
 }
 
 body{
@@ -25,6 +22,7 @@ body{
 	min-height:720px;
 	padding-bottom:80px;
 }
+
 
 
 div{
@@ -533,6 +531,7 @@ div.ui-datepicker{
 
 #dialog-popup-overlay{
 	background:rgb(43,43,43);
+	z-index:1001;
 	position:fixed !important;
 }
 
@@ -906,4 +905,80 @@ div.ui-datepicker{
     bottom:0;
     content:"..."
 }
+
+.upload-evt-pic-label{
+	overflow:hidden;
+	position:relative;
+	height: 22px;
+	width: 22px;
+	float: right;
+	margin:-2px 0px 0px 14px;
+	opacity:0.6;
+	cursor:pointer;
+}
+
+.upload-evt-pic-label:hover{
+	opacity:1;
+	transform:scale(1.1);
+}
+
+
+.upload-evt-pic-camera{
+	height:100%;
+	width:100%;
+}
+#evt-preview{
+	text-align:center;
+	z-index:1000;
+	position:fixed;
+	width:100%;
+	height:90%;
+}
+
+#evt-preview .pht{
+	position:relative;
+	border-radius:8px 0px 0px 8px;
+	overflow:hidden;
+	text-align:center;
+	border-radius:8px 0px 0px 8px;
+	background-color:#000;
+	height:100%;
+	max-width:60%;
+	min-width:50%;
+}
+
+
+#evt-preview .ct{
+	text-align:left;
+	border-radius:0px 8px 8px 0px;
+	width:30%;
+	background:#fff;
+	height:100%;
+	overflow: scroll;
+	position:relative;
+}
+
+#evt-preview .ct .ct-pht-all{
+	font-size:0px;
+	margin:6px;
+	margin-top:10px;
+	overflow:hidden;
+}
+#evt-preview .thumb-evt-pht{
+ 	height:140px;
+ 	max-width:48.6%;
+ 	overflow:hidden;
+ 	margin:0px 4px 4px 0px;
+ 	position:relative;
+ 	cursor:pointer;
+}
+
+#evt-preview .thumb-evt-pht .remove-evt-pht{
+	position:absolute;
+	top:2px;
+	right:2px;
+	height:16px;
+	width=16px;
+} 
+
 

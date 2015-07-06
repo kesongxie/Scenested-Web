@@ -56,7 +56,7 @@
 		
 		
 	 	public function renderSlideShowCommentBlockByCommentId($comment_id, $firstComment){
-			$column_array = array('activity_id','user_id','text');
+			$column_array = array('activity_id','user_id','text','hash');
 			$comment = $this->getMultipleColumnsById($column_array, $comment_id);
 			include_once 'User_Profile_Picture.php';
 			$profile = new User_Profile_Picture();
@@ -64,6 +64,7 @@
 			include_once 'User_Table.php';
 			$user = new User_Table();
 			$fullname = $user->getUserFullnameByUserIden($comment['user_id']);
+			$hash = $comment['hash'];
 			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($comment['user_id']);
 			$text = $comment['text'];
 			//$reply_block = $this->getSlideShowReplyBlockByCommentId($comment_id);

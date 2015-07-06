@@ -74,7 +74,7 @@
     	$timestamp = mktime($hour, $minute, $second, $month, $day, $year);
     	
     	$difference = time() - $timestamp;
-   		$periods = array("sec", "min", "hr", "day", "wek", "mon", "year", "decade");
+   		$periods = array("sec", "min", "hr", "day", "week", "mon", "year", "decade");
    		$lengths = array("60","60","24","7","4.35","12","10");
    		for($j = 0; $difference >= $lengths[$j]; $j++)
    			$difference /= $lengths[$j];

@@ -9,6 +9,13 @@
 			parent::__construct($this->table_name);
 		}
 		
+		public function uploadInterestLabelImage($label_image_file,$user_id, $interest_id){
+			$hash = $this->generateUniqueHash();
+			$this->uploadMediaForAssocColumn($label_image_file, $user_id,$hash, 'interest_id', $interest_id);
+		
+		} 
+
+		
 		public function getLabelImageUrlByInterestId($interest_id){
 			 return  $this->getColumnBySelector('picture_url', 'interest_id', $interest_id);
 		}

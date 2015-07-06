@@ -38,6 +38,8 @@
 			return false;
 		}
 		
+	
+		
 		public function deleteRowById($id){
 			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `id` = ? LIMIT 1");
 			$stmt->bind_param('i', $id);
@@ -64,6 +66,24 @@
 			}
 			return false;
 		}
+		
+		public function deleteRowBySelectorForUser($selector_column, $selector_value, $user_id){
+			$selector_column = $this->connection->escape_string($selector_column);
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? AND `user_id`=? LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('si', $selector_value, $user_id);
+				if($stmt->execute()){
+					$stmt->close();
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		
+		
+		
+		
 		
 		public function deleteRowByNumericSelector($selector_column, $selector_value){
 			$selector_column = $this->connection->escape_string($selector_column);
@@ -138,13 +158,13 @@
 				return false;
 		}
 		
-		
+	
 		
 		
 		/*
 			result order by id ascend if $ascend is set to true
 		*/
-		public function getColumnByUserIdFetchAll($column,$user_id, $ascend){
+		public function getColumnByUserIdFetchAll($column,$user_id, $ascend = false){
 			$column = $this->connection->escape_string($column);
 			if($ascend){
 				$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `user_id` = ?  ORDER BY `id` ASC ");
@@ -185,6 +205,7 @@
 						 }
 					}
 				}
+				echo $this->connection->error;
 				return false;
 		}
 		
@@ -230,6 +251,11 @@
 			}
 			return false;
 		}
+		
+		
+		
+		
+		
 		
 		public function getMultipleColumnsBySelector($column_array, $selector_column, $selector_value){
 			$selector_column = $this->connection->escape_string($selector_column);
@@ -376,6 +402,22 @@
 			}
 			return false;
 		}
+		
+		public function getRowsNumberForStringColumn($column, $column_value){
+			$column = $this->connection->escape_string($column);
+			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? ");
+			if($stmt){
+				$stmt->bind_param('s', $column_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false){
+						return $result->num_rows;
+					 }
+				}
+			}
+			return false;
+		}
+		
 		
 		
 		

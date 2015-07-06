@@ -17,6 +17,7 @@
 		
 		public function uploadMediaForUser($file,$user_id){
 			$user_media_prefix = new User_Media_Prefix();
+			$hash = $this->generateUniqueHash();
 			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
 			if($prefix === false){
 				$prefix = $user_media_prefix->createMediaPrefixForUser($user_id);
@@ -25,9 +26,9 @@
 			if($prefix !== false){
 				$picture_url = $this->file_m->upload_File_To_Dir($file, $prefix);
 				if($picture_url !== false){
-					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`picture_url`,`upload_time`) VALUES(?, ?, ?)");
+					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`picture_url`,`upload_time`,`hash`) VALUES(?, ?, ?,?)");
 					$time = date("Y-m-d H:i:s");
-					$stmt->bind_param('iss',$user_id, $picture_url, $time);
+					$stmt->bind_param('isss',$user_id, $picture_url, $time,$hash);
 					if($stmt->execute()){
 						$stmt->close();
 						return true;
@@ -41,7 +42,7 @@
 			this method is used for the case when the user id is not a column in the table structure, 
 			the column name is $assoc_name instead of "user_id"
 		*/
-		public function uploadMediaForAssocColumn($file,$user_id, $assoc_name, $assoc_id){
+		public function uploadMediaForAssocColumn($file, $user_id, $hash, $assoc_name, $assoc_id){
 			$user_media_prefix = new User_Media_Prefix();
 			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
 			if($prefix === false){
@@ -51,9 +52,9 @@
 			if($prefix !== false){
 				$picture_url = $this->file_m->upload_File_To_Dir($file, $prefix);
 				if($picture_url !== false){
-					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`$assoc_name`,`picture_url`,`upload_time`) VALUES(?, ?, ?)");
+					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`$assoc_name`,`user_id`,`picture_url`,`upload_time`,`hash`) VALUES(?,?, ?, ?, ?)");
 					$time = date("Y-m-d H:i:s");
-					$stmt->bind_param('iss',$assoc_id, $picture_url, $time);
+					$stmt->bind_param('iisss',$assoc_id,$user_id, $picture_url, $time, $hash);
 					if($stmt->execute()){
 						$stmt->close();
 						return $picture_url;
@@ -63,7 +64,7 @@
 			return false;	
 		}
 		
-		public function uploadCaptionableMediaForAssocColumn($file,$user_id, $caption, $assoc_name, $assoc_id){
+		public function uploadCaptionableMediaForAssocColumn($file,$user_id, $caption, $hash, $assoc_name, $assoc_id){
 			$user_media_prefix = new User_Media_Prefix();
 			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
 			if($prefix === false){
@@ -73,15 +74,18 @@
 			if($prefix !== false){
 				$picture_url = $this->file_m->upload_File_To_Dir($file, $prefix);
 				if($picture_url !== false){
-					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`$assoc_name`,`picture_url`,`upload_time`,`caption`) VALUES(?, ?, ?, ?)");
-					$time = date("Y-m-d H:i:s");
-					$stmt->bind_param('isss',$assoc_id, $picture_url, $time, $caption);
-					if($stmt->execute()){
-						$stmt->close();
-						return $picture_url;
+					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`$assoc_name`,`user_id`,`picture_url`,`upload_time`,`caption`,`hash`) VALUES(?,?, ?, ?, ?,?)");
+					if($stmt){
+						$time = date("Y-m-d H:i:s");
+						$stmt->bind_param('iissss',$assoc_id, $user_id,$picture_url, $time, $caption, $hash);
+						if($stmt->execute()){
+							$stmt->close();
+							return $picture_url;
+						}
 					}
 				}
 			}
+			echo $this->connection->error;
 			return false;	
 		}
 		

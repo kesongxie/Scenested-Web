@@ -169,6 +169,10 @@ $(document).ready(function(){
 	
 	
 	
+	
+	
+	
+	
 	$('#upload-cover').on('change',function(){
 		var imgTarget = $('#avator-wrapper .avator-inner-top .profile-image');
 		var old_src = imgTarget.attr('src');
@@ -585,6 +589,7 @@ $(document).ready(function(){
 				contentType: false,
 				data:data,
 				success:function(resp){
+					console.log(resp);
 					if(resp == '1'){
 						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 					}else if(resp == '2'){
@@ -683,7 +688,8 @@ $(document).ready(function(){
 			data.append('date', date);
 			data.append('key',key);
 			
-			parentDiv.find('.loading-icon-wrapper').show();
+			var loadingWrapper = parentDiv.find('.loading-icon-wrapper');
+			loadingWrapper.show();
 			var actionButton = parentDiv.find('.edit-dialog-footer .action-button');
 			actionButton.text("Loading...");
 			$.ajax({
@@ -705,8 +711,10 @@ $(document).ready(function(){
 						presentPopupDialog("Need a Date",'Please add a date for your moment', "Got it", "", null, null );
 
 					}else{	
+						actionButton.text('Post');
 						parentDiv.find('.preview-container').addClass('hdn');
 						image_label.attr('src','');
+						loadingWrapper.hide();
 						image_file.val('');
 						description_txtarea.val('');
 						date_input.val('');
@@ -830,31 +838,38 @@ $(document).ready(function(){
 		}
 	
 	},'.passed-evt-block .toggle-slide-comment');
+	
+	// 
+// 	$('body').on({
+// 		mouseover:function(){
+// 			$(this).find('.total-photos').removeClass('hdn');
+// 		},
+// 		mouseleave:function(){
+// 			$(this).find('.total-photos').addClass('hdn');
+// 		}
+// 	
+// 	},'.passed-evt-block');
+// 	
+// 	
+	
+	
 
 	$('body').on({
 		mouseenter: function() {
 			if(!$(this).find('.slideshow-comment-wrapper').hasClass('hdn')){
 				$(this).data('timer',startSlideComment($(this))); 
 			}
+			return false;
 		},
 		mouseleave: function() {
 			if(!$(this).find('.slideshow-comment-wrapper').hasClass('hdn')){
 				clearInterval( $(this).data('timer') );
 			}
+			return false;
 		}
 	},'.evt-block');
 	
-	$('body').on({
-		click:function(){
-			var parentDiv = $(this).parents('.evt-block');
-			var evt_photo_wrap = parentDiv.find('.evt-photo-wrap');
-			var content = parentDiv.find('.content');
-			$('#dialog-popup-overlay').removeClass('hdn');
-			$('#evt-preview .pht').html(evt_photo_wrap);
-			$('#evt-preview .ct').html(content);
-			$('#evt-preview').removeClass('hdn');
-		}
-	},'.evt-photo-wrap');
+	
 	
 	
 });

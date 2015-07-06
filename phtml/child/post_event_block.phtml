@@ -1,16 +1,23 @@
 <div class="post-wrapper post evt-block" data-key="<?php echo $hash; ?>">
 
-
+	
 	<?php $displayable = isMediaDisplayable($event_photo); ?>
 
 	<?php if($displayable): ?>
 		<img src="<?php echo IMGDIR ?>white-down-arrow.png" style="float:none;position: absolute; right: 14px; top: 14px;"class="toggle-operation pointer hdn">
-		<div style="max-height:160px;overflow:hidden;background:#f0f0f0">
+		<div class="evt-photo-wrap pointer" style="max-height:200px;overflow:hidden;background:#f0f0f0">
 			<img style="max-width:100%;" src="<?php echo U_IMGDIR.$event_photo ?>">
+			<?php if($isEventPassed): ?>
+				<!-- 
+<div class="total-photos" style="position:absolute;bottom:0px;right:0px;">
+					<div class="total-photos-label" style="color:#fff;padding:10px;background:#000;font-size:13px;"><?php echo $event_photo_num ?> Photo<?php echo ($event_photo_num > 1)?'s':'' ?></div>
+				</div>
+ -->
+			<?php  endif;?>
 		</div>
 	<?php else: ?>
 			<img src="<?php echo IMGDIR ?>down_arrow_icon.png" style="float:none;position: absolute; right: 10px; top: 10px;"class="toggle-operation pointer hdn">
-
+			
 	<?php endif; ?>
 	
 	<?php if($displayable): ?>
@@ -26,16 +33,7 @@
 			</a>
 			<span style="margin-left: 10px; color: #969696;"><?php echo $post_time ?></span>
 		</div>
-	
-	
-<!-- 
 
-		<div style="margin:10px 0px 0px 0px;color: #969696;"><?php 
-			//this is for upcoming post 
-			echo 'Kesong just planned a hangout';
-			//echo 'Shared one of his hangout';
-		 ?></div>
- -->
 	</div>	
 	
 
@@ -55,10 +53,7 @@
 		
 		<div style="text-align:center; margin-bottom:10px;padding:10px;">
 
-		<?php if($isEventPassed): ?>
-			<!-- <div class="evt-action-button inline-blk">Details</div> -->
-			<div class="inline-blk plain-lk pointer" style="color:rgb(36, 89, 182)">View Moments</div>
-		<?php else: ?>
+		<?php if(!$isEventPassed): ?>
 			<div class="evt-action-button inline-blk">Join</div>
 		<?php endif;?>
  		</div>
@@ -79,6 +74,9 @@
 	
 	
 	<div class="in_con_opt_w popover" style="top:34px;right:12px;">
+		<?php if($isEventPassed): ?>
+					<div class="in_con_w_opt_it evt-mt-action">Moment</div>
+		<?php endif; ?>
 		<div class="in_con_w_opt_it remove_activity">Remove This Post</div>
 	</div>
 </div>

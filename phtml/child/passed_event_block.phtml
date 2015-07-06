@@ -1,15 +1,16 @@
+
 <div class="post-wrapper post evt-block passed-evt-block" data-key="<?php echo $hash; ?>">
 
 
 	<?php $displayable = isMediaDisplayable($event_photo); ?>
 
 	<?php if($displayable): ?>
-		<img src="<?php echo IMGDIR ?>menu_navi_icon.png" style="float:none;position: absolute; right: 10px; top: 14px;width:20px;height:14px;"class="toggle-operation pointer hdn">
+		<img src="<?php echo IMGDIR ?>menu_navi_icon.png" style="z-index:1;float:none;position: absolute; right: 10px; top: 14px;width:20px;height:14px;"class="toggle-operation pointer hdn">
 
 		<div class="pointer evt-photo-wrap" style="max-height:300px;overflow:hidden;background:#f0f0f0;position:relative;" title="View Photos in This Event">
-			<img style="max-width:100%;" src="<?php echo U_IMGDIR.$event_photo ?>">
-			<div style="position:absolute;bottom:6px;right:0px;">
-				<div style="color:#fff;padding:10px;background:#000;font-size:13px;">2 Photos</div>
+				<img style="width:100%;display:block;" src="<?php echo U_IMGDIR.$event_photo ?>">
+			<div class="total-photos" style="position:absolute;bottom:0px;right:0px;">
+				<div class="total-photos-label" style="color:#fff;padding:10px;background:#000;font-size:13px;"><?php echo $event_photo_num ?> Photo<?php echo ($event_photo_num > 1)?'s':'' ?></div>
 			</div>
 		</div>
 	<?php else: ?>
@@ -47,16 +48,17 @@
 				
 				</div>
 			</div>
+			<?php if($comment_number > 0): ?>
  			<div class="slideshow-comment-wrapper" style="overflow:hidden;height:56px;position:relative;">
  				<?php echo $comment_block; ?>
  			</div>
+ 			<?php endif; ?>
 		</div>
 	</div>
 	
 	
 	<div class="in_con_opt_w popover" style="top:34px;right:12px;">
-		<div class="in_con_w_opt_it">Photos</div>
-		<div class="in_con_w_opt_it">Friends</div>
+		<div class="in_con_w_opt_it evt-mt-action">Moment</div>
 		<div class="in_con_w_opt_it remove_activity">Remove This Post</div>
 	</div>
 </div>

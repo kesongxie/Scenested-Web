@@ -3,9 +3,11 @@ var SIGNUP_ALERT_MESSAGE = new Array();
 var DOCUMENT_ROOT = "http://localhost:8888/lsere/";
 var INDEX_PAGE = DOCUMENT_ROOT + "index.php";
 var AJAX_DIR = DOCUMENT_ROOT+"ajax/";
-var AJAX_PHTML_DIR = AJAX_DIR+"phtml/"
+var AJAX_PHTML_DIR = AJAX_DIR+"phtml/";
+var IMGDIR = DOCUMENT_ROOT+'media/';
+
 // var NOTIFICATION_CENTER_ON = false;
-var BAD_IMAGE_MESSAGE = "A valid image is of type PNG or JPG and it's less than 5M"
+var BAD_IMAGE_MESSAGE = "A valid image is of type PNG or JPG and it's less than 5M";
 
 function readURL(input,tg) {
 	if (input.files && input.files[0]) {
@@ -20,8 +22,15 @@ function readURL(input,tg) {
 
 
 function resetDialog(){
-	$('#dialog-popup-overlay').addClass('hdn');
+
+	if($('#dialog-popup-overlay').hasClass('hdn')){
+		$('#evt-preview').html('').addClass('hdn').removeAttr('data-key');
+	}
+	
+	$('.ol').not('.hdn').last().addClass('hdn');
 	$('#popup-dialog-wrapper').addClass('hdn');
+	
+	
 	var dialogParent = $('#popup-dialog');
 	dialogParent.find('.dialog-header .bar-title').text('');
 	dialogParent.find('.dialog-body .body-text').html('');
@@ -100,6 +109,7 @@ function removeComment(sender){
 		success:function(resp){
 			console.log(resp);
 			if(resp!='1'){
+				parentDiv.find('.slideshow-comment-wrapper .cmt[data-key='+key+']').remove();
 				comment.remove();
 				var remainedCommentNum = comment_block.find('.cmt').length;
 				remainedCommentNum = (remainedCommentNum >=0)?remainedCommentNum:0;
@@ -109,6 +119,8 @@ function removeComment(sender){
 		}
 	});
 }
+
+
 
 
 function removeReply(sender){
@@ -129,6 +141,28 @@ function removeReply(sender){
 				parentDiv.find('.cmt-num').text(remainedCommentNum);
 			}
 			
+		}
+	});
+}
+
+function removeEventPhoto(sender){
+	var evt_wrapper_key = sender.parents('#evt-preview').attr('data-key');
+	var pht_num =  sender.parents('.ct-pht-all').find('.thumb').length;
+	var parentDiv = sender.parents('.thumb-evt-pht');
+	var key = parentDiv.attr('data-key');
+	$.ajax({
+		url:AJAX_DIR+'remove_evt_pht.php',
+		method:'post',
+		data: {key:key},
+		success:function(resp){
+			console.log(resp);
+			if(resp != '1'){
+				var label_message = "";
+				pht_num = (--pht_num >= 0)?pht_num:0;
+				label_message = pht_num +' Photo'+ ((pht_num > 1 )?'s':'');
+				$('.evt-block[data-key='+evt_wrapper_key+']').find('.total-photos-label').html(label_message);
+				parentDiv.remove();
+			}
 		}
 	});
 }
@@ -560,8 +594,138 @@ $(document).ready(function(){
 	
 	},'.evt_tm');
 	
-
 	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.evt-block');
+			var key =parentDiv.attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'loadEventPreviewBlock.php',
+				method:'post',
+				data: {key:key},
+				success:function(resp){
+					$('#preview-popup-overlay').removeClass('hdn');
+					$('#evt-preview').html(resp).removeClass('hdn').attr('data-key',key);
+				}
+			});
+		}
+	},'.evt-photo-wrap, .evt-mt-action');
+	
+	$('body').on({
+		click:function(){
+			$('#preview-popup-overlay').addClass('hdn');
+			$('#evt-preview').addClass('hdn');
+		}
+	},'.ct .cross');
+	
+	/*
+		var evt_wrapper_key = sender.parents('#evt-preview').attr('data-key');
+	var pht_num =  sender.parents('.ct-pht-all').find('.thumb').length;
+	var parentDiv = sender.parents('.thumb-evt-pht');
+	var key = parentDiv.attr('data-key');
+	$.ajax({
+		url:AJAX_DIR+'remove_evt_pht.php',
+		method:'post',
+		data: {key:key},
+		success:function(resp){
+			console.log(resp);
+			if(resp != '1'){
+				var label_message = "";
+				pht_num = (--pht_num >= 0)?pht_num:0;
+				label_message = pht_num +' photo'+ ((pht_num > 1 )?'s':'');
+				$('.evt-block[data-key='+evt_wrapper_key+']').find('.total-photos-label').html(label_message);
+				parentDiv.remove();
+			}
+		}
+	});
+	
+	*/
+	
+	
+	$('body').on({
+		change:function(){
+			var parentDiv = $(this).parents('#evt-preview');
+			var evt_wrapper_key = parentDiv.attr('data-key');
+			var pht_num = parentDiv.find('.ct-pht-all').find('.thumb').length;
+			var new_evt_pht_frame = parentDiv.find('.evt-pht-new-frame');
+			$('.ct-pht-all').prepend(new_evt_pht_frame.clone());
+			var imgTarget =new_evt_pht_frame.find('.target-image');
+			var targetConatiner = new_evt_pht_frame.find('.target-container');
+			var key = parentDiv.attr('data-key');
+			
+			var data=new FormData();
+			data.append('profile-pic',$(this)[0].files[0]);
+			data.append('key',key);
+			
+			var thisE = this;
+			var preview_loading_wrapper = new_evt_pht_frame.find('.preview-loading-wrapper');
+		
+			$.ajax({
+				url:AJAX_DIR+'upload_evt_pht.php',
+				type:'POST',
+				processData: false,
+				contentType: false,
+				data:data,
+				success:function(resp){
+					console.log(resp);
+					if(resp == '1'){
+						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
+						new_evt_pht_frame.remove();
+						preview_loading_wrapper.addClass('hdn');
+						return false;
+					}
+					readURL(thisE,imgTarget);
+					imgTarget.after('<img src="'+IMGDIR+'c_icon.png" class="remove-evt-pht pointer animate-opacity hdn">');
+					new_evt_pht_frame.removeClass('hdn');
+					preview_loading_wrapper.removeClass('hdn');
+					targetConatiner.removeClass('hdn');
+					new_evt_pht_frame.removeClass('hdn evt-pht-new-frame').addClass('thumb').attr('data-key',resp);
+ 					imgTarget.removeClass('target-image').addClass('vertical-center').unwrap();
+					var label_message = "";
+					pht_num = (++pht_num >= 0)?pht_num:0;
+					label_message = pht_num +' Photo'+ ((pht_num > 1 )?'s':'');
+					$('.evt-block[data-key='+evt_wrapper_key+']').find('.total-photos-label').html(label_message);
+					$(thisE).val('');
+					
+					if(resp != '2'){
+						setTimeout(function(){
+							preview_loading_wrapper.remove();
+						},2000);
+ 					}
+				}
+			});
+		}
+		
+	},'.upload-evt-pic');
+	
+	
+	$('body').on({
+		click:function(){
+			var thumb_src = $(this).find('img').attr('src');
+			var src = thumb_src.replace('thumb_','');
+			$(this).parents('#evt-preview').find('.pht .display-img').attr('src',src);
+		}
+	
+	},'.thumb-evt-pht.thumb');
+	
+	$('body').on({
+		mouseover:function(){
+			$(this).find('.remove-evt-pht').removeClass('hdn');
+		},
+		mouseleave:function(){
+			$(this).find('.remove-evt-pht').addClass('hdn');
+		}
+	},'#evt-preview .thumb-evt-pht');
+	
+	
+	
+	$('body').on({
+		click:function(){
+			presentPopupDialog("Remove Photo", "Do you want to remove this photo", "Cancel", "Remove", removeEventPhoto, $(this) );
+			return false;
+		}
+	
+	},'#evt-preview .thumb-evt-pht .remove-evt-pht');
 	
 	
 });

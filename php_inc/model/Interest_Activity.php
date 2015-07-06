@@ -84,6 +84,8 @@
 				include_once 'User_Media_Prefix.php';
 				$prefix = new User_Media_Prefix();
 				$event_photo = $this->event->event_photo->getEventPhotoUrlByEventId($event['id']);
+				$event_photo_num = $this->event->event_photo->getPhotoNumberForEvent($event['id']);
+								
 				
 				$media_prefix = $prefix->getUserMediaPrefix($interest_activity['user_id']).'/';
 				if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo)){
@@ -97,8 +99,6 @@
 					$event_photo = $media_prefix.$label_image->getLabelImageUrlByInterestId($interest_id);
 				}
 				
-				
-// 				$comment_block = $this->getCommentBlockByActivityId($activity_id);
 				$comment_number = $this->comment->getCommentNumberForTarget($activity_id);
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.'phtml/child/post_event_block.phtml');
@@ -107,10 +107,6 @@
 			}
 			return false;
 		}	
-		
-		
-	
-		
 		
 		
 		
@@ -265,7 +261,9 @@
 								$prefix = new User_Media_Prefix();
 								$this->event = new event($row['activity_id']);
 								$event_photo = $this->event->event_photo->getEventPhotoUrlByEventId($row['event_id']);
-				
+								$event_photo_num = $this->event->event_photo->getPhotoNumberForEvent($row['event_id']);
+
+								
 								$media_prefix = $prefix->getUserMediaPrefix($row['user_id']).'/';
 								if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo)){
 									$caption = $this->event->event_photo->getEventPhotoCaptionByPictureUrl($event_photo);
@@ -276,6 +274,7 @@
 									$label_image = new User_Interest_Label_Image();
 									$event_photo = $media_prefix.$label_image->getLabelImageUrlByInterestId($row['interest_id']);
 								}
+								
 								
 								$date = returnShortDate($row['date'],'-');
 								$comment_number = $this->comment->getCommentNumberForTarget($row['activity_id']);
@@ -324,9 +323,49 @@
 			}
 		}
 		
+		public function loadEventPreviewBlockByKey($key, $user_id){
+			$column_array = array('id','user_id','interest_id');
+			$result = $this->getMultipleColumnsBySelector($column_array, 'hash', $key);
+			if($result['id'] !== false){
+				$this->event = new Event($result['id']);
+				$isEventEditableForCurrentUser = $this->isEventEditableForCurrentUser($result['id'], $user_id);
+				return $this->event->renderEventPrewviewBlock($result['user_id'],$result['interest_id'],$isEventEditableForCurrentUser );	
+			}
+			return false;
+		}
 		
 		
+		public function isEventEditableForCurrentUser($activity_id, $user_id){
+			//check whether this event is posted by the given user
+			$isPostForUser = $this->getAllRowsColumnBySelectorForUser('id','id',$activity_id,$user_id, $asc = false);
+			//people in the joining list 
+			if($isPostForUser !== false){
+				return true;
+			}
+			return false;
+		}
 		
+		
+		public function isEvtPhotoUploadableByUserForEvent($user_id, $key){
+			//either in the joining list or the post owner, and the event should have already passed. true return an event id, false otherwise
+			$activity_id = $this->getRowIdByHashkey($key);
+			$this->event = new Event($activity_id);
+	
+			if($this->event->isEventPassedForActivityId($activity_id)){
+				return true;
+			}	
+			return false;
+		}
+		
+		/* $user_id is the user who is uploading the photo*/
+		public function uploadEvtPhotoByKey($key, $user_id, $photo_file){
+			if($this->isEvtPhotoUploadableByUserForEvent($user_id, $key)){
+				//upload the photo
+				$event_id = $this->event->event_id;
+				return $this->event->event_photo->uploadEventPhotoByEventId($photo_file, $user_id, $event_id);
+			}
+			return false;
+		}	
 		
 	}
 ?>
