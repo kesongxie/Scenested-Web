@@ -4,5 +4,4 @@
 	echo $interest_activity->loadPassedEventCollectionForUser($request_user_page_id);
 	
 	
-	
 ?>

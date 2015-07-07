@@ -113,8 +113,6 @@ textarea{
 	font-size: 12px;
 	cursor: pointer;
 	width: 94%;
-	margin-top: 15px;
-	margin-left: 0px;
 	border-radius: 3px;
 	padding: 5px;
 }
@@ -142,6 +140,15 @@ textarea{
 	opacity:0.7;
 	z-index:-1;
 }
+
+.arrow-up {
+	width: 0; 
+	height: 0; 
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid #656565;
+}
+
 
 .visible-control{
 	color:#949494;
@@ -612,6 +619,10 @@ div.ui-datepicker{
 	margin:6px 0px;
 }
 
+
+.target-image{
+	display:block;
+}
 
 
 /* ends with interest profile template*/

@@ -3,22 +3,24 @@
 	
 	<?php $displayable = isMediaDisplayable($event_photo); ?>
 
+	<?php $displayable = isMediaDisplayable($event_photo); ?>
+
 	<?php if($displayable): ?>
-		<img src="<?php echo IMGDIR ?>white-down-arrow.png" style="float:none;position: absolute; right: 14px; top: 14px;"class="toggle-operation pointer hdn">
-		<div class="evt-photo-wrap pointer" style="max-height:200px;overflow:hidden;background:#f0f0f0">
-			<img style="max-width:100%;" src="<?php echo U_IMGDIR.$event_photo ?>">
-			<?php if($isEventPassed): ?>
-				<!-- 
+		<img src="<?php echo IMGDIR ?>menu_navi_icon.png" style="z-index:1;float:none;position: absolute; right: 10px; top: 14px;width:20px;height:14px;"class="toggle-operation pointer hdn">
+
+		<div class="pointer evt-photo-wrap" style="max-height:300px;overflow:hidden;background:#f0f0f0;" title="View Photos in This Event">
+				<img style="width:100%;display:block;" src="<?php echo U_IMGDIR.$event_photo ?>">
+			<!-- 
 <div class="total-photos" style="position:absolute;bottom:0px;right:0px;">
-					<div class="total-photos-label" style="color:#fff;padding:10px;background:#000;font-size:13px;"><?php echo $event_photo_num ?> Photo<?php echo ($event_photo_num > 1)?'s':'' ?></div>
-				</div>
+				<div class="total-photos-label" style="color:#fff;padding:10px;background:#000;font-size:13px;"><?php echo $event_photo_num ?> Photo<?php echo ($event_photo_num > 1)?'s':'' ?></div>
+			</div>
  -->
-			<?php  endif;?>
 		</div>
 	<?php else: ?>
-			<img src="<?php echo IMGDIR ?>down_arrow_icon.png" style="float:none;position: absolute; right: 10px; top: 10px;"class="toggle-operation pointer hdn">
-			
+			<img src="<?php echo IMGDIR ?>menu_navi_icon.png" style="float:none;position: absolute; right: 10px; top: 10px;"class="toggle-operation pointer hdn">
 	<?php endif; ?>
+	
+	
 	
 	<?php if($displayable): ?>
 		<div style="padding:0px 14px 0px 14px; margin-top:-22px;">
@@ -54,7 +56,7 @@
 		<div style="text-align:center; margin-bottom:10px;padding:10px;">
 
 		<?php if(!$isEventPassed): ?>
-			<?php  if($interest_activity['user_id'] != $_SESSION['id']): ?>
+			<?php  if($activity['user_id'] != $_SESSION['id']): ?>
 				<div class="evt-action-button inline-blk">Join</div>
 			<?php endif ?>
 		<?php endif;?>
@@ -81,10 +83,10 @@
 		<?php if($isEventPassed): ?>
 					<div class="in_con_w_opt_it evt-mt-action">Moment</div>
 		<?php endif; ?>
-		<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
-		<div class="in_con_w_opt_it remove_activity">Remove This Post</div>
+		<?php  if($activity['user_id'] == $_SESSION['id']): ?>
+		<div class="in_con_w_opt_it remove_activity">Cancel this Event</div>
 		<?php else: ?>
-		<div class="in_con_w_opt_it remove_activity">Block This Post</div>
+		<div class="in_con_w_opt_it remove_activity">Unjoin this Event</div>
 		<?php endif; ?>
 	</div>
 </div>

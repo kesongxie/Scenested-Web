@@ -289,6 +289,9 @@
 									$right_content.= $content;
 								}
 							}
+							include_once 'User_Upcoming_Event.php';
+							$upcoming_evt = new User_Upcoming_Event();
+							$upcoming_event_num = $upcoming_evt->getUpComingEventNumForUser($row['user_id']);
 			
 							ob_start();
 							include(TEMPLATE_PATH_CHILD.'event.phtml');
@@ -302,6 +305,110 @@
 			
 			return false;
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		public function loadUpComingEventCollectionForUser($user_id){
+			include_once 'User_Upcoming_Event.php';
+			$upcoming_evt = new User_Upcoming_Event();
+			$rows = $upcoming_evt->getUpcomingEventForUser($user_id);
+			
+			if($rows !== false && sizeof($rows) >0 ){
+				$left_content = "";
+				$right_content = "";
+				$count = 0;
+				foreach($rows as $row ){
+					$title = $row['title'];
+					$description = $row['description'];  
+					
+					
+					$time = "";
+					if($row['date'] != null){
+						$time .= returnShortDate($row['date'],',').' - '.getWeekDayFromDate($row['date']);
+					}
+				
+					if($row['time'] != null){
+						if($row['date'] != null){
+							$time .= ', ';
+						}
+						$time .= convertTimeToAmPm($row['time']);
+					}
+				
+				
+				
+					$location = '';
+					if($row['location'] != null){
+						$location = $row['location'];
+					}
+				
+					$isEventPassed = (time() > strtotime($row['date'].$row['time']));				
+					
+					
+					$prefix = new User_Media_Prefix();
+					$this->event = new event($row['activity_id']);
+					$event_photo = $this->event->event_photo->getEventPhotoUrlByEventId($row['event_id']);
+					$event_photo_num = $this->event->event_photo->getPhotoNumberForEvent($row['event_id']);
+					
+					
+					$activity = $this->getMultipleColumnsById(array('user_id','hash','post_time'),$row['activity_id']);
+					$hash = $activity['hash'];
+					
+					
+					include_once 'User_Profile_Picture.php';
+					$profile = new User_Profile_Picture();
+					$post_owner_pic = $profile->getLatestProfileImageForUser($activity['user_id']);
+					include_once 'User_Table.php';
+					$user = new User_Table();
+					$fullname = $user->getUserFullnameByUserIden($activity['user_id']);
+					$post_time = convertDateTimeToAgo($activity['post_time'], false);	
+					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($activity['user_id']);
+				
+					
+					
+					$media_prefix = $prefix->getUserMediaPrefix($activity['user_id']).'/';
+					if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo)){
+						$caption = $this->event->event_photo->getEventPhotoCaptionByPictureUrl($event_photo);
+						$event_photo = $media_prefix.$event_photo;
+					}else{
+						//get the label photo as the event cover
+						include_once 'User_Interest_Label_Image.php';
+						$label_image = new User_Interest_Label_Image();
+						$event_photo = $media_prefix.$label_image->getLabelImageUrlByInterestId($row['interest_id']);
+					}
+					
+					
+					$date = returnShortDate($row['date'],'-');
+					//$time = 
+					$comment_number = $this->comment->getCommentNumberForTarget($row['activity_id']);
+					$comment_block = $this->getSlideShowCommentBlockByActivityId($row['activity_id']);
+					ob_start();
+					include($upcoming_evt->template());
+					$content = ob_get_clean();
+					
+					if($count++ % 2 == 0){
+						$left_content.= $content;
+					}else{
+						$right_content.= $content;
+					}
+				}
+				
+				
+				$upcoming_event_num = sizeof($rows);
+				
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'upcoming_event.phtml');
+				$content = ob_get_clean();
+				return $content;
+			}
+
+			
+		}
+		
 		
 		
 		public function deleteActivityForUserByActivityId($user_id, $key){

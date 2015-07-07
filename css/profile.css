@@ -289,7 +289,7 @@
 .interest-profile .preview-container .inner{
 	position:relative;
 	width:100%;
-	min-height:160px;
+	min-height:60px;
 }
 
 
@@ -313,4 +313,24 @@
 	border-top:1px dashed #f0f0f0;
 	width:100%;
 	padding-top:4px;		
+}
+
+
+.act-evt-navi{
+	color: #797979;
+	font-weight: bold;
+}
+
+.favor-evt-label{
+	color:rgb(48, 51, 198);
+}
+
+.favor-evt-ic:hover{
+	opacity:0.6;
+}
+div#favor-evt-label-wrapper{
+	margin-top:12px;
+}
+div#favor-evt-label-wrapper .favor-evt-wrapper{
+	margin-bottom:2px;
 }

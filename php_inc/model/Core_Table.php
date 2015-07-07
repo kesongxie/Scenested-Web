@@ -257,6 +257,9 @@
 		
 		
 		
+		
+		
+		
 		public function getMultipleColumnsBySelector($column_array, $selector_column, $selector_value){
 			$selector_column = $this->connection->escape_string($selector_column);
 			$targets = implode('`,`',$column_array);

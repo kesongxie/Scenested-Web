@@ -35,7 +35,7 @@
 	
 	//user media prefix
 	$_USER_MEDIA_PREFIX  = $media_prefix->getUserMediaPrefix($request_user_page_id).'/';
-	
+
 	require_once 'phtml/profile.phtml';
 	
 	

@@ -1,7 +1,4 @@
-
 <div class="post-wrapper post evt-block passed-evt-block" data-key="<?php echo $hash; ?>">
-
-
 	<?php $displayable = isMediaDisplayable($event_photo); ?>
 
 	<?php if($displayable): ?>
@@ -34,7 +31,7 @@
 		</div>
 		
 		
-		<div class="post-inner-padding" style="padding-top:0px">
+		<div class="post-inner-padding" style="padding-top:0px;padding-bottom:0px;">
 			<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer toggle-slide-comment" src="<?php echo IMGDIR ?>ci.png" title="Comment" height="16" width="16"><div class="inline-blk cmt-num" style="margin:-3px 8px 0px 0px"><?php echo $comment_number ?></div></div>
 			<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>favor_icon.png" title="Pin" height="18" width="18"><div class="inline-blk" style="margin-top:-1px;"></div></div>
 			<div class=
@@ -48,11 +45,13 @@
 				
 				</div>
 			</div>
-			<?php if($comment_number > 0): ?>
+			<!-- 
+<?php if($comment_number > 0): ?>
  			<div class="slideshow-comment-wrapper" style="overflow:hidden;height:56px;position:relative;">
  				<?php echo $comment_block; ?>
  			</div>
  			<?php endif; ?>
+ -->
 		</div>
 	</div>
 	

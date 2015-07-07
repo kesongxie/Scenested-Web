@@ -839,19 +839,7 @@ $(document).ready(function(){
 	
 	},'.passed-evt-block .toggle-slide-comment');
 	
-	// 
-// 	$('body').on({
-// 		mouseover:function(){
-// 			$(this).find('.total-photos').removeClass('hdn');
-// 		},
-// 		mouseleave:function(){
-// 			$(this).find('.total-photos').addClass('hdn');
-// 		}
-// 	
-// 	},'.passed-evt-block');
-// 	
-// 	
-	
+
 	
 
 	$('body').on({
@@ -868,6 +856,155 @@ $(document).ready(function(){
 			return false;
 		}
 	},'.evt-block');
+	
+	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			if(!thisE.hasClass('set')){
+				$.ajax({
+					url:AJAX_DIR+'loadUpcomingEvent.php',
+					method:'post',
+					success:function(resp){
+						thisE.addClass('set');
+						$('#show-passed-evt').removeClass('act-evt-navi');
+						thisE.addClass('act-evt-navi');
+						$('#profile-mid-content #passed-evt').addClass('hdn');
+						$('#profile-mid-content #upcom-evt').removeClass('hdn').html(resp);
+					}	
+				});
+			}else{
+				$('#show-passed-evt').removeClass('act-evt-navi');
+				thisE.addClass('act-evt-navi');
+				$('#profile-mid-content #passed-evt').addClass('hdn');
+				$('#profile-mid-content #upcom-evt').removeClass('hdn');
+			}
+		}
+	},'#show-upcom-evt');
+	
+	
+	$('body').on({
+		click:function(){
+			$('#show-upcom-evt').removeClass('act-evt-navi');
+			$(this).addClass('act-evt-navi');
+			$('#profile-mid-content #passed-evt').removeClass('hdn');
+			$('#profile-mid-content #upcom-evt').addClass('hdn');
+			
+		}
+	},'#show-passed-evt');
+	
+	
+	function showPopOverDialog(thisE,content){
+		var parentDiv = thisE.parents('.popover-throwable');
+		var popOver = parentDiv.find('.popover-dialog-wrapper');
+		if(popOver.length < 1){
+			$.get(AJAX_PHTML_DIR+"popover_dialog.phtml", function(resp) {
+				parentDiv.prepend(resp);
+				parentDiv.find('.popover-dialog-wrapper').css('top',parentDiv.height()+10);
+				parentDiv.find('.popover-dialog-content').text(content);
+			});
+		}else{
+			popOver.removeClass('hdn');
+		}
+	}
+	
+	function hidePopOverDialog(thisE){
+		thisE.parents('.popover-throwable').find('.popover-dialog-wrapper').addClass('hdn');
+	}
+	
+	
+	function addFavorEvt(title, desc){
+		$.ajax({
+			url:AJAX_DIR+'add_favor_event.php',
+			method:'post',
+			data:{title:title, desc:desc},
+			success:function(resp){
+				var favor_blk = $('#favor-evt-block');
+				var add_evt =favor_blk.find('#add-favor-evt');
+				add_evt.addClass('hdn');
+				add_evt.find('textarea,input').val('');
+				favor_blk.find('#hide-favor-evt-edit').addClass('hdn');
+				favor_blk.find('#show-favor-evt-edit').removeClass('hdn');
+				favor_blk.find('#favor-evt-label-wrapper').prepend(resp).removeClass('hdn');
+			}	
+		});
+	}
+	
+	$('body').on({
+		keyup:function(evt){
+			if(evt.keyCode == 13){
+				var add_favor_evt = $(this).parents('#add-favor-evt');
+				title = $(this).val().trim();
+				if( title == ''){
+					showPopOverDialog($(this),"Please add a title of the event your recently want to join");
+					return false;
+				}else{
+					hidePopOverDialog($(this));
+				}
+				//the input is good, now check the textarea
+				var textarea = add_favor_evt.find('textarea');
+				var desc = textarea.val().trim();
+				if(desc == ''){
+					textarea.focus();
+					showPopOverDialog(textarea,"Please add some description about the event your recently want to join");
+					return false;
+				}else{
+					hidePopOverDialog(textarea);
+				}
+				//the textarea is good
+				//submit
+				addFavorEvt(title, desc);
+				
+			}
+		},
+		blur:function(){
+			var parentDiv = $(this).parents('.popover-throwable');
+			var popOver = parentDiv.find('.popover-dialog-wrapper');
+			if(popOver.length > 0){
+				popOver.addClass('hdn');
+			}
+		}
+	
+	},'#add-favor-evt input');
+	
+		$('body').on({
+		keypress:function(e){
+ 			if(e.keyCode == 10 || e.keyCode == 13){
+ 				e.preventDefault();
+				var add_favor_evt = $(this).parents('#add-favor-evt');
+				var desc = $(this).val().trim();
+				if(desc == ''){
+					showPopOverDialog($(this),"Please add some description about the event your recently want to join");
+					return false;
+				}else{
+					hidePopOverDialog($(this));
+				}
+				
+				var input = add_favor_evt.find('input');
+				title = input.val().trim();
+				if(title == ''){
+					showPopOverDialog(input,"Please add a title of the event your recently want to join");
+					return false;
+				}else{
+					hidePopOverDialog(input);
+				}
+				
+				addFavorEvt(title, desc);
+				
+			}
+		},
+		blur:function(){
+			var parentDiv = $(this).parents('.popover-throwable');
+			var popOver = parentDiv.find('.popover-dialog-wrapper');
+			if(popOver.length > 0){
+				popOver.addClass('hdn');
+			}
+		}
+	
+	},'#add-favor-evt textarea');
+	
+	
+	
 	
 	
 	
