@@ -53,6 +53,11 @@
 			return $this->getMultipleColumnsBySelector($column_array, 'interest_activity_id', $this->activity_id);	
 		}
 		
+		public function getPostText(){
+			return $this->getColumnBySelector('description', 'interest_activity_id', $this->activity_id);	
+		}
+	
+		
 		public function deleteEventForUserByActivityId($user_id){
 			//delete photos in this event
 			$event_id = $this->getColumnBySelector('id', 'interest_activity_id', $this->activity_id);
@@ -101,7 +106,6 @@
 			$column_array = array('date','time');
 			$event = $this->getMultipleColumnsBySelector($column_array, 'interest_activity_id', $activity_id);
 			return (time() > strtotime($event['date'].$event['time']));				
-
 		}
 		
 	

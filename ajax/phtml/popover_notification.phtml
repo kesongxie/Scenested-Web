@@ -1,0 +1,7 @@
+<?php if($queues !== false): ?>
+<?php foreach($queues as $queue): ?>
+	<?php echo $renderer->getNotificationBlockByQueue($queue);?>
+<?php endforeach; ?>
+<?php else: ?>
+	<div class="empty-feed">You have no <?php echo ($isFresh)?'fresh':'previous'; ?> notification</div>
+<?php endif;?>

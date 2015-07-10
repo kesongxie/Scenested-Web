@@ -43,14 +43,17 @@
 			
 		</div>
 		
-		<div class="in_con_opt_w popover" style="top:50px;right:0px;">
-		<?php  if($interest['user_id'] == $_SESSION['id']): ?>
-				<div class="in_con_w_opt_it edit_interest">Edit</div>
-		<?php  endif; ?>	
-				<div class="in_con_w_opt_it">Interest Friends</div>
-		<?php  if($interest['user_id'] == $_SESSION['id']): ?>
-				<div class="in_con_w_opt_it remove_interest">Remove This Interest</div>
-		<?php  endif; ?>
+		<div class="in_con_opt_w popover" style="top:38px;right:7px;">
+			<div class="in_con_opt_w_inner" style="position:relative;width:100%;height:126px;">
+				<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
+				<?php  if($interest['user_id'] == $_SESSION['id']): ?>
+						<div class="in_con_w_opt_it edit_interest">Edit</div>
+				<?php  endif; ?>	
+						<div class="in_con_w_opt_it">Interest Friends</div>
+				<?php  if($interest['user_id'] == $_SESSION['id']): ?>
+						<div class="in_con_w_opt_it remove_interest">Remove This Interest</div>
+				<?php  endif; ?>
+			</div>
 		</div>
 		
 	</div>

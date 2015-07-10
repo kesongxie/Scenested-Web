@@ -121,6 +121,42 @@ function startSlideComment(evt_wrapper){
 
 
 
+function addFavorEvt(title, desc){
+	$.ajax({
+		url:AJAX_DIR+'add_favor_event.php',
+		method:'post',
+		data:{title:title, desc:desc},
+		success:function(resp){
+			var favor_blk = $('#favor-evt-block');
+			var add_evt =favor_blk.find('#add-favor-evt');
+			add_evt.addClass('hdn');
+			add_evt.find('textarea,input').val('');
+			favor_blk.find('#hide-favor-evt-edit').addClass('hdn').removeClass('act');
+			favor_blk.find('#show-favor-evt-edit').removeClass('hdn').addClass('act');
+			favor_blk.find('#favor-evt-label-wrapper').prepend(resp).removeClass('hdn');
+		}	
+	});
+}
+
+function removeRecentFavor(sender){
+	var parentWrappr = sender.parents('#favor-evt-block');
+	var parentDiv = sender.parents('.favor-evt-wrapper');
+	var key = parentDiv.attr('data-key');
+	$.ajax({
+		url:AJAX_DIR+'remove_favor.php',
+		method:'post',
+		data:{key:key},
+		success:function(resp){
+			console.log(resp);
+			parentDiv.remove();
+			if(parentWrappr.find('.favor-evt-wrapper').length < 1){
+				parentWrappr.find('.empty-mesg').removeClass('hdn');
+			}
+		}	
+	
+	});
+}
+
 $(document).ready(function(){
 
 	var in_navi_count = 0;
@@ -861,10 +897,12 @@ $(document).ready(function(){
 	$('body').on({
 		click:function(){
 			var thisE = $(this);
+			var key = thisE.attr('data-key');
 			if(!thisE.hasClass('set')){
 				$.ajax({
 					url:AJAX_DIR+'loadUpcomingEvent.php',
 					method:'post',
+					data:{key:key},
 					success:function(resp){
 						thisE.addClass('set');
 						$('#show-passed-evt').removeClass('act-evt-navi');
@@ -894,41 +932,7 @@ $(document).ready(function(){
 	},'#show-passed-evt');
 	
 	
-	function showPopOverDialog(thisE,content){
-		var parentDiv = thisE.parents('.popover-throwable');
-		var popOver = parentDiv.find('.popover-dialog-wrapper');
-		if(popOver.length < 1){
-			$.get(AJAX_PHTML_DIR+"popover_dialog.phtml", function(resp) {
-				parentDiv.prepend(resp);
-				parentDiv.find('.popover-dialog-wrapper').css('top',parentDiv.height()+10);
-				parentDiv.find('.popover-dialog-content').text(content);
-			});
-		}else{
-			popOver.removeClass('hdn');
-		}
-	}
 	
-	function hidePopOverDialog(thisE){
-		thisE.parents('.popover-throwable').find('.popover-dialog-wrapper').addClass('hdn');
-	}
-	
-	
-	function addFavorEvt(title, desc){
-		$.ajax({
-			url:AJAX_DIR+'add_favor_event.php',
-			method:'post',
-			data:{title:title, desc:desc},
-			success:function(resp){
-				var favor_blk = $('#favor-evt-block');
-				var add_evt =favor_blk.find('#add-favor-evt');
-				add_evt.addClass('hdn');
-				add_evt.find('textarea,input').val('');
-				favor_blk.find('#hide-favor-evt-edit').addClass('hdn');
-				favor_blk.find('#show-favor-evt-edit').removeClass('hdn');
-				favor_blk.find('#favor-evt-label-wrapper').prepend(resp).removeClass('hdn');
-			}	
-		});
-	}
 	
 	$('body').on({
 		keyup:function(evt){
@@ -936,7 +940,7 @@ $(document).ready(function(){
 				var add_favor_evt = $(this).parents('#add-favor-evt');
 				title = $(this).val().trim();
 				if( title == ''){
-					showPopOverDialog($(this),"Please add a title of the event your recently want to join");
+					showPopOverDialog($(this),add_favor_evt,"Please add a title of the event your recently want to join");
 					return false;
 				}else{
 					hidePopOverDialog($(this));
@@ -946,7 +950,7 @@ $(document).ready(function(){
 				var desc = textarea.val().trim();
 				if(desc == ''){
 					textarea.focus();
-					showPopOverDialog(textarea,"Please add some description about the event your recently want to join");
+					showPopOverDialog(textarea,add_favor_evt,"Please add some description about the event your recently want to join");
 					return false;
 				}else{
 					hidePopOverDialog(textarea);
@@ -971,10 +975,10 @@ $(document).ready(function(){
 		keypress:function(e){
  			if(e.keyCode == 10 || e.keyCode == 13){
  				e.preventDefault();
-				var add_favor_evt = $(this).parents('#add-favor-evt');
+ 				var add_favor_evt = $(this).parents('#add-favor-evt');
 				var desc = $(this).val().trim();
 				if(desc == ''){
-					showPopOverDialog($(this),"Please add some description about the event your recently want to join");
+					showPopOverDialog($(this),add_favor_evt,"Please add some description about the event your recently want to join");
 					return false;
 				}else{
 					hidePopOverDialog($(this));
@@ -983,7 +987,7 @@ $(document).ready(function(){
 				var input = add_favor_evt.find('input');
 				title = input.val().trim();
 				if(title == ''){
-					showPopOverDialog(input,"Please add a title of the event your recently want to join");
+					showPopOverDialog(input,add_favor_evt,"Please add a title of the event your recently want to join");
 					return false;
 				}else{
 					hidePopOverDialog(input);
@@ -1003,8 +1007,95 @@ $(document).ready(function(){
 	
 	},'#add-favor-evt textarea');
 	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('#favor-evt-block');
+			parentDiv.find('#favor-evt-label-wrapper').addClass('hdn');
+			parentDiv.find('#add-favor-evt').removeClass('hdn');
+			$(this).addClass('hdn').removeClass('act');
+			parentDiv.find('#hide-favor-evt-edit').removeClass('hdn').addClass('act');
+			parentDiv.find('.empty-mesg').addClass('hdn');
+		}
+	},'#favor-evt-block #show-favor-evt-edit');
 	
 	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('#favor-evt-block');
+			parentDiv.find('#add-favor-evt').addClass('hdn');
+			parentDiv.find('input, textarea').val('');
+			parentDiv.find('#favor-evt-label-wrapper').removeClass('hdn');
+			$(this).addClass('hdn').removeClass('act');
+			parentDiv.find('#show-favor-evt-edit').removeClass('hdn').addClass('act');
+			
+			if(parentDiv.find('.favor-evt-wrapper').length < 1){
+				parentDiv.find('.empty-mesg').removeClass('hdn');
+			}
+			
+		}
+	},'#favor-evt-block #hide-favor-evt-edit');
+	
+	$('body').on({
+		mouseover:function(){
+			$(this).find('.favor-evt-ic.act').removeClass('hdn');
+		},
+		mouseleave:function(){
+			$(this).find('.favor-evt-ic').addClass('hdn');
+		}
+	
+	},'#favor-evt-block');
+	
+	
+	
+	
+	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var parent = thisE.parents('#favor-evt-label-wrapper');
+			var key = thisE.parents('.favor-evt-wrapper').attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'load_favor_evt_desc.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					showPopOverDialog(thisE, parent, resp);
+				}	
+			});
+			return false;
+		}
+	},'#favor-evt-label-wrapper .favor-evt-label');
+	
+	
+	$('body').on({
+		mouseover:function(){
+			$(this).find('.remove-favor').removeClass('hdn');
+		},
+		mouseleave:function(){
+			$(this).find('.remove-favor').addClass('hdn');
+		}
+	},'#favor-evt-label-wrapper .favor-evt-wrapper');
+	
+	
+	
+	$('body').on({
+		click:function(){
+			presentPopupDialog("Remove recent favorite",'Do you want to remove this recent favorite?', "Cancel", "Remove", removeRecentFavor, $(this) );
+		}
+	
+	},'#favor-evt-label-wrapper .favor-evt-wrapper .remove-favor');
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('#favor-evt-block');
+			parentDiv.find('#favor-evt-label-wrapper').addClass('hdn');
+			parentDiv.find('#add-favor-evt').removeClass('hdn');
+			$('#show-favor-evt-edit').addClass('hdn').removeClass('act');
+			parentDiv.find('#hide-favor-evt-edit').removeClass('hdn').addClass('act');
+			parentDiv.find('.empty-mesg').addClass('hdn');
+		}
+	
+	},'#favor-evt-block #show-favor-edit')
 	
 	
 	

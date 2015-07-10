@@ -1,0 +1,48 @@
+#search-sider-bar-left{
+	width:24%;
+	height:100vh;
+	border-right:1px solid #EAEAEA;
+}
+#search-sider-bar-right {
+  width: 54%;
+  vertical-align: top;
+  min-width: 700px;
+  margin-left: 10px;
+}
+#search-sider-bar-right  > div{
+	margin-left:14px;	
+}
+
+#search-sider-bar-right #search-navigation-bar {
+	position: relative;
+	margin:22px 0px 16px 0px;
+	width: 100%;
+	min-width: 693px;
+	border-bottom: 1px solid #EEEEEE;
+}
+
+#search-sider-bar-right #search-navigation-bar .navi-item {
+	position: relative;
+	font-size: 13px;
+	cursor: pointer;
+	font-weight: bold;
+	padding: 6px 20px;
+	text-align: center;
+	display: inline-block;
+	color:rgb(135, 135, 135);
+}
+
+#search-sider-bar-right #search-navigation-bar .active-navi {
+	color: rgb(18, 18, 18);
+	border-bottom: 3px solid rgb(10, 43, 138);
+	border-radius: 0px;
+}
+
+#search-sider-bar-right #search-navigation-bar .navi-item .sub-text {
+	font-size: 9px;
+	font-weight: normal;
+}
+
+.search-user-profile-wrapper{
+	width:43%;
+}

@@ -13,8 +13,6 @@
 	if(!isset($_SESSION['id']) && !$auth_tokens->auth_token_valified()){
 		header('location:'.LOGIN_PAGE);
 	}
-	$session_user_profile_image_url = $user->getLatestProfilePictureForuser($_SESSION['id']);
-	$session_user_access_url = $user->getUserAccessUrl($_SESSION['id']);
 	
 	
 	$request_info = $user->requestUserPageValid($_SERVER['REQUEST_URI']);
@@ -30,8 +28,9 @@
 	$page_own = ($request_user_page_id == $_SESSION['id']); // if it's true, allow editting
 	$request_user_page_fullname = $user->getUserFullnameByUserIden($request_user_page_id);	
 	$request_user_page_firstname = $user->getUserFirstNameByUserIden($request_user_page_id);
-	$request_user_page_gender_call = $user->getWhatShouldCallForUser($request_user_page_id);
-	
+	$gender_call = $user->getWhatShouldCallForUser($request_user_page_id);
+	$heOrShe = $gender_call[0];
+	$hisOrHer = $gender_call[1];
 	
 	//user media prefix
 	$_USER_MEDIA_PREFIX  = $media_prefix->getUserMediaPrefix($request_user_page_id).'/';

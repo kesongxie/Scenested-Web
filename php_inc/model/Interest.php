@@ -18,6 +18,14 @@
 			$this->interest_activity = new Interest_Activity();
 		}
 
+		public function getInterestNameForUser($user_id, $limit_row){
+			if($limit_row > 0){
+				return $this->getRowsColumnBySelector('name', 'user_id', $user_id, $limit_row);
+			}else{
+				return $this->getAllRowsColumnBySelector('name', 'user_id', $user_id);
+			}
+		}
+		
 
 		//return the result set of the first row for the given user id
 		public function getUserFirstInterestByUserId($user_id){
@@ -248,8 +256,29 @@
 			return $this->interest_activity->deleteActivityForUserByActivityId($user_id, $activity_id);
 		}
 		
+		public function returnMatchedUserBySearchkeyWord($key_word){
+			$stmt = $this->connection->prepare("
+			SELECT CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+			FROM user 
+			LEFT JOIN interest
+			ON interest.user_id=user.id  WHERE interest.name LIKE ? ORDER BY `id` ASC
+			");
+			if($stmt){
+				$key_word = '%' .$key_word. '%';
+				$stmt->bind_param('s',$key_word);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
 		
-		
+	}
 
-	}		
 ?>

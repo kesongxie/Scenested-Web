@@ -1,3 +1,4 @@
+
 <div class="header">
 	<div class="header-inner" >
 		<div id="logo" class="gradient-red-background">
@@ -10,21 +11,52 @@
 			</div>
 		</div>
 		<div id="loggedin-menu">
-			<div style="position:relative">
 				<ul>
 					<a href="<?php echo ROOTDIR; ?>index.php" style="text-decoration:none;"><span class="header-navi-item"><img src="<?php echo IMGDIR ?>home_icon.png" id="home_icon" class="animate-opacity" height="25" width="25" title="Home"><span>Home</span></span></a>
 					<span id="header-notification-delegate" class="header-navi-item pointer">
 					<span style="position:relative">
 						<img src="<?php echo IMGDIR ?>notification.png" class="animate-opacity" height="24" width="24" title="Notifications">
-						<span id="index-noti-red-spot" class="n_r_s">1</span>
+						
+						<span id="index-noti-red-spot" class="n_r_s<?php echo ($notification_number > 0)?'':' hdn' ?>"><?php echo $notification_number ?></span>
+						
+						
+						<div id="notification-center" class="popover" >
+							<div class="in_con_opt_w_inner" style="width:100%;font-weight:normal">
+								<div class="arrow-up" style="position:absolute;top:-10px;right:88px;border-bottom:10px solid #FFFFFF"></div>
+								<div class="title">
+									<div class="inline-blk pointer get-fresh red-act" style="margin-right:10px;">Fresh</div>
+									<div class="inline-blk pointer get-prev">Previous</div>
+									<div class="inline-blk pointer" style="float:right"><a href="#" class="plain-lk">View All</a></div>
+								</div>	
+
+								<div class="body child-scrollable fresh" >
+									<?php if($notification_number < 1):?>
+											<div class="empty-feed">You have no fresh notification</div>
+									<?php endif; ?>
+								</div>
+								
+								<div class="body child-scrollable previous hdn" data-set="false" >
+								</div>
+								<div style="border-top:1px solid #EAEAEA;height:20px;"></div>
+
+							</div>
+						</div>
 					</span>
 					</span>
 				<span id="loggin-user-icon"><img src="<?php echo $session_user_profile_image_url; ?>" width="30" height="30" style="cursor:pointer" ></span></ul>
 				<div id="setting-menu" class="popover" >
-					<a href="<?php echo USER_PROFILE_ROOT.$session_user_access_url; ?>" class="plain-lk"><div class="setting-menu-item gradient-red-background-hover pointer">My Profile</div></a>
-					<a href="<?php echo ROOTDIR; ?>logout.php" class="plain-lk"><div class="setting-menu-item gradient-red-background-hover pointer">Log Out</div></a>
+					<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
+						<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
+						<a href="<?php echo USER_PROFILE_ROOT.$session_user_access_url; ?>" class="plain-lk"><div class="setting-menu-item gradient-red-background-hover pointer">My Profile</div></a>
+						<a href="<?php echo ROOTDIR; ?>logout.php" class="plain-lk"><div class="setting-menu-item gradient-red-background-hover pointer">Log Out</div></a>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	
+	
 </div>
+
+
+

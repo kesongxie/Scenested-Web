@@ -1,0 +1,43 @@
+<div class="in_con_opt_w popover fri-oper" style="top:37px;right:7px;height:126px;">
+		<div class="in_con_opt_w_inner" style="position:relative;width:100%;height:126px;">
+		<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
+		<div class="inner-w" style="height:100%;position:relative;overflow:hidden;width:100%">
+			<div class="main" style="position:absolute;width:100%;left:0px;background:#fff;">
+				<div class="in_con_w_opt_it add-interest-group" style="cursor:default">Interest Group<img src="<?php echo IMGDIR ?>right_nxt.png" style="float:right;margin-top:4px" height="12" width="12"></div>
+				<div class="in_con_w_opt_it">Add as Friend</div>
+				<div class="in_con_w_opt_it">Follow</div>
+			</div>
+			<div class="sub int-group hdn"  style="position:absolute;right:-100%;width:100%;background:#fff;">
+				<div class="back-to-main" style="cursor:default;padding:10px;text-align:center"><img src="<?php echo IMGDIR ?>left_nxt.png" style="float:left;margin-top:4px;margin-right:-12px;" height="12" width="12">Interest Group</div>
+				<div style="max-height:130px;overflow:scroll">
+					<?php if($rows !== false && sizeof($rows) > 0): ?>
+					<?php foreach($rows as $row): ?>
+						<?php
+							$sent =	$interest_request->isRequestAlreadySentForInterestId($_SESSION['id'],$user_to, $row['id']);
+						?>
+						
+						<?php if($sent): ?>
+							<div  class="in_con_border_top" style="padding:6px;cursor:default;" data-key="<?php echo $row['id'] ?>">
+						<?php else:?>
+							<div  class="in_con_w_opt_it in_con_border_top selectable" style="padding:6px;" data-key="<?php echo $row['id'] ?>">
+						<?php endif; ?>	
+							<img class="label-image" src="<?php echo U_IMGDIR.$user_media_prefix.$row['picture_url'] ?>"><div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;"><?php echo $row['name'] ?></div>
+						
+						<?php if($sent): ?>
+							<img src="<?php echo IMGDIR ?>plane_sent_icon.png" class="request-sent"  title="Request Sent">
+						<?php endif; ?>
+						
+						</div>
+						
+					
+					<?php  endforeach;?>
+					<?php endif; ?>
+				</div>
+	
+				<div  class="right-align" style="border-top:1px solid #f0f0f0;padding:6px;">
+					<div class="inline-blk action-button center-align request un-requestable">Request</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

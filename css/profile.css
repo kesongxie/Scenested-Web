@@ -56,7 +56,7 @@
 	right:0px;
 	bottom:-50px;
 	background:#000;
-	font-weight:bold;
+	font-weight:500;
 	border-radius:4px;
 }
 
@@ -334,3 +334,4 @@ div#favor-evt-label-wrapper{
 div#favor-evt-label-wrapper .favor-evt-wrapper{
 	margin-bottom:2px;
 }
+

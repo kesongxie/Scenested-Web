@@ -25,7 +25,7 @@
 					<div class="desc"><?php echo $description; ?></div>
 				</div>
 				<div class="evt-info-wrapper">
-					<div style="font-weight:bold;font-size:15px;color:rgb(114, 113, 113);text-align:center"><?php echo $date; ?></div>
+					<div style="font-size:15px;color:rgb(114, 113, 113);text-align:center"><?php echo $date; ?></div>
 				</div>
 			</div>
 		</div>
@@ -40,7 +40,7 @@
 	
 		<div class="post-inner-padding comment-block" style="padding-top:0px">
 			<div class="regular-comment-wrapper hdn">
-				<textarea class="fcy-txt comment-txt" placeholder="Write down your thoughts..." data-key="<?php echo $hash; ?>"></textarea>
+				<textarea class="fcy-txt comment-txt" style="margin-top:12px;" placeholder="Write down your thoughts..." data-key="<?php echo $hash; ?>"></textarea>
 				<div class="comment-container" style="margin-top:20px;">
 				
 				</div>
@@ -56,8 +56,11 @@
 	</div>
 	
 	
-	<div class="in_con_opt_w popover" style="top:34px;right:12px;">
-		<div class="in_con_w_opt_it evt-mt-action">Moment</div>
-		<div class="in_con_w_opt_it remove_activity">Remove This Post</div>
+	<div class="in_con_opt_w popover" style="top:40px;right:4px;">
+		<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
+			<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
+			<div class="in_con_w_opt_it evt-mt-action">Moment</div>
+			<div class="in_con_w_opt_it remove_activity">Remove This Post</div>
+		</div>
 	</div>
 </div>

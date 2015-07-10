@@ -9,6 +9,17 @@
 			$this->send_from = $send_from;
 		}
 		
+		public function getNotificationQueueForUser($user_id){
+			return $this->getColumnByUserId('queue',$user_id);
+		}
+		
+		public function getNotificationReadQueueForUser($user_id){
+			return $this->getColumnByUserId('read_queue',$user_id);
+		}
+		
+		
+		
+		
 		public function addNotificationQueueForUser($user_id, $row_id){
 			$queue_row = $this->queueRowForUserExist($user_id);
 			if($queue_row !== false){
@@ -63,11 +74,18 @@
 		public function updateQueue($queue, $row_id){
 			$this->setColumnById('queue', $queue, $row_id);
 		}
-		
 		public function updateReadQueue($read_queue, $row_id){
-			$this->setColumnById('read_queue', $queue, $row_id);
+			$this->setColumnById('read_queue', $read_queue, $row_id);
 		}
 		
+		
+		public function updateQueueToReadQueue($user_id){
+			$queue = $this->getNotificationQueueForUser($user_id);
+			$old_read_queue = $this->getNotificationReadQueueForUser($user_id);
+			$new_read_queue = $queue.$old_read_queue;
+			$this->setColumnByUserId('read_queue', $new_read_queue, $user_id);
+			$this->setColumnByUserId('queue', '', $user_id);
+		}
 		
 		
 	}

@@ -1,19 +1,17 @@
 <?php
 	include_once 'core_table.php';
+	include_once 'User_Table.php';
 	include_once 'User_Media_Prefix.php';
 	include_once 'Moment.php';
 	include_once 'Event.php';
-	include_once 'comment.php';
 	
 	class Interest_Activity extends Core_Table{
 		private  $table_name = "interest_activity";
 		private $moment = null;
 		private $event = null;
-		private $comment = null;
 		
 		public function __construct(){
 			parent::__construct($this->table_name);
-			$this->comment = new Comment();
 		}
 		
 		
@@ -49,7 +47,6 @@
 				include_once 'User_Profile_Picture.php';
 				$profile = new User_Profile_Picture();
 				$post_owner_pic = $profile->getLatestProfileImageForUser($interest_activity['user_id']);
-				include_once 'User_Table.php';
 				$user = new User_Table();
 				$fullname = $user->getUserFullnameByUserIden($interest_activity['user_id']);
 				$post_time = convertDateTimeToAgo($interest_activity['post_time'], false);	
@@ -99,7 +96,9 @@
 					$event_photo = $media_prefix.$label_image->getLabelImageUrlByInterestId($interest_id);
 				}
 				
-				$comment_number = $this->comment->getCommentNumberForTarget($activity_id);
+				include_once 'Comment.php';
+				$comment = new Comment();
+				$comment_number = $comment->getCommentNumberForTarget($activity_id);
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.'phtml/child/post_event_block.phtml');
 				$event_block = ob_get_clean();
@@ -143,7 +142,6 @@
 					include_once 'User_Profile_Picture.php';
 					$profile = new User_Profile_Picture();
 					$post_owner_pic = $profile->getLatestProfileImageForUser($interest_activity['user_id']);
-					include_once 'User_Table.php';
 					$user = new User_Table();
 					$fullname = $user->getUserFullnameByUserIden($interest_activity['user_id']);
 					$post_time = convertDateTimeToAgo($interest_activity['post_time'], false);	
@@ -164,7 +162,9 @@
 					
 					$caption =  $this->moment->moment_photo->getMomentPhotoCaptionByMomentId($moment['id']);
 					
-					$comment_number = $this->comment->getCommentNumberForTarget($activity_id);
+					include_once 'Comment.php';
+					$comment = new Comment();
+					$comment_number = $comment->getCommentNumberForTarget($activity_id);
 					ob_start();
 					include(SCRIPT_INCLUDE_BASE.'phtml/child/post_moment_block.phtml');
 					$moment_block = ob_get_clean();
@@ -194,10 +194,12 @@
 		
 		public function getCommentBlockByActivityId($activity_id){
 			$comment_block = '';
-			$idCollection =$this->comment->getSelfIdCollectionByTargetId($activity_id);
+			include_once 'Comment.php';
+			$comment = new Comment();
+			$idCollection =$comment->getSelfIdCollectionByTargetId($activity_id);
 			if($idCollection !== false && sizeof($idCollection) > 0){
 				foreach($idCollection as $row ){
-					$comment_block.= $this->comment->renderCommentBlockByCommentId($row['id']);
+					$comment_block.= $comment->renderCommentBlockByCommentId($row['id']);
 				}
 			}
 			return $comment_block;
@@ -206,12 +208,14 @@
 		
 		public function getSlideShowCommentBlockByActivityId($activity_id){
 			$comment_block = '';
-			$idCollection =$this->comment->getSelfIdCollectionByTargetId($activity_id);
+			include_once 'Comment.php';
+			$comment = new Comment();
+			$idCollection =$comment->getSelfIdCollectionByTargetId($activity_id);
 			if($idCollection !== false && sizeof($idCollection) > 0){
 				$count = 0;
 				foreach($idCollection as $row ){
 					$firstComment = ( $count++ == 0 );
-					$comment_block.= $this->comment->renderSlideShowCommentBlockByCommentId($row['id'], $firstComment);
+					$comment_block.= $comment->renderSlideShowCommentBlockByCommentId($row['id'], $firstComment);
 				}
 			}
 			return $comment_block;
@@ -245,13 +249,15 @@
 				$stmt->bind_param('i',$user_id);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows >= 1){
+					 if($result !== false){
 						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						if($rows !== false && sizeof($rows) > 0){
+						if($rows !== false){
 							$left_content = "";
 							$right_content = "";
 							$count = 0;
+							include_once 'Comment.php';
+							$comment = new Comment();
 							foreach($rows as $row ){
 								$hash = $row['hash'];
 								
@@ -277,7 +283,7 @@
 								
 								
 								$date = returnShortDate($row['date'],'-');
-								$comment_number = $this->comment->getCommentNumberForTarget($row['activity_id']);
+								$comment_number = $comment->getCommentNumberForTarget($row['activity_id']);
 								$comment_block = $this->getSlideShowCommentBlockByActivityId($row['activity_id']);
 								ob_start();
 								include(TEMPLATE_PATH_CHILD.'passed_event_block.phtml');
@@ -289,10 +295,17 @@
 									$right_content.= $content;
 								}
 							}
+							
+							$passed_event_num = sizeof($rows);
 							include_once 'User_Upcoming_Event.php';
 							$upcoming_evt = new User_Upcoming_Event();
-							$upcoming_event_num = $upcoming_evt->getUpComingEventNumForUser($row['user_id']);
-			
+							$upcoming_event_num = $upcoming_evt->getUpComingEventNumForUser($user_id);
+							$user = new User_Table();
+							$firstname = $user->getUserFirstNameByUserIden($user_id);
+							$gender_call = $user->getWhatShouldCallForUser($user_id);
+							$heOrShe = $gender_call[0];
+							$hisOrHer = $gender_call[1];
+							$hash = $user->getUniqueIdenForUser($user_id);
 							ob_start();
 							include(TEMPLATE_PATH_CHILD.'event.phtml');
 							$content = ob_get_clean();
@@ -313,12 +326,17 @@
 		
 		
 		
-		public function loadUpComingEventCollectionForUser($user_id){
+		public function loadUpComingEventCollectionForUser($key){
+			
+			$user = new User_Table();
+			$user_id = $user->getUserIdByKey($key);
 			include_once 'User_Upcoming_Event.php';
 			$upcoming_evt = new User_Upcoming_Event();
 			$rows = $upcoming_evt->getUpcomingEventForUser($user_id);
+			include_once 'Comment.php';
+			$comment = new Comment();
 			
-			if($rows !== false && sizeof($rows) >0 ){
+			if($rows !== false && sizeof($rows) > 0){
 				$left_content = "";
 				$right_content = "";
 				$count = 0;
@@ -362,7 +380,6 @@
 					include_once 'User_Profile_Picture.php';
 					$profile = new User_Profile_Picture();
 					$post_owner_pic = $profile->getLatestProfileImageForUser($activity['user_id']);
-					include_once 'User_Table.php';
 					$user = new User_Table();
 					$fullname = $user->getUserFullnameByUserIden($activity['user_id']);
 					$post_time = convertDateTimeToAgo($activity['post_time'], false);	
@@ -384,7 +401,7 @@
 					
 					$date = returnShortDate($row['date'],'-');
 					//$time = 
-					$comment_number = $this->comment->getCommentNumberForTarget($row['activity_id']);
+					$comment_number = $comment->getCommentNumberForTarget($row['activity_id']);
 					$comment_block = $this->getSlideShowCommentBlockByActivityId($row['activity_id']);
 					ob_start();
 					include($upcoming_evt->template());
@@ -396,15 +413,18 @@
 						$right_content.= $content;
 					}
 				}
-				
-				
-				$upcoming_event_num = sizeof($rows);
-				
-				ob_start();
-				include(TEMPLATE_PATH_CHILD.'upcoming_event.phtml');
-				$content = ob_get_clean();
-				return $content;
 			}
+				
+			$upcoming_event_num = ($rows !==false )?sizeof($rows):0;
+			$firstname = $user->getUserFirstNameByUserIden($user_id);
+			$gender_call = $user->getWhatShouldCallForUser($user_id);
+			$heOrShe = $gender_call[0];
+			$hisOrHer = $gender_call[1];
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'upcoming_event.phtml');
+			$content = ob_get_clean();
+			return $content;
+			
 
 			
 		}
@@ -412,6 +432,8 @@
 		
 		
 		public function deleteActivityForUserByActivityId($user_id, $key){
+			include_once 'Comment.php';
+			$comment = new Comment();
 			$column_array = array('id','type');
 			$result = $this->getMultipleColumnsBySelector($column_array, 'hash', $key);
 			$activity_id = $result['id'];
@@ -425,7 +447,7 @@
 						$this->event = new Event($activity_id);
 						$this->event->deleteEventForUserByActivityId($user_id);
 					}
-					$this->comment->deleteAllCommentsByActivityId($activity_id);
+					$comment->deleteAllCommentsByActivityId($activity_id);
 				}
 			}
 		}
@@ -472,7 +494,46 @@
 				return $this->event->event_photo->uploadEventPhotoByEventId($photo_file, $user_id, $event_id);
 			}
 			return false;
-		}	
+		}
+		
+		
+		public function returnMatchedUserBySearchkeyWord($key_word){
+			$stmt = $this->connection->prepare("
+			SELECT event.title, event.description, event.location, event.date, event.time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+			FROM event 
+			LEFT JOIN interest_activity
+			ON event.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'e'  AND  (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?) ORDER BY event.date, event.time ASC
+			");			
+			if($stmt){
+				$key_word = '%' .$key_word. '%';
+				$stmt->bind_param('sss',$key_word,$key_word,$key_word);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+		public function getPostTextByActivityId($activity_id){
+			$type = $this->getColumnById('type',$activity_id);
+			if($type == 'm'){
+				$this->moment = new Moment($activity_id);
+				return $this->moment->getPostText();
+			}else if($type == 'e'){
+				$this->event = new Event($activity_id);
+				return $this->event->getPostText();
+			}
+		}
+		
+		
+			
 		
 	}
 ?>

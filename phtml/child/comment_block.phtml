@@ -20,7 +20,7 @@
 			</div>
 		</div>
 		<?php if($user_id != $_SESSION['id']): ?>
-			<textarea class="fcy-txt comment-reply hdn" data-key="<?php echo $hash; ?>" placeholder="Reply to <?php echo $fullname ?>..."></textarea>
+			<textarea class="fcy-txt comment-reply hdn" style="margin-top:12px;" data-key="<?php echo $hash; ?>" placeholder="Reply to <?php echo $fullname ?>..."></textarea>
 		<?php endif; ?>
 		<div class="reply-block">
 			<?php echo $reply_block; ?>

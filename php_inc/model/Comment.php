@@ -3,12 +3,14 @@
 	class Comment extends Comment_Base{
 		private $table_name = "comment";
 		private $template_path = "phtml/child/comment_block.phtml";
+		private $popover_notification_template_path = "phtml/child/popover_notification_comment_block.phtml";
 		private $slid_show_template_path = "phtml/child/slideshow_comment_block.phtml";
 		public function __construct(){
 			parent::__construct($this->table_name);
 		}
 		
 		public function addPostComment($key, $user_sent, $text){
+
 			$unique_hash = $this->generateUniqueHash();
 			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`activity_id`,`user_id`,`user_id_get`,`text`,`sent_time`,`hash`) VALUES(?, ?, ?, ?, ?, ?)");
 			include_once 'Interest_Activity.php';
@@ -20,7 +22,7 @@
 				$stmt->bind_param('iiisss',$activity_id, $user_sent, $user_id_get, $text, $time,$unique_hash);
 				if($stmt->execute()){
 					$stmt->close();
-					$comment_id = $this->connection->insert_id;
+				 	$comment_id = $this->connection->insert_id;
 					if($user_sent != $user_id_get){
 						$this->noti_queue->addNotificationQueueForUser($user_id_get, $comment_id);
 					}
@@ -131,6 +133,38 @@
 		public function getSelfIdCollectionByTargetId($target_id){
 			return $this->getAllRowsColumnBySelector('id', 'activity_id', $target_id);
 		}
+		
+		public function renderCommentForNotificationBlock($comment_id){
+			$column_array = array('activity_id','user_id','text','sent_time','hash');
+			$comment = $this->getMultipleColumnsById($column_array, $comment_id);
+			include_once 'User_Profile_Picture.php';
+			$profile = new User_Profile_Picture();
+			$post_owner_pic = $profile->getLatestProfileImageForUser($comment['user_id']);
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			$fullname = $user->getUserFullnameByUserIden($comment['user_id']);
+			$post_time = convertDateTimeToAgo($comment['sent_time'], false);	
+			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($comment['user_id']);
+			$text = $comment['text'];
+			$user_id = $comment['user_id'];
+			$hash = $comment['hash'];
+			
+			include_once 'Reply.php';
+			$reply = new Reply();
+			$isReply = $reply->getSelfIdCollectionByCommentId($comment_id);
+			
+			include_once 'Interest_Activity.php';
+			$activity  = new Interest_Activity();
+			$post_text = $activity->getPostTextByActivityId($comment['activity_id']);
+			
+			$post_owner_id = $this->getPostUserIdByActivityId($comment['activity_id']);
+			ob_start();
+			include(SCRIPT_INCLUDE_BASE.$this->popover_notification_template_path);
+			$comment_block = ob_get_clean();
+			return $comment_block;
+		
+		}
+		
 		
 		
 	}

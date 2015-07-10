@@ -101,11 +101,21 @@
 		public function getWhatShouldCallForUser($user_iden){
 			$gender = $this->getUserInfoByUserIden('gender',$user_iden);
 			if($gender == '1'){
-				return 'she';
+				return array('she','her');
 			}else{
-				return 'he';
+				return array('he','his');
 			}
 		}
+		
+		public function getUniqueIdenForUser($user_iden){
+			return $this->getUserInfoByUserIden('unique_iden',$user_iden);
+		}
+		
+		public function getUserIdByKey($key){
+			return $this->getColumnBySelector('id','unique_iden',$key);
+		}
+		
+		
 		
 		
 		
@@ -148,6 +158,25 @@
 			include_once 'User_Profile_Picture.php';
 			$profile = new User_Profile_Picture();
 			return $profile->getLatestProfileImageForUser($user_id);
+		}
+		
+		
+		public function returnMatchedUserBySearchkeyWord($key_word){
+			$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `activated` = '1' ");
+			if($stmt){
+				$key_word = '%' .$key_word. '%';
+				$stmt->bind_param('s',$key_word);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
 		}
 		
 		

@@ -32,7 +32,7 @@
 				<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>favor_icon.png"  title="Pin" height="18" width="18"><div class="inline-blk" style="margin-top:-1px;"></div></div>
 			</div>
 			<div class="regular-comment-wrapper comment-block hdn">
-				<textarea class="fcy-txt comment-txt" placeholder="Write down your thoughts..." data-key="<?php echo $hash ?>"></textarea>
+				<textarea class="fcy-txt comment-txt" style="margin-top:12px;" placeholder="Write down your thoughts..." data-key="<?php echo $hash ?>"></textarea>
 				<div class="comment-container" style="margin-top:20px;">
 				
 				</div>
@@ -43,13 +43,17 @@
 	</div>
 	
 	
-	<div class="in_con_opt_w popover" style="top:34px;right:12px;">
-		<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
-			<div class="in_con_w_opt_it remove_activity">Remove This Moment</div>
-		<?php  endif;?>
-		<?php  if($interest_activity['user_id'] != $_SESSION['id']): ?>
-			<div class="in_con_w_opt_it remove_activity">Block this Post</div>
-		<?php endif; ?>
+	<div class="in_con_opt_w popover" style="top:38px;right:5px;">
+		<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
+			<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
+		
+			<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
+				<div class="in_con_w_opt_it remove_activity">Remove This Moment</div>
+			<?php  endif;?>
+			<?php  if($interest_activity['user_id'] != $_SESSION['id']): ?>
+				<div class="in_con_w_opt_it remove_activity">Block this Post</div>
+			<?php endif; ?>
+		</div>
 	</div>
 </div>
 		

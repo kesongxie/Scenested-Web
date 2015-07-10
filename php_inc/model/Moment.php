@@ -38,6 +38,11 @@
 			return $this->getMultipleColumnsBySelector($column_array, 'interest_activity_id', $this->activity_id);	
 		}
 		
+		
+		public function getPostText(){
+			return $this->getColumnBySelector('description', 'interest_activity_id', $this->activity_id);	
+		}
+		
 		public function deleteMomentForUserByActivityId($user_id){
 			//delete photos in this moment
 			$moment_id = $this->getColumnBySelector('id', 'interest_activity_id', $this->activity_id);

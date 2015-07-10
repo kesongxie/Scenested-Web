@@ -158,6 +158,9 @@
 				return false;
 		}
 		
+		
+		
+		
 	
 		
 		
@@ -209,6 +212,35 @@
 				return false;
 		}
 		
+		
+		public function getRowsColumnBySelector($column, $selector_column, $selector_value, $limit_num = 1, $offset = 0, $asc = false){
+			$column = $this->connection->escape_string($column);
+				$selector_column = $this->connection->escape_string($selector_column);
+				if($asc){
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT ?,? ");
+				}else{
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC LIMIT ?,? ");
+				}
+				if($stmt){
+					$stmt->bind_param('sii', $selector_value, $offset,$limit_num);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							return $row;
+						 }
+					}
+				}
+				echo $this->connection->error;
+				return false;
+		}
+		
+		
+		
+		
+		
+		
 		public function getAllRowsMultipleColumnsBySelector($column_array, $selector_column, $selector_value, $asc = false){
 			$selector_column = $this->connection->escape_string($selector_column);
 			$targets = implode('`,`',$column_array);
@@ -249,6 +281,7 @@
 					 }
 				}
 			}
+			echo $this->connection->error;
 			return false;
 		}
 		
@@ -329,10 +362,15 @@
 		/*
 			this function is aim to select all rows that with the same $user_id
 		*/
-		public function getAllRowsMultipleColumnsByUserId($column_array, $user_id){
+		public function getAllRowsMultipleColumnsByUserId($column_array, $user_id, $asc = false){
 			$targets = implode('`,`',$column_array);
 			$targets = '`'.$targets.'`';
-			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `user_id` = ? ");
+			
+			if($asc){
+				$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `user_id` = ? ");
+			}else{
+				$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `user_id` = ? ORDER BY `id` DESC");
+			}
 			if($stmt){
 				$stmt->bind_param('i', $user_id);
 				if($stmt->execute()){

@@ -1,34 +1,45 @@
 <div id="favor-evt-block" style="padding:10px 10px 12px 10px;margin-top:20px;" >
 	<div>
-		<span style="color:#1E1E1E;font-weight:bold;font-size:16px;" title="Recent favorite hangout event" >Favorite Events</span>
-		<img id="show-favor-evt-edit" class="favor-evt-ic pointer" src="<?php echo IMGDIR ?>add_icon.png" height="14" width="14" title="Add favorite event" style="float:right;margin-top:2px;">
-		<img id="hide-favor-evt-edit" class="favor-evt-ic pointer hdn" src="<?php echo IMGDIR ?>minus_icon.png" height="18" width="18" title="Cancel editting favorite event" style="float:right;margin-top:2px;">
+		<span style="color:#1E1E1E;font-weight:bold;font-size:16px;" title="Recent favorite hangout event" >Recent Favorite</span>
+		<?php if($user_id == $_SESSION['id']): ?>
+		<img id="show-favor-evt-edit" class="act favor-evt-ic pointer hdn" src="<?php echo IMGDIR ?>add_icon.png" height="14" width="14" title="Add recent favorite event or interest" style="float:right;margin-top:4px;">
+		<img id="hide-favor-evt-edit" class="favor-evt-ic pointer hdn" src="<?php echo IMGDIR ?>minus_icon.png" height="18" width="18" title="Cancel editting" style="float:right;margin-top:2px;">
+		<?php endif; ?>
+	
 	</div>
+	<?php if($user_id == $_SESSION['id']): ?>
 	<div id="add-favor-evt" class="hdn" style="width:100%;background:#fff;margin-top:10px">
-		<div class="popover-throwable" style="position:relative;margin-bottom:10px;">
+		<div class="popover-throwable" style="margin-bottom:10px;">
 			<div style="width:100%;"><input type="text" class="fcy-txt" placeholder="Add a short title..." maxlength="32"></div>
 		</div>
-		<div class="popover-throwable" style="position:relative;">
+		<div class="popover-throwable" >
 			<div style="width:100%;"><textarea class="fcy-txt" style="height:60px;display:block;" placeholder="Add some description..."></textarea></div>
 		</div>
 	</div>
+	<?php endif; ?>
 	
-	<?php if($evts !== false && sizeof($evts) > 0): ?>
 	<div id="favor-evt-label-wrapper">
+		<?php if($evts !== false && sizeof($evts) > 0): ?>
 		<?php foreach($evts as $evt): ?>
-		<div class="favor-evt-wrapper" style="position:relative;margin-right:10px;" data-key="<?php echo $evt['hash'] ?>">
-			<span class="favor-evt-label plain-lk ">#<?php echo htmlentities($evt['title']) ?></span>
+		<div class="popover-throwable">
+			<div class="favor-evt-wrapper" style="position:relative;" data-key="<?php echo $evt['hash'] ?>">
+				<span class="favor-evt-label plain-lk pointer">#<?php echo htmlentities($evt['title']) ?></span>
+				<?php if($user_id == $_SESSION['id']): ?>
+				<img src="<?php echo IMGDIR ?>minus_icon.png" class="remove-favor pointer hdn" height="18" width="18" title="Remove this favorite" style="margin-right:-2px;float:right">
+				<?php endif; ?>
+			</div>
 		</div>
 		<?php endforeach; ?>
-	</div>	
-	<?php else: ?>
-	
-		<?php if($user_id == $_SESSION['id']): ?>
-		<div style="background:#fff;position:relative" >
-<!-- 
-			You haven't added your favorite events yet, <span href="" class="plain-lk pointer" style="color:#062AA3">Let your friend know</span>
- -->
-		</div>
 		<?php endif; ?>
+	</div>	
+	
+	
+	<div class="empty-mesg<?php echo ($evts !== false)?' hdn':'' ?>" style="background:#fff;position:relative" >
+	<?php if($user_id == $_SESSION['id']): ?>
+		You haven't added your recent favorite yet, <span href="" id="show-favor-edit" class="plain-lk pointer" style="color:#062AA3">Let your friends know</span>
+	<?php else:  ?>
+		<?php echo $fullname ?> hasn't updated recent favorite
 	<?php endif; ?>
+	</div>	
+	
 </div>
