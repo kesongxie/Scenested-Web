@@ -161,11 +161,19 @@
 		}
 		
 		
-		public function returnMatchedUserBySearchkeyWord($key_word){
-			$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `activated` = '1' ");
+		public function returnMatchedUserBySearchkeyWord($key_word, $limit){
+			if($limit > 0){
+				$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `activated` = '1' LIMIT ? ");
+			}else{
+				$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `activated` = '1'");
+			}
 			if($stmt){
 				$key_word = '%' .$key_word. '%';
-				$stmt->bind_param('s',$key_word);
+				if($limit > 0){
+					$stmt->bind_param('si',$key_word, $limit);
+				}else{
+					$stmt->bind_param('s',$key_word);
+				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){

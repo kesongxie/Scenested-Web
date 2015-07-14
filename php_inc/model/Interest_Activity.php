@@ -300,6 +300,7 @@
 							include_once 'User_Upcoming_Event.php';
 							$upcoming_evt = new User_Upcoming_Event();
 							$upcoming_event_num = $upcoming_evt->getUpComingEventNumForUser($user_id);
+							
 							$user = new User_Table();
 							$firstname = $user->getUserFirstNameByUserIden($user_id);
 							$gender_call = $user->getWhatShouldCallForUser($user_id);
@@ -373,7 +374,7 @@
 					$event_photo_num = $this->event->event_photo->getPhotoNumberForEvent($row['event_id']);
 					
 					
-					$activity = $this->getMultipleColumnsById(array('user_id','hash','post_time'),$row['activity_id']);
+					$activity = $this->getMultipleColumnsById(array('interest_id','user_id','hash','post_time'),$row['activity_id']);
 					$hash = $activity['hash'];
 					
 					
@@ -395,7 +396,7 @@
 						//get the label photo as the event cover
 						include_once 'User_Interest_Label_Image.php';
 						$label_image = new User_Interest_Label_Image();
-						$event_photo = $media_prefix.$label_image->getLabelImageUrlByInterestId($row['interest_id']);
+						$event_photo = $media_prefix.$label_image->getLabelImageUrlByInterestId($activity['interest_id']);
 					}
 					
 					
@@ -452,6 +453,18 @@
 			}
 		}
 		
+		
+		public function getPostTextByActivityId($activity_id){
+			$type = $this->getColumnById('type',$activity_id);
+			if($type == 'm'){
+				$this->moment = new Moment($activity_id);
+				return $this->moment->getPostText();
+			}else if($type == 'e'){
+				$this->event = new Event($activity_id);
+				return $this->event->getPostText();
+			}
+		}
+		
 		public function loadEventPreviewBlockByKey($key, $user_id){
 			$column_array = array('id','user_id','interest_id');
 			$result = $this->getMultipleColumnsBySelector($column_array, 'hash', $key);
@@ -497,12 +510,12 @@
 		}
 		
 		
-		public function returnMatchedUserBySearchkeyWord($key_word){
+		public function returnMatchedEventBySearchkeyWord($key_word){
 			$stmt = $this->connection->prepare("
 			SELECT event.title, event.description, event.location, event.date, event.time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
 			FROM event 
 			LEFT JOIN interest_activity
-			ON event.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'e'  AND  (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?) ORDER BY event.date, event.time ASC
+			ON event.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'e'  AND  (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?) ORDER BY TIMESTAMP(event.date, event.time) DESC
 			");			
 			if($stmt){
 				$key_word = '%' .$key_word. '%';
@@ -519,19 +532,134 @@
 			echo $this->connection->error;
 			return false;
 		}
+	
 		
 		
-		public function getPostTextByActivityId($activity_id){
-			$type = $this->getColumnById('type',$activity_id);
-			if($type == 'm'){
-				$this->moment = new Moment($activity_id);
-				return $this->moment->getPostText();
-			}else if($type == 'e'){
-				$this->event = new Event($activity_id);
-				return $this->event->getPostText();
+		
+		public function returnMatchedPostBySearchkeyWord($key_word){
+			$stmt = $this->connection->prepare("
+			SELECT moment.id, moment.description, moment.date, interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+			FROM moment 
+			LEFT JOIN interest_activity
+			ON moment.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'm' And   ( moment.description LIKE ? ) ORDER BY interest_activity.post_time DESC
+			");			
+			if($stmt){
+				$key_word = '%' .$key_word. '%';
+				$stmt->bind_param('s',$key_word);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
 			}
+			echo $this->connection->error;
+			return false;
 		}
 		
+		public function returnMatchedPhotoBySearchkeyWord($key_word){
+			$stmt = $this->connection->prepare("
+			SELECT moment.id, moment_photo.picture_url, moment_photo.caption, moment_photo.user_id
+			FROM moment 
+			LEFT JOIN moment_photo
+			ON moment.id = moment_photo.moment_id  WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?)
+			
+			UNION ALL
+			SELECT event.id, event_photo.picture_url, event_photo.caption, event_photo.user_id
+			FROM event 
+			LEFT JOIN event_photo
+			ON event.id = event_photo.event_id  WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?)
+			
+			");	
+			if($stmt){
+				$key_word = '%' .$key_word. '%';
+				$stmt->bind_param('sssss',$key_word, $key_word,$key_word, $key_word,$key_word);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;		
+		}
+		
+		
+		public function returnMatchedEventForMineInterest(){
+			include_once MODEL_PATH.'Interest.php';
+			$interest = new Interest();
+			$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
+			$interest_like = '';
+			if($mine_interests !== false){
+				foreach($mine_interests as $interest){
+ 					$interest_like .= $interest['name'].'|';	
+				}
+				$interest_like = trim($interest_like,'|');
+				
+				//use random offset to get random user
+				$stmt = $this->connection->prepare("
+				SELECT event.title, event.description, event.location, event.date, event.time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+				FROM event 
+				LEFT JOIN interest_activity
+				ON event.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?) ORDER BY TIMESTAMP(event.date, event.time) DESC
+				");
+				if($stmt){
+					$stmt->bind_param('sss',$interest_like,$interest_like, $interest_like);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							return $row;
+						 }
+					}
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+		public function returnMatchedMomentForMineInterest(){
+			include_once MODEL_PATH.'Interest.php';
+			$interest = new Interest();
+			$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
+			$interest_like = '';
+			if($mine_interests !== false){
+				foreach($mine_interests as $interest){
+ 					$interest_like .= $interest['name'].'|';	
+				}
+				$interest_like = trim($interest_like,'|');
+				
+				//use random offset to get random user
+				$stmt = $this->connection->prepare("
+				SELECT moment.id, moment.description, moment.date, interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+				FROM moment 
+				LEFT JOIN interest_activity
+				ON moment.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'm' And   ( moment.description REGEXP ? ) ORDER BY interest_activity.post_time DESC
+				");		
+				if($stmt){
+					$stmt->bind_param('s',$interest_like);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							return $row;
+						 }
+					}
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+			
 		
 			
 		

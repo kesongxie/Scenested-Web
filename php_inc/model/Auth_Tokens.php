@@ -1,7 +1,7 @@
 <?php
 	include_once 'core_table.php';
 	class Auth_Tokens extends Core_Table{
-		var $table_name = "auth_tokens";
+		private $table_name = "auth_tokens";
 		public function __construct(){
 			parent::__construct($this->table_name);
 		}	

@@ -48,6 +48,9 @@ textarea{
 .blk{
 	display:block;
 }
+.dummy-lk{
+	text-decoration:none;
+}
 
 .plain-lk{
 	text-decoration:none;
@@ -139,6 +142,10 @@ textarea{
 	background:#fff;
 	opacity:0.7;
 	z-index:-1;
+}
+
+.light-hover:hover{
+	background:#f3f3f3 !important;
 }
 
 .arrow-up {
@@ -315,7 +322,7 @@ div.ui-datepicker{
 
 .header #global-search-bar{
 	position: absolute;
-	top: 20px;
+	top: 19px;
 	left: 334px;
 	width: 376px;
 	
@@ -386,34 +393,55 @@ div.ui-datepicker{
 	cursor:default;
 	position:absolute;
 	top:28px;
-	width:360px;
+	width:380px;
 	background:#fff;
 	box-shadow:-1px 2px 17px #E2E2E2;
 	right:-83px;
 	z-index: 99;
 	display:none;
+	font-size:14px;
 
 }
 
 #notification-center .title{
-	padding:14px;
+	padding:14px 18px;
 }
 
 #notification-center .body{
-	padding:4px 14px 14px 14px;
-	max-height:220px;
+	padding:4px 18px 14px 18px;
+	max-height:260px;
 	overflow:scroll;
 	border-top:1px solid #EAEAEA;
 }
 
-#notification-center .body .cmt{
+#notification-center .body .popover-child{
 	border-bottom:1px solid #f0f0f0;
+	padding: 14px 0px;
+	position:relative;
+	margin-bottom:4px;
+	min-height:40px;
 }
 
 
-#notification-center .body .cmt:last-child{
+
+#notification-center .body .popover-child:last-child{
 	border-bottom:0px;
 }
+#notification-center .body .inner{
+	margin-left:40px !important;
+}
+
+#notification-center .body .sender-avator{
+	height:32px;
+	width:32px;
+	position:absolute;
+	border-radius:4%;
+}
+
+#notification-center .body .target{
+	color:#9F1612;
+}
+
 
 /*begins dialog template*/
 .dialog{
@@ -654,6 +682,13 @@ div.ui-datepicker{
 }
 
 
+.inner{
+	position:relative;
+	padding:2px;
+	top:-5px;
+	line-height:1.4;
+}
+
 .target-image{
 	display:block;
 }
@@ -761,17 +796,12 @@ div.ui-datepicker{
 	border-radius:9%;
 }
 
-
 .comment .inner{
 	margin-left:36px;
-	background-color:#fff;
-	position:relative;
-	padding:2px;
-	top:-6px;
-	line-height:1.4;
 }
 
-.comment .react{
+
+.react{
 	opacity: 0.7;
 }
 
@@ -916,6 +946,7 @@ div.ui-datepicker{
 	background:#fff;
 	box-shadow: -10px 1px 10px #EAEAEA;
 	height: 84%;
+	/* height:260px; */
 	min-width: 222px;
 	width: 17%;
 	background: white;
@@ -926,10 +957,6 @@ div.ui-datepicker{
 	position: fixed;
 	border-radius: 4px 0px 0px 0px;
 }
-
-
-
-
 
 
 
@@ -1086,3 +1113,11 @@ div.ui-datepicker{
 	margin-top:8px;
 }
 
+.side-bar #frag-footer{
+	font-size:12px;
+	color:rgb(161, 161, 161);
+}
+
+.side-bar #frag-footer a{
+	color:rgb(161, 161, 161);
+}

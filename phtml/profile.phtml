@@ -21,7 +21,7 @@
 	<body>
 		<?php require_once 'child/loggedin_header.php'; ?>
 		<div id="profile-global-container" >
-			<div id="profile-sider-bar-left" class="inline-blk">
+			<div id="profile-sider-bar-left" class="inline-blk side-bar">
 					<div id="avator-wrapper" style="height:230px;">
 						<div class="avator-inner-top"  style="z-index:1">
 							<img class="profile-image" src="<?php echo $user->getLatestCoverForuser($request_user_page_id); ?>">
@@ -86,8 +86,12 @@
 
 
 				<?php include_once 'child/favor_evt_block.php'; ?>	
-			
 				
+				<!-- 
+<div style="margin-top:100px;">
+						<?php require_once 'phtml/footer.phtml'; ?>
+				</div>
+ -->
 				
 			</div>
 			

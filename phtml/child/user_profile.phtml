@@ -9,20 +9,18 @@
 	<div class="avator-inner-bottom" style="z-index:2;position:relative">
 	<div class="avator-picture-wrapper" style="margin-top:-40px;margin-left:14px;" >
 		<div class="inline-blk" style="box-shadow:1px 1px 3px #848484;margin-right:10px;width:74px;height:74px;overflow:hidden">
-			<a href="<?php echo $user_page_redirect; ?>"><img  style="width:100%;min-height:100%;" src="<?php echo $profile_pic ?>"></a>
+			<a href="<?php echo $user_page_redirect; ?>"><img  class="profile-pic" style="width:100%;min-height:100%;" src="<?php echo $profile_pic ?>"></a>
 		</div>
-		<div class="inline-blk" style="margin:0px 0px -4px 0px;vertical-align:bottom;font-size: 15px;color: #323232;font-weight: bold;"><?php echo htmlentities($fullname); ?></div>
-	<!-- 
-	<div style="font-size:13px;margin-top:10px;">Borough of Manhattan Community College</div>
- -->
+		<div class="inline-blk fullname" style="margin:0px 0px -4px 0px;vertical-align:bottom;font-size: 15px;color: #323232;font-weight: bold;"><?php echo htmlentities($fullname); ?></div>
+		<div class="summary" style=margin-top:10px;"">
+			<div style="font-size:13px;">Borough of Manhattan Community College</div>
 
-
-		
-		<?php if($interest_list != ''): ?>
-			<div style="font-size:14px;margin-top:10px;">
-				Interested in <?php echo htmlentities($interest_list) ?>
-			</div>
-		<?php endif; ?>	
+			<?php if($interest_list != ''): ?>
+				<div style="font-size:14px;">
+					Interested in <?php echo htmlentities($interest_list) ?>
+				</div>
+			<?php endif; ?>	
+		</div>
 	</div>
 	
 	</div>

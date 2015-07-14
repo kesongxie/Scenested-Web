@@ -1,21 +1,22 @@
 #search-sider-bar-left{
-	width:24%;
-	height:100vh;
-	border-right:1px solid #EAEAEA;
+	width:20.3%;
 }
 #search-sider-bar-right {
-  width: 54%;
-  vertical-align: top;
-  min-width: 700px;
-  margin-left: 10px;
+	width: 54%;
+	vertical-align: top;
+	min-width: 700px;
+	min-height:100vh;
+	padding-left: 10px;
+	border-left:1px solid #EAEAEA;
+
 }
 #search-sider-bar-right  > div{
-	margin-left:14px;	
+	margin-left:6px;	
 }
 
 #search-sider-bar-right #search-navigation-bar {
 	position: relative;
-	margin:22px 0px 16px 0px;
+	margin:14px 0px 16px 0px;
 	width: 100%;
 	min-width: 693px;
 	border-bottom: 1px solid #EEEEEE;

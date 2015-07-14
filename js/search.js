@@ -1,3 +1,12 @@
+function prepare(){
+	var q = $('#search-submit-form input').val();
+	if(q.trim() != ''){
+		prepareAjaxSearchResult(q, false);
+	}else{
+		clearAjaxSearchResult();
+	}
+}
+
 $(document).ready(function(){
 	$('body').on({
 	mouseover:function(){
@@ -7,5 +16,9 @@ $(document).ready(function(){
 		$(this).css({'color':'rgb(135, 135, 135)','border-bottom':'0px'});
 	}
 	},'.deactive-navi');
+	
+	
+	
+	
 
 });

@@ -1,10 +1,9 @@
-<div class="in_con_opt_w popover fri-oper" style="top:37px;right:7px;height:126px;">
-		<div class="in_con_opt_w_inner" style="position:relative;width:100%;height:126px;">
+<div class="in_con_opt_w popover fri-oper" style="top:37px;right:7px;height:90px;">
+		<div class="in_con_opt_w_inner" style="position:relative;width:100%;height:90px;">
 		<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
 		<div class="inner-w" style="height:100%;position:relative;overflow:hidden;width:100%">
 			<div class="main" style="position:absolute;width:100%;left:0px;background:#fff;">
 				<div class="in_con_w_opt_it add-interest-group" style="cursor:default">Interest Group<img src="<?php echo IMGDIR ?>right_nxt.png" style="float:right;margin-top:4px" height="12" width="12"></div>
-				<div class="in_con_w_opt_it">Add as Friend</div>
 				<div class="in_con_w_opt_it">Follow</div>
 			</div>
 			<div class="sub int-group hdn"  style="position:absolute;right:-100%;width:100%;background:#fff;">
@@ -12,21 +11,28 @@
 				<div style="max-height:130px;overflow:scroll">
 					<?php if($rows !== false && sizeof($rows) > 0): ?>
 					<?php foreach($rows as $row): ?>
-						<?php
-							$sent =	$interest_request->isRequestAlreadySentForInterestId($_SESSION['id'],$user_to, $row['id']);
+						<?php  
+							$hash = $in->isUserInInterest($_SESSION['id'],$user_to, $row['id']);
+							if($hash !== false): 
 						?>
+							<div  class="in_con_border_top" style="padding:6px;cursor:default;" data-key="<?php echo $row['id'] ?>" data-hash="<?php echo $hash ?>" title="In your <?php echo htmlentities($row['name']); ?> interest group">
+							<img class="label-image" src="<?php echo U_IMGDIR.$user_media_prefix.$row['picture_url'] ?>"><div class="inline-blk txt_ofl red-act" style="width:95px;margin-top:3px;font-size:13px;"><?php echo $row['name'] ?></div>
+							<img class="remove-from-interest pointer animate-opacity" src="<?php echo IMGDIR ?>minus_icon.png" title="Remove from interest group" height="16" wdith="16" style="float:right;margin-top:8px;" >
+						<?php else: ?>
+							<?php
+								$sent =	$interest_request->isRequestAlreadySentForInterestId($_SESSION['id'],$user_to, $row['id']);
+								if($sent): 
+							?>
+								<div  class="in_con_border_top" style="padding:6px;cursor:default;" data-key="<?php echo $row['id'] ?>">
+							<?php else:?>
+								<div  class="in_con_w_opt_it in_con_border_top selectable" style="padding:6px;" data-key="<?php echo $row['id'] ?>">
+							<?php endif; ?>	
+								<img class="label-image" src="<?php echo U_IMGDIR.$user_media_prefix.$row['picture_url'] ?>"><div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;"><?php echo $row['name'] ?></div>
 						
-						<?php if($sent): ?>
-							<div  class="in_con_border_top" style="padding:6px;cursor:default;" data-key="<?php echo $row['id'] ?>">
-						<?php else:?>
-							<div  class="in_con_w_opt_it in_con_border_top selectable" style="padding:6px;" data-key="<?php echo $row['id'] ?>">
-						<?php endif; ?>	
-							<img class="label-image" src="<?php echo U_IMGDIR.$user_media_prefix.$row['picture_url'] ?>"><div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;"><?php echo $row['name'] ?></div>
-						
-						<?php if($sent): ?>
-							<img src="<?php echo IMGDIR ?>plane_sent_icon.png" class="request-sent"  title="Request Sent">
+							<?php if($sent): ?>
+								<img src="<?php echo IMGDIR ?>plane_sent_icon.png" class="request-sent"  title="Request Sent">
+							<?php endif; ?>
 						<?php endif; ?>
-						
 						</div>
 						
 					

@@ -1,0 +1,36 @@
+<div style="padding:20px 0px 10px 0px;border-bottom:1px solid #f0f0f0;">
+	<a class="plain-lk" href=""><span style="color:#868686;font-weight:bold;font-size:16px;" title=People">Similar Interests</span></a>
+	<?php foreach($user_found as $u):  ?>
+		<?php
+			$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
+			$cover_pic =  $user->getLatestCoverForuser($u['id']);
+			$fullname = $u['fullname'];
+			$rows = $interest->getInterestNameForUser($u['id'], 2);
+			$interest_list = '';
+			if($rows !== false){
+					$count = 1;
+					foreach($rows as $row){
+						if($count == sizeof($rows) -1 ){
+							$interest_list .= $row['name'].' and ';
+						}else if($count < sizeof($rows)){
+							$interest_list .= $row['name'].', ';
+						}else{
+							$interest_list .= $row['name'];
+						}
+						$count++;
+					}
+			}
+			
+			$interest_list = trim($interest_list,', ');
+				
+			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
+			?>
+	
+		<a class="dummy-lk" href="<?php echo $user_page_redirect; ?>"><div style="min-height:40px;padding:10px 0px;">
+			<img src="<?php echo $profile_pic ?>" style="float:left;margin-right:10px;width:38px;height:38px;border-radius:9%;">
+			<div class="profile-name normal-font" style="font-size:14px;"><?php echo htmlentities($fullname) ?></div>
+			<div class="txt_ofl" style="color:rgb(172, 172, 172);font-size:13px;">Interested in <?php echo htmlentities($interest_list); ?></div>
+		</div></a>
+	<?php endforeach; ?>
+	
+</div>

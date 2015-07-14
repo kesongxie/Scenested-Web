@@ -1,0 +1,11 @@
+<?php if($rows !== false): ?>
+	<div class="inline-blk" style="width: 46%;margin-left:6px;">
+			<?php echo $left_content; ?>
+		</div>
+
+	<div class="inline-blk" style="width: 46%;margin-left:8px;">
+		<?php echo $right_content; ?>
+	</div>
+<?php else: ?>
+		<div>No match result found <a href="<?php echo SEARCH_PEOPLE_PATH; ?>all&t=mine" class="plain-lk red-act" >Search post match your interests?</a></div>
+<?php  endif;?>

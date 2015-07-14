@@ -19,7 +19,7 @@ function renderVisibleScope(desc,src){
 	
 	if(desc != ''){
 		if(desc.substr(1,1) != ' '){
-			description+='<span  class="first-cap" style="position:relative;top:0px;margin-right:-3px;">'+desc.substr(0,1).toUpperCase()+'</span>';
+			description+='<span  class="first-cap" style="position:relative;top:4px;margin-right:-3px;">'+desc.substr(0,1).toUpperCase()+'</span>';
 		}else{
 			description+='<span class="first-cap" >'+desc.substr(0,1).toUpperCase()+'</span>';
 		}

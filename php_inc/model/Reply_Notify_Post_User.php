@@ -25,5 +25,13 @@
 		}
 		
 		
+		public function renderNotifyPostUserReplyForNotificationBlock($row_id){
+			$reply_id = $this->getColumnById('reply_id',$row_id);
+			include_once 'Reply.php';
+			$reply = new Reply();
+			return $reply->renderNotifyPostUserReplyForNotificationBlock($reply_id);
+		}
+		
+		
 	}
 ?>

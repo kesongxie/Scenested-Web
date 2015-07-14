@@ -1,0 +1,63 @@
+<div class="in_con_opt_w" style="box-shadow:1px 1px 12px #DBDBDB;display:block;width:100%;top:36px;padding:0px;">
+	<div class="in_con_opt_w_inner" style="position:relative;width:100%;margin-top:5px;">
+		<div class="arrow-up" style="position:absolute;top:-14px;left:12px;border-bottom:10px solid #FFFFFF"></div>
+		
+		<?php if($result_found !== false): ?>
+			<?php foreach($result_found as $u): ?>
+				<?php
+					$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
+					$cover_pic =  $user->getLatestCoverForuser($u['id']);
+					$fullname = $u['fullname'];
+					$rows = $interest->getInterestNameForUser($u['id'], 2);
+					$interest_list = '';
+					if($rows !== false){
+ 							$count = 1;
+ 							foreach($rows as $row){
+ 								if($count == sizeof($rows) -1 ){
+ 									$interest_list .= $row['name'].' and ';
+								}else if($count < sizeof($rows)){
+ 									$interest_list .= $row['name'].', ';
+ 								}else{
+ 									$interest_list .= $row['name'];
+ 								}
+ 								$count++;
+  							}
+ 					}
+ 					
+ 					$interest_list = trim($interest_list,', ');
+ 						
+					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
+				?>
+				<a class="dummy-lk" href="<?php echo $user_page_redirect?>" ><div class="in_con_w_opt_it light-hover" style="min-height:40px;padding:10px;border-bottom:1px solid #f0f0f0;" class="pointer" >
+					<img src="<?php echo $profile_pic ?>"style="float:left;margin-right:10px;width:38px;height:38px;border-radius:9%;">
+					<div class="profile-name normal-font txt_ofl"><?php echo htmlentities($fullname) ?></div>
+					<div  class="txt_ofl" style="color:rgb(172, 172, 172);font-size:13px;">
+						<?php 
+							if($interest_list != ''){
+								echo 'Interested in '.$interest_list;
+							}
+						
+						 ?>
+					</div>
+				</div></a>
+			<?php endforeach; ?>
+		<?php endif; ?>
+		
+		<?php if($user_found !== false ): ?>
+			<a class="dummy-lk" href="<?php echo SEARCH_PEOPLE_PATH.htmlentities($this->search_keyword) ?>"><div class="in_con_w_opt_it light-hover txt_ofl">Search people named <span class="red-act">"<?php echo htmlentities($this->search_keyword) ?>"</span></div></a>
+		<?php endif; ?>
+		<?php if($interest_found !== false ): ?>
+			<a class="dummy-lk" href="<?php echo SEARCH_PEOPLE_PATH.htmlentities($this->search_keyword) ?>&t=interest"><div class="in_con_w_opt_it light-hover txt_ofl" style="margin-bottom:5px;">Search people who interest in <span class="red-act">"<?php echo htmlentities($this->search_keyword) ?>"</span></div></a>
+		<?php endif;?>	
+		<?php if($user_found === false && $interest_found === false): ?>
+			<a class="dummy-lk" href="<?php echo SEARCH_PEOPLE_PATH.htmlentities($this->search_keyword) ?>"><div class="in_con_w_opt_it light-hover txt_ofl" style="margin-bottom:5px;">Search all for <span class="red-act">"<?php echo htmlentities($this->search_keyword) ?>"</span></div></a>
+
+		<?php endif; ?>
+		
+		<!-- 
+<div class="in_con_w_opt_it light-hover txt_ofl" style="margin-bottom:5px;">Search event for <span class="red-act">"<?php echo htmlentities($this->search_keyword) ?>"</span></div>
+ -->
+
+			</div>
+		</div>
+				

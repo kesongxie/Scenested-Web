@@ -1,6 +1,7 @@
 <?php
 	include_once 'php_inc/core.inc.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'Auth_Tokens.php';
+	include_once PHP_INC_MODEL_ROOT_REF.'Interest.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'User_Table.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'User_Media_Prefix.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'Prepare_Search.php';
@@ -21,11 +22,19 @@
 	$session_user_profile_image_url = $user->getLatestProfilePictureForuser($_SESSION['id']);
 	$session_user_access_url = $user->getUserAccessUrl($_SESSION['id']);
 		
-	if(isset($_GET['k'])){
-		$_GET['t'] = isset($_GET['t'])?$_GET['t']:null;
-		$prepare_search = new Prepare_Search($_GET['k'],$_GET['t']);
+	$search_result_main_block = '';	
+	$_GET['t'] = isset($_GET['t'])?$_GET['t']:null;
+	if(isset($_GET['q'])){
+		$prepare_search = new Prepare_Search($_GET['q'],$_GET['t']);
+		$search_result_main_block =  $prepare_search->getSearchResultMainBlock();
+	}else if($_GET['r'] == 'mine'){
+		$prepare_search = new Prepare_Search(null,$_GET['t'] , true);
+		$search_result_main_block =  $prepare_search->getSearchResultMainBlock();
+	}else{
+		header('location:'.ERROR_PAGE);
 	}
-	$search_result_main_block =  $prepare_search->getSearchResultMainBlock();
 	
+	$interest = new Interest();
+	$similar_interest_block = $interest->getSimilarInterestBlock();
 	require_once 'phtml/search.phtml';
 ?>

@@ -7,9 +7,10 @@
 
 	class User_Media_Base extends Core_Table{
 		private $file_m = null;
+		private $photo_stream_template_path = TEMPLATE_PATH_CHILD."photo_stream.phtml";
 		private $table_name;
 		
-		public function __construct($table_name){
+		public function __construct($table_name = null){
 			parent::__construct($table_name);
 			$this->table_name = $table_name;
 			$this->file_m = new File_Manager();
@@ -95,6 +96,21 @@
 			return $this->file_m->removeMediaFileForUser($url, $user_id);
 		}
 		
+		
+		public function renderPhotoStreamByPictureUrl($url, $user_id){
+			$user_media_prefix = new User_Media_Prefix();
+			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
+			if($prefix !== false){
+				if(!empty($url) && !empty($prefix) && isMediaDisplayable($prefix.'/'.$url)){
+					$url =  U_IMGDIR.$prefix.'/'.$url;
+					ob_start();
+					include($this->photo_stream_template_path);
+					$content = ob_get_clean();
+					return $content;
+				}
+			}
+			return false;
+		}
 		
 		
 		

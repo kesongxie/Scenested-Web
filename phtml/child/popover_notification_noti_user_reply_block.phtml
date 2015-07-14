@@ -1,0 +1,45 @@
+<div class="popover-child reply-wrapper comment cmt" data-key="<?php echo $hash; ?>" >
+	<a href="<?php echo $user_page_redirect ?>"><img src="<?php  echo $post_owner_pic ?>" class="sender-avator"></a>
+	
+	<div class="inner">
+		<div class="inner-container">
+			<div class="visible-post-scope">
+				<div class="visible-content limit-height">
+				<a class="profile-name plain-lk normal-font"  href="<?php echo $user_page_redirect ?>"><?php echo htmlentities($fullname); ?>:</a>
+				<span class="noti-text"><?php echo htmlentities($text) ?></span>
+				
+				
+			<?php if($isReply !== false): ?> 
+				<span class="popover-throwable">
+					<img src="<?php echo IMGDIR ?>plane_sent_icon.png" class="request-sent" style="margin-left:3px;opacity:0.4;"  title="Reply Sent">
+				</span>
+ 			<?php  endif;?>
+
+				</div>
+			</div>
+			<div style="position:relative;top:2px;left:-2px;font-size:12px;">
+				<div class="txt_ofl"title="<?php echo ($post_text !== false)?htmlentities($post_text):'The post might have been deleted or is not available to display'; ?>" style="margin-bottom:3px;"><span style="opacity:0.8;">Replied to <?php echo htmlentities($at_fullname); ?> on your post 
+				
+				 <?php if($post_text !== false): ?>
+					 <a class="target plain-lk">"<?php echo htmlentities($post_text) ?>"</a>
+				 <?php else: ?>
+				 	 <a class="plain-lk">"<?php echo 'The post might have been deleted or is not available to display' ?>"</a>
+				<?php  endif; ?>
+				</span></div>
+
+				<span class="react"><?php echo $post_time ?></span>
+				<?php if($user_id != $_SESSION['id']): ?>
+					<span class="reply-comment react pointer" style="margin-left:10px;">Reply</span>
+				<?php endif; ?>
+			</div>
+		</div>
+		<?php if($user_id != $_SESSION['id']): ?>
+			<textarea class="fcy-txt noti-sub-reply hdn" style="margin-top:12px;" data-key="<?php echo $hash; ?>" placeholder="Reply to <?php echo $fullname ?>..."></textarea>
+		<?php  endif;?>
+		
+	</div>
+	
+</div>
+
+
+

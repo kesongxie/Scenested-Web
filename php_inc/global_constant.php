@@ -7,6 +7,8 @@
 	define("IMGDIR",ROOTDIR."media/");
 	define("DEFAULT_IMAGE",IMGDIR.'default_image/');
 	define("U_IMGDIR",ROOTDIR."media_u/");
+	define("SEARCH_PEOPLE_PATH",ROOTDIR.'search.php?q=');
+
 	
 	//paths for php file system
 	define("DOCUMENT_ROOT",'../');
@@ -35,6 +37,7 @@
 	define("DEFAULT_COVER_IMAGE",DEFAULT_IMAGE."beach-230.jpg");
 	define("DEFAULT_INTEREST_LABEL_IMAGE_PREFIX",DEFAULT_IMAGE.'interest-label-');
 	define("MAX_INTEREST_LABEL_COLOR_RANDOM_INDEX", 6);
+	
 	
 	
 	

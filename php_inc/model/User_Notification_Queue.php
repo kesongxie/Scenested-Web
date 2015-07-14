@@ -18,6 +18,28 @@
 		}
 		
 		
+		/*this function doesn't use the property send from, instead, custom send from code is provided */
+		public function addNotificationQueueForUserWithCustomSendFrom($user_id, $row_id, $send_from){
+			$queue_row = $this->queueRowForUserExist($user_id);
+			if($queue_row !== false){
+				//update
+				$id = $queue_row['id'];
+				$queue = $queue_row['queue'];
+				$queue = $send_from.$row_id.','.$queue;
+				$this->updateQueue($queue, $id);
+			}else{
+				//create new row for user
+				$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`queue`) VALUES(?,?)");
+				$queue = $send_from.$row_id.',';
+				$stmt->bind_param('is',$user_id,$queue);
+				if($stmt->execute()){
+					$stmt->close();
+					return true;
+				}
+				return false;
+			}
+		}
+		
 		
 		
 		public function addNotificationQueueForUser($user_id, $row_id){
