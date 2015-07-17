@@ -29,7 +29,10 @@
 			$reply_id = $this->getColumnById('reply_id',$row_id);
 			include_once 'Reply.php';
 			$reply = new Reply();
-			return $reply->renderNotifyPostUserReplyForNotificationBlock($reply_id);
+			if($reply_id !== false){
+				return $reply->renderNotifyPostUserReplyForNotificationBlock($reply_id);
+			}
+			return false;
 		}
 		
 		

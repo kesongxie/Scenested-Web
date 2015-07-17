@@ -32,7 +32,7 @@ div{
 
 
 div img{
-	border-radius:2px;
+	border-radius:3px;
 	border:none;
 }
 
@@ -162,10 +162,14 @@ textarea{
 	margin-top:3px;
 }
 
+
 .visible-control:hover{
 	color:#2459B6;
 }
 
+.visible-control{
+	color:rgb(174,174,174);
+}
 
 .loading-container-wrapper img{
 	width: 29%;
@@ -284,7 +288,9 @@ div.ui-datepicker{
 .red-act{
 	 color: rgb(180, 40, 40);
 }
-
+.previewable{
+	cursor:pointer;
+}
 .in_con_opt_w {
 	position: absolute;
 	background: #fff;
@@ -529,7 +535,6 @@ div.ui-datepicker{
 	font-weight:500;
 	color:#fff;
 	padding:6px 16px;
-	border-radius:2px;
 	font-size:12px;
 	border:1px solid #f0f0f0;
 	background: #780000;
@@ -537,9 +542,8 @@ div.ui-datepicker{
 	background: -o-linear-gradient(#a13030,#780000);
 	background: -moz-linear-gradient(#a13030,#780000);
 	background: linear-gradient(#a13030,#780000);
-	color:white;
 	box-shadow:2px 0px 3px #EAEAEA;
-	border-radius: 3px;
+	border-radius: 4px;
 }
 .action-button:hover{
 	background-color:#8a0000;
@@ -558,7 +562,7 @@ div.ui-datepicker{
 	border-radius:2px;
 	font-size:12px;
 	border:1px solid #f0f0f0;
-	border-radius:0px;
+	border-radius:4px;
 }
 /*ends dialog  template*/
 
@@ -670,10 +674,18 @@ div.ui-datepicker{
 	max-height:108px;	/* max-height:124px; */
 }
 
+
 .comment .limit-height{
 	overflow:hidden;
 	max-height:76px;
 }
+
+
+.media-detail .limit-height{
+	overflow:hidden;
+	max-height:44px;
+}
+
 
 .interest-profile .dialog-body .exp{
 	font-weight:bold;
@@ -740,9 +752,7 @@ div.ui-datepicker{
 .post-user-name{
 	color:#727272;
 }
-.post-user-name:hover{
-	color: #1C23AE;
-}
+
 .post-wrapper .content{
 	margin-top:18px;
 }
@@ -1017,6 +1027,7 @@ div.ui-datepicker{
 	height:90%;
 }
 
+
 #evt-preview .pht{
 	position:relative;
 	border-radius:8px 0px 0px 8px;
@@ -1062,6 +1073,20 @@ div.ui-datepicker{
 	height:16px;
 	width=16px;
 } 
+
+
+#photo-preview{
+	text-align: center;
+	z-index: 1000;
+	top:0px;
+	right:0px;
+	bottom:0px;
+	left:0px;
+	position: fixed;
+	width: 100%;
+	height:90%;
+}
+
 
 .user-profile-wrapper{
 	box-shadow: 1px 1px 10px #EAEAEA;
@@ -1120,4 +1145,11 @@ div.ui-datepicker{
 
 .side-bar #frag-footer a{
 	color:rgb(161, 161, 161);
+}
+.media-asset{
+ 	background:#000;
+ 	width:100%;
+ 	height:400px;
+ 	position:relative;
+ 	border-radius:6px;
 }

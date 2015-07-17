@@ -50,6 +50,10 @@ function resetDialog(){
 	
 	$('.ol').not('.hdn').last().addClass('hdn');
 	$('#popup-dialog-wrapper').addClass('hdn');
+	if(!$('#photo-preview').hasClass('hdn')){
+		$('#photo-preview').addClass('hdn');
+		$('#photo-preview .content-wrapper').html('');
+	}
 	$('body').css('overflow','auto');
 	
 	var dialogParent = $('#popup-dialog');
@@ -90,7 +94,7 @@ function presentPopupDialog(title, body, dismissButtonnText, actionButtonText, a
 
 function setVisibleContent(){
 	$('.visible-content').each(function(){
-		if($(this)[0].scrollHeight > $(this).innerHeight() ){
+		if( typeof $(this)[0].scrollHeight !== "undefined" &&  $(this)[0].scrollHeight > $(this).innerHeight() ){
 			if($(this).parents('.visible-post-scope').find('.visible-control').length < 1){
 				$(this).parents('.visible-post-scope').find('.visible-content').after('<div class="visible-control plain-lk pointer inline-blk rdm" >Read more</div>');
 			}
@@ -99,6 +103,21 @@ function setVisibleContent(){
 		}
 	});
 }
+
+
+
+function setVisibleContentWithParent(parent, text){
+	parent.find('.visible-content').each(function(){
+		if( typeof $(this)[0].scrollHeight !== "undefined" &&  $(this)[0].scrollHeight > $(this).innerHeight() ){
+			if($(this).parents('.visible-post-scope').find('.visible-control').length < 1){
+				$(this).parents('.visible-post-scope').find('.visible-content').after('<div class="visible-control plain-lk pointer inline-blk rdm" >Read more</div>');
+			}
+		}// else{
+// 			$(this).parents('.visible-post-scope').find('.visible-control').remove();
+// 		}
+	});	
+}
+
 
 
 function removeActivity(sender){
@@ -247,7 +266,7 @@ function loadComment(thisE){
 			success:function(resp){
 				commentBlock.find('.comment-container').html(resp);
 				postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length);
-				setVisibleContent();
+				setVisibleContentWithParent(commentBlock, 'Read more')
 			}
 		});
 	}
@@ -348,8 +367,7 @@ $(document).click(function(){
 
 
 $(document).ready(function(){
-	setVisibleContent();
-	
+	setVisibleContent()
 	$(window).scroll(function(){
 		if(!$('body').hasClass('disable-hover'))
 			$('body').addClass('disable-hover');
@@ -455,19 +473,19 @@ $(document).ready(function(){
 			$(this).addClass('red-act');
 			notification_center.find('.body.previous').addClass('hdn');
 			notification_center.find('.body.fresh').removeClass('hdn');
-			var noti = $('#index-noti-red-spot');
-				if(parseInt(noti.text()) > 0 ){
+			var noti = $('#index-noti-red-spot');	
+			if(parseInt(noti.text()) > 0 ){
 				$.get(AJAX_DIR+"ld_popover_notification.php", function(resp) {
-					var freshDiv = notification_center.find('.body.child-scrollable.fresh');
+					var freshDiv = notification_center.find('.body.fresh');
 					freshDiv.prepend(resp);
 					freshDiv.find('.empty-feed').remove();
 					noti.text('').addClass('hdn');
 					$.post(AJAX_DIR+"update_notification_queue.php");
 				});
-					notification_center.show();
-				}else{
-					notification_center.show();
-				}			
+				notification_center.show();
+			}else{
+				notification_center.show();
+			}			
 		}
 	},'#notification-center .get-fresh');
 	
@@ -803,7 +821,35 @@ $(document).ready(function(){
 				$(this).addClass('rdm');
 			}
 		}
-	},'.visible-control');
+	},'.visible-control:not(#photo-preview .visible-control)');
+	
+	
+	$('body').on({
+		click:function(evt){
+			var preview = $(this).parents('#photo-preview');
+			var visible_scope = $(this).parents('.visible-post-scope');
+			if($(this).hasClass('rdm')){
+				$(this).text('Show less');
+				var currentHeight = visible_scope.height();
+				visible_scope.find('.visible-content').removeClass('limit-height');
+				$(this).removeClass('rdm');
+				var newHeight = visible_scope.height();
+				preview.find('.media-asset').animate({'height':'-='+(newHeight-currentHeight)},200);
+
+			}else{
+				$(this).text('Show detail');
+				var currentHeight = visible_scope.height();
+				visible_scope.find('.visible-content').addClass('limit-height');
+				$(this).addClass('rdm');
+				var newHeight = visible_scope.height();
+				preview.find('.media-asset').animate({'height':'-='+(newHeight-currentHeight)},200);
+			}
+			
+		}
+	},'#photo-preview .visible-control');
+	
+	
+	
 	
 	
 	
@@ -923,23 +969,6 @@ $(document).ready(function(){
 	
 	},'.evt_tm');
 	
-	
-	$('body').on({
-		click:function(){
-			var parentDiv = $(this).parents('.evt-block');
-			var key =parentDiv.attr('data-key');
-			$('body').css('overflow','hidden');
-			$.ajax({
-				url:AJAX_DIR+'loadEventPreviewBlock.php',
-				method:'post',
-				data: {key:key},
-				success:function(resp){
-					$('#preview-popup-overlay').removeClass('hdn');
-					$('#evt-preview').html(resp).removeClass('hdn').attr('data-key',key);
-				}
-			});
-		}
-	},'.evt-photo-wrap, .evt-mt-action');
 	
 	$('body').on({
 		click:function(){
@@ -1201,7 +1230,44 @@ $(document).ready(function(){
 		}
 	},'.in_con_opt_w .sub .action-button.request');
 
-
+	
+	$('body').on({
+		click:function(){
+			var thumb_src =  $(this).attr('src');
+			var src = thumb_src.replace('thumb_','');
+			var key = $(this).attr('data-key');
+			var from  =$(this).attr('data-sourcefrom');
+			$.ajax({
+				url:AJAX_DIR+'ld_preview_photo.php',
+				method:'post',
+				data:{key:key,from:from},
+				success:function(resp){
+					$('body').css('overflow','hidden');
+					var photo_preview = $('#photo-preview');
+					var content_wrapper = photo_preview.find('.content-wrapper');
+					content_wrapper.html(resp);
+					var preview_image = photo_preview.find('.preview-image');
+					preview_image.attr('src',src).removeClass('hdn');
+					preview_image.load(function(){
+					  var height = this.naturalHeight;
+					  var width = this.naturalWidth;
+					  if(width >= height){
+					  		preview_image.css('width','100%');
+					  		if(preview_image.height() < 400){
+					  			preview_image.addClass('vertical-center');
+					  		}
+ 					  }else{
+ 					  		preview_image.css({'max-width':'100%', 'max-height':'100%'});
+ 					  }
+					});
+					$('#preview-popup-overlay').removeClass('hdn');
+					photo_preview.removeClass('hdn');
+					setVisibleContentWithParent(photo_preview,'Show detail');
+				}
+			})
+		}
+	
+	},'.previewable');
 	
 
 

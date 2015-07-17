@@ -1,5 +1,5 @@
 <div style="padding:20px 0px 10px 0px;border-bottom:1px solid #f0f0f0;">
-	<a class="plain-lk" href=""><span style="color:#868686;font-weight:bold;font-size:16px;" title=People">Similar Interests</span></a>
+	<a class="plain-lk" href="<?php echo SEARCH_SIMILAR_PEOPLE_PATH ?>"><span style="color:#868686;font-weight:bold;font-size:16px;" title=People">Similar Interests</span></a>
 	<?php foreach($user_found as $u):  ?>
 		<?php
 			$profile_pic = $profile->getLatestProfileImageForUser($u['id']);

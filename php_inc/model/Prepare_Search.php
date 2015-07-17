@@ -147,24 +147,26 @@
 							}
 							$count++;
 						}
-						array_push($result_array,current($rows));
+						
+						$result_array = array_merge($result_array,$rows);
+						
 						
 						
  						$interest_list = '';
+ 						
  						if($result_array !== false){
- 							$count = 1;
- 							foreach($result_array as $row){
- 								if($count == sizeof($rows) -1 ){
- 									$interest_list .= $row['name'].' and ';
-								}else if($count < sizeof($rows)){
- 									$interest_list .= $row['name'].', ';
- 								}else{
- 									$interest_list .= $row['name'];
- 								}
- 								$count++;
-  							}
+							$results = array_slice($result_array,0,2);
+							$count = 1;
+							foreach($results as $result){
+								if($count == 2){
+									$interest_list .= ' and '.$result['name'];
+								}else{
+									$interest_list .=  $result['name'];
+								}
+								$count++;
+							}
  						}
- 						$interest_list = trim($interest_list,', ');
+ 						
 						ob_start();
  						include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
  						$user_profile= ob_get_clean();
@@ -277,7 +279,7 @@
 				$right_content = "";
 				$count = 0;
 				foreach($rows as $row){
-					$content= $media_base->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id']);
+					$content= $media_base->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id'],$row['source_from'], $row['hash']);
 					if($content !== false){
 						if($count++ % 2 == 0){
 							$left_content.= $content;

@@ -12,8 +12,9 @@
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/jquery-ui.js"></script>
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/core.js"></script>
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/profile.js"></script>
-
-
+		<?php if(isset($_GET['s']) && $_GET['s']=='friends'): ?>	
+			<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/child_js/profile_friend.js"></script>
+		<?php endif;?>
 		<!--[if lt IE 9]>
 		<script src="dist/html5shiv.js"></script>
 		<![endif]-->
@@ -109,6 +110,10 @@
 						<?php 
 							if(isset($_GET['s']) && $_GET['s'] == 'events'){
 								require_once 'child/event.php';
+							}else if(isset($_GET['s']) && $_GET['s'] == 'friends'){
+								require_once 'child/friend.php';
+							}else if(isset($_GET['s']) && $_GET['s'] == 'photos'){
+								require_once 'child/photo.php';
 							}else{
 								require_once 'child/interest.php';
 							}

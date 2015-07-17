@@ -221,30 +221,33 @@
 		public function renderReplyForNotificationBlock($reply_id){
 			$column_array = array('activity_id','comment_id','user_id','text','sent_time','target_id','hash');
 			$reply = $this->getMultipleColumnsById($column_array, $reply_id);
-			include_once 'User_Profile_Picture.php';
-			$profile = new User_Profile_Picture();
-			$post_owner_pic = $profile->getLatestProfileImageForUser($reply['user_id']);
-			include_once 'User_Table.php';
-			$user = new User_Table();
-			$fullname = $user->getUserFullnameByUserIden($reply['user_id']);
-			$post_time = convertDateTimeToAgo($reply['sent_time'], false);	
-			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($reply['user_id']);
-			$text = $reply['text'];
-			$user_id = $reply['user_id'];
-			$hash = $reply['hash'];
-			$post_owner_id =$this->getPostUserIdByActivityId($reply['activity_id']);
-			if($reply['target_id'] === null){
-				include_once 'Comment.php';
-				$comment = new Comment();
-				$comment_text =  $comment->getColumnById('text',$reply['comment_id']);
-			}else{
-				$comment_text =  $this->getColumnById('text',$reply['target_id']);
+			if($reply !== false){
+				include_once 'User_Profile_Picture.php';
+				$profile = new User_Profile_Picture();
+				$post_owner_pic = $profile->getLatestProfileImageForUser($reply['user_id']);
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				$fullname = $user->getUserFullnameByUserIden($reply['user_id']);
+				$post_time = convertDateTimeToAgo($reply['sent_time'], false);	
+				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($reply['user_id']);
+				$text = $reply['text'];
+				$user_id = $reply['user_id'];
+				$hash = $reply['hash'];
+				$post_owner_id =$this->getPostUserIdByActivityId($reply['activity_id']);
+				if($reply['target_id'] === null){
+					include_once 'Comment.php';
+					$comment = new Comment();
+					$comment_text =  $comment->getColumnById('text',$reply['comment_id']);
+				}else{
+					$comment_text =  $this->getColumnById('text',$reply['target_id']);
+				}
+				$isReply = $this->checkWhetherUserHasRepliedToReply($_SESSION['id'], $reply_id);
+				ob_start();
+				include(SCRIPT_INCLUDE_BASE.$this->popover_notification_template_path);
+				$reply_block = ob_get_clean();
+				return $reply_block;
 			}
-			$isReply = $this->checkWhetherUserHasRepliedToReply($_SESSION['id'], $reply_id);
-			ob_start();
-			include(SCRIPT_INCLUDE_BASE.$this->popover_notification_template_path);
-			$reply_block = ob_get_clean();
-			return $reply_block;
+			return false;
 		}
 		
 		
@@ -252,32 +255,35 @@
 		public function renderNotifyPostUserReplyForNotificationBlock($reply_id){
 			$column_array = array('activity_id','comment_id','user_id','user_id_get','text','sent_time','target_id','hash');
 			$reply = $this->getMultipleColumnsById($column_array, $reply_id);
-			include_once 'User_Profile_Picture.php';
-			$profile = new User_Profile_Picture();
-			$post_owner_pic = $profile->getLatestProfileImageForUser($reply['user_id']);
-			include_once 'User_Table.php';
-			$user = new User_Table();
-			$fullname = $user->getUserFullnameByUserIden($reply['user_id']);
-			$post_time = convertDateTimeToAgo($reply['sent_time'], false);	
-			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($reply['user_id']);
-			$text = $reply['text'];
-			$user_id = $reply['user_id'];
-			$hash = $reply['hash'];
+			if($reply !== false){
+				include_once 'User_Profile_Picture.php';
+				$profile = new User_Profile_Picture();
+				$post_owner_pic = $profile->getLatestProfileImageForUser($reply['user_id']);
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				$fullname = $user->getUserFullnameByUserIden($reply['user_id']);
+				$post_time = convertDateTimeToAgo($reply['sent_time'], false);	
+				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($reply['user_id']);
+				$text = $reply['text'];
+				$user_id = $reply['user_id'];
+				$hash = $reply['hash'];
 			
-			$at_fullname = $user->getUserFullnameByUserIden($reply['user_id_get']);
+				$at_fullname = $user->getUserFullnameByUserIden($reply['user_id_get']);
 
-			$post_owner_id =$this->getPostUserIdByActivityId($reply['activity_id']);
+				$post_owner_id =$this->getPostUserIdByActivityId($reply['activity_id']);
 			
-			include_once 'Interest_Activity.php';
-			$activity  = new Interest_Activity();
-			$post_text = $activity->getPostTextByActivityId($reply['activity_id']);
+				include_once 'Interest_Activity.php';
+				$activity  = new Interest_Activity();
+				$post_text = $activity->getPostTextByActivityId($reply['activity_id']);
 			
 			
-			$isReply = $this->checkWhetherUserHasRepliedToReply($_SESSION['id'], $reply_id);
-			ob_start();
-			include(SCRIPT_INCLUDE_BASE.$this->noti_user_popover_notification_template_path);
-			$reply_block = ob_get_clean();
-			return $reply_block;
+				$isReply = $this->checkWhetherUserHasRepliedToReply($_SESSION['id'], $reply_id);
+				ob_start();
+				include(SCRIPT_INCLUDE_BASE.$this->noti_user_popover_notification_template_path);
+				$reply_block = ob_get_clean();
+				return $reply_block;
+			}
+			return false;
 		}
 		
 		

@@ -18,8 +18,8 @@
 		</div>
 		</div>
 		<div style="margin-top:10px;">
-			<?php if(isMediaDisplayable($moment_photo)): ?>
-			<img style="width:100%;" src="<?php echo U_IMGDIR.$moment_photo ?>">
+			<?php if($moment_photo !== false && isMediaDisplayable($photo_url)): ?>
+			<img class="previewable" style="width:100%;" src="<?php echo U_IMGDIR.$photo_url ?>"  data-key="<?php echo $photo_hash ?>" data-sourceFrom = "m">
 			<?php if($caption !== false && $caption !== null && !empty($caption)):?>
 			<div style="text-align:right;margin-right:10px;"><span title="<?php echo htmlentities($caption); ?>" style="opacity:0.6;font-size:13px"><?php echo ((strlen($caption)>30)?substr($caption,0,30).'...':$caption) ?><span></div>
 			<?php endif;?>

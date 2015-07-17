@@ -1,0 +1,25 @@
+<!--friend page-->
+
+<div id="friend-content-wrapper" class="inline-blk <?php echo (($request_user_page_has_interest)?"":" hdn") ?>" style="width:80%;">
+	<div class="friend-content-inner-wrapper blk" data-key="-1">
+		<?php echo $content; ?>
+	</div>
+</div>
+
+
+<div id="friend-interest-navi" class="interest-navi inline-blk" style="text-align:left;width:18%;">
+	<div class="interest-sider-navi pointer"  data-labelfor="-1" style="color: #797979; font-weight: bold;"><span class="plain-lk">All Friends</span></div>
+
+	<?php if($user_interests !== false): ?>
+	<?php foreach($user_interests as $user_interest): //start display navi interests label ?>
+				<?php
+				 if($user_interest['picture_url'] != ''){
+				  		$label_url = U_IMGDIR.$_USER_MEDIA_PREFIX.$user_interest['picture_url'];
+				  }else{
+				  		$label_url =getDefaultInterestLabelImageByNum($defualr_label_image->getLabelImageUrllByInterestId($user_interest['id']));
+				  }
+				 ?>
+				<div class="interest-side-label interest-sider-navi pointer" data-labelfor="<?php echo $user_interest['id'];?>"  title="<?php echo htmlentities($user_interest['name']);?>"><div class="vertical-center"><img src="<?php echo $label_url; ?>"><div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;"><?php echo htmlentities($user_interest['name']);?></div></div></div>	
+ 	<?php  endforeach;  //end display side ?>
+	<?php endif ?>
+</div>

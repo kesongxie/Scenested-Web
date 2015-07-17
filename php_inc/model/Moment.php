@@ -36,6 +36,10 @@
 		public function loadMomentResource(){
 			$column_array = array('id','description','date');
 			return $this->getMultipleColumnsBySelector($column_array, 'interest_activity_id', $this->activity_id);	
+		
+		
+		
+		
 		}
 		
 		

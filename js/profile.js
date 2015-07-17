@@ -45,14 +45,14 @@ function deleteInterest(sender){
 			resetDialog();
 			var inner_wrapper = $('#interest-content-wrapper .interest-content-inner-wrapper[data-key='+key+']');
 			inner_wrapper.css('-webkit-animation',"bounceOutDown 1s").css('animation',"bounceOutDown 1s");
-			var side_label = $('#interest-navi .interest-side-label[data-labelfor='+key+']');
+			var side_label = $('#i-interest-navi .interest-side-label[data-labelfor='+key+']');
 			side_label.css('-webkit-animation',"bounceOutDown 1s").css('animation',"bounceOutDown 1s");
 			setTimeout( function() {
 				inner_wrapper.remove();
 				side_label.remove();
 			}, 500);
 			setTimeout( function() {
-				var labels =  $('#interest-navi').find('.interest-side-label');
+				var labels =  $('#i-interest-navi').find('.interest-side-label');
 				if(labels.length >= 1){
 					var firstInterestLabel = labels.first();
 					loadInterest(firstInterestLabel);
@@ -474,7 +474,7 @@ $(document).ready(function(){
 						var side_content = $($.parseHTML(resp)).filter('#node-side-content');			
 						$('#interest-content-wrapper').append(mid_content.html()).removeClass('hdn');
 						side_content.children('.interest-side-label').css('-webkit-animation',' bounceInUp 1s');
-						$('#interest-navi').append(side_content.html());
+						$('#i-interest-navi').append(side_content.html());
 
 						setVisibleContent();
 						//reset elements
@@ -497,7 +497,7 @@ $(document).ready(function(){
 			$(window).scrollTop(0);
 			var activelabelFor = $('#interest-content-wrapper .blk').attr('data-key');
 			var thisO = $(this);
-			var activeSideBarLabel = $('#interest-navi').find('.interest-sider-navi[data-labelfor='+activelabelFor+']');
+			var activeSideBarLabel = $('#i-interest-navi').find('.interest-sider-navi[data-labelfor='+activelabelFor+']');
 			var add_interest_w = $('#add-new-interest-wrapper');
 			if(add_interest_w.hasClass('hdn') == false){
 				add_interest_w.css('-webkit-animation',"shake 0.5s").css('animation',"shake 0.5s");
@@ -518,7 +518,7 @@ $(document).ready(function(){
 	$('#add-new-interest').on({
 		click:function(){
 			var activelabelFor = $('#interest-content-wrapper .blk').attr('data-key');
-			var activeSideBarLabel = $('#interest-navi').find('.interest-sider-navi[data-labelfor='+activelabelFor+']');
+			var activeSideBarLabel = $('#i-interest-navi').find('.interest-sider-navi[data-labelfor='+activelabelFor+']');
 			$('#add-new-interest-wrapper').addClass('hdn');
 			activeSideBarLabel.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
 			$('#interest-content-wrapper').removeClass('hdn');
@@ -529,7 +529,7 @@ $(document).ready(function(){
 		
 	},'.cancel-button');
 	
-	$('#interest-navi').on({
+	$('#i-interest-navi').on({
 		click:function(){
 			loadInterest($(this));
 			
@@ -635,7 +635,7 @@ $(document).ready(function(){
 					}else{	
 						parentDiv.find('.loading-icon-wrapper').hide();
 						actionButton.text("Update");
-						var sideBarParent = $('#interest-navi').find('.interest-side-label[data-labelfor='+key+']');
+						var sideBarParent = $('#i-interest-navi').find('.interest-side-label[data-labelfor='+key+']');
 						//modify the side bar
 						if(imageSet != 'false'){
 							sideBarParent.find('img').attr('src',updated_image_src);
@@ -1096,6 +1096,10 @@ $(document).ready(function(){
 		}
 	
 	},'#favor-evt-block #show-favor-edit')
+	
+	
+	
+	
 	
 	
 	

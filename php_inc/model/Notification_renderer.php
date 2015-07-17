@@ -1,7 +1,7 @@
 <?php
 	include_once 'Code_For_Notification_Sendable_Table.php';
 	class Notification_Renderer{
-		public function getNotificationBlockByQueue($queue){
+		 public function getNotificationBlockByQueue($queue){
 			$result = explode('-',$queue);
 			$code = $result[0];
 			$row_id = $result[1];

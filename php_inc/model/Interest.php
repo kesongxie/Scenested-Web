@@ -28,9 +28,9 @@
 		
 		public function getInterestNameAndDescriptionForUser($user_id, $limit_row){
 			if($limit_row > 0){
-				return $this->getRowsMultipleColumnsBySelectorWithFilter(array('name','description'), 'user_id', $user_id, $limit_row);
+				return $this->getRowsMultipleColumnsBySelectorWithFilter(array('name','description'), 'user_id', $user_id, $limit_row, true);
 			}else{
-				return $this->getAllRowsMultipleColumnsBySelector(array('name','description'), 'user_id', $user_id);
+				return $this->getAllRowsMultipleColumnsBySelector(array('name','description'), 'user_id', $user_id, true);
 			}
 		}
 		
@@ -150,6 +150,10 @@
 			}
 			return $this->loadInterestBlockByInterestResource($interestRow);
 			
+		}
+		
+		public function getInterestUserIdByInterestId($interest_id){
+			return $this->getColumnById('user_id',$interest_id);
 		}
 		
 		public function getInterestNameByInterestId($interest_id){
@@ -371,6 +375,57 @@
 			return false;		
 		
 		}
+		
+		
+		public function initContentForFriend($user_id, $All){
+			include_once 'User_In_Interest.php';
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			$in = new User_In_Interest();
+			$user_found = $in->getAllFriendsInUsersInterestByUserId($user_id);
+			$friend_block = null;
+			if($user_found !== false){
+				include_once 'User_Profile_Picture.php';
+				$profile = new User_Profile_Picture();
+				$friend_block = "";
+				foreach($user_found as $u){
+						$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
+						$cover_pic =  $user->getLatestCoverForuser($u['id']);
+						$fullname = $u['fullname'];
+						$hash = $u['hash'];
+						$rows = $this->getInterestNameForUser($u['id'], 2);
+						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
+						$user_id = $u['id'];
+						$result_array = array();
+						
+						$interest_list = '';
+ 						if($rows !== false){
+ 							$count = 1;
+ 							foreach($rows as $row){
+ 								if($count == sizeof($rows) -1 ){
+ 									$interest_list .= $row['name'].' and ';
+								}else if($count < sizeof($rows)){
+ 									$interest_list .= $row['name'].', ';
+ 								}else{
+ 									$interest_list .= $row['name'];
+ 								}
+ 								$count++;
+  							}
+ 						}
+ 						$interest_list = trim($interest_list,', ');
+ 						
+ 						
+						ob_start();
+ 						include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
+ 						$user_profile= ob_get_clean();
+ 						ob_start();
+ 						include(TEMPLATE_PATH_CHILD.'friend_profile_wrapper.phtml');
+ 						$friend_block .= ob_get_clean();
+				}
+				return $friend_block;
+			}
+		}
+		
 		
 		
 		

@@ -13,6 +13,12 @@
 			 return  $this->getColumnBySelector('picture_url', 'event_id', $event_id);
 		}
 		
+		public function getEventPhotoResourceByMomentId($event_id){
+			return  $this->getMultipleColumnsBySelector(array('hash','picture_url'), 'event_id', $event_id);
+
+		}
+		
+		
 		public function getAllEventPhotoByEventId($event_id){
 			$column_array = array('picture_url','user_id','hash');
 			$rows = $this->getAllRowsMultipleColumnsBySelector($column_array, 'event_id', $event_id);
@@ -65,6 +71,50 @@
 		
 		public function getEventPhotoCaptionByPictureUrl($picture_url){
 			return $this->getColumnBySelector('caption', 'picture_url',$picture_url);
+		}
+		
+		
+		public function loadEventPhotoPreviewBlock($hash){
+			$stmt = $this->connection->prepare("
+			SELECT event_photo.user_id, event_photo.picture_url, event_photo.upload_time, event_photo.caption,event.title, event.description, event.location, event.date, event.time
+			FROM event_photo 
+			LEFT JOIN event
+			ON event_photo.event_id=event.id WHERE event_photo.hash = ? LIMIT 1
+			");
+			if($stmt){
+				$stmt->bind_param('s',$hash);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+					 	
+						$row = $result->fetch_assoc();
+ 						$stmt->close();
+						include_once 'User_Table.php';
+						include_once 'User_Profile_Picture.php';
+						$profile = new User_Profile_Picture();
+						$profile_pic = $profile->getLatestProfileImageForUser($row['user_id']);
+						$post_time = convertDateTimeToAgo($row['upload_time'], false);	
+						$user = new User_Table();
+						$caption = ($row['caption']!==null)?$row['caption']:$row['title'];
+						$time = "";
+						if($row['date'] != null){
+							$time .= returnShortDate($row['date'],',').' - '.getWeekDayFromDate($row['date']);
+						}
+			
+						if($row['time'] != null){
+							if($row['date'] != null){
+								$time .= ', ';
+							}
+							$time .= convertTimeToAmPm($row['time']);
+						}
+						$fullname = $user->getUserFullnameByUserIden($row['user_id']);
+						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($row['user_id']);
+						include TEMPLATE_PATH_CHILD.'evt-photo-preview.phtml';
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
 		}
 		
 		

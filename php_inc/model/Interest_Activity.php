@@ -80,20 +80,20 @@
 				$description = $event['description'];
 				include_once 'User_Media_Prefix.php';
 				$prefix = new User_Media_Prefix();
-				$event_photo = $this->event->event_photo->getEventPhotoUrlByEventId($event['id']);
+				$event_photo = $this->event->event_photo->getEventPhotoResourceByMomentId($event['id']);
 				$event_photo_num = $this->event->event_photo->getPhotoNumberForEvent($event['id']);
 								
 				
 				$media_prefix = $prefix->getUserMediaPrefix($interest_activity['user_id']).'/';
-				if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo)){
-					$caption = $this->event->event_photo->getEventPhotoCaptionByPictureUrl($event_photo);
-					$event_photo = $media_prefix.$event_photo;
+				if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo['picture_url'])){
+					$event_photo_url = $media_prefix.$event_photo['picture_url'];
+					$event_photo_hash = $event_photo['hash'];
 				}else{
 					//get the label photo as the event cover
 					include_once 'User_Interest_Label_Image.php';
 					$label_image = new User_Interest_Label_Image();
 					$interest_id = $this->getColumnById('interest_id',$activity_id);
-					$event_photo = $media_prefix.$label_image->getLabelImageUrlByInterestId($interest_id);
+					$event_photo_url = $media_prefix.$label_image->getLabelImageUrlByInterestId($interest_id);
 				}
 				
 				include_once 'Comment.php';
@@ -155,9 +155,10 @@
 					$description = $moment['description'];
 					include_once 'User_Media_Prefix.php';
 					$prefix = new User_Media_Prefix();
-					$moment_photo = $this->moment->moment_photo->getMomentPhotoUrlByMomentId($moment['id']);
+					$moment_photo = $this->moment->moment_photo->getMomentPhotoResourceByMomentId($moment['id']);
 					if($moment_photo !== false){
-						$moment_photo = $prefix->getUserMediaPrefix($interest_activity['user_id']).'/'.$moment_photo;
+						$photo_url = $prefix->getUserMediaPrefix($interest_activity['user_id']).'/'.$moment_photo['picture_url'];
+						$photo_hash = $moment_photo['hash'];
 					}
 					
 					$caption =  $this->moment->moment_photo->getMomentPhotoCaptionByMomentId($moment['id']);
@@ -259,35 +260,7 @@
 							include_once 'Comment.php';
 							$comment = new Comment();
 							foreach($rows as $row ){
-								$hash = $row['hash'];
-								
-								$title = $row['title'];
-								$description = $row['description'];  
-								
-								$prefix = new User_Media_Prefix();
-								$this->event = new event($row['activity_id']);
-								$event_photo = $this->event->event_photo->getEventPhotoUrlByEventId($row['event_id']);
-								$event_photo_num = $this->event->event_photo->getPhotoNumberForEvent($row['event_id']);
-
-								
-								$media_prefix = $prefix->getUserMediaPrefix($row['user_id']).'/';
-								if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo)){
-									$caption = $this->event->event_photo->getEventPhotoCaptionByPictureUrl($event_photo);
-									$event_photo = $media_prefix.$event_photo;
-								}else{
-									//get the label photo as the event cover
-									include_once 'User_Interest_Label_Image.php';
-									$label_image = new User_Interest_Label_Image();
-									$event_photo = $media_prefix.$label_image->getLabelImageUrlByInterestId($row['interest_id']);
-								}
-								
-								
-								$date = returnShortDate($row['date'],'-');
-								$comment_number = $comment->getCommentNumberForTarget($row['activity_id']);
-								$comment_block = $this->getSlideShowCommentBlockByActivityId($row['activity_id']);
-								ob_start();
-								include(TEMPLATE_PATH_CHILD.'passed_event_block.phtml');
-								$content = ob_get_clean();
+							$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id']);
 							
 								if($count++ % 2 == 0){
 									$left_content.= $content;
@@ -342,72 +315,7 @@
 				$right_content = "";
 				$count = 0;
 				foreach($rows as $row ){
-					$title = $row['title'];
-					$description = $row['description'];  
-					
-					
-					$time = "";
-					if($row['date'] != null){
-						$time .= returnShortDate($row['date'],',').' - '.getWeekDayFromDate($row['date']);
-					}
-				
-					if($row['time'] != null){
-						if($row['date'] != null){
-							$time .= ', ';
-						}
-						$time .= convertTimeToAmPm($row['time']);
-					}
-				
-				
-				
-					$location = '';
-					if($row['location'] != null){
-						$location = $row['location'];
-					}
-				
-					$isEventPassed = (time() > strtotime($row['date'].$row['time']));				
-					
-					
-					$prefix = new User_Media_Prefix();
-					$this->event = new event($row['activity_id']);
-					$event_photo = $this->event->event_photo->getEventPhotoUrlByEventId($row['event_id']);
-					$event_photo_num = $this->event->event_photo->getPhotoNumberForEvent($row['event_id']);
-					
-					
-					$activity = $this->getMultipleColumnsById(array('interest_id','user_id','hash','post_time'),$row['activity_id']);
-					$hash = $activity['hash'];
-					
-					
-					include_once 'User_Profile_Picture.php';
-					$profile = new User_Profile_Picture();
-					$post_owner_pic = $profile->getLatestProfileImageForUser($activity['user_id']);
-					$user = new User_Table();
-					$fullname = $user->getUserFullnameByUserIden($activity['user_id']);
-					$post_time = convertDateTimeToAgo($activity['post_time'], false);	
-					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($activity['user_id']);
-				
-					
-					
-					$media_prefix = $prefix->getUserMediaPrefix($activity['user_id']).'/';
-					if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo)){
-						$caption = $this->event->event_photo->getEventPhotoCaptionByPictureUrl($event_photo);
-						$event_photo = $media_prefix.$event_photo;
-					}else{
-						//get the label photo as the event cover
-						include_once 'User_Interest_Label_Image.php';
-						$label_image = new User_Interest_Label_Image();
-						$event_photo = $media_prefix.$label_image->getLabelImageUrlByInterestId($activity['interest_id']);
-					}
-					
-					
-					$date = returnShortDate($row['date'],'-');
-					//$time = 
-					$comment_number = $comment->getCommentNumberForTarget($row['activity_id']);
-					$comment_block = $this->getSlideShowCommentBlockByActivityId($row['activity_id']);
-					ob_start();
-					include($upcoming_evt->template());
-					$content = ob_get_clean();
-					
+					$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id']);
 					if($count++ % 2 == 0){
 						$left_content.= $content;
 					}else{
@@ -537,15 +445,27 @@
 		
 		
 		public function returnMatchedPostBySearchkeyWord($key_word){
+			//select based on interest name
 			$stmt = $this->connection->prepare("
-			SELECT moment.id, moment.description, moment.date, interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
-			FROM moment 
-			LEFT JOIN interest_activity
-			ON moment.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'm' And   ( moment.description LIKE ? ) ORDER BY interest_activity.post_time DESC
-			");			
+			SELECT * 
+			FROM(
+				SELECT moment.id, moment.description, moment.date, interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+				FROM interest 
+				LEFT JOIN interest_activity
+				ON interest.id = interest_activity.interest_id 
+				LEFT JOIN moment
+				ON moment.interest_activity_id = interest_activity.id 
+				WHERE interest.name Like ? AND interest_activity.type = 'm' 
+				UNION
+				SELECT  moment.id, moment.description, moment.date, interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+				FROM moment 
+				LEFT JOIN interest_activity
+				ON moment.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'm' And   ( moment.description LIKE ? ) 
+			) dum ORDER BY activity_id DESC
+			");	
 			if($stmt){
 				$key_word = '%' .$key_word. '%';
-				$stmt->bind_param('s',$key_word);
+				$stmt->bind_param('ss',$key_word, $key_word);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
@@ -559,23 +479,58 @@
 			return false;
 		}
 		
+		
 		public function returnMatchedPhotoBySearchkeyWord($key_word){
 			$stmt = $this->connection->prepare("
-			SELECT moment.id, moment_photo.picture_url, moment_photo.caption, moment_photo.user_id
-			FROM moment 
-			LEFT JOIN moment_photo
-			ON moment.id = moment_photo.moment_id  WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?)
+			SELECT *
+			FROM
+			(
+				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+				FROM interest 
+				LEFT JOIN interest_activity
+				ON interest.id = interest_activity.interest_id 
+				LEFT JOIN moment
+				ON interest_activity.id = moment.interest_activity_id 
+				LEFT JOIN moment_photo
+				ON moment.id = moment_photo.moment_id 
+				WHERE interest.name Like ?
 			
-			UNION ALL
-			SELECT event.id, event_photo.picture_url, event_photo.caption, event_photo.user_id
-			FROM event 
-			LEFT JOIN event_photo
-			ON event.id = event_photo.event_id  WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?)
+				UNION 
+			
+				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+				FROM interest 
+				LEFT JOIN interest_activity
+				ON interest.id = interest_activity.interest_id 
+				LEFT JOIN event
+				ON interest_activity.id = event.interest_activity_id 
+				LEFT JOIN event_photo
+				ON event.id = event_photo.event_id
+				WHERE interest.name Like ?
+				
+				UNION 
+				
+				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+				FROM moment 
+				LEFT JOIN interest_activity
+				ON moment.interest_activity_id = interest_activity.id
+				LEFT JOIN moment_photo
+				ON moment.id = moment_photo.moment_id  WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?)
+			
+				UNION 
+				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+ 				FROM event 
+ 				LEFT JOIN interest_activity
+				ON event.interest_activity_id = interest_activity.id
+ 				LEFT JOIN event_photo
+ 				ON event.id = event_photo.event_id  WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?)
+
+				)dum ORDER BY interest_activity_id DESC
 			
 			");	
+
 			if($stmt){
 				$key_word = '%' .$key_word. '%';
-				$stmt->bind_param('sssss',$key_word, $key_word,$key_word, $key_word,$key_word);
+				$stmt->bind_param('sssssss',$key_word,$key_word, $key_word, $key_word,$key_word, $key_word, $key_word);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
@@ -600,16 +555,55 @@
  					$interest_like .= $interest['name'].'|';	
 				}
 				$interest_like = trim($interest_like,'|');
+				$result_rows = false;
+				$rowFromUpcoming = $this->returnUpcomingMatchedEventForMinInterest($interest_like);
+				if($rowFromUpcoming !== false){
+					$result_rows = $rowFromUpcoming;
+				}
 				
+				$rowFromPassed = $this->returnPassedMatchedEventForMinInterest($interest_like);
+				if($rowFromPassed !== false){
+					if($result_rows !== false){
+						$result_rows = array_merge($result_rows, $rowFromPassed);
+					}else{
+						$result_rows = $rowFromPassed;
+					}
+				}
+				return $result_rows;
 				//use random offset to get random user
+				
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+		public function returnUpcomingMatchedEventForMinInterest($interest_like){
 				$stmt = $this->connection->prepare("
-				SELECT event.title, event.description, event.location, event.date, event.time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
-				FROM event 
-				LEFT JOIN interest_activity
-				ON event.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?) ORDER BY TIMESTAMP(event.date, event.time) DESC
-				");
+				SELECT * 
+				FROM
+				(
+					SELECT event.title, event.description, event.location, event.date AS date, event.time AS time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN event
+					ON event.interest_activity_id = interest_activity.id 
+					WHERE TIMESTAMP(date, time) > NOW() AND interest.name REGEXP ? AND interest_activity.type = 'e' 
+			
+					UNION
+			
+					SELECT event.title, event.description, event.location, event.date AS date, event.time AS time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+					FROM event 
+					LEFT JOIN interest_activity
+					ON   event.interest_activity_id = interest_activity.id  WHERE TIMESTAMP(date, time) > NOW() AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?)
+				
+					
+				) dum ORDER BY TIMESTAMP(date, time) ASC
+				");	
+				
 				if($stmt){
-					$stmt->bind_param('sss',$interest_like,$interest_like, $interest_like);
+					$stmt->bind_param('ssss',$interest_like,$interest_like,$interest_like, $interest_like);
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
 						 if($result !== false && $result->num_rows >= 1){
@@ -619,10 +613,49 @@
 						 }
 					}
 				}
-			}
-			echo $this->connection->error;
-			return false;
 		}
+		
+		public function returnPassedMatchedEventForMinInterest($interest_like){
+				$stmt = $this->connection->prepare("
+				SELECT * 
+				FROM
+				(
+					SELECT event.title, event.description, event.location, event.date AS date, event.time AS time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN event
+					ON event.interest_activity_id = interest_activity.id 
+					WHERE interest.name REGEXP ? AND interest_activity.type = 'e' AND TIMESTAMP(date, time) <= NOW()
+			
+					UNION
+			
+					SELECT event.title, event.description, event.location, event.date AS date, event.time AS time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+					FROM event 
+					LEFT JOIN interest_activity
+					ON   event.interest_activity_id = interest_activity.id  WHERE  interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?) AND TIMESTAMP(date, time) <= NOW() 
+		
+					
+				) dum ORDER BY TIMESTAMP(date, time) DESC
+				");	
+				
+				if($stmt){
+					$stmt->bind_param('ssss',$interest_like,$interest_like,$interest_like, $interest_like);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							return $row;
+						 }
+					}
+				}
+		}
+		
+		
+		
+		
+		
 		
 		
 		public function returnMatchedMomentForMineInterest(){
@@ -638,13 +671,29 @@
 				
 				//use random offset to get random user
 				$stmt = $this->connection->prepare("
+			SELECT * 	
+			FROM
+			(
+				SELECT moment.id, moment.description, moment.date, interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+				FROM interest 
+				LEFT JOIN interest_activity
+				ON interest.id = interest_activity.interest_id 
+				LEFT JOIN moment
+				ON moment.interest_activity_id = interest_activity.id 
+				WHERE interest.name REGEXP ? AND interest_activity.type = 'm' 
+			
+				UNION
+			
 				SELECT moment.id, moment.description, moment.date, interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
 				FROM moment 
 				LEFT JOIN interest_activity
-				ON moment.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'm' And   ( moment.description REGEXP ? ) ORDER BY interest_activity.post_time DESC
-				");		
+				ON moment.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'm' And   ( moment.description REGEXP ? ) 
+			) dum ORDER BY activity_id DESC
+				");	
+				
+				
 				if($stmt){
-					$stmt->bind_param('s',$interest_like);
+					$stmt->bind_param('ss',$interest_like, $interest_like);
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
 						 if($result !== false && $result->num_rows >= 1){

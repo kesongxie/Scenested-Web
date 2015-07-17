@@ -10,7 +10,7 @@
 			exit();	
 		}	
 		$user_cover = new User_Profile_Cover();
-		$user_cover->uploadMediaForUser($_FILES['profile-pic'],$_SESSION['id']);
+		$user_cover->uploadCoverPicture($_FILES['profile-pic'],$_SESSION['id']);
 	}
 	
 

@@ -44,6 +44,6 @@
 	font-weight: normal;
 }
 
-.search-user-profile-wrapper{
-	width:43%;
+.user-profile-wrapper{
+	width:43% !important;
 }
