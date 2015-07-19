@@ -42,6 +42,7 @@ function deleteInterest(sender){
 		method:'post',
 		data: {key:key},
 		success:function(resp){
+			console.log(resp);
 			resetDialog();
 			var inner_wrapper = $('#interest-content-wrapper .interest-content-inner-wrapper[data-key='+key+']');
 			inner_wrapper.css('-webkit-animation',"bounceOutDown 1s").css('animation',"bounceOutDown 1s");
@@ -90,7 +91,7 @@ function loadInterest(thisE){
 					thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
 					$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
 					$('#interest-content-wrapper').append(resp);
-					setVisibleContent();
+					setVisibleContentWithParent($('.interest-content-inner-wrapper[data-key='+label_key+']'), "Read more");
 				}
 			}
 		});
@@ -449,8 +450,6 @@ $(document).ready(function(){
 			
 			loading_wrapper.show();
 			actionButton.text("Loading...");
-			
-			
 			$.ajax({
 				url:AJAX_DIR+'add_interest.php',
 				type:'POST',
@@ -476,7 +475,7 @@ $(document).ready(function(){
 						side_content.children('.interest-side-label').css('-webkit-animation',' bounceInUp 1s');
 						$('#i-interest-navi').append(side_content.html());
 
-						setVisibleContent();
+						setVisibleContentWithParent(mid_content.find('.interest-content-inner-wrapper'),'Read more');
 						//reset elements
 						parentDiv.find('input, textarea, select').val('');
 						parentDiv.find('.camera-center').show();
@@ -735,7 +734,6 @@ $(document).ready(function(){
 				contentType: false,
 				data:data,
 				success:function(resp){
-					console.log(resp);
 					if(resp == '1'){
 						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 						return false;
@@ -818,8 +816,8 @@ $(document).ready(function(){
 			data.append('date', date);
 			data.append('time', time);
 			data.append('key',key);
-			
-			parentDiv.find('.loading-icon-wrapper').show();
+			var loadingWrapper = parentDiv.find('.loading-icon-wrapper');
+			loadingWrapper.show();
 			var actionButton = parentDiv.find('.edit-dialog-footer .action-button');
 			actionButton.text("Loading...");
 			
@@ -830,7 +828,9 @@ $(document).ready(function(){
 				contentType: false,
 				data:data,
 				success:function(resp){
-					console.log(resp);
+					// console.log(resp);
+					actionButton.text('Post');
+					loadingWrapper.hide();
 					if(resp == '1'){
 						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 						return false;
@@ -845,7 +845,7 @@ $(document).ready(function(){
 					}else{	
 						parentDiv.find('.preview-container').addClass('hdn');
 						image_label.attr('src','');
-						parentDiv.find('.interest-profile-event input').val('');
+						parentDiv.find('input, textarea').val('');
 						doneWithInterestEditing(parentDiv);
 						inner_wrapper.find('.interest-content-right').prepend(resp);
 						setVisibleContent();

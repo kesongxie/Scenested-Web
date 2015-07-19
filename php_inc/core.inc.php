@@ -21,9 +21,7 @@
 		return strtolower(pathinfo(basename($file["name"]),PATHINFO_EXTENSION));
 	}
 	
-	function getDefaultInterestLabelImageByNum($num){
-		return DEFAULT_INTEREST_LABEL_IMAGE_PREFIX.$num.'.png';
-	}
+	
 	
 	function validateDate($date, $format = 'Y-m-d H:i:s')
 	{
@@ -58,10 +56,24 @@
 		return $d;
 	}	
 	
-	function isMediaDisplayable($media_url){
-		return ($media_url !== false && file_exists(SCRIPT_INCLUDE_BASE.MEDIA_U.$media_url));
+	function is_url_exist($url){
+		$ch = curl_init($url);    
+		curl_setopt($ch, CURLOPT_NOBODY, true);
+		curl_exec($ch);
+		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if($code == 200){
+		   $status = true;
+		}else{
+		  $status = false;
+		}
+		curl_close($ch);
+	   return $status;
 	}
 	
+	
+	function isMediaDisplayable($media_url){
+		return ($media_url !== false && file_exists(MEDIA_U.$media_url));
+	}
 	
 
 	/*
@@ -138,7 +150,16 @@
 		else{
 			return date('M d '.$delimeter.' Y',$ts);
 		}
-	}		
+	}	
+	
+	
+	function convertThumbPathToOriginPath($src){
+		return str_replace('thumb_','',$src);
+	}	
+	
+	
+	
+	
 	
 	
 		

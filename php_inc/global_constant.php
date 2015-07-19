@@ -15,8 +15,9 @@
 	define("DOCUMENT_ROOT",'../');
 	define("U_MEDAI_FOLDER_DIR",DOCUMENT_ROOT.'media_u/');
 	define("MEDIA_THUMBNAIL_PREFIX","thumb_");
-	define("MEDIA_U","media_u/");
+
 	define("SCRIPT_INCLUDE_BASE",$_SERVER['DOCUMENT_ROOT'].'/lsere/');
+	define("MEDIA_U",SCRIPT_INCLUDE_BASE."media_u/");
 	define("TEMPLATE_PATH",SCRIPT_INCLUDE_BASE.'phtml/');
 	define("AJAX_TEMPLATE_PATH", SCRIPT_INCLUDE_BASE.'/ajax/phtml/');
 	define("TEMPLATE_PATH_CHILD",TEMPLATE_PATH.'child/');
@@ -36,6 +37,7 @@
 	define("MAXIMUM_UPLOAD_IMAGE_SIZE",5000000);
 	define("DEFAULT_PROFILE_IMAGE",DEFAULT_IMAGE."default_profile_100pl.png");
 	define("DEFAULT_COVER_IMAGE",DEFAULT_IMAGE."beach-230.jpg");
+	define("DEFAULT_INTEREST_LABEL_IMAGE",DEFAULT_IMAGE."interest-label.png");
 	define("DEFAULT_INTEREST_LABEL_IMAGE_PREFIX",DEFAULT_IMAGE.'interest-label-');
 	define("MAX_INTEREST_LABEL_COLOR_RANDOM_INDEX", 6);
 	

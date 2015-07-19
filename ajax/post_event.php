@@ -50,23 +50,42 @@
 	
 	
 	
-	$date = "";
-	if(isset($_POST['date']) && !empty(trim($_POST['date'])) && !validateDate(trim($_POST['date']), $format = 'm-d-Y')  ){
-		echo '5'; //wrong date
-		exit();
-	}
-	$date = trim($_POST['date']);
-	$date = substr($date,6).'-'.substr($date,0,5);
-	
-	
-	$time = "";
-	$valid_time = validateTime(trim($_POST['time']));
-	if(isset($_POST['time']) && !empty(trim($_POST['time'])) && !$valid_time  ){
-		echo '6'; //wrong time
-		exit();
+	if(isset($_POST['date']) ){
+		if(empty(trim($_POST['date']))){
+			$date = null;
+		}else{
+			if(!validateDate(trim($_POST['date']), $format = 'm-d-Y')){
+				echo '5';
+				exit();
+			}else{
+				$date = trim($_POST['date']);
+				$date = substr($date,6).'-'.substr($date,0,5);
+			}
+		}
 	}else{
-		$time = $valid_time;
+		$date = null;
 	}
+	
+	
+	
+	if(isset($_POST['time']) ){
+		if(empty(trim($_POST['time']))){
+			$time = null;
+		}else{
+			$valid_time = validateTime(trim($_POST['time']));
+			if(!$valid_time){
+				echo '6';
+				exit();
+			}else{
+				$time = $valid_time;
+			}
+		}
+	}else{
+		$date = null;
+	}
+	
+	
+	
 	
 	
 	$interest_activity = new Interest_Activity();

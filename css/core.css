@@ -381,16 +381,18 @@ div.ui-datepicker{
 	right:0px;
 	top:40px;
 	background: #fff;
-	box-shadow: 1px 1px 12px #DBDBDB;
-	padding: 6px;
+	box-shadow: -1px 1px 12px #DBDBDB;
 	border-radius: 4px;
-	width: 120px;
+	width: 140px;
 	z-index:99;
 	display:none;
+	padding:6px 0px 12px 0px;
 }
+
+
 .header #loggedin-menu #setting-menu .setting-menu-item{
 	font-size:13px;
-	padding:7px;
+	padding:8px 14px;
 	border-bottom:1px solid #f0f0f0;
 }
 
@@ -729,11 +731,13 @@ div.ui-datepicker{
 .post-owner-picture{
 	border-radius: 50%;
 	cursor: pointer;
-	margin-right: 6px;
+	margin-right: 8px;
+	margin-top:-2px;
 	float: left;
 	height: 44px;
 	width: 44px;
 	box-shadow:1px 1px 3px #777777;
+	/* box-shadow:1px 1px 3px #C6C6C6 */
 }
 .post-wrapper{
 	box-shadow: 1px 1px 10px #E8E8E8;
@@ -1084,7 +1088,7 @@ div.ui-datepicker{
 	left:0px;
 	position: fixed;
 	width: 100%;
-	height:90%;
+	height:100%;
 }
 
 
@@ -1152,4 +1156,33 @@ div.ui-datepicker{
  	height:400px;
  	position:relative;
  	border-radius:6px;
+}
+
+.preview-image-wrapper{
+	text-align:center;
+	position:absolute;
+	top:0px;
+	z-index:9999;
+	overflow:hidden;
+	width:100%;
+	height:100%;
+}
+
+.preview-image-wrapper .preview-image{
+	display:block;
+	margin:0px auto;
+	width:100%;
+}
+
+img.gallery-navi{
+	opacity:0.4;
+	display:none;
+}
+.navigable{
+	display:block !important;
+}
+
+.navigable:hover{
+	opacity:1;
+	cursor:pointer;
 }

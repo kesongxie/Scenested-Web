@@ -5,7 +5,7 @@
 	if(isset($_POST['key']) && !empty(trim($_POST['key']))){
 		$interest = new Interest();
 		$key = trim($_POST['key']);
-		$interest->deletePostForUserByActivityId($_SESSION['id'], $key);
+		$interest->deletePostForUserByActivityKey($_SESSION['id'], $key);
 	}
 	
 ?>

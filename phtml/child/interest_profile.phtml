@@ -19,9 +19,9 @@
 		<div class="dialog-body">
 			<div class="visible-post-scope">
 				<div class="visible-content limit-height">
-					<?php if(isMediaDisplayable($interest_label_image)): ?>
+					<?php if($labelImage !== false && is_url_exist($labelImage)): ?>
 						<div class="interest-image-label">
-							<img src="<?php echo U_IMGDIR.$interest_label_image ?>" />
+							<img src="<?php echo $labelImage ?>" />
 						</div>
 					<?php  endif;?>
 					<?php  if($interest['description'] != ''):?>
@@ -70,9 +70,8 @@
 				<div style="position:relative">
 					<label class="pointer" title="Upload a picture label for your interest">
 						<div class="picture-upload-wrapper">
-							<?php $hasInterestLabelImage = $interest_label_image !== false && file_exists(SCRIPT_INCLUDE_BASE.MEDIA_U.$interest_label_image); ?>
-								<?php if($hasInterestLabelImage): ?>
-										<img class="target-image"  src="<?php echo U_IMGDIR.$interest_label_image ?>" height="36" width="36">
+								<?php if($labelImage !== false && is_url_exist($labelImage)): ?>
+										<img class="target-image"  src="<?php echo $labelImage ?>" height="36" width="36">
 								<?php else: ?>
 										<img class="target-image hdn"  src="" height="36" width="36">
 								<?php  endif;?>

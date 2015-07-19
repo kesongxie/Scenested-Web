@@ -83,18 +83,21 @@
 				$event_photo = $this->event->event_photo->getEventPhotoResourceByMomentId($event['id']);
 				$event_photo_num = $this->event->event_photo->getPhotoNumberForEvent($event['id']);
 								
-				
 				$media_prefix = $prefix->getUserMediaPrefix($interest_activity['user_id']).'/';
 				if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo['picture_url'])){
-					$event_photo_url = $media_prefix.$event_photo['picture_url'];
+					$event_photo_url = U_IMGDIR.$media_prefix.$event_photo['picture_url'];
 					$event_photo_hash = $event_photo['hash'];
-				}else{
-					//get the label photo as the event cover
-					include_once 'User_Interest_Label_Image.php';
-					$label_image = new User_Interest_Label_Image();
-					$interest_id = $this->getColumnById('interest_id',$activity_id);
-					$event_photo_url = $media_prefix.$label_image->getLabelImageUrlByInterestId($interest_id);
+					
 				}
+				// else{
+// 					//get the label photo as the event cover
+// 					include_once 'User_Interest_Label_Image.php';
+// 					$label_image = new User_Interest_Label_Image();
+// 					$interest_id = $this->getColumnById('interest_id',$activity_id);
+// 					$event_photo_url = $label_image->getLabelImageUrlByInterestId($interest_id);
+// 					$interest_photo_hash = $label_image->getLabelImageHashByInterestId($interest_id);
+// 				}
+				
 				
 				include_once 'Comment.php';
 				$comment = new Comment();
@@ -340,7 +343,7 @@
 		
 		
 		
-		public function deleteActivityForUserByActivityId($user_id, $key){
+		public function deleteActivityForUserByActivityKey($user_id, $key){
 			include_once 'Comment.php';
 			$comment = new Comment();
 			$column_array = array('id','type');
@@ -360,6 +363,46 @@
 				}
 			}
 		}
+		
+		
+		public function deleteActivityForUserByActivityId($user_id, $activity_id){
+			include_once 'Comment.php';
+			$comment = new Comment();
+			$type = $this->getColumnById('type', $activity_id);
+			if($activity_id !== false){
+				if($this->deleteRowForUserById($user_id, $activity_id) !== false){
+					if($type == 'm'){
+						$this->moment = new Moment($activity_id);
+						$this->moment->deleteMomentForUserByActivityId($user_id);
+					}else if($type == 'e'){
+						$this->event = new Event($activity_id);
+						$this->event->deleteEventForUserByActivityId($user_id);
+					}
+					$comment->deleteAllCommentsByActivityId($activity_id);
+				}
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		public function deleteAllActivityForUserByInterestId($user_id, $interest_id){
+			$rows = $this->getAllRowsColumnBySelectorForUser('id','interest_id',$interest_id,$user_id);
+			if($rows !== false){
+				foreach($rows as $row){
+					$this->deleteActivityForUserByActivityId($user_id, $row['id']);
+				}	
+			}
+		}
+		
+		
+		public function getInterestIdByActivityId($activity_id){
+			return $this->getColumnById('interest_id', $activity_id);
+		}
+		
 		
 		
 		public function getPostTextByActivityId($activity_id){

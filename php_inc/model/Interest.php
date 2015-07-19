@@ -2,19 +2,14 @@
 	include_once 'core_table.php';
 	include_once 'Interest_Activity.php';
 	include_once 'User_Interest_Label_Image.php';
-	include_once 'Default_User_Interest_Label_Image.php';
 	
 	class Interest extends Core_Table{
 		private  $table_name = "interest";
 		private $interest_activity = null;
 		private $similar_interest_block_template_path = TEMPLATE_PATH_CHILD."similar_interest_block.phtml";
-		public $interest_label_image = null;
-		public $default_label_image = null;
-		public $new_interest_id = null; //new interest rows being added;
 		public function __construct(){
 			parent::__construct($this->table_name);
 			$this->interest_label_image = new User_Interest_Label_Image();
-			$this->default_label_image = new Default_User_Interest_Label_Image();
 			$this->interest_activity = new Interest_Activity();
 		}
 
@@ -73,17 +68,14 @@
 						$stmt->close();
 						return false;
 					}
-				}else{
-					//random generate label image url
-					$random = rand(1,MAX_INTEREST_LABEL_COLOR_RANDOM_INDEX);
-					$label_image_url = $random;
-					$this->default_label_image->addDefaultInterestLabelImageForInterestId($interest_id,$label_image_url);
-				}	
-				$this->new_interest_id = $interest_id;
+				}
 				$stmt->close();
-				$this->interest_label_image->url = $label_image_url;
-				return  $this->initContentForInterest($user_id,false);
-				
+				$main_content = $this->initContentForInterest($user_id,false); //main-block
+				$side_content = $this->getInterestLabelByInterestId($interest_id);
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'new_interest.phtml');
+				$content = ob_get_clean();
+				return $content;
 			}
 			return false;
 		}
@@ -118,7 +110,6 @@
 					//remove the old record after successfully update the new media file
 					$flile_m->removeMediaFileForUser($old_image_url, $user_id);
 					$this->interest_label_image->deleteRowById($old_image_row_id);
-					$this->default_label_image->deleteLabelImageForUserByInterestId($user_id, $interest_id);
 					return true;
 				}
 			}
@@ -128,10 +119,7 @@
 		
 		
 		
-		public function getLabelImageUrl(){
-			return $this->interest_label_image->url;
-		}
-		
+	
 		public function interestExistForUser($interest_name, $user_id){
 			return $this->checkColumnValueExistForUser('name',$interest_name, $user_id);
 		}
@@ -174,16 +162,13 @@
 				//get interest profile
 				$left_content = "";
 				$right_content = "";
-				$user_media_prefix = new User_Media_Prefix();
-				$prefix = $user_media_prefix->getUserMediaPrefix($interest['user_id']).'/';
-				$interest_label_image = $this->interest_label_image->getLabelImageUrlByInterestId($interest['id']);
-				if($interest_label_image !== false){
-					$interest_label_image = $prefix.$interest_label_image;
-				}
+				$labelImage = $this->interest_label_image->hasLabelImageForInterest($interest['id']);
 				
 				$experience = $this->translateExperienceByNumber($interest['experience']);
+				
+				
 				ob_start();
-				include(SCRIPT_INCLUDE_BASE.'phtml/child/interest_profile.phtml');
+				include(TEMPLATE_PATH_CHILD.'interest_profile.phtml');
 				$interest_profile = ob_get_clean();
 				$left_content = $interest_profile;
 				//end getting interest profile
@@ -200,13 +185,12 @@
 					}
 				}
 				ob_start();
-				include(SCRIPT_INCLUDE_BASE.'phtml/child/interest_unit.phtml');
+				include(TEMPLATE_PATH_CHILD.'interest_unit.phtml');
 				$content = ob_get_clean();
 				return $content;
 			}
 			return false;
 		}
-		
 		
 		
 		
@@ -249,10 +233,23 @@
 			echo $this->connection->error;
 			return false;
 		}
+		
+		
+		public function getInterestLabelByInterestId($interest_id){
+			$label_image = new User_Interest_Label_Image();
+			$url = $label_image->getLabelImageUrlByInterestId($interest_id);
+			$name = $this->getInterestNameByInterestId($interest_id);
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'inetrest_label.phtml');
+			$content = ob_get_clean();
+			return $content;
+		}
+		
+		
 		public function deleteInterestForUserByInterestId($user_id, $interest_id){
 			if($this->deleteRowForUserById($user_id, $interest_id)){
-				$this->default_label_image->deleteLabelImageForUserByInterestId($user_id, $interest_id);
-				return $this->interest_label_image->deleteLabelImageForUserByInterestId($user_id, $interest_id);
+				$this->interest_label_image->deleteLabelImageForUserByInterestId($user_id, $interest_id);
+				$this->interest_activity->deleteAllActivityForUserByInterestId($user_id,$interest_id);
 			}
 		}
 		
@@ -264,8 +261,8 @@
 			return false;
 		}
 		
-		public function deletePostForUserByActivityId($user_id, $activity_id){
-			return $this->interest_activity->deleteActivityForUserByActivityId($user_id, $activity_id);
+		public function deletePostForUserByActivityKey($user_id, $key){
+			return $this->interest_activity->deleteActivityForUserByActivityKey($user_id, $key);
 		}
 		
 		public function returnMatchedUserBySearchkeyWord($key_word, $limit){

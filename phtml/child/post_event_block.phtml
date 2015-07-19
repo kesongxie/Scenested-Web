@@ -1,12 +1,10 @@
 <div class="post-wrapper post evt-block" data-key="<?php echo $hash; ?>">
-
-	
-	<?php $displayable = isMediaDisplayable($event_photo_url); ?>
+	<?php $displayable = is_url_exist($event_photo_url); ?>
 
 	<?php if($displayable): ?>
 		<img src="<?php echo IMGDIR ?>white-down-arrow.png" style="float:none;position: absolute; right: 14px; top: 14px;"class="toggle-operation pointer hdn">
 		<div class="pointer" style="max-height:200px;overflow:hidden;background:#f0f0f0">
-			<img class="previewable" style="max-width:100%;" src="<?php echo U_IMGDIR.$event_photo_url ?>" data-key = "<?php echo $event_photo_hash ?>" data-sourceFrom = "e">
+			<img class="previewable" style="width:100%;display:block;" src="<?php echo $event_photo_url ?>" data-key="<?php echo $event_photo_hash ?>" data-sourceFrom = "e">
 		</div>
 	<?php else: ?>
 			<img src="<?php echo IMGDIR ?>down_arrow_icon.png" style="float:none;position: absolute; right: 10px; top: 10px;"class="toggle-operation pointer hdn">
@@ -20,11 +18,21 @@
 	<?php endif ?>
 			
 			<div class="inline-blk"><a href="<?php echo $user_page_redirect; ?>"><img class="post-owner-picture" style="float:none;width:50px;height:50px"src="<?php echo $post_owner_pic; ?>"></a></div>
+			<?php if($displayable): ?>
 			<div class="inline-blk" style="vertical-align:bottom;padding-bottom:4px;">
+			<?php  else:?>
+			<div class="inline-blk" style="vertical-align:top;padding-bottom:4px;">
+			<?php endif ?>
+			
 			<a class="plain-lk"  href="<?php echo $user_page_redirect; ?>">
 				<span class="profile-name pointer post-user-name"><?php echo htmlentities($fullname) ?></span>
 			</a>
+			
+			<?php if($displayable): ?>
 			<span style="margin-left: 10px; color: #969696;"><?php echo $post_time ?></span>
+			<?php  else:?>
+			<div style="color: #969696;"><?php echo $post_time ?></div>
+			<?php endif ?>
 		</div>
 
 	</div>	

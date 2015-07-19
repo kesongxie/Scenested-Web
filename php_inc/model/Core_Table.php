@@ -483,6 +483,114 @@
 		}
 		
 		
+		public function getColumnRowsGreaterThanSelector($column,$selector_column, $selector_value,  $limit = -1, $asc = false ){
+			$column = $this->connection->escape_string($column);
+			$selector_column = $this->connection->escape_string($selector_column);
+			if($asc){
+				if($limit > 0){
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` > ? LIMIT ? ");
+				}else{
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` > ? ");
+				}
+			}else{
+				if($limit > 0){
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` > ? ORDER BY `id` DESC LIMIT ? ");
+				}else{
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` > ? ORDER BY `id` DESC ");
+				}
+			}	
+			if($stmt){
+				if($limit > 0){
+					$stmt->bind_param('si', $selector_value,$limit);
+				}else{
+					$stmt->bind_param('s', $selector_value);
+				}
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			return false;
+		}
+		
+		
+		//the selector is of int type
+		public function getColumnRowsGreaterThanRowId($column, $row_id,$selector_name, $selector_value,  $limit = -1, $asc = false ){
+			$selector_name = $this->connection->escape_string($selector_name);
+			$column = $this->connection->escape_string($column);
+			if($asc){
+				if($limit > 0){
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` > ?  AND `$selector_name` = ? LIMIT ? ");
+				}else{
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` > ? AND `$selector_name` = ?  ");
+				}
+			}else{
+				if($limit > 0){
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` > ? AND `$selector_name` = ?  ORDER BY `id` DESC LIMIT ? ");
+				}else{
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` > ? AND `$selector_name` = ?  ORDER BY `id` DESC ");
+				}
+			}	
+			if($stmt){
+				if($limit > 0){
+					$stmt->bind_param('iii', $row_id,$selector_value,$limit);
+				}else{
+					$stmt->bind_param('ii', $selector_value, $row_id);
+				}
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			return false;
+		}
+		
+		public function getColumnRowsLessThanRowId($column, $row_id,$selector_name, $selector_value,  $limit = -1, $asc = false ){
+			$selector_name = $this->connection->escape_string($selector_name);
+			$column = $this->connection->escape_string($column);
+			if($asc){
+				if($limit > 0){
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` < ?  AND `$selector_name` = ? LIMIT ? ");
+				}else{
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` < ? AND `$selector_name` = ?  ");
+				}
+			}else{
+				if($limit > 0){
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` < ? AND `$selector_name` = ?  ORDER BY `id` DESC LIMIT ? ");
+				}else{
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` < ? AND `$selector_name` = ?  ORDER BY `id` DESC ");
+				}
+			}	
+			if($stmt){
+				if($limit > 0){
+					$stmt->bind_param('iii', $row_id,$selector_value,$limit);
+				}else{
+					$stmt->bind_param('ii', $selector_value, $row_id);
+				}
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			return false;
+		}
+		
+		
+		
+		
+		
 		
 		
 		public function setColumnByNumericSelector($column, $value, $selector_column, $selector_value ){

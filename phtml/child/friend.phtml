@@ -16,7 +16,7 @@
 				 if($user_interest['picture_url'] != ''){
 				  		$label_url = U_IMGDIR.$_USER_MEDIA_PREFIX.$user_interest['picture_url'];
 				  }else{
-				  		$label_url =getDefaultInterestLabelImageByNum($defualr_label_image->getLabelImageUrllByInterestId($user_interest['id']));
+				  		$label_url = DEFAULT_INTEREST_LABEL_IMAGE;
 				  }
 				 ?>
 				<div class="interest-side-label interest-sider-navi pointer" data-labelfor="<?php echo $user_interest['id'];?>"  title="<?php echo htmlentities($user_interest['name']);?>"><div class="vertical-center"><img src="<?php echo $label_url; ?>"><div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;"><?php echo htmlentities($user_interest['name']);?></div></div></div>	

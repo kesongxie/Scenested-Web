@@ -22,23 +22,23 @@
 				if(empty($location)){
 					$location = null;
 				}
-				if(empty($date)){
-					$date = null;
-				}
 				if(empty($evt_time)){
 					$evt_time = null;
 				}
 			
 				$stmt->bind_param('isssss',$this->activity_id, $title, $description, $location, $date,$evt_time);
 				if($stmt->execute()){
+					$event_id = $this->connection->insert_id;
 					 if($photoFile != null){
-						$event_id = $this->connection->insert_id;
 						$event_photo_url = $this->event_photo->uploadEventPhotoByEventId($photoFile, $user_id, $event_id, $caption);
 						if($event_photo_url === false){
 							$this->deleteRowById($event_id);
 							$stmt->close();
 							return false;
 						}
+					}else{
+						//insert a row that copies the user's interest label image
+						 $this->event_photo->copyInterestLabelImageAsEventPhoto($user_id, $event_id,$this->activity_id);
 					}
 					$stmt->close();
 					return $this->activity_id;

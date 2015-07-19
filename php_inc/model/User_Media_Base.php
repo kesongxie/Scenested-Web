@@ -6,7 +6,7 @@
 
 
 	class User_Media_Base extends Core_Table{
-		private $file_m = null;
+		public $file_m = null;
 		private $photo_stream_template_path = TEMPLATE_PATH_CHILD."photo_stream.phtml";
 		private $table_name;
 		
@@ -100,6 +100,7 @@
 		public function renderPhotoStreamByPictureUrl($url, $user_id, $source_from, $hash){
 			$user_media_prefix = new User_Media_Prefix();
 			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
+			
 			if($prefix !== false){
 				if(!empty($url) && !empty($prefix) && isMediaDisplayable($prefix.'/'.$url)){
 					$url =  U_IMGDIR.$prefix.'/'.$url;
@@ -118,13 +119,13 @@
 		public function getUserMediaBlockByUserId($user_id){
 			
 			$stmt = $this->connection->prepare("
-				SELECT  'm' AS `source_from`, `picture_url`, `upload_time`, `hash`  FROM moment_photo WHERE `user_id` = ?
+				SELECT  'm' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM moment_photo WHERE `user_id` = ?
 				UNION  
-				SELECT  'e' AS `source_from`, `picture_url`, `upload_time`, `hash`  FROM event_photo WHERE `user_id` = ?
+				SELECT  'e' AS `source_from`, `id`, `picture_url`, `upload_time`, `hash`  FROM event_photo WHERE `user_id` = ?
 				UNION  
-				SELECT  'p' AS `source_from`, `picture_url`, `upload_time`, `hash`  FROM user_profile_picture WHERE `user_id` = ?
+				SELECT  'p' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_picture WHERE `user_id` = ?
 				UNION  
-				SELECT  'c' AS `source_from`, `picture_url`, `upload_time`, `hash`  FROM user_profile_cover WHERE `user_id` = ?
+				SELECT  'c' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_cover WHERE `user_id` = ?
 				ORDER BY upload_time DESC
 			");	
 		
@@ -162,7 +163,7 @@
 			return false;
 		}
 		
-		/*from can be m, e, p, c and stand for moment, event, profile, cover respectively*/
+		/*from can be m, e, p, c and stand for moment, event, profile, cover respectively, ei is interest label image*/
 		public function getPreviewImage($hash, $from){
 			switch($from){
 				case 'm' :return  $this->loadMomentPreviewImage($hash);

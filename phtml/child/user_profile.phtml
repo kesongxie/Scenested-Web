@@ -1,7 +1,6 @@
 <div class="user-profile operation-triggeable" style="width:100%;position:relative" data-key="<?php echo $hash ?>">
-		
 		<div style="width:100%;height:140px;overflow:hidden;position:relative;">
-			<a href="<?php echo $user_page_redirect; ?>"><img  style="width:100%;" src="<?php echo $cover_pic ?>"></a>
+			<img  style="width:100%;" src="<?php echo $cover_pic ?>">
 			<?php if($user_id != $_SESSION['id']): ?>
 				<img src="<?php echo IMGDIR ?>menu_navi_icon.png" style="float:none;width:20px;height:14px;position: absolute; right: 12px; top: 12px;"class="hdn toggle-operation pointer">
 			<?php endif; ?>

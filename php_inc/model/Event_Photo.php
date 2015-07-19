@@ -76,7 +76,7 @@
 		
 		public function loadEventPhotoPreviewBlock($hash){
 			$stmt = $this->connection->prepare("
-			SELECT event_photo.user_id, event_photo.picture_url, event_photo.upload_time, event_photo.caption,event.title, event.description, event.location, event.date, event.time
+			SELECT event_photo.id,event_photo.event_id, event_photo.user_id, event_photo.picture_url, event_photo.upload_time, event_photo.caption,event.title, event.description, event.location, event.date, event.time
 			FROM event_photo 
 			LEFT JOIN event
 			ON event_photo.event_id=event.id WHERE event_photo.hash = ? LIMIT 1
@@ -86,8 +86,7 @@
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){
-					 	
-						$row = $result->fetch_assoc();
+					 	$row = $result->fetch_assoc();
  						$stmt->close();
 						include_once 'User_Table.php';
 						include_once 'User_Profile_Picture.php';
@@ -109,6 +108,10 @@
 						}
 						$fullname = $user->getUserFullnameByUserIden($row['user_id']);
 						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($row['user_id']);
+						//check whether there is a next and previous
+						$previous_photo_hash = $this->getPreviousPhotoBeforeRowForEvent($row['id'],$row['event_id']);
+						$next_photo_hash = $this->getNextPhotoAfterRowForEvent($row['id'],$row['event_id']);
+						
 						include TEMPLATE_PATH_CHILD.'evt-photo-preview.phtml';
 					 }
 				}
@@ -117,6 +120,64 @@
 			return false;
 		}
 		
+		public function getPreviousPhotoBeforeRowForEvent($row_id, $event_id){
+			$result =  $this->getColumnRowsLessThanRowId('hash', $row_id, 'event_id',$event_id,  $limit = 1 );
+			if($result !== false){
+				return $result[0]['hash'];
+			}
+			return 'null';
+		}
+		
+		public function getNextPhotoAfterRowForEvent($row_id, $event_id){
+			$result =  $this->getColumnRowsGreaterThanRowId('hash', $row_id, 'event_id',$event_id,  $limit = 1, true );
+			if($result !== false){
+				return $result[0]['hash'];
+			}
+			return 'null';
+		}
+		
+		public function loadEventPhotoByKey($hash){
+			include_once 'User_Media_Prefix.php';
+			$prefix = new User_Media_Prefix();
+			$row = $this->getMultipleColumnsBySelector(array('id','picture_url','user_id','event_id'),'hash',$hash);
+			$previous_photo_hash = $this->getPreviousPhotoBeforeRowForEvent($row['id'],$row['event_id']);
+			$next_photo_hash = $this->getNextPhotoAfterRowForEvent($row['id'],$row['event_id']);
+			$picture_url = convertThumbPathToOriginPath($prefix->getUserMediaPrefix($row['user_id']).'/'.$row['picture_url']);
+			include TEMPLATE_PATH_CHILD.'single_evt_photo.phtml';
+		}
+		
+		
+		public function copyInterestLabelImageAsEventPhoto($user_id, $event_id, $activity_id){
+			include_once 'Interest_Activity.php';
+			$activity = new Interest_Activity();
+			$interest_id = $activity->getInterestIdByActivityId($activity_id);
+			include_once 'User_Interest_Label_Image.php';
+			$label = new User_Interest_Label_Image();
+			$label_image_url = $label->hasLabelImageForInterestMinPath($interest_id);
+			if($label_image_url !== false){
+				$array = explode('/',$label_image_url);
+				$label_image_url_folder = $array[0];
+				include_once 'User_Media_Prefix.php';
+				$prefix = new User_Media_Prefix();
+				$user_prefix = $prefix->getUserMediaPrefix($user_id);
+				
+				$src = MEDIA_U.$user_prefix.'/'.$label_image_url_folder;
+				$random_name = $this->file_m->getNewRandomNonRepeatedFolderNameInDir($src);
+				$des = MEDIA_U.$user_prefix.'/'.$random_name;
+				$this->file_m->recurse_copy($src,$des);
+				
+				$picture_url = $random_name.'/'. $array[1]; //new pciture url contains the new copied files locations
+				$hash = $this->generateUniqueHash();
+				$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`event_id`,`picture_url`,`upload_time`,`hash`) VALUES(?,?, ?, ?,?)");
+				$time = date("Y-m-d H:i:s");
+				$stmt->bind_param('iisss',$user_id, $event_id, $picture_url, $time,$hash);
+				if($stmt->execute()){
+					$stmt->close();
+					return true;
+				}
+			}
+			return false;
+		}
 		
 	}		
 ?>

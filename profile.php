@@ -4,7 +4,6 @@
 	include_once PHP_INC_MODEL_ROOT_REF.'User_Table.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'User_Media_Prefix.php';
 	
-	
 	$user = new User_Table();
 	
 	$media_prefix = new User_Media_Prefix();

@@ -14,10 +14,39 @@
 			$this->uploadMediaForAssocColumn($label_image_file, $user_id,$hash, 'interest_id', $interest_id);
 		
 		} 
+		
+		
+		public function getLabelImageHashByInterestId($interest_id){
+			return 	 $this->getColumnBySelector('hash', 'interest_id', $interest_id);
+		}
+
+		public function hasLabelImageForInterestMinPath($interest_id){
+			return $this->getColumnBySelector('picture_url','interest_id',$interest_id);
+		}
+		
+		public function hasLabelImageForInterest($interest_id){
+			$result = $this->getMultipleColumnsBySelector(array('picture_url','user_id'), 'interest_id', $interest_id);
+			if($result !== false){
+				include_once 'User_Media_Prefix.php';
+				$user_media_prefix = new User_Media_Prefix();
+				$prefix = $user_media_prefix->getUserMediaPrefix($result['user_id']); //folder for the given user
+				return U_IMGDIR.$prefix.'/'.$result['picture_url'];
+			}else{
+				return false;
+			}	
+		}
 
 		
 		public function getLabelImageUrlByInterestId($interest_id){
-			 return  $this->getColumnBySelector('picture_url', 'interest_id', $interest_id);
+			$result = $this->getMultipleColumnsBySelector(array('picture_url','user_id'), 'interest_id', $interest_id);
+			if($result !== false){
+				include_once 'User_Media_Prefix.php';
+				$user_media_prefix = new User_Media_Prefix();
+				$prefix = $user_media_prefix->getUserMediaPrefix($result['user_id']); //folder for the given user
+				return U_IMGDIR.$prefix.'/'.$result['picture_url'];
+			}else{
+				return DEFAULT_INTEREST_LABEL_IMAGE;
+			}
 		}
 		
 		public function getLabelImageFirstRowIdByInterestId($interest_id){
@@ -25,9 +54,11 @@
 		}
 		
 		public function deleteLabelImageForUserByInterestId($user_id, $interest_id){
-			$url = $this->getLabelImageUrlByInterestId($interest_id);
-			$this->deleteMediaByPictureUrl($url, $user_id);
-			$this->deleteRowBySelector('interest_id', $interest_id);
+			$url = $this->getColumnBySelector('picture_url','interest_id',$interest_id);
+			if($url !== false){
+				$this->deleteMediaByPictureUrl($url, $user_id);
+				$this->deleteRowBySelector('interest_id', $interest_id);
+			}
 		}
 		
 	}		
