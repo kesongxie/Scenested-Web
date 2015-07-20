@@ -358,6 +358,22 @@
 		
 		
 		
+		public function isRowForUserExists($user_id){
+			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE  `user_id` = ? LIMIT 1 ");
+			if($stmt){
+				$stmt->bind_param('i', $user_id);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$stmt->close();
+						return true;
+					 }
+				}
+			}
+			return false;
+		}
+		
+		
 		
 		public function getMultipleColumnsById($column_array, $id){
 			$targets = implode('`,`',$column_array);

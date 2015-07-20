@@ -17,7 +17,7 @@
 	}
 		
 	$url = parse_url($_SERVER['REQUEST_URI']);
-	 $BASE_PATH = $url['path'];
+	$BASE_PATH = $url['path'];
 		
 	$session_user_profile_image_url = $user->getLatestProfilePictureForuser($_SESSION['id']);
 	$session_user_access_url = $user->getUserAccessUrl($_SESSION['id']);
@@ -27,7 +27,7 @@
 	if(isset($_GET['q'])){
 		$prepare_search = new Prepare_Search($_GET['q'],$_GET['t']);
 		$search_result_main_block =  $prepare_search->getSearchResultMainBlock();
-	}else if($_GET['r'] == 'mine'){
+	}else if(isset($_GET['r']) && $_GET['r'] == 'mine'){
 		$prepare_search = new Prepare_Search(null,$_GET['t'] , true);
 		$search_result_main_block =  $prepare_search->getSearchResultMainBlock();
 	}else{

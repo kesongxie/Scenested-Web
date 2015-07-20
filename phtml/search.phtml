@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+	<?php include_once 'child/prepare_head.php'; ?>
 	<head>
 		<meta charset="utf-8">
-		<title>Lsere</title>
+		<title id="page-title" data-m="<?php echo $new_message_notification_num; ?>"  data-n="<?php echo $notification_number; ?>"  ><?php echo $title; ?></title>
 		<link rel="shortcut icon" type="image/x-icon" href="<?php echo ROOTDIR; ?>favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/core.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/animate.css">
@@ -57,7 +58,7 @@
 			</div>
 	</div>	
 	
-	<?php include_once 'chat.php'; ?>
+	<?php include_once 'child/chat.php'; ?>
 	<?php include_once TEMPLATE_PATH_CHILD.'footer-overlay-element.phtml'; ?>
 
 	

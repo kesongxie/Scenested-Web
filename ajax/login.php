@@ -9,6 +9,7 @@
 		parse_str($_POST['data'], $data);
 		
 		$iden = trim($data['login-iden']);
+		
 		if(empty($iden)){
 			echo '1'; //empty email address
 			exit();

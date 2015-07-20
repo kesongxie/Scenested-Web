@@ -1,39 +1,16 @@
-<?php
-	
-?>
 <div id="chat-outer-wrapper" class="strech" >
-	<div class="chat-header">
-		<span class="title vertical-center">Messages<span>
-		<span id="chat-search" class="vertical-center" title="Search Contact">
-		<img src="<?php echo IMGDIR ?>search_icon.png" height="15px" width="15px">
-		</span>
-	</div>
-	<div class="chat-body" style="padding:0px 10px;">
-		<div class="contact pointer" style="padding:12px 0px 0px 0px;">
-			<div class="master left-bar" style="margin-right:8px;"><img style="border-radius:50%;" src="http://localhost:8888/lsere/media_u/0b6b58a7d212e078ed4662cb/25eb09fd55c99ba70457980a/thumb_5a75c4eb018390687fb428b3.jpg" height="36" width="36"></div>
-			<div class="detail">
-				<div style="width:100%;">
-					<span>Meghan Mccann</span>
-					<span class="right-bar default-message" style="font-size:12px;">3 mins</span>
-				</div>
-				<div class="default-message text">Me: This is lovely</div>
+	<div id="chat-side-content" style="position:relative;height:100%;width:100%;">
+		<div id="chat-bar">
+			<div class="chat-header">
+				<span class="title vertical-center">Messages<span>
+				<span id="chat-search" class="vertical-center" title="Search Contact">
+				<img src="<?php echo IMGDIR ?>search_icon.png" height="15px" width="15px">
+				</span>
+			</div>
+			<div class="chat-body" style="padding:0px 10px;">
+				<?php echo $contact_block; ?>
 			</div>
 		</div>
-	
-		<div class="contact pointer" style="padding:12px 0px 0px 0px;">
-			<div class="master left-bar" style="margin-right:8px;"><img style="border-radius:50%;" src="http://localhost:8888/lsere/media_u/299363e42aba1f6f3821b086/d871dbb11ac4aba085a48660/thumb_be6a01e557d399f76ac8fd0c.jpg" height="36" width="36"></div>
-			<div class="detail">
-				<div style="width:100%;">
-					<span>Kenny Armenta</span>
-					<span class="right-bar default-message" style="font-size:12px;">1 hr</span>
-				</div>
-				<div class="default-message text txt_ofl" >Kesong, are u updating the layout?</div>
-				
-			</div>
-		</div>
-	
 	</div>
-	
-
 </div>
 

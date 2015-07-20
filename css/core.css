@@ -981,6 +981,7 @@ div.ui-datepicker{
 	font-weight: bold;
 	font-size: 15px;
 	border-radius: 4px 0px 0px 0px;
+	color:#fff;
 }
 
 #chat-outer-wrapper .chat-header .title{
@@ -1185,4 +1186,47 @@ img.gallery-navi{
 .navigable:hover{
 	opacity:1;
 	cursor:pointer;
+}
+
+.contact{
+	clear:both;
+}
+
+.contact .detail{
+	height:40px;
+}
+
+
+.conversation{
+	margin:14px 10px;clear:both;
+}
+
+
+
+.conversation .arrow-up{
+	position:absolute;
+	top:0px;
+	border-bottom:10px solid #f0f0f0; 
+	-ms-transform: rotate(180deg); 
+    -webkit-transform: rotate(180deg); 
+    transform: rotate(180deg);
+}
+.conversation .text{
+	text-align:left;
+	border-radius:4px;
+	background:#f0f0f0;
+	padding:12px;
+	max-width:70%;
+	position:relative;
+	margin-right:10px;
+} 
+
+
+.conversation .sent-user-avator{
+	border-radius:9%;
+}
+#chat-box #chat-box-body{
+	height:65%;
+	width:100%;
+	overflow:hidden;	
 }

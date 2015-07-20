@@ -2,17 +2,20 @@
 	include_once 'Code_For_Notification_Sendable_Table.php';
 	class Notification_Renderer{
 		 public function getNotificationBlockByQueue($queue){
+		 	
 			$result = explode('-',$queue);
-			$code = $result[0];
-			$row_id = $result[1];
-			$name = Code_For_Notification_Sendable_Table::getTableNameByCode($code);
-			switch($name){
-				case 'comment': return $this->commentRenderer($row_id);break;
-				case 'reply':return $this->replyRenderer($row_id);break;
-				case 'reply_notify_post_user':return $this->replyNotifyPostUserRenderer($row_id);break;
-				case 'interest_request':return $this->interestRequestRenderer($row_id);break;
-				case 'interest_request_accept':return $this->interestRequestAcceptRenderer($row_id);break;
-				default:break;			
+			if(sizeof($result) == 2){
+				$code = $result[0];
+				$row_id = $result[1];
+				$name = Code_For_Notification_Sendable_Table::getTableNameByCode($code);
+				switch($name){
+					case 'comment': return $this->commentRenderer($row_id);break;
+					case 'reply':return $this->replyRenderer($row_id);break;
+					case 'reply_notify_post_user':return $this->replyNotifyPostUserRenderer($row_id);break;
+					case 'interest_request':return $this->interestRequestRenderer($row_id);break;
+					case 'interest_request_accept':return $this->interestRequestAcceptRenderer($row_id);break;
+					default:break;			
+				}
 			}
 		}
 		

@@ -23,6 +23,13 @@ ErrorDocument 404 http://localhost:8888/lsere/404.php
 	RewriteRule ^user/([a-zA-Z0-9]+).([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ profile.php?f=$1&l=$2&s=$3 [NC,L]
 </IfModule>
 
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /lsere/
+	RewriteRule ^user/([a-zA-Z0-9]+).([a-zA-Z0-9]+).([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ profile.php?f=$1&l=$2&s=$4 [NC,L]
+</IfModule>
+
+
 
 
 

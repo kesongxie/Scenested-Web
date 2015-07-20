@@ -28,7 +28,7 @@
 			if($stmt->execute()){
 				$stmt->close();
 				$user_id = $this->connection->insert_id;
-				$unique_iden = password_hash($user_id, PASSWORD_DEFAULT);
+				$unique_iden = $this->generateUniqueHash();
 				$this->setColumnById('unique_iden',$unique_iden, $user_id);
 				return $user_id;
 			}
@@ -36,8 +36,8 @@
 		}
 		
 		public function checkUserRegistered($iden){
-			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE (`user_iden`= ?  || `id`= ?) LIMIT 1 ");
-			$stmt->bind_param('si',$iden,$iden);
+			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE ( `id` = ? || `user_iden`=? || `unique_iden` = ?) LIMIT 1 ");
+			$stmt->bind_param('iss',$iden,$iden, $iden);
 			if($stmt->execute()){
 				$result = $stmt->get_result();
 				if($result->num_rows == 1){
@@ -62,9 +62,9 @@
 		
 		public function getUserInfoByUserIden($column,$user_iden){
 			$column = $this->connection->escape_string($column);
-			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE (`user_iden` = ? || `id` = ?) LIMIT 1 ");
+			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE ( `id` = ? || `user_iden`=? || `unique_iden` = ?) LIMIT 1 ");
 			if($stmt){
-				$stmt->bind_param('si', $user_iden, $user_iden);
+				$stmt->bind_param('iss', $user_iden,$user_iden, $user_iden);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){
@@ -83,9 +83,9 @@
 		
 		
 		public function getUserFullnameByUserIden($user_iden){
-			$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname FROM `$this->table_name` WHERE (`id` = ? || `user_iden` = ? ) LIMIT 1  ");
+			$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname FROM `$this->table_name` WHERE ( `id` = ? || `user_iden`=? || `unique_iden` = ?) LIMIT 1  ");
 			if($stmt){
-				$stmt->bind_param('is', $user_iden, $user_iden);
+				$stmt->bind_param('iss', $user_iden, $user_iden,$user_iden);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){
