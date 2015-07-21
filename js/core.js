@@ -118,6 +118,43 @@ function setVisibleContentWithParent(parent, text){
 }
 
 
+// function resetResizableOption(thisE){
+// 	var parentDiv = thisE.parents('.in_con_opt_w');
+// 	parentDiv.find('.main').addClass('hdn').css('left','-100%');
+// 	var c_group = parentDiv.find('.sub.connection-group');
+// 	var w = thisE.parents('.inner-w');
+// 	c_group.removeClass('hdn').animate({
+// 		'right':'0px'
+// 		},{
+// 		duration: 200,
+// 		complete: function() {
+// 			parentDiv.animate({
+// 			'height':c_group.height()
+// 			},100);
+// 			w.css('height',c_group.height());
+// 		}
+// 	});
+// }
+
+
+function leaveInterestGroup(thisE){
+	var parentDiv = thisE.parents('.in_con_border_top');
+	var key = parentDiv.attr('data-key');
+	$.ajax({
+		url:AJAX_DIR+'leaveInterest.php',
+		method:'post',
+		data: {key:key},
+		success:function(resp){
+			console.log(resp);
+			if(resp != '1'){
+				parentDiv.remove();
+			}
+		}
+	
+	});
+}
+
+
 
 function removeActivity(sender){
 	var key = sender.parents('.post-wrapper').attr('data-key');
@@ -1026,8 +1063,9 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
-			$('.popover').hide();
-			$(this).parents('.post-wrapper').find('.popover').toggle();
+			var selfPopover = $(this).parents('.post-wrapper').find('.popover');
+			$('.popover').not(selfPopover).hide();
+			selfPopover.toggle();
 			return false;
 		
 		}
@@ -1275,6 +1313,14 @@ $(document).ready(function(){
 		}
 	},'.user-profile.operation-triggeable .remove-from-interest');
 	
+	$('body').on({
+		click:function(){
+			presentPopupDialog("Leave Interest Group", "Do you want to leave this interest group", "No", "Yes", leaveInterestGroup, $(this) );
+			return false;
+		}
+	},'.user-profile.operation-triggeable .leave-interest-group');
+	
+	
 	
 	
 	$('body').on({
@@ -1316,6 +1362,28 @@ $(document).ready(function(){
 		  		});
 		}
 	},'.in_con_opt_w .main .add-interest-group');
+	
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.in_con_opt_w');
+			parentDiv.find('.main').addClass('hdn').css('left','-100%');
+			var c_group = parentDiv.find('.sub.connection-group');
+			var w = $(this).parents('.inner-w');
+			c_group.removeClass('hdn').animate({
+				'right':'0px'
+				},{
+				duration: 200,
+				complete: function() {
+					parentDiv.animate({
+					'height':c_group.height()
+					},100);
+					w.css('height',c_group.height());
+				}
+		  		});
+		}
+	},'.in_con_opt_w .main .view-connection');
+	
 	
 	$('body').on({
 		click:function(){

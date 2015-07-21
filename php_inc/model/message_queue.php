@@ -5,16 +5,17 @@
 		private  $table_name = "message_queue";
 		private $chat_box_template_path = TEMPLATE_PATH_CHILD."chat_box.phtml";
 		private  $message = null;
-		//private  $group_message = null;
+		private $group_message = null;
 		
 		public function __construct(){
 			parent::__construct($this->table_name);
 			include_once MODEL_PATH.'Message.php';
 			$this->message =  new Message();
+			include_once MODEL_PATH.'Group_Message.php';
+			$this->group_message =  new Group_Message();
 		}
 		
 		public function getMessageQueueBlockForUserId($user_id){
-
 			$this->reArrangeMessageQueueForUser($user_id);
 			$m_q = $this->getQueueForUser($user_id);
 			if($m_q !== false){
@@ -27,7 +28,7 @@
 						$row_id = $segment[1]; //this can be user_id or a group id
 						switch($sent_from){
 							case 'm':$content.= $this->message->renderMessageContactOfGivenUser($row_id);break;
-						//	case 'mg':$content.= $this->group_message->renderMessageContactOfGivenGroup($row_id);break;
+							case 'g':$content.= $this->group_message->renderMessageContactOfGivenGroup($row_id);break;
 							default:break;
 						}
 					}
@@ -38,6 +39,10 @@
 			}
 			
 		}
+		
+		
+		
+		
 		
 		
 		public function reArrangeMessageQueueForUser($user_id){

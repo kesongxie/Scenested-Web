@@ -1,7 +1,7 @@
 <?php
 	include_once 'core_table.php';
 	class Message extends Core_Table{
-		private  $table_name = "Message";
+		private  $table_name = "message";
 		private  $contact_block_template_path = TEMPLATE_PATH_CHILD."contact_block.phtml";		
 		private  $own_dialog_template_path = TEMPLATE_PATH_CHILD.'own_dialog.phtml';
 		private  $others_dialog_template_path = TEMPLATE_PATH_CHILD.'others_dialog.phtml';

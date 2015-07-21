@@ -225,6 +225,19 @@
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
 						$row = $result->fetch_all(MYSQLI_ASSOC);
+						include_once 'User_Media_Prefix.php';
+						$prefix = new User_Media_Prefix();
+						$media_prefix = $prefix->getUserMediaPrefix($user_id).'/';
+						
+						foreach($row as &$r){
+							if(isset($r['picture_url']) && $r['picture_url'] !== null){
+								$url = U_IMGDIR.$media_prefix.$r['picture_url'];
+								$url = (is_url_exist($url)?$url:DEFAULT_INTEREST_LABEL_IMAGE);
+							}else{
+								$url = DEFAULT_INTEREST_LABEL_IMAGE;
+							}
+							$r['picture_url'] = $url;
+						}
 						$stmt->close();
 						return $row;
 					 }
@@ -334,16 +347,58 @@
 			return false;
 		}
 		
+		/*
+					$stmt = $this->connection->prepare("
+			SELECT *
+			FROM
+			(
+				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+				FROM interest 
+				LEFT JOIN interest_activity
+				ON interest.id = interest_activity.interest_id 
+				LEFT JOIN moment
+				ON interest_activity.id = moment.interest_activity_id 
+				LEFT JOIN moment_photo
+				ON moment.id = moment_photo.moment_id 
+				WHERE interest.name Like ?
+			
+				UNION 
+			
+				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+				FROM interest 
+				LEFT JOIN interest_activity
+				ON interest.id = interest_activity.interest_id 
+				LEFT JOIN event
+				ON interest_activity.id = event.interest_activity_id 
+				LEFT JOIN event_photo
+				ON event.id = event_photo.event_id
+				WHERE interest.name Like ?
+				
+				UNION 
+				
+				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+				FROM moment 
+				LEFT JOIN interest_activity
+				ON moment.interest_activity_id = interest_activity.id
+				LEFT JOIN moment_photo
+				ON moment.id = moment_photo.moment_id  WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?)
+			
+				UNION 
+				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+ 				FROM event 
+ 				LEFT JOIN interest_activity
+				ON event.interest_activity_id = interest_activity.id
+ 				LEFT JOIN event_photo
+ 				ON event.id = event_photo.event_id  WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?)
+
+				)dum ORDER BY interest_activity_id DESC
+			
+			");	
+		*/
 		
-		public function returnMatchedPhotoForMineInterest(){
-			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
-			$interest_like = '';
-			if($mine_interests !== false){
-				foreach($mine_interests as $interest){
- 					$interest_like .= $interest['name'].'|';	
-				}
-				$interest_like = trim($interest_like,'|');
-				$stmt = $this->connection->prepare("
+		
+		/*
+			$stmt = $this->connection->prepare("
 				SELECT moment.id, moment_photo.picture_url, moment_photo.caption, moment_photo.user_id
 				FROM moment 
 				LEFT JOIN moment_photo
@@ -356,8 +411,64 @@
 				ON event.id = event_photo.event_id  WHERE  (event.title REGEXP ?|| event.description REGEXP ? || event_photo.caption REGEXP ?)
 			
 				");	
+		*/
+		
+		public function returnMatchedPhotoForMineInterest(){
+			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
+			$interest_like = '';
+			if($mine_interests !== false){
+				foreach($mine_interests as $interest){
+ 					$interest_like .= $interest['name'].'|';	
+				}
+				$interest_like = trim($interest_like,'|');
+					$stmt = $this->connection->prepare("
+			SELECT *
+			FROM
+			(
+				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+				FROM interest 
+				LEFT JOIN interest_activity
+				ON interest.id = interest_activity.interest_id 
+				LEFT JOIN moment
+				ON interest_activity.id = moment.interest_activity_id 
+				LEFT JOIN moment_photo
+				ON moment.id = moment_photo.moment_id 
+				WHERE interest.name REGEXP ? 
+			
+				UNION 
+			
+				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+				FROM interest 
+				LEFT JOIN interest_activity
+				ON interest.id = interest_activity.interest_id 
+				LEFT JOIN event
+				ON interest_activity.id = event.interest_activity_id 
+				LEFT JOIN event_photo
+				ON event.id = event_photo.event_id
+				WHERE interest.name REGEXP ? 
+				
+				UNION 
+				
+				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+				FROM moment 
+				LEFT JOIN interest_activity
+				ON moment.interest_activity_id = interest_activity.id
+				LEFT JOIN moment_photo
+				ON moment.id = moment_photo.moment_id  WHERE  (moment.description REGEXP  ? || moment_photo.caption REGEXP ?)
+			
+				UNION 
+				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+ 				FROM event 
+ 				LEFT JOIN interest_activity
+				ON event.interest_activity_id = interest_activity.id
+ 				LEFT JOIN event_photo
+ 				ON event.id = event_photo.event_id  WHERE  (event.title REGEXP ? || event.description REGEXP ?  || event_photo.caption REGEXP ?)
+
+				)dum ORDER BY interest_activity_id DESC
+			
+			");	
 				if($stmt){
-					$stmt->bind_param('sssss',$interest_like, $interest_like,$interest_like, $interest_like,$interest_like);
+					$stmt->bind_param('sssssss',$interest_like, $interest_like,$interest_like, $interest_like,$interest_like,$interest_like,$interest_like);
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
 						 if($result !== false && $result->num_rows >= 1){
@@ -441,6 +552,8 @@
 			}
 			return $content;
 		}
+		
+		
 		
 		
 		

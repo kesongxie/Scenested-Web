@@ -17,6 +17,7 @@
 			$rows = $interest->getUserInterestsLabel($_SESSION['id']);
 			$user_media_prefix = $media_prefix->getUserMediaPrefix($_SESSION['id']).'/';
 			$in = new User_In_Interest();
+			$rows_in = $in->getUserInInterest($_SESSION['id'],$user_to);
 			ob_start();
 			include(AJAX_TEMPLATE_PATH.'friend_operation.phtml');
 			$content = ob_get_clean();

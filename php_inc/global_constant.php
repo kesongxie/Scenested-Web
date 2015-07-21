@@ -9,6 +9,7 @@
 	define("U_IMGDIR",ROOTDIR."media_u/");
 	define("SEARCH_PEOPLE_PATH",ROOTDIR.'search.php?q=');
 	define("SEARCH_SIMILAR_PEOPLE_PATH",ROOTDIR.'search.php?r=mine');
+	define("SEARCH_MINE_EVENT_PATH", ROOTDIR.'search.php?r=mine&t=event');
 
 	
 	//paths for php file system

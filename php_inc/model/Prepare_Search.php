@@ -407,7 +407,7 @@
 				$right_content = "";
 				$count = 0;
 				foreach($rows as $row){
-					$content= $media_base->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id']);
+					$content= $media_base->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id'], $row['source_from'], $row['hash']);
 					if($content !== false){
 						if($count++ % 2 == 0){
 							$left_content.= $content;

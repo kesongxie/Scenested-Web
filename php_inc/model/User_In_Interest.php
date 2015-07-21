@@ -39,6 +39,53 @@
 			return false;
 		}
 		
+		//get which interest the $user_in was added in $user_id's interest
+		public function getUserInInterest($user_in, $user_id){
+			$stmt = $this->connection->prepare("
+			SELECT user_in_interest.hash, user_in_interest.interest_id, interest.name, user_interest_label_image.picture_url, user.firstname
+			FROM user_in_interest 
+			LEFT JOIN interest
+			ON user_in_interest.interest_id = interest.id
+			LEFT JOIN user
+			ON interest.user_id = user.id
+			LEFT JOIN user_interest_label_image
+			ON interest.id = user_interest_label_image.interest_id  WHERE user_in_interest.user_in = ? && user_in_interest.user_id = ?
+			");		
+			if($stmt){
+				$stmt->bind_param('ii', $user_in, $user_id);
+				if($stmt->execute()){
+					$result = $stmt->get_result();
+					if($result && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						include_once 'User_Media_Prefix.php';
+						$prefix = new User_Media_Prefix();
+						$media_prefix = $prefix->getUserMediaPrefix($user_id).'/';
+						
+						foreach($row as &$r){
+							if(isset($r['picture_url']) && $r['picture_url'] !== null){
+								$url = U_IMGDIR.$media_prefix.$r['picture_url'];
+								$url = (is_url_exist($url)?$url:DEFAULT_INTEREST_LABEL_IMAGE);
+							}else{
+								$url = DEFAULT_INTEREST_LABEL_IMAGE;
+							}
+							$r['picture_url'] = $url;
+						}
+						return $row;
+					}
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
 		public function removeUserFromInterest($user_id, $key, $hash){
 			include_once 'User_Table.php';
 			$user = new User_Table();
@@ -64,21 +111,21 @@
 				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 				FROM user_in_interest 
 				LEFT JOIN user
-				ON user_in_interest.user_in = user.id WHERE user_in_interest.user_id = ? LIMIT ?,?
+				ON user_in_interest.user_in = user.id || user_in_interest.user_id = user.id WHERE (user.id != ? && (user_in_interest.user_id = ? || user_in_interest.user_in = ?)) LIMIT ?,?
 				");
 			}else{
 				$stmt = $this->connection->prepare("
 				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 				FROM user_in_interest 
 				LEFT JOIN user
-				ON user_in_interest.user_in = user.id WHERE user_in_interest.user_id = ?
+				ON user_in_interest.user_in = user.id || user_in_interest.user_id = user.id WHERE (user.id != ? && (user_in_interest.user_id = ? || user_in_interest.user_in = ?)) 
 				");			
 			}
 			if($stmt){
 				if($limit_num > 0){
-					$stmt->bind_param('iii',$user_id,$offset, $limit_num);
+					$stmt->bind_param('iiiii',$user_id,$user_id, $user_id,$offset, $limit_num);
 				}else{
-					$stmt->bind_param('i',$user_id);
+					$stmt->bind_param('iii',$user_id, $user_id,$user_id);
 				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
@@ -179,6 +226,17 @@
 			return false;
 		}
 		
+		public function leaveInterest($user_in, $hash){
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `user_in` = ? && `hash` = ? ");
+			if($stmt){
+				$stmt->bind_param('is', $user_in, $hash);
+				if($stmt->execute()){
+					$stmt->close();
+					return true;
+				}
+			}
+			return false;
+		}
 		
 			
 		
