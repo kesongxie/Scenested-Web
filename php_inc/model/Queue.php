@@ -67,6 +67,12 @@
 		}
 		
 		
+		public function removeFromQueueForUse($user_id, $queue){
+			$old_queue = $this->getQueueForUser($user_id);
+			$new_queue = str_replace($queue, '', $old_queue);
+			$this->updateQueueForUser($user_id, $new_queue);
+		}
+		
 		
 		public function queueRowForUserExist($user_id){
 			//if exists, return the current queue, false otherwise

@@ -3,8 +3,6 @@
 	
 	<?php $displayable = isMediaDisplayable($event_photo); ?>
 
-	<?php $displayable = isMediaDisplayable($event_photo); ?>
-
 	<?php if($displayable): ?>
 		<img src="<?php echo IMGDIR ?>menu_navi_icon.png" style="z-index:1;float:none;position: absolute; right: 10px; top: 14px;width:20px;height:14px;"class="toggle-operation pointer hdn">
 
@@ -83,9 +81,6 @@
 		<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
 			<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
 		
-		<?php if($isEventPassed): ?>
-					<div class="in_con_w_opt_it evt-mt-action">Moment</div>
-		<?php endif; ?>
 		<?php  if($activity['user_id'] == $_SESSION['id']): ?>
 		<div class="in_con_w_opt_it remove_activity">Cancel this Event</div>
 		<?php else: ?>

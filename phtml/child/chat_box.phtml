@@ -1,27 +1,23 @@
-<div id="chat-box" style="position:absolute;left:-340px;width:330px;height:400px;bottom:0px;background:#fff;overflow:hidden;border-radius:6px 6px 0px 0px; box-shadow:-2px 1px 24px #717070; ">
-	<div id="chat-box-header" class="chat-header" style="padding:0px 10px;height:11%">
+<div id="chat-box" class="i-c" style="position:absolute;left:-340px;width:330px;height:400px;bottom:0px;background:#fff;overflow:hidden;border-radius:6px 6px 0px 0px; box-shadow:-2px 1px 24px #717070; ">
+	<div id="chat-box-header" class="chat-header" style="padding:0px 10px;height:11%;z-index:1">
 		<div class="vertical-center" style="pading-top:2px;" >
 			<div class="inline-blk" style="color:#fff;"><?php echo htmlentities($fullname); ?></div>
-			<div class="inline-blk pointer" style="margin:2px 0px 0px 4px;"><img src="<?php echo IMGDIR; ?>mu_icon.png" height="18" width="30"></div>
+			<div class="inline-blk pointer toggle-option" style="margin:2px 0px 0px 4px;position:relative;">
+				<img src="<?php echo IMGDIR; ?>mu_icon.png" height="18" width="30">
+				<div class="in_con_opt_w popover" style="top:26px; left: -90px; width:200px;font-size:13px;font-weight:normal;z-index:99">
+					<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
+						<div class="arrow-up" style="position:absolute;top:-13px;left:91px;border-bottom:10px solid #FFFFFF"></div>
+						<div class="in_con_w_opt_it remove-chatting-list">Remove from chatting list</div>
+					</div>
+				</div>
+				
+			</div>
 			<div class="inline-blk right-bar pointer"><img id="close-chat-box" src="<?php echo IMGDIR; ?>white_cross_icon.png" height="12" width="12"></div>
 		</div>
 	</div>
 	<div id="chat-box-body" class="child-scrollable">
-		<!-- 
-<div style="text-align:center;padding:10px 0px 0px 0px;margin-bottom:-6px;font-size:11px;" class="default-message">Wednesday, Jun 2, 7:05 PM</div>
-		<div style="text-align:left;margin:14px 10px;clear:both">
-			<img style="border-radius:9%;float:left" src="http://localhost:8888/lsere/media_u/0b6b58a7d212e078ed4662cb/406867654e08b646857e431d/thumb_be08ebe9354ca99c168b0976.jpg" height="36" width="36" />
-			<div class="inline-blk" style="text-align:left;border-radius:4px ;background:#f0f0f0;padding:12px;max-width:70%;position:relative;margin-left:10px;">
-				<div class="arrow-up" style="position:absolute;top:0px;left:-10px;border-bottom:10px solid #f0f0f0; -webkit-transform: rotate(180deg); "></div>
-				<div class="text">How are u, kesong. Hope you have been doing well. I just want to ask whether you will come to this year US Open</div>
-			</div>
-		</div>
--->
 		<?php  echo $conversations; ?>
-
 	</div>
-	
-	
 	<div id="chat-box-footer" style="background:#fff;height:24%;width:100%;text-align:center;border-top:1px solid #EAEAEA">
 		<div class="vertical-center" ><textarea class="fcy-txt msg" style="font-size:14px;width:90%;" data-key="<?php echo $conversation_with_key ?>" ></textarea></div>
 	</div>

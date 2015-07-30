@@ -162,6 +162,9 @@ textarea{
 	margin-top:3px;
 }
 
+.evt-block .visible-control{
+	margin-left:20px;
+}
 
 .visible-control:hover{
 	color:#2459B6;
@@ -745,7 +748,7 @@ div.ui-datepicker{
 	margin-bottom: 20px;
 	background:#fff;
 	position:relative;
-	border:1px solid #f0f0f0;
+	border:1px solid #EAEAEA;
 	border-radius:4px;
 }
 
@@ -926,7 +929,7 @@ div.ui-datepicker{
 }
 
 .evt-block .evt-info-wrapper{
-	padding:20px 14px;
+	/* padding:20px 14px; */
 	text-align:center !important;
 	font-size:13px;
 }
@@ -935,7 +938,7 @@ div.ui-datepicker{
 	text-align:center;
 	font-weight:normal;
 	color:#6B6B6B;
-	margin-bottom:10px;
+	margin:10px 34px;
 }
 
 .evt-block .evt-action-button {
@@ -949,8 +952,35 @@ div.ui-datepicker{
 
 .evt-block .evt-action-button:hover{
 	background-color:#2C68D3;
-
 }
+
+.evt-block .evt-joined:hover{
+	background-color:#AB1C21;
+}
+
+.evt-block .joined-list{
+	width:100%;
+	min-height:300px;
+	background-color:#fff;
+}
+
+.evt-block .joined-list .list-item{
+	border: 1px solid #eaeaea;
+	height:30px;
+	background:#f0f0f0;
+	border-radius:4px;
+	overflow:hidden;
+	width:47%;
+	margin-bottom:10px;
+}
+.evt-block .joined-list .list-item:nth-child(odd){
+	float:left;
+}
+
+.evt-block .joined-list .list-item:nth-child(even){
+	float:right;
+}
+
 /*ends with evt-block template*/
 
 
@@ -980,7 +1010,7 @@ div.ui-datepicker{
 	position: relative;
 	font-weight: bold;
 	font-size: 15px;
-	border-radius: 4px 0px 0px 0px;
+	border-radius: 6px 6px 0px 0px;
 	color:#fff;
 }
 
@@ -988,20 +1018,18 @@ div.ui-datepicker{
 	color: #fff;
 }
 
+#chat-outer-wrapper .chat-footer{
+	position:absolute;
+	bottom:-40px;
+	border-top:1px solid #f0f0f0;
+	width:100%;
+}
+
 #chat-outer-wrapper .chat-header #chat-search{
 	margin-left:10px;
 }
 /*ends with chat template*/
 
-.clip-text{
-    position: relative;
-}
-.clip-text::after{
-    position:absolute;
-    right:-1px;
-    bottom:0;
-    content:"..."
-}
 
 .upload-evt-pic-label{
 	overflow:hidden;

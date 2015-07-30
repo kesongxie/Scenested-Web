@@ -188,6 +188,33 @@
 		}
 		
 		
+		public function returnContactMatchedUserBySearchkeyWord($key_word, $limit){
+			if($limit > 0){
+				$stmt = $this->connection->prepare("SELECT  CONCAT('m-',id) AS queue FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `id` != ? AND `activated` = '1' LIMIT ? ");
+			}else{
+				$stmt = $this->connection->prepare("SELECT  CONCAT('m-',id) AS queue FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `id` != ? AND `activated` = '1' ");
+			}
+			if($stmt){
+				$key_word = '%' .$key_word. '%';
+				if($limit > 0){
+					$stmt->bind_param('sii',$key_word,$_SESSION['id'], $limit);
+				}else{
+					$stmt->bind_param('si',$_SESSION['id'],$key_word);
+				}
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
 		
 	}
 ?>

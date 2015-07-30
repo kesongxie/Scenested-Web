@@ -20,9 +20,9 @@
 			<div style="position:relative;top:2px;left:-2px;font-size:12px;">
 				<div class="txt_ofl" title="<?php echo ($post_text !== false)?htmlentities($post_text):'The post might have been deleted or is not available to display'; ?>" style="margin-bottom:3px;"><span style="opacity:0.8;">Commented on your post
 				 <?php if($post_text !== false): ?>
-					 <a class="target plain-lk">"<?php echo htmlentities($post_text) ?>"</a>
+					 <span class="target plain-lk">"<?php echo htmlentities($post_text) ?>"</span>
 				 <?php else: ?>
-				 	 <a class="plain-lk">"<?php echo 'The post might have been deleted or is not available to display' ?>"</a>
+				 	 <span class="plain-lk">"<?php echo 'The post might have been deleted or is not available to display' ?>"</span>
 				<?php  endif; ?>
 				 </span></div>
 				<span class="react"><?php echo $post_time ?></span>

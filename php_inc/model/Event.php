@@ -2,6 +2,7 @@
 	include_once 'core_table.php';
 	include_once 'Event_Photo.php';
 	
+	
 	class Event extends Core_Table{
 		private  $table_name = "event";
 		private  $activity_id = false;
@@ -9,10 +10,12 @@
 		public $event_id;
 		public $event_photo = null;
 		
-		public function __construct($interest_activity_id){
+		public function __construct($interest_activity_id = null){
 			parent::__construct($this->table_name);
-			$this->activity_id = $interest_activity_id;
-			$this->event_id = $this->getColumnBySelector('id', 'interest_activity_id', $this->activity_id);
+			if($interest_activity_id !== null){
+				$this->activity_id = $interest_activity_id;
+				$this->event_id = $this->getColumnBySelector('id', 'interest_activity_id', $this->activity_id);
+			}
 			$this->event_photo = new Event_Photo();
 		}
 		
@@ -109,7 +112,56 @@
 		}
 		
 	
+		public function getEventTitleByEventId($event_id){
+			return $this->getColumnById('title',$event_id);
+		}
 		
+		public function getPostUserByEventId($event_id){
+			$activity_id = $this->getColumnById('interest_activity_id', $event_id);
+			if($activity_id !== false){
+				include_once 'Interest_Activity.php';
+				$activity = new Interest_Activity();
+				return $activity->getEventPostUserByActivityId($activity_id);
+			}
+			return false;
+		}
+		
+		public function getJoinedUserByEventId($event_id){
+			include_once 'Groups.php';
+			include_once 'Event_Group.php';
+			$group = new Groups();
+			$e_group = new Event_Group();
+			$group_id = $e_group->getGroupIdByEventId($event_id);
+			if($group_id !== false){
+				return $group->getGroupMemberTitleByGroupId($group_id);
+			}else{
+				include_once 'User_Table.php';
+				$post_user = $this->getPostUserByEventId($event_id);
+				$user = new User_Table();
+				if($post_user !== false){
+					$firstname = $user->getUserFirstNameByUserIden($post_user);
+					return array('title'=>$firstname, 'members'=>$firstname);
+				}
+			}
+			return false;
+		}
+		
+		public function hasUserJoinedEvent($user_id, $event_id){
+			include_once 'Groups.php';
+			$group = new Groups();
+			include_once 'Event_Group.php';
+			$e_g = new Event_Group();
+			$group_id = $e_g->getGroupIdByEventId($event_id);
+			if($group_id !== false){
+				$user_in = $group->getUserInGroup($group_id);
+				if($user_in !== false){
+					if( stripos($user_in, $user_id.',') !== false){
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 		
 		
 		

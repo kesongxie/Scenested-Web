@@ -24,7 +24,7 @@
 			$new_message_num = $this->hasNewMessageFromGivenUser($_SESSION['id'], $user_id);
 
 			if($latest_message !== false){
-				$time = convertDateTimeToAgo($latest_message['sent_time'], false,true, true);
+				$time = convertDateTimeToAgo($latest_message['sent_time'], false,true, true, true);
 				$text = $latest_message['text'];
 				if($latest_message['user_sent'] == $_SESSION['id']){
 					$text = 'Me: '.$text;
@@ -157,9 +157,6 @@
 					include_once 'User_Profile_Picture.php';
 					$profile = new User_Profile_Picture();
 					$profile_pic = $profile->getLatestProfileImageForUser($user_sent);
-					include_once 'User_Table.php';
-					$user = new User_Table();
-					$fullname = $user->getUserFullnameByUserIden($user_sent);
 					ob_start();
 					include($this->own_dialog_template_path);
 					$content = ob_get_clean();
@@ -202,22 +199,22 @@
 			return false;
 		}
 		
-		public function getNewMessageSentUserListForUser($user_id){
-			$stmt = $this->connection->prepare("SELECT DISTINCT `user_id` AS `sent_queue` FROM `$this->table_name` WHERE `user_id_get`=?  AND `view` ='n' ");
-			if($stmt){
-				$stmt->bind_param('i', $user_id);
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows >= 1){
- 						$rows = $result->fetch_all(MYSQLI_ASSOC);
-						$stmt->close();
-						return $rows;
-					}
-				}
-			}
-			echo $this->connection->error;
-			return false;
-		}
+	// 	public function getNewMessageSentUserListForUser($user_id){
+// 			$stmt = $this->connection->prepare("SELECT DISTINCT `user_id` AS `sent_queue` FROM `$this->table_name` WHERE `user_id_get`=?  AND `view` ='n' ");
+// 			if($stmt){
+// 				$stmt->bind_param('i', $user_id);
+// 				if($stmt->execute()){
+// 					 $result = $stmt->get_result();
+// 					 if($result !== false && $result->num_rows >= 1){
+//  						$rows = $result->fetch_all(MYSQLI_ASSOC);
+// 						$stmt->close();
+// 						return $rows;
+// 					}
+// 				}
+// 			}
+// 			echo $this->connection->error;
+// 			return false;
+// 		}
 		
 		public function getSentFrom(){
 			return $this->sent_from;

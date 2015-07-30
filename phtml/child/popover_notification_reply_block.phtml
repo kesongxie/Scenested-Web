@@ -20,9 +20,9 @@
 			<div style="position:relative;top:2px;left:-2px;font-size:12px;">
 				<div class="txt_ofl" title="<?php echo ($comment_text !== false)?htmlentities($comment_text):'The comment might have been deleted or is not available to display'; ?>" style="margin-bottom:3px;"><span style="opacity:0.8;">Replied on your comment
 				 <?php if($comment_text !== false): ?>
-					 <a class="target plain-lk">"<?php echo htmlentities($comment_text) ?>"</a>
+					 <span class="target plain-lk">"<?php echo htmlentities($comment_text) ?>"</span>
 				 <?php else: ?>
-				 	 <a class="plain-lk">"<?php echo 'The comment might have been deleted or is not available to display' ?>"</a>
+				 	 <span class="plain-lk">"<?php echo 'The comment might have been deleted or is not available to display' ?>"</span>
 				<?php  endif; ?>
 				 </span></div>
 				<span class="react"><?php echo $post_time ?></span>

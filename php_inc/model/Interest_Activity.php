@@ -76,8 +76,12 @@
 					$location = $event['location'];
 				}
 				
+				$joined_user = $this->event->getJoinedUserByEventId($event['id']);
+				$joined_user_num = ($joined_user !== false)?sizeof(explode(',',$joined_user['members'])):1;
+				$joined_user_list = $joined_user['title'];
 				$isEventPassed = (time() > strtotime($event['date'].$event['time']));				
 				$description = $event['description'];
+				$event_joined = $this->event->hasUserJoinedEvent($_SESSION['id'], $event['id']);
 				include_once 'User_Media_Prefix.php';
 				$prefix = new User_Media_Prefix();
 				$event_photo = $this->event->event_photo->getEventPhotoResourceByMomentId($event['id']);
@@ -87,18 +91,7 @@
 				if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo['picture_url'])){
 					$event_photo_url = U_IMGDIR.$media_prefix.$event_photo['picture_url'];
 					$event_photo_hash = $event_photo['hash'];
-					
 				}
-				// else{
-// 					//get the label photo as the event cover
-// 					include_once 'User_Interest_Label_Image.php';
-// 					$label_image = new User_Interest_Label_Image();
-// 					$interest_id = $this->getColumnById('interest_id',$activity_id);
-// 					$event_photo_url = $label_image->getLabelImageUrlByInterestId($interest_id);
-// 					$interest_photo_hash = $label_image->getLabelImageHashByInterestId($interest_id);
-// 				}
-				
-				
 				include_once 'Comment.php';
 				$comment = new Comment();
 				$comment_number = $comment->getCommentNumberForTarget($activity_id);
@@ -242,13 +235,31 @@
 		
 		
 		
-		public function loadPassedEventCollectionForUser($user_id){
-			$stmt = $this->connection->prepare("
-			SELECT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id,event.id AS event_id, event.title, event.description,event.date
-			FROM  event 
-			LEFT JOIN interest_activity
-			ON interest_activity.id = event.interest_activity_id  WHERE interest_activity.user_id = ? AND interest_activity.type = 'e' AND TIMESTAMP(event.date, event.time) < NOW() ORDER BY interest_activity.id DESC
-			");
+		
+		
+		
+		
+		
+		
+		
+		public function loadEventCollectionForUser($user_id, $passed = false){
+			
+			if($passed){
+				$stmt = $this->connection->prepare("
+				SELECT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id,event.id AS event_id, event.title, event.description,event.date
+				FROM  event 
+				LEFT JOIN interest_activity
+				ON interest_activity.id = event.interest_activity_id  WHERE interest_activity.user_id = ? AND interest_activity.type = 'e' AND TIMESTAMP(event.date, event.time) < NOW() ORDER BY interest_activity.id DESC
+				");
+			}else{
+				$stmt = $this->connection->prepare("
+				SELECT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id,event.id AS event_id, event.title, event.description,event.date
+				FROM  event 
+				LEFT JOIN interest_activity
+				ON interest_activity.id = event.interest_activity_id  WHERE interest_activity.user_id = ? AND interest_activity.type = 'e'  ORDER BY interest_activity.id DESC
+				");
+			}
+			
 			if($stmt){
 				$stmt->bind_param('i',$user_id);
 				if($stmt->execute()){
@@ -751,6 +762,38 @@
 			return false;
 		}
 		
+		
+		public function joinEventForUser($user_id, $activity_key){
+			$activity_id = $this->getRowIdByHashkey($activity_key);
+			if($activity_id !== false){
+				$this->event = new Event($activity_id);
+				if(!$this->event->isEventPassedForActivityId($activity_id)){
+					include_once 'Event_Group.php';
+					$post_user = $this->getEventPostUserByActivityId($activity_id);
+					$e_g = new Event_Group();
+					$e_g->joinEventForUser($user_id, $this->event->event_id, $post_user);
+					
+				}
+			}	
+			return false;
+		}
+		
+		public function getEventPostUserByActivityId($activity_id){
+			return $this->getColumnById('user_id', $activity_id);
+		}
+		
+		public function unjoinEventForUser($user_id, $activity_key){
+			$activity_id = $this->getRowIdByHashkey($activity_key);
+			if($activity_id !== false){
+				$this->event = new Event($activity_id);
+				include_once 'Event_Group.php';
+				$post_user = $this->getEventPostUserByActivityId($activity_id);
+				$e_g = new Event_Group();
+				$e_g->unjoinEventForUser($user_id, $this->event->event_id, $post_user);
+				return true;
+			}	
+			return false;
+		}
 			
 		
 			

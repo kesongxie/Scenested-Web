@@ -687,6 +687,23 @@
 			return false;
 		}
 		
+		
+		public function isNumericValueExistingForColumn($value, $column){
+			$column = $this->connection->escape_string($column);
+			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('i', $value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result->num_rows == 1){
+						return true;
+					 }
+				}
+			}
+			return false;
+		}
+		
+		
 		public function generateUniqueHash(){
 			$unique_hash = "";
 			do{

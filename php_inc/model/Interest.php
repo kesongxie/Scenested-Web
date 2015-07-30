@@ -315,6 +315,9 @@
 		}
 		
 		
+		
+		
+		
 		public function returnMatchedUserForMineInterest(){
 			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
 			$interest_like = '';
@@ -347,71 +350,8 @@
 			return false;
 		}
 		
-		/*
-					$stmt = $this->connection->prepare("
-			SELECT *
-			FROM
-			(
-				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
-				FROM interest 
-				LEFT JOIN interest_activity
-				ON interest.id = interest_activity.interest_id 
-				LEFT JOIN moment
-				ON interest_activity.id = moment.interest_activity_id 
-				LEFT JOIN moment_photo
-				ON moment.id = moment_photo.moment_id 
-				WHERE interest.name Like ?
-			
-				UNION 
-			
-				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
-				FROM interest 
-				LEFT JOIN interest_activity
-				ON interest.id = interest_activity.interest_id 
-				LEFT JOIN event
-				ON interest_activity.id = event.interest_activity_id 
-				LEFT JOIN event_photo
-				ON event.id = event_photo.event_id
-				WHERE interest.name Like ?
-				
-				UNION 
-				
-				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
-				FROM moment 
-				LEFT JOIN interest_activity
-				ON moment.interest_activity_id = interest_activity.id
-				LEFT JOIN moment_photo
-				ON moment.id = moment_photo.moment_id  WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?)
-			
-				UNION 
-				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
- 				FROM event 
- 				LEFT JOIN interest_activity
-				ON event.interest_activity_id = interest_activity.id
- 				LEFT JOIN event_photo
- 				ON event.id = event_photo.event_id  WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?)
-
-				)dum ORDER BY interest_activity_id DESC
-			
-			");	
-		*/
 		
 		
-		/*
-			$stmt = $this->connection->prepare("
-				SELECT moment.id, moment_photo.picture_url, moment_photo.caption, moment_photo.user_id
-				FROM moment 
-				LEFT JOIN moment_photo
-				ON moment.id = moment_photo.moment_id  WHERE  (moment.description REGEXP ? || moment_photo.caption REGEXP ?)
-			
-				UNION ALL
-				SELECT event.id, event_photo.picture_url, event_photo.caption, event_photo.user_id
-				FROM event 
-				LEFT JOIN event_photo
-				ON event.id = event_photo.event_id  WHERE  (event.title REGEXP ?|| event.description REGEXP ? || event_photo.caption REGEXP ?)
-			
-				");	
-		*/
 		
 		public function returnMatchedPhotoForMineInterest(){
 			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);

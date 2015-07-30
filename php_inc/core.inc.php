@@ -79,7 +79,7 @@
 	/*
 		from format Y-m-d H:i:s to ago
 	*/
-	function convertDateTimeToAgo($str, $withAgo, $shorter = false, $ignore_plural = false){
+	function convertDateTimeToAgo($str, $withAgo, $shorter = false, $ignore_plural = false, $shorter_now = false){
 		list($date, $time) = explode(' ', $str);
     	list($year, $month, $day) = explode('-', $date);
     	list($hour, $minute, $second) = explode(':', $time);
@@ -105,7 +105,11 @@
 				$text.=" ago";
 			}
    		}else{
-   			$text = 'Just now';
+   			if($shorter_now){
+   				$text = 'now';
+   			}else{
+   				$text = 'Just now';
+   			}
    		}
    		return $text;
     }

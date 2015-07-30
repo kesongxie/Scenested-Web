@@ -140,6 +140,72 @@
 		}
 		
 		
+		public function getContactSearchByKeyWord($key_word){
+			$stmt = $this->connection->prepare("
+			
+			SELECT DISTINCT CONCAT('m-',user_in_interest.user_in) AS queue
+			FROM user_in_interest 
+			LEFT JOIN user
+			ON user_in_interest.user_in = user.id  WHERE user_in_interest.user_id = ?  && CONCAT(user.firstname,' ',user.lastname) LIKE ? 
+			
+			UNION 
+			
+			SELECT DISTINCT CONCAT('m-',user_in_interest.user_id) AS queue
+			FROM user_in_interest 
+			LEFT JOIN user
+			ON user_in_interest.user_id = user.id  WHERE user_in_interest.user_in = ?  && CONCAT(user.firstname,' ',user.lastname) LIKE ? 
+			
+			UNION
+			
+			SELECT DISTINCT  CONCAT('m-',user_in_interest.user_in) AS queue
+			FROM user_in_interest 
+			LEFT JOIN interest
+			ON user_in_interest.interest_id = interest.id  WHERE (user_in_interest.user_id = ?  && (interest.name LIKE ? || interest.description LIKE ?)  )
+			
+			UNION 
+			
+			SELECT DISTINCT  CONCAT('m-',user_in_interest.user_id) AS queue
+			FROM user_in_interest 
+			LEFT JOIN interest
+			ON user_in_interest.interest_id = interest.id  WHERE (user_in_interest.user_in = ?  && (interest.name LIKE ? || interest.description LIKE ?)  )
+			
+			
+			
+			UNION 
+			
+			SELECT DISTINCT  CONCAT('m-',user_in_interest.user_in) AS queue
+			FROM user_in_interest 
+			LEFT JOIN interest
+			ON user_in_interest.user_in = interest.user_id  WHERE ( user_in_interest.user_id = ?  && (interest.name LIKE ? || interest.description LIKE ?)  )
+			
+			UNION 
+			
+			SELECT DISTINCT  CONCAT('m-',user_in_interest.user_id) AS queue
+			FROM user_in_interest 
+			LEFT JOIN interest
+			ON user_in_interest.user_id = interest.user_id  WHERE ( user_in_interest.user_in = ?  && (interest.name LIKE ? || interest.description LIKE ?)  )
+			
+			");
+			
+			if($stmt){
+				$key_word = '%'.$key_word.'%';
+				$stmt->bind_param('isisississississ',$_SESSION['id'], $key_word, $_SESSION['id'], $key_word, $_SESSION['id'],$key_word,$key_word,$_SESSION['id'],$key_word,$key_word, $_SESSION['id'],$key_word,$key_word,  $_SESSION['id'],$key_word,$key_word);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+		
+		
 		public function getUserFriendBlockByInterestId($interest_id, $limit_num = -1, $offset = 0){
 			include_once 'Interest.php';
 			$interest = new Interest();
