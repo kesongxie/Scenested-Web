@@ -110,6 +110,17 @@
 			$this->deleteRowBySelector('event_id', $event_id);
 		}
 		
+		
+		public function getEventGroupJoinedMemberByGroupId($group_id){
+			$event_id = $this->getEventIdByGroupId($group_id);
+			if($event_id !== false){
+				include_once 'Event.php';
+				$e = new Event();
+				return $e->getJoinedMemberByEventId($event_id, $group_id);
+			}
+			return false;
+		}
+		
 	}		
 	
 ?>

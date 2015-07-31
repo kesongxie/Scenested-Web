@@ -1,44 +1,5 @@
 <div class="post-wrapper post evt-block" data-key="<?php echo $hash; ?>">
 	
-	
-
-<div class="joined-list hdn" style="z-index:1;text-align:left;position:relative">
-		<div class="dialog-header" style="width:100%;">
-			<div class="dialog-header-inner" style="margin:0px;">
-				<div class="txt_ofl" style="color:#fff;padding:10px 13px;font-weight:600;"><?php echo htmlentities($title); ?></div>
-			</div>
-		</div>
-		<div style="margin:10px auto;width:90%;position:relative;">
-			<div style="margin-bottom:10px;">4 people are going</div>
-			<div class="list-item inline-blk">
-				<img src="http://localhost:8888/lsere/media_u/597394f9fe626bbb1f13c37f/4358d1f8e26a23e87ad92964/thumb_6e90cee991f25c6c904eabbb.jpg" style="float:left;margin-right:10px;width:30px;height:30px;border-radius:9%;">
-				<div class="inline-blk vertical-center txt_ofl" style="font-size:13px;">Nicholas</div>
-			</div>
-			<div class="list-item inline-blk">
-				<img src="http://localhost:8888/lsere/media_u/0b6b58a7d212e078ed4662cb/406867654e08b646857e431d/thumb_be08ebe9354ca99c168b0976.jpg" style="float:left;margin-right:10px;width:30px;height:30px;border-radius:9%;">
-				<div class="inline-blk vertical-center txt_ofl" style="font-size:13px;">Meghan</div>
-			</div>
-
-			<div class="list-item inline-blk">
-				<img src="http://localhost:8888/lsere/media_u/48115f24e89820aede4825d6/10059e85d3306094df94bb21/thumb_c403cf558ee807a776c20963.jpg" style="float:left;margin-right:10px;width:30px;height:30px;border-radius:9%;">
-				<div class="inline-blk vertical-center txt_ofl" style="font-size:13px;">Quentin</div>
-			</div>
-
-			<div class="list-item inline-blk">
-				<img src="http://localhost:8888/lsere/media_u/06f1e47fbdb03e48203ebfba/eac5b69845c56a5ad39933bd/thumb_443fae5d7fc18ce21b89c814.jpg" style="float:left;margin-right:10px;width:30px;height:30px;border-radius:9%;">
-				<div class="inline-blk vertical-center txt_ofl" style="font-size:13px;">Kesong</div>
-			</div>
-		</div>
-		
-		<div class="hdn" style="border-top:1px solid #EAEAEA;width:100%;clear:both;position:absolute;bottom:0px;">
-			<input type="text" style="margin:0px auto;border:0px;width:90%;padding:6px 12px;" placeholder="invite friends who might be interested" />
-		</div>
-			
-			
-		
-	</div>
-
-	
 
 	<?php $displayable = is_url_exist($event_photo_url); ?>
 
@@ -91,7 +52,7 @@
 					<div class="evt-info"><?php echo $time; ?></div>
 					<div class="evt-info"><?php echo htmlentities($location) ?></div>
 					<div class="evt-info" style="position:relative;margin:0px;">
-						<div class="inline-blk  plain-lk pointer joined-user-info">
+						<div class="inline-blk  plain-lk pointer joined-user-info toggle-joined">
 							<div class="joined-num inline-blk" ><?php  echo $joined_user_num; ?></div>
 							<div class="joined-label inline-blk" >
 							<?php if($joined_user_num > 1): ?>
@@ -119,9 +80,29 @@
  		</div>
 		
 		<div class="post-inner-padding" style="padding-top:0px">
-			<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer toggle-comment" src="<?php echo IMGDIR ?>ci.png" title="Comment" height="16" width="16"><div class="inline-blk cmt-num" style="margin:-3px 8px 0px 0px"><?php echo $comment_number ?></div></div>
-			<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>favor_icon.png" title="Pin" height="18" width="18"><div class="inline-blk" style="margin-top:-1px;"></div></div>
+			<div class="inline-blk" ><img class="post-operation-icon pointer toggle-comment" src="<?php echo IMGDIR ?>ci.png" title="Comment" height="16" width="16"><div class="cmt-num inline-blk" style="margin:-3px 8px 0px 0px"><?php echo $comment_number ?></div></div>
+			<div class="inline-blk" style="margin-top:-3px;"><img class="post-operation-icon pointer toggle-joined t-j" src="<?php echo IMGDIR ?>profile-icon.png" title="People joined" height="18" width="18"><div class="inline-blk joined-num"  style="margin:0px 8px 0px 0px"><?php echo $joined_user_num; ?></div></div>
 		</div>
+		
+		
+		
+			
+
+<div class="joined-list hdn">
+	<div class="joined-list-inner" >
+			
+	</div>
+</div>	
+
+
+
+	
+
+		
+		
+		
+		
+		
 		
 		<div class="post-inner-padding regular-comment-wrapper comment-block hdn" style="padding-top:0px">
 			<textarea class="fcy-txt comment-txt" style="margin-top:12px;" placeholder="Write down your thoughts..." data-key="<?php echo $hash; ?>"></textarea>

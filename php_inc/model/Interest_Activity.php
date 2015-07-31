@@ -230,13 +230,6 @@
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
 		public function loadEventCollectionForUser($user_id, $passed = false){
 			if($passed){
 				$stmt = $this->connection->prepare("
@@ -332,7 +325,6 @@
 		
 		
 		public function loadUpComingEventCollectionForUser($key){
-			
 			$user = new User_Table();
 			$user_id = $user->getUserIdByKey($key);
 			include_once 'User_Upcoming_Event.php';
@@ -364,9 +356,6 @@
 			include(TEMPLATE_PATH_CHILD.'upcoming_event.phtml');
 			$content = ob_get_clean();
 			return $content;
-			
-
-			
 		}
 		
 		
@@ -811,9 +800,18 @@
 			}	
 			return false;
 		}
-			
 		
-			
+		
+		public function getJoinedMemberBlockByActivityKey($key){
+			$activity_id = $this->getRowIdByHashkey($key);
+			if($activity_id !== false){
+				$this->event = new Event($activity_id);
+				if($this->event->event_id !== false){
+					return $this->event->getJoinedMemberByEventId($this->event->event_id);
+				}
+			}
+			return false;
+		}
 		
 	}
 ?>

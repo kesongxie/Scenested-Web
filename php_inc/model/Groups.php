@@ -207,6 +207,20 @@
 		}
 		
 		
+		public function getEventGroupJoinedMemberByGroupKey($group_key){
+			$group_id = $this->getGroupIdByGroupKey($group_key);
+			if($group_id !== false){
+				include_once 'Event_Group.php';
+				$e_g = new Event_Group();
+				$chat_members = $e_g->getEventGroupJoinedMemberByGroupId($group_id);
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'group_chat_member.phtml');
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
+		}
+		
 		
 		
 	}

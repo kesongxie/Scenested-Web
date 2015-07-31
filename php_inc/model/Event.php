@@ -163,6 +163,53 @@
 			return false;
 		}
 		
+		public function getJoinedMemberByEventId($event_id, $group_id = false){
+			include_once 'User_Table.php';
+			include_once 'Event_Group.php';
+			$user = new User_Table();
+			include_once 'User_Profile_Picture.php';
+			$profile = new User_Profile_Picture();
+			$e_g = new Event_Group();
+			if($group_id === false){
+				$group_id = $e_g->getGroupIdByEventId($event_id);
+			}
+			$content = "";
+			
+			if($group_id !== false){
+				include_once 'Groups.php';
+				$g = new Groups();
+				$user_in = $g->getUserInGroup($group_id); //22,28,29,
+				if($user_in !== false){
+					$users = explode(',',trim($user_in, ','));
+					foreach($users as $u){
+						$profile_pic = $profile->getLatestProfileImageForUser($u);
+						$firstname = $user->getUserFirstNameByUserIden($u);
+						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u);
+						$hash = $user->getUniqueIdenForUser($u);
+						ob_start();
+						include(TEMPLATE_PATH_CHILD.'event_joined_member.phtml');
+						$content .= ob_get_clean();
+					}
+				}else{
+					return false;
+				}
+			}else{
+				$u = $this->getPostUserByEventId($event_id);
+				if($u !== false){
+					$profile_pic = $profile->getLatestProfileImageForUser($u);
+					$firstname = $user->getUserFirstNameByUserIden($u);
+					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u);
+					$hash = $user->getUniqueIdenForUser($u);
+					ob_start();
+					include(TEMPLATE_PATH_CHILD.'event_joined_member.phtml');
+					$content .= ob_get_clean();
+				}else{
+					return false;
+				}
+			}
+			return $content;
+		}
+		
 		
 		
 	}

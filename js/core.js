@@ -291,6 +291,7 @@ function onVisibilityChange (el, callback) {
 
 function loadComment(thisE){
 	var postWrapper = thisE.parents('.post');
+	var joined_list = postWrapper.find('.joined-list');
 	var key = postWrapper.attr('data-key');
 	var commentBlock = postWrapper.find('.regular-comment-wrapper');
 	if(commentBlock.hasClass('hdn')){
@@ -300,6 +301,7 @@ function loadComment(thisE){
 			method:'post',
 			data:{key:key},
 			success:function(resp){
+				joined_list.addClass('hdn');
 				commentBlock.find('.comment-container').html(resp);
 				postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length);
 				setVisibleContentWithParent(commentBlock, 'Read more')
@@ -307,6 +309,25 @@ function loadComment(thisE){
 		});
 	}
 	commentBlock.toggleClass('hdn');
+}
+
+function loadJoinedMember(thisE){
+	var parentDiv = thisE.parents('.evt-block');
+	var joined_list = parentDiv.find('.joined-list');
+	var commentBlock = parentDiv.find('.regular-comment-wrapper');
+	var key = parentDiv.attr('data-key');
+	$.ajax({
+		url:AJAX_DIR+'load_joined_member.php',
+		method:'post',
+		data:{key:key},
+		success:function(resp){
+			if(resp != '1'){
+				joined_list.find('.joined-list-inner').html(resp);
+				commentBlock.addClass('hdn');
+				joined_list.toggleClass('hdn');
+			}
+		}
+	});
 }
 
 
@@ -1139,6 +1160,13 @@ $(document).ready(function(){
 	},'.post-wrapper .content .toggle-comment');
 	
 	
+	$('body').on({
+		click:function(){
+			loadJoinedMember($(this));
+		}
+	},'.post-wrapper .content .toggle-joined');
+	
+	
 	
 	$('body').on({
 		click:function(){
@@ -1834,6 +1862,41 @@ $(document).ready(function(){
 	
 	},'#chat-box .remove-chatting-list');	
 	
+	
+	$('body').on({
+		click:function(){
+			var chat_box = $(this).parents('#chat-box');
+			var key = chat_box.find('.msg').attr('data-key');
+			
+			$.ajax({
+				url:AJAX_DIR+'load_event_group_joined_member.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					chat_box.find('#main-conversation').addClass('hdn');
+					chat_box.find('#side-member').html(resp).removeClass('hdn');
+				}
+ 			});
+			
+		}
+	
+	},'#chat-box .joined-member');	
+	
+	
+	$('body').on({
+		click:function(){
+			var chat_box = $(this).parents('#chat-box');
+			chat_box.find('#side-member').html('').addClass('hdn');
+			chat_box.find('#main-conversation').removeClass('hdn');
+		}
+	},'.chat-header .back-to-main');
+	
+	
+	
+	
+	
+	
 	$('body').on({
 		click:function(){
 			var selfPopover = $(this).parents('#chat-box').find('.in_con_opt_w');
@@ -1897,10 +1960,11 @@ $(document).ready(function(){
 				data:{key:key},
 				success:function(resp){
 					console.log(resp);
-					var joined_num = joined_num_div.text();
+					var joined_num = joined_num_div.first().text();
 					joined_num_div.text(++joined_num);
 					joined_label.text('people going');
 					thisE.removeClass('evt-join').addClass('evt-joined').text('Joined');
+					loadJoinedMember(thisE);
 					refreshMessage();
 				}
  			});
@@ -1922,13 +1986,15 @@ $(document).ready(function(){
 				data:{key:key},
 				success:function(resp){
 					console.log(resp);
-					var joined_num = joined_num_div.text();
+					
+					var joined_num = joined_num_div.first().text();
 					joined_num = (--joined_num > 1)?joined_num:1;
 					joined_num_div.text(joined_num);
 					if(joined_num < 2){
 						joined_label.text('person going');
 					}
 					thisE.removeClass('evt-joined').addClass('evt-join').text('Join');
+					loadJoinedMember(thisE);
 					refreshMessage();
 				}
 			});
@@ -1941,6 +2007,8 @@ $(document).ready(function(){
 		}
 	
 	},'.evt-block .evt-joined');
+	
+	
 	
 	
 	
