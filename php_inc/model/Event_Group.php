@@ -57,9 +57,15 @@
 					if($group_id !== false){
 						include_once 'Groups.php';
 						$g  = new Groups();
-						
 						include_once 'Message_Queue.php';
 						$queue = new Message_Queue();
+						$user_in = $g->getUserInGroup($group_id);
+						if(stripos($user_in, $_SESSION['id'].',') === false){
+							$user_in = $_SESSION['id'].','.$user_in;
+							$g->updateUserInForGroupId($user_in,$group_id);	
+						}else{
+							return false;
+						}
 						$queue->makeGroupTopAtContactListByGroupId($group_id, $user_id);
 						include_once 'Group_Message.php';
 						$g_m = new Group_Message();

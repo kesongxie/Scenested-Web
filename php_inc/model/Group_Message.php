@@ -73,9 +73,10 @@
 		
 	
 		public function getLatestMessageWithGivenGroup($group_id){
-			$stmt = $this->connection->prepare("SELECT `user_id` AS `user_sent`,`text`,`sent_time`,`message_type` FROM `$this->table_name` WHERE  `group_id`=?  ORDER BY `id` DESC LIMIT 1    ");
+			$join_time = $this->getUserJoinTime($_SESSION['id'], $group_id);
+			$stmt = $this->connection->prepare("SELECT `user_id` AS `user_sent`,`text`,`sent_time`,`message_type` FROM `$this->table_name` WHERE  `group_id`=? AND `sent_time` >= ? ORDER BY `id` DESC LIMIT 1    ");
 			if($stmt){
-				$stmt->bind_param('i', $group_id);
+				$stmt->bind_param('is', $group_id, $join_time);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){
@@ -92,13 +93,32 @@
 		}
 		
 		
+		public function getUserJoinTime($user_id, $group_id){
+			$stmt = $this->connection->prepare("SELECT `sent_time` FROM `$this->table_name` WHERE  `group_id`=? AND `user_id` = ? AND `message_type` = 'n' ORDER BY `id` DESC LIMIT 1    ");
+			if($stmt){
+				$stmt->bind_param('ii', $group_id, $user_id);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$row = $result->fetch_assoc();
+						$stmt->close();
+						return $row['sent_time'];
+					 }
+				}
+			}
+			return false;
+		}
+		
+		
+		
 	
 		public function getTotalMessageNumForGroup($group_id){
+			$join_time = $this->getUserJoinTime($_SESSION['id'], $group_id);
 			$user_in_group = $_SESSION['id'].',';
-			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE group_id = ? AND `user_id` != ? AND `view_list` NOT LIKE ?");
+			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE group_id = ? AND `user_id` != ? AND `view_list` NOT LIKE ? AND `sent_time` >= ?");
 			if($stmt){
 				$user_in_group = '%'.$user_in_group.'%';
-				$stmt->bind_param('iis' ,$group_id, $_SESSION['id'], $user_in_group);
+				$stmt->bind_param('iiss' ,$group_id, $_SESSION['id'], $user_in_group, $join_time);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false){
@@ -115,18 +135,23 @@
 		public function getTotalGroupMessageNumForUser($user_id){
 			$user_in_group = $user_id.',';
 			$stmt = $this->connection->prepare("
-			SELECT groups.id
+			SELECT DISTINCT groups.id
 			FROM groups 
 			LEFT JOIN group_message
-			ON groups.id = group_message.group_id WHERE groups.user_in LIKE ? AND group_message.user_id != ? AND (group_message.view_list IS NULL || group_message.view_list NOT LIKE ?) ");
+			ON groups.id = group_message.group_id WHERE groups.user_in LIKE ? AND group_message.user_id != ? AND  group_message.view_list NOT LIKE ?");
 			if($stmt){
 				$user_in_group = '%'.$user_in_group.'%';
 				$stmt->bind_param('sis' ,$user_in_group, $user_id, $user_in_group);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
-					 if($result !== false){
+					 if($result !== false && $result->num_rows >=1){
  						$stmt->close();
- 						return $result->num_rows;
+ 						$group_ids = $result->fetch_all(MYSQLI_ASSOC);
+ 						$count = 0;
+ 						foreach($group_ids as $id){
+ 							 $count += $this->getTotalMessageNumForGroup($id['id']);
+ 						}
+ 						return $count;	
 					}
 				}
 			}
@@ -138,9 +163,10 @@
 		
 	
 		public function getGroupMessagesForUser($group_id){
-			$stmt = $this->connection->prepare("SELECT `user_id`,`text`,`sent_time`,`message_type` FROM `$this->table_name` WHERE `group_id` = ?  ");
+			$join_time = $this->getUserJoinTime($_SESSION['id'], $group_id);
+			$stmt = $this->connection->prepare("SELECT `user_id`,`text`,`sent_time`,`message_type` FROM `$this->table_name` WHERE `group_id` = ?  AND `sent_time` >= ? ");
 			if($stmt){
-				$stmt->bind_param('i',$group_id);
+				$stmt->bind_param('is',$group_id, $join_time);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
@@ -268,6 +294,8 @@
 				if($group_resource !== false){
 					$group_id =  $group_resource['id'];
 					$user_in = $group_resource['user_in'];
+				}else{
+					return false;
 				}
 			}else{
 				//get by group_id
@@ -276,10 +304,6 @@
 					return false;
 				}
 			}
-			
-			
-			
-
 			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`group_id`,`sent_time`,`message_type`, `hash`) VALUES(?, ?, ?, ?,  ?)");
 			$time = date('Y-m-d H:i:s');
 			$hash = $this->generateUniqueHash();

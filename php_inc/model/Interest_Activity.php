@@ -67,18 +67,13 @@
 					}
 					$time .= convertTimeToAmPm($event['time']);
 				}
-				
-				
 				$title = $event['title'];
-				
 				$location = '';
 				if($event['location'] != null){
 					$location = $event['location'];
 				}
-				
 				$joined_user = $this->event->getJoinedUserByEventId($event['id']);
 				$joined_user_num = ($joined_user !== false)?sizeof(explode(',',$joined_user['members'])):1;
-				$joined_user_list = $joined_user['title'];
 				$isEventPassed = (time() > strtotime($event['date'].$event['time']));				
 				$description = $event['description'];
 				$event_joined = $this->event->hasUserJoinedEvent($_SESSION['id'], $event['id']);
@@ -243,20 +238,45 @@
 		
 		
 		public function loadEventCollectionForUser($user_id, $passed = false){
-			
 			if($passed){
 				$stmt = $this->connection->prepare("
-				SELECT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id,event.id AS event_id, event.title, event.description,event.date
-				FROM  event 
-				LEFT JOIN interest_activity
-				ON interest_activity.id = event.interest_activity_id  WHERE interest_activity.user_id = ? AND interest_activity.type = 'e' AND TIMESTAMP(event.date, event.time) < NOW() ORDER BY interest_activity.id DESC
+				SELECT * 
+				FROM(
+					SELECT DISTINCT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id,event.id AS event_id, event.title, event.description,event.date AS date, event.time AS time
+					FROM  event 
+					LEFT JOIN interest_activity
+					ON interest_activity.id = event.interest_activity_id  WHERE interest_activity.user_id = ? AND interest_activity.type = 'e' AND TIMESTAMP(date, time) < NOW() 
+					 
+					UNION 
+					SELECT DISTINCT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id, event.id AS event_id, event.title, event.description,event.date AS date, event.time AS time
+					FROM groups
+					LEFT JOIN event_group
+					ON groups.id = event_group.group_id 
+					LEFT JOIN event
+					ON event_group.event_id = event.id
+					LEFT JOIN interest_activity
+					ON event.interest_activity_id = interest_activity.id WHERE TIMESTAMP(event.date, event.time) < NOW()
+		 
+				) dum ORDER BY TIMESTAMP(date,time) DESC
 				");
 			}else{
 				$stmt = $this->connection->prepare("
-				SELECT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id,event.id AS event_id, event.title, event.description,event.date
-				FROM  event 
-				LEFT JOIN interest_activity
-				ON interest_activity.id = event.interest_activity_id  WHERE interest_activity.user_id = ? AND interest_activity.type = 'e'  ORDER BY interest_activity.id DESC
+				SELECT * 
+				FROM(
+					SELECT DISTINCT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id, event.id AS event_id, event.title, event.description,event.date AS date, event.time AS time
+					FROM  event 
+					LEFT JOIN interest_activity
+					ON interest_activity.id = event.interest_activity_id  WHERE interest_activity.user_id = ? AND interest_activity.type = 'e'  
+					UNION 
+					SELECT DISTINCT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id, event.id AS event_id, event.title, event.description,event.date AS date, event.time AS time
+					FROM groups
+					LEFT JOIN event_group
+					ON groups.id = event_group.group_id 
+					LEFT JOIN event
+					ON event_group.event_id = event.id
+					LEFT JOIN interest_activity
+					ON event.interest_activity_id = interest_activity.id 
+				) dum ORDER BY TIMESTAMP(date,time) DESC
 				");
 			}
 			
@@ -271,11 +291,8 @@
 							$left_content = "";
 							$right_content = "";
 							$count = 0;
-							include_once 'Comment.php';
-							$comment = new Comment();
 							foreach($rows as $row ){
-							$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id']);
-							
+								$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id']);
 								if($count++ % 2 == 0){
 									$left_content.= $content;
 								}else{
@@ -284,10 +301,10 @@
 							}
 							
 							$passed_event_num = sizeof($rows);
-							include_once 'User_Upcoming_Event.php';
-							$upcoming_evt = new User_Upcoming_Event();
-							$upcoming_event_num = $upcoming_evt->getUpComingEventNumForUser($user_id);
-							
+							// include_once 'User_Upcoming_Event.php';
+// 							$upcoming_evt = new User_Upcoming_Event();
+// 							$upcoming_event_num = $upcoming_evt->getUpComingEventNumForUser($user_id);
+// 							
 							$user = new User_Table();
 							$firstname = $user->getUserFirstNameByUserIden($user_id);
 							$gender_call = $user->getWhatShouldCallForUser($user_id);

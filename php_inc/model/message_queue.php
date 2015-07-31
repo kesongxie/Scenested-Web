@@ -69,7 +69,7 @@
 					FROM group_message 
 					LEFT JOIN groups
 					ON group_message.group_id = groups.id WHERE groups.user_in LIKE ? AND  group_message.view_list NOT LIKE ? AND group_message.user_id != ?
-				) dum 
+				) dum ORDER BY sent_time ASC
 			");
 			if($stmt){
 				$user_in_group = '%'.$user_in_group.'%';

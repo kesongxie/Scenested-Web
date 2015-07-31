@@ -1884,16 +1884,22 @@ $(document).ready(function(){
 	$('body').on({
 		click:function(){
 			var thisE = $(this);
-			var key =thisE.parents('.evt-block').attr('data-key');
+			var parentDiv = thisE.parents('.evt-block');
+			var key =parentDiv.attr('data-key');
 			if(key.trim() == ''){
 				return false;
 			}
+			var joined_num_div = parentDiv.find('.joined-num');
+			var joined_label = parentDiv.find('.joined-label');
 			$.ajax({
 				url:AJAX_DIR+'joinEvent.php',
 				method:'post',
 				data:{key:key},
 				success:function(resp){
 					console.log(resp);
+					var joined_num = joined_num_div.text();
+					joined_num_div.text(++joined_num);
+					joined_label.text('people going');
 					thisE.removeClass('evt-join').addClass('evt-joined').text('Joined');
 					refreshMessage();
 				}
@@ -1908,12 +1914,20 @@ $(document).ready(function(){
 			var thisE = $(this);
 			var parentDiv = thisE.parents('.evt-block');
 			var key = parentDiv.attr('data-key');
+			var joined_num_div = parentDiv.find('.joined-num');
+			var joined_label = parentDiv.find('.joined-label');
 			$.ajax({
 				url:AJAX_DIR+'unjoinEvent.php',
 				method:'post',
 				data:{key:key},
 				success:function(resp){
 					console.log(resp);
+					var joined_num = joined_num_div.text();
+					joined_num = (--joined_num > 1)?joined_num:1;
+					joined_num_div.text(joined_num);
+					if(joined_num < 2){
+						joined_label.text('person going');
+					}
 					thisE.removeClass('evt-joined').addClass('evt-join').text('Join');
 					refreshMessage();
 				}

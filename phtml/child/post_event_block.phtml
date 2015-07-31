@@ -91,14 +91,15 @@
 					<div class="evt-info"><?php echo $time; ?></div>
 					<div class="evt-info"><?php echo htmlentities($location) ?></div>
 					<div class="evt-info" style="position:relative;margin:0px;">
-						<div class="inline-blk  plain-lk pointer" title="<?php echo $joined_user_list; ?>" style="position:relative;color:#1C23AE;margin:0px 20px;">
-							<div class="joined-num inline-blk"><?php  echo $joined_user_num; ?></div>
+						<div class="inline-blk  plain-lk pointer joined-user-info">
+							<div class="joined-num inline-blk" ><?php  echo $joined_user_num; ?></div>
+							<div class="joined-label inline-blk" >
 							<?php if($joined_user_num > 1): ?>
 								people going
 							<?php else: ?>
 								person going							
 							<?php endif; ?>
-								
+							</div>
 						</div>
 					</div>
 				</div>

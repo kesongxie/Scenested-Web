@@ -981,6 +981,15 @@ div.ui-datepicker{
 	float:right;
 }
 
+
+.evt-block .joined-user-info{
+	margin:0px 20px;
+}
+
+.evt-block .joined-user-info div{
+	color:#1C23AE;
+}
+
 /*ends with evt-block template*/
 
 
