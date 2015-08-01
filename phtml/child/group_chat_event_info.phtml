@@ -16,8 +16,23 @@
 	</div>
 </div>
 
-<div class="event-info-body" style="height:89%">
-	<!-- <div style="padding:14px;overflow:scroll"><?php echo ; ?></div> -->
+<div class="event-info-body evt-block child-scrollable" style="height:89%;overflow:scroll">
+	<div  style="padding:14px;">
+ 		<div class="content">
+			<div class="post-text">
+				<div class="visible-post-scope">
+					<div class="title"  style="font-size:16px;"><?php echo $title; ?></div>
+					<div class="visible-content limit-height">
+						<div class="desc" style="padding:0px 6px;font-size:14px;"><?php echo $description; ?></div>
+					</div>
+					<div class="evt-info-wrapper" style="margin-top:20px;">
+						<div class="evt-info"><?php echo $time; ?></div>
+						<div class="evt-info"><?php echo htmlentities($location) ?></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 

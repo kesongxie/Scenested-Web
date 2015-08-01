@@ -1867,7 +1867,6 @@ $(document).ready(function(){
 		click:function(){
 			var chat_box = $(this).parents('#chat-box');
 			var key = chat_box.find('.msg').attr('data-key');
-			
 			$.ajax({
 				url:AJAX_DIR+'load_event_group_joined_member.php',
 				method:'post',
@@ -1882,6 +1881,28 @@ $(document).ready(function(){
 		}
 	
 	},'#chat-box .joined-member');	
+	
+	$('body').on({
+		click:function(){
+			var chat_box = $(this).parents('#chat-box');
+			var key = chat_box.find('.msg').attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'load_event_group_event_info.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					chat_box.find('#main-conversation, #side-member').addClass('hdn');
+					var event_info = chat_box.find('#side-event-info');
+					event_info.html(resp).removeClass('hdn');
+					setVisibleContentWithParent(event_info, 'Read more');
+				}
+ 			});
+			
+		}
+	
+	},'#chat-box .event-info');	
+	
 	
 	
 	$('body').on({

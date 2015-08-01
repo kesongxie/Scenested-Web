@@ -221,7 +221,15 @@
 			return false;
 		}
 		
-		
+		public function getEventGroupEventInfoByGroupKey($group_key){
+			$group_id = $this->getGroupIdByGroupKey($group_key);
+			if($group_id !== false){
+				include_once 'Event_Group.php';
+				$e_g = new Event_Group();
+				return $e_g->getEventGroupEventInfoByGroupId($group_id);
+			}
+			return false;
+		}
 		
 	}
 ?>

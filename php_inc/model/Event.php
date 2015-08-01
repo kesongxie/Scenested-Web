@@ -56,6 +56,11 @@
 			return $this->getMultipleColumnsBySelector($column_array, 'interest_activity_id', $this->activity_id);	
 		}
 		
+		public function loadEventResourceByEventId($event_id){
+			$column_array = array('id','title','description','location','date','time');
+			return $this->getMultipleColumnsById($column_array,$event_id);	
+		}
+		
 		public function getPostText(){
 			return $this->getColumnBySelector('description', 'interest_activity_id', $this->activity_id);	
 		}
@@ -210,6 +215,20 @@
 			return $content;
 		}
 		
+		public function getEventInforByEventId($event_id, $group_id = false){
+			$evt_resource = $this->loadEventResourceByEventId($event_id);
+			if($evt_resource !== false){
+				$title = $evt_resource['title'];
+				$description = $evt_resource['description'];
+				$location = $evt_resource['location'];
+				$time = returnShortDate($evt_resource['date'],'-');
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'group_chat_event_info.phtml');
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
+		}
 		
 		
 	}

@@ -121,6 +121,16 @@
 			return false;
 		}
 		
+		public function getEventGroupEventInfoByGroupId($group_id){
+			$event_id = $this->getEventIdByGroupId($group_id);
+			if($event_id !== false){
+				include_once 'Event.php';
+				$e = new Event();
+				return $e->getEventInforByEventId($event_id, $group_id);
+			}
+			return false;
+		}
+		
 	}		
 	
 ?>

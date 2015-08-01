@@ -166,6 +166,10 @@ textarea{
 	margin-left:20px;
 }
 
+#side-event-info .evt-block .visible-control{
+	margin-left:6px;
+}
+
 .visible-control:hover{
 	color:#2459B6;
 }
