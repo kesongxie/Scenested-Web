@@ -5,6 +5,7 @@
 	//for page rendering 
 	define("ROOTDIR","http://localhost:8888/lsere/");
 	define("IMGDIR",ROOTDIR."media/");
+	define("E_IMGDIR",IMGDIR.'e/');
 	define("DEFAULT_IMAGE",IMGDIR.'default_image/');
 	define("U_IMGDIR",ROOTDIR."media_u/");
 	define("SEARCH_PEOPLE_PATH",ROOTDIR.'search.php?q=');

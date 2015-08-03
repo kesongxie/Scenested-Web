@@ -263,6 +263,13 @@
 			if($this->deleteRowForUserById($user_id, $interest_id)){
 				$this->interest_label_image->deleteLabelImageForUserByInterestId($user_id, $interest_id);
 				$this->interest_activity->deleteAllActivityForUserByInterestId($user_id,$interest_id);
+				include_once 'User_In_Interest.php';
+				$user_in = new User_In_Interest();
+				$user_in->deleteAllUserInByInterestId($user_id, $interest_id);
+				include_once 'Interest_Request.php';
+				$request = new Interest_Request();
+				$request->deleteAllRequestByInterestId($user_id, $interest_id);
+				
 			}
 		}
 		

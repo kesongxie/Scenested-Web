@@ -12,7 +12,7 @@
 
 	<?php if($user_interests !== false): ?>
 	<?php foreach($user_interests as $user_interest): //start display navi interests label ?>
-				<div class="interest-side-label interest-sider-navi pointer" data-labelfor="<?php echo $user_interest['id'];?>"  title="<?php echo htmlentities($user_interest['name']);?>"><div class="vertical-center"><img src="<?php echo $user_interest['picture_url']; ?>"><div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;"><?php echo htmlentities($user_interest['name']);?></div></div></div>	
+			<div class="interest-side-label interest-sider-navi pointer" data-labelfor="<?php echo $user_interest['id'];?>"  title="<?php echo htmlentities($user_interest['name']);?>"><div class="vertical-center"><img src="<?php echo $user_interest['picture_url']; ?>"><div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;"><?php echo htmlentities($user_interest['name']);?></div></div></div>	
  	<?php  endforeach;  //end display side ?>
 	<?php endif ?>
 </div>

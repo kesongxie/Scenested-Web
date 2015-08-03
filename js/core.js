@@ -21,7 +21,7 @@ function readURL(input,tg) {
 	}
 }
 
-
+//parent is the outer wrapper that contains all the popover-dialog-wrappers
 function showPopOverDialog(thisE, parent, content){
 		parent.find('.popover-dialog-wrapper').addClass('hdn');
 		var parentDiv = thisE.parents('.popover-throwable');
@@ -534,6 +534,15 @@ function loadGroupConversation(thisE){
 	});
 }
 
+function setVisibleForBlurAction(){
+	$('.side-blur-action').each(function(){
+		var parentDiv = $(this).parents('.side-block-wrapper');
+		if(parentDiv.find('.side-block-edit-wrapper').hasClass('hdn')){
+			$(this).addClass('hdn');
+		}
+	})
+}
+
 
 $(function(){
 	setInterval(function(){
@@ -568,6 +577,7 @@ $(function(){
 });
 
 
+
 $(document).keyup(function(evt){
 	if(evt.keyCode==27)
 	{	
@@ -577,7 +587,8 @@ $(document).keyup(function(evt){
 
 
 $(document).click(function(){
-	$('.popover').hide();
+	$('.popover').removeClass('act').hide();
+	setVisibleForBlurAction();
 });
 
 

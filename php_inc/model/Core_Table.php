@@ -67,9 +67,13 @@
 			return false;
 		}
 		
-		public function deleteRowBySelectorForUser($selector_column, $selector_value, $user_id){
+		public function deleteRowBySelectorForUser($selector_column, $selector_value, $user_id, $all = false){
 			$selector_column = $this->connection->escape_string($selector_column);
-			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? AND `user_id`=? LIMIT 1");
+			if($all){
+				$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? AND `user_id`=?");
+			}else{
+				$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? AND `user_id`=? LIMIT 1");
+			}
 			if($stmt){
 				$stmt->bind_param('si', $selector_value, $user_id);
 				if($stmt->execute()){
@@ -79,6 +83,7 @@
 			}
 			return false;
 		}
+		
 		
 		
 		
@@ -323,6 +328,24 @@
 			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1 ");
 			if($stmt){
 				$stmt->bind_param('s', $selector_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row[0];
+					 }
+				}
+			}
+			return false;
+		}
+		
+		public function getMultipleColumnsByUserId($column_array, $user_id){
+			$targets = implode('`,`',$column_array);
+			$targets = '`'.$targets.'`';
+			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `user_id` = ? LIMIT 1 ");
+			if($stmt){
+				$stmt->bind_param('i', $user_id);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){

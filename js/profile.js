@@ -96,6 +96,8 @@ function loadInterest(thisE){
 			}
 		});
 	}
+	thisE.parents('#i-interest-navi').find('.interest-side-label .txt_ofl').removeClass('red-act');
+	thisE.find('.txt_ofl').addClass('red-act');
 	setTimeout(function(){
 		thisE.css('-webkit-animation',"").css('animation',"");
 	},200);
@@ -502,6 +504,7 @@ $(document).ready(function(){
 				add_interest_w.css('-webkit-animation',"shake 0.5s").css('animation',"shake 0.5s");
 			}else{
 				activeSideBarLabel.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
+				activeSideBarLabel.find('.txt_ofl').removeClass('red-act');
 				$('#interest-content-wrapper').addClass('hdn');
 				add_interest_w.removeClass('hdn').css('-webkit-animation',"zoomIn 0.3s").css('animation',"zoomIn 0.3s");
 			}
@@ -520,6 +523,7 @@ $(document).ready(function(){
 			var activeSideBarLabel = $('#i-interest-navi').find('.interest-sider-navi[data-labelfor='+activelabelFor+']');
 			$('#add-new-interest-wrapper').addClass('hdn');
 			activeSideBarLabel.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
+			activeSideBarLabel.find('.txt_ofl').addClass('red-act');
 			$('#interest-content-wrapper').removeClass('hdn');
 			setTimeout(function(){
 				activeSideBarLabel.css('-webkit-animation',"").css('animation',"");
@@ -1099,9 +1103,236 @@ $(document).ready(function(){
 	
 	
 	
+	$('body').on({
+		mouseover:function(){
+			$(this).find('.side-blur-action.act').removeClass('hdn');
+		},
+		mouseleave:function(){
+			var popover = $(this).find('.action .in_con_opt_w');
+			if(!popover.hasClass('act') && $(this).find('.side-block-edit-wrapper').hasClass('hdn')){
+				$(this).find('.side-blur-action.act').addClass('hdn');
+			}
+		}
+	
+	},'.side-block-wrapper');
+	
+	$('body').on({
+		click:function(){
+			var actionDiv = $(this).parents('.action');
+			actionDiv.find('.in_con_opt_w').toggleClass('act').toggle();	
+			return false;
+		}
+	},'.side-block-wrapper .show-edit');
+	
+		$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.side-block-wrapper');
+			var editDiv = parentDiv.find('.side-block-edit-wrapper');
+			editDiv.addClass('hdn');
+			editDiv.find('.edit-input').addClass('hdn');
+			parentDiv.find('.front.act').removeClass('hdn');
+			parentDiv.find('.side-blur-action.show-edit').addClass('act').removeClass('hdn');
+			$(this).removeClass('act').addClass('hdn');
+			return false;
+		}
+	},'.side-block-wrapper .hide-edit');
+	
+	
+	$('body').on({
+		keyup:function(evt){
+			var thisE = $(this);
+			var name = thisE.val();
+			var parentDiv = thisE.parents('.side-block-wrapper');
+			var main = parentDiv.find('.side-block-main-wrapper');
+			var edit = parentDiv.find('.side-block-edit-wrapper');
+			var empty = parentDiv.find('.empty');
+			var input_wrapper = thisE.parents('.edit-input');
+			suggest = input_wrapper.find('.school-name-suggest');
+			if(name.trim() == ''){
+				suggest.html('').addClass('hdn');
+			}
+			if(evt.keyCode == 13){
+				if(name.trim() == ''){
+					showPopOverDialog(thisE, parentDiv, "Please add a name for your school");
+					return false;
+				}
+				$.ajax({
+					url:AJAX_DIR+'save_school.php',
+					method:'post',
+					data:{name:name},
+					success:function(resp){
+						console.log(resp);
+						if(resp != '1'){
+							empty.removeClass('act').addClass('hdn');
+							edit.removeClass('act').addClass('hdn');
+							main.addClass('act').removeClass('hdn');
+							main.find('.name').text(name);
+							suggest.html(resp).removeClass('hdn');
+							parentDiv.find('.side-blur-action.hide-edit').removeClass('act').addClass('hdn');
+							parentDiv.find('.side-blur-action.show-edit').addClass('act').removeClass('hdn');
+							input_wrapper.addClass('hdn');
+						}else{
+							showPopOverDialog(thisE, parentDiv, "School name not found");
+						}
+					}	
+				});
+			}else{
+				$.ajax({
+					url:AJAX_DIR+'suggest_school.php',
+					method:'post',
+					data:{name:name},
+					success:function(resp){
+						suggest.html(resp).removeClass('hdn');
+					}	
+				});
+			}
+		},
+		blur:function(){
+			var parentDiv = $(this).parents('.popover-throwable');
+			var popOver = parentDiv.find('.popover-dialog-wrapper');
+			if(popOver.length > 0){
+				popOver.addClass('hdn');
+			}
+		}
+	
+	},'.side-block-wrapper .school-name-input-wrapper input');
+	
+	
+	
+	$('body').on({
+		keyup:function(evt){
+			var thisE = $(this);
+			var name = thisE.val();
+			var parentDiv = thisE.parents('.side-block-wrapper');
+			var main = parentDiv.find('.side-block-main-wrapper');
+			var edit = parentDiv.find('.side-block-edit-wrapper');
+			var empty = parentDiv.find('.empty');
+			var input_wrapper = thisE.parents('.edit-input');
+			suggest = input_wrapper.find('.major-name-suggest');
+			if(name.trim() == ''){
+				suggest.html('').addClass('hdn');
+			}
+			if(evt.keyCode == 13){
+				if(name.trim() == ''){	
+					showPopOverDialog(thisE, parentDiv, "Please add a name for the subject you study");
+					return false;
+				}
+				$.ajax({
+					url:AJAX_DIR+'save_major.php',
+					method:'post',
+					data:{name:name},
+					success:function(resp){
+						console.log(resp);
+						if(resp != '1'){
+							empty.removeClass('act').addClass('hdn');
+							edit.removeClass('act').addClass('hdn');
+							main.addClass('act').removeClass('hdn');
+							main.find('.name').text(name);
+							suggest.html(resp).removeClass('hdn');
+							parentDiv.find('.side-blur-action.hide-edit').removeClass('act').addClass('hdn');
+							parentDiv.find('.side-blur-action.show-edit').addClass('act').removeClass('hdn');
+							input_wrapper.addClass('hdn');
+						}else{
+							showPopOverDialog(thisE, parentDiv, "Major not found");
+						}
+					}	
+				})
+			}else{
+				$.ajax({
+					url:AJAX_DIR+'suggest_major.php',
+					method:'post',
+					data:{name:name},
+					success:function(resp){
+						console.log(resp);
+						suggest.html(resp).removeClass('hdn');
+					}	
+				});
+			}
+		},
+		blur:function(){
+			var parentDiv = $(this).parents('.popover-throwable');
+			var popOver = parentDiv.find('.popover-dialog-wrapper');
+			if(popOver.length > 0){
+				popOver.addClass('hdn');
+			}
+		}
+	
+	},'.side-block-wrapper .major-name-input-wrapper input');
 	
 	
 	
 	
 	
+	
+	
+	
+	
+	
+
+	
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.in_con_opt_w');
+			parentDiv.find('.main').addClass('hdn').css('left','-100%');
+			var int_group = parentDiv.find('.sub.educ');
+			var w = $(this).parents('.inner-w');
+			int_group.removeClass('hdn').animate({
+				'right':'0px'
+				},{
+				duration: 200,
+				complete: function() {
+					parentDiv.animate({
+					'height':int_group.height()
+					},100);
+					w.css('height',int_group.height());
+				}
+		  		});
+		}
+	},'.in_con_opt_w .main .update-education');
+
+
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.side-block-wrapper');
+			var edit_wrapper = parentDiv.find('.side-block-edit-wrapper');
+			parentDiv.find('.front').addClass('hdn');
+			edit_wrapper.removeClass('hdn');
+			edit_wrapper.find('.school-name-input-wrapper').removeClass('hdn');
+			parentDiv.find('.side-blur-action.show-edit').removeClass('act').addClass('hdn');
+			parentDiv.find('.side-blur-action.hide-edit').addClass('act').removeClass('hdn');
+			parentDiv.find('.title .in_con_opt_w').hide();
+		}
+	},'.side-block-wrapper .add-school');
+	
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.side-block-wrapper');
+			var edit_wrapper = parentDiv.find('.side-block-edit-wrapper');
+			parentDiv.find('.front').addClass('hdn');
+			edit_wrapper.removeClass('hdn');
+			edit_wrapper.find('.major-name-input-wrapper').removeClass('hdn');
+			parentDiv.find('.side-blur-action.show-edit').removeClass('act').addClass('hdn');
+			parentDiv.find('.side-blur-action.hide-edit').addClass('act').removeClass('hdn');
+			parentDiv.find('.title .in_con_opt_w').hide();
+		}
+	},'.side-block-wrapper .add-study');
+	
+	
+
+
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.school-name-input-wrapper');
+			parentDiv.find('.school-name-suggest').addClass('hdn');
+			parentDiv.find('input').val($(this).text().trim()).focus();
+			
+		}
+	},'.school-name-suggest .school-name-item');
+
+
+	
+
+
 });

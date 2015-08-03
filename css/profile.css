@@ -160,6 +160,7 @@
 	width: 100%;
 	min-width: 693px;
 	border-bottom: 1px solid #EEEEEE;
+	padding-left:14px;
 }
 
 #profile-sider-bar-right #profile-navigation-bar .navi-item {
@@ -335,4 +336,39 @@ div#favor-evt-label-wrapper{
 div#favor-evt-label-wrapper .favor-evt-wrapper{
 	margin-bottom:2px;
 }
+
+/*starts side block template*/
+
+.side-block-wrapper{
+	padding:10px 10px 12px 10px;
+	margin-top:20px;
+	position:relative;
+}
+
+.side-block-wrapper .side-block-edit-wrapper{
+	width:100%;
+	background:#fff;
+	margin-top:10px;
+}
+
+.side-block-wrapper .side-block-main-wrapper{
+	margin-top:12px;
+}
+
+.side-block-wrapper .title-text{
+	color:#1E1E1E;
+	font-weight:bold;
+	font-size:16px;
+}
+/*ends side block template*/
+.suggest-item .text{
+	font-size:13px;
+	color:#6E6E73;
+}
+
+/* 
+.suggest-item:hover{
+	color:#48489D;
+}
+ */
 

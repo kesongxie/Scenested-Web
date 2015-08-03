@@ -744,7 +744,7 @@ div.ui-datepicker{
 	float: left;
 	height: 44px;
 	width: 44px;
-	box-shadow:1px 1px 3px #777777;
+	/* box-shadow:1px 1px 3px #777777; */
 	/* box-shadow:1px 1px 3px #C6C6C6 */
 }
 .post-wrapper{
@@ -1302,3 +1302,12 @@ img.gallery-navi{
  	left:91px;
  	border-bottom:10px solid #FFFFFF;
 }
+
+.suggest-item{
+	height:40px;
+	padding:10px;
+	border-bottom:1px solid #f0f0f0;
+	cursor:default;
+}
+
+

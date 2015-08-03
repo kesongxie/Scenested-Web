@@ -304,6 +304,10 @@
 			return false;
 		}
 		
+		
+		public function deleteAllUserInByInterestId($user_id, $interest_id){
+			$this->deleteRowBySelectorForUser('interest_id', $interest_id, $user_id, true);
+		}
 			
 		
 	}

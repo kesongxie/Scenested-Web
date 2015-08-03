@@ -1,4 +1,3 @@
-
 function loadFriend(thisE){
 	var  label_key = thisE.attr('data-labelfor');
 	var inner_wrapper = $('#friend-content-wrapper').find('.friend-content-inner-wrapper[data-key='+label_key+']'); //block for selected interest
@@ -24,6 +23,8 @@ function loadFriend(thisE){
 			}
 		});
 	}
+	thisE.parents('#friend-interest-navi').find('.interest-side-label .txt_ofl').removeClass('red-act');
+	thisE.find('.txt_ofl').addClass('red-act');
 	setTimeout(function(){
 		thisE.css('-webkit-animation',"").css('animation',"");
 	},200);
