@@ -16,7 +16,7 @@
 			return false;
 		}
 		
-		public static function getSchooIdByMajorName($major_name){
+		public static function getMajorIdByMajorName($major_name){
 			$database_connection = new Database_Connection();
 			$stmt = $database_connection->getConnection()->prepare("SELECT `id` FROM `Major` WHERE `major_name` = ? LIMIT 1 ");
 			$major_name = trim($major_name);

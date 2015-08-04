@@ -1,19 +1,33 @@
 <?php
 	include_once 'core_table.php';
 	include_once 'School.php';
+	include_once 'Major.php';
 	class Education extends Core_Table{ 
 		private  $table_name = "education";
 		public function __construct(){
 			parent::__construct($this->table_name);
 		}
 		
+		
+		
+		public function getSchoolIdByUserId($user_id){
+			$school_id = $this->getColumnByUserId('school_id',$user_id);
+			return $school_id;
+		}
+		
+		
 		public function getEducationByUserId($user_id){
-			$education = $this->getMultipleColumnsByUserId(array('school_id','study'),$user_id);
+			$education = $this->getMultipleColumnsByUserId(array('school_id','major_id'),$user_id);
 			if($education !== false){
-				$school_name = School::getSchoolNameBySchoolId($education['school_id']);
-				if($school_name !== false){
-					return array('school_name'=>$school_name, 'study'=>$education['study']);
+				$school_name = false;
+				$major_name = false;
+				if($education['school_id'] !== null){
+					$school_name = School::getSchoolNameBySchoolId($education['school_id']);
 				}
+				if($education['major_id'] !== null){
+					$major_name = Major::getMajorNameByMajorId($education['major_id']);
+				}
+				return array('school_name'=>$school_name, 'study'=>$major_name);
 			}
 			return false;
 		}
@@ -36,6 +50,78 @@
 			}
 			return false;
 		}
+		
+		public function addMajorForUser($major_name){
+			$major_id = Major::getMajorIdByMajorName($major_name);
+			if($major_id !== false){
+				if($this->isRowForUserExists($_SESSION['id'])){
+					$this->setColumnByUserId('major_id', $major_id, $_SESSION['id']);
+					return true;
+				}else{
+					$hash =  $this->generateUniqueHash();
+					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`school_id`,`hash`) VALUES(?,  ?, ?)");
+					$stmt->bind_param('iis',$_SESSION['id'], $school_id, $hash);
+					if($stmt->execute()){
+						$stmt->close();
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		
+		public function returnMatchedUserForMineInterest(){
+			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
+			$interest_like = '';
+			if($mine_interests !== false){
+				foreach($mine_interests as $interest){
+ 					$interest_like .= $interest['name'].'|';	
+				}
+				$interest_like = trim($interest_like,'|');
+				include_once 'Education.php';
+				$edu = new Education();
+				$school_id = $edu->getSchoolIdByUserId($_SESSION['id']);
+				if($school_id !== false){
+					//use random offset to get random user
+					$stmt = $this->connection->prepare("
+					SELECT DISTINCT user.id,    CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM education 
+					LEFT JOIN user
+					ON education.user_id=user.id
+					LEFT JOIN interest
+					ON user.id = interest.user_id
+					AND user.id !=? WHERE (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
+						
+					");
+				}
+				if($stmt){
+					if($school_id !== false){
+						$stmt->bind_param('issi',$_SESSION['id'],$interest_like,$interest_like, $school_id);
+					}
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							var_dump($row);
+							return $row;
+						 }
+					}
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 
 ?>

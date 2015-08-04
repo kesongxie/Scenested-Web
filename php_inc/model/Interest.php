@@ -163,10 +163,7 @@
 				$left_content = "";
 				$right_content = "";
 				$labelImage = $this->interest_label_image->hasLabelImageForInterest($interest['id']);
-				
 				$experience = $this->translateExperienceByNumber($interest['experience']);
-				
-				
 				ob_start();
 				include(TEMPLATE_PATH_CHILD.'interest_profile.phtml');
 				$interest_profile = ob_get_clean();
@@ -286,27 +283,73 @@
 		}
 		
 		public function returnMatchedUserBySearchkeyWord($key_word, $limit){
-			if($limit > 0){
-				$stmt = $this->connection->prepare("
-				SELECT DISTINCT user.id,CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-				FROM user 
-				LEFT JOIN interest
-				ON interest.user_id=user.id  WHERE interest.name LIKE ? || interest.description LIKE ? ORDER BY `id` ASC LIMIT ?
-				");
+			include_once 'Education.php';
+			$edu = new Education();
+			$school_id = $edu->getSchoolIdByUserId($_SESSION['id']);
+			if($school_id !== false){
+				if($limit > 0){
+					$stmt = $this->connection->prepare("
+					SELECT DISTINCT user.id,CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id 
+					LEFT JOIN education
+					ON user.id = education.user_id
+					WHERE (interest.name LIKE ? || interest.description LIKE ?) AND education.school_id = ? 
+					UNION 
+					SELECT DISTINCT user.id,CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id  WHERE interest.name LIKE ? || interest.description LIKE ? 
+					LIMIT ?
+					");
+				}else{
+					$stmt = $this->connection->prepare("
+					SELECT DISTINCT user.id,CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id 
+					LEFT JOIN education
+					ON user.id = education.user_id
+					WHERE (interest.name LIKE ? || interest.description LIKE ?) AND education.school_id = ? 
+					UNION 
+					SELECT DISTINCT user.id,CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id  WHERE interest.name LIKE ? || interest.description LIKE ? 
+					");
+				}
 			}else{
+				if($limit > 0){
 				$stmt = $this->connection->prepare("
-				SELECT DISTINCT user.id,CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-				FROM user 
-				LEFT JOIN interest
-				ON interest.user_id=user.id  WHERE interest.name LIKE ? || interest.description LIKE ?  ORDER BY `id` ASC
-				");
+					SELECT DISTINCT user.id,CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id  WHERE interest.name LIKE ? || interest.description LIKE ? LIMIT ?
+					");
+				}else{
+					$stmt = $this->connection->prepare("
+					SELECT DISTINCT user.id,CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id  WHERE interest.name LIKE ? || interest.description LIKE ? 
+					");
+				}
 			}
 			if($stmt){
 				$key_word = '%' .$key_word. '%';
-				if($limit > 0){
-					$stmt->bind_param('ssi',$key_word,$key_word, $limit);
+				if($school_id !== false){
+					if($limit > 0){
+						$stmt->bind_param('ssissi',$key_word,$key_word, $school_id, $key_word,$key_word, $limit);
+					}else{
+						$stmt->bind_param('ssiss',$key_word,$key_word, $school_id, $key_word,$key_word);
+					}
 				}else{
-					$stmt->bind_param('ss',$key_word,$key_word);
+					if($limit > 0){
+						$stmt->bind_param('ssi',$key_word,$key_word, $limit);
+					}else{
+						$stmt->bind_param('ss',$key_word,$key_word);
+					}
 				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
@@ -323,8 +366,6 @@
 		
 		
 		
-		
-		
 		public function returnMatchedUserForMineInterest(){
 			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
 			$interest_like = '';
@@ -333,16 +374,40 @@
  					$interest_like .= $interest['name'].'|';	
 				}
 				$interest_like = trim($interest_like,'|');
-				
-				//use random offset to get random user
-				$stmt = $this->connection->prepare("
-				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-				FROM user 
-				LEFT JOIN interest
-				ON interest.user_id=user.id  AND user.id !=? WHERE interest.name REGEXP ?  || interest.description REGEXP ? ORDER BY `id` ASC
-				");
+				include_once 'Education.php';
+				$edu = new Education();
+				$school_id = $edu->getSchoolIdByUserId($_SESSION['id']);
+				if($school_id !== false){
+					//use random offset to get random user
+					$stmt = $this->connection->prepare("
+					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id
+					LEFT JOIN education
+					ON user.id = education.user_id
+					AND user.id !=? WHERE (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
+					UNION
+					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id  AND user.id !=? WHERE interest.name REGEXP ?  || interest.description REGEXP ? 
+					
+					");
+				}else{
+					$stmt = $this->connection->prepare("
+					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id  AND user.id !=? WHERE interest.name REGEXP ?  || interest.description REGEXP ?
+					");
+				}
 				if($stmt){
-					$stmt->bind_param('iss',$_SESSION['id'],$interest_like,$interest_like);
+					if($school_id !== false){
+						$stmt->bind_param('issiiss',$_SESSION['id'],$interest_like,$interest_like, $school_id,$_SESSION['id'],$interest_like,$interest_like);
+					}else{
+						$stmt->bind_param('iss',$_SESSION['id'],$interest_like,$interest_like);
+					}
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
 						 if($result !== false && $result->num_rows >= 1){
@@ -452,6 +517,9 @@
 						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
 						$user_id = $u['id'];
 						$result_array = array();
+						include_once 'Education.php';
+						$educ = new Education();
+						$education = $educ->getEducationByUserId($u['id']);
 						
 						$interest_list = '';
  						if($rows !== false){
@@ -482,9 +550,6 @@
 		}
 		
 		
-		
-		
-		
 		public function getSimilarInterestBlock(){
 			include_once 'User_Profile_Picture.php';
 			$interest  = new Interest();
@@ -499,9 +564,6 @@
 			}
 			return $content;
 		}
-		
-		
-		
 		
 		
 	}

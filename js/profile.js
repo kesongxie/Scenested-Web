@@ -1227,7 +1227,7 @@ $(document).ready(function(){
 							empty.removeClass('act').addClass('hdn');
 							edit.removeClass('act').addClass('hdn');
 							main.addClass('act').removeClass('hdn');
-							main.find('.name').text(name);
+							main.find('.major').text(name);
 							suggest.html(resp).removeClass('hdn');
 							parentDiv.find('.side-blur-action.hide-edit').removeClass('act').addClass('hdn');
 							parentDiv.find('.side-blur-action.show-edit').addClass('act').removeClass('hdn');
@@ -1243,7 +1243,6 @@ $(document).ready(function(){
 					method:'post',
 					data:{name:name},
 					success:function(resp){
-						console.log(resp);
 						suggest.html(resp).removeClass('hdn');
 					}	
 				});
@@ -1298,7 +1297,9 @@ $(document).ready(function(){
 			var edit_wrapper = parentDiv.find('.side-block-edit-wrapper');
 			parentDiv.find('.front').addClass('hdn');
 			edit_wrapper.removeClass('hdn');
-			edit_wrapper.find('.school-name-input-wrapper').removeClass('hdn');
+			var input_wrapper = edit_wrapper.find('.school-name-input-wrapper');
+			input_wrapper.removeClass('hdn');
+			input_wrapper.find('input').focus();
 			parentDiv.find('.side-blur-action.show-edit').removeClass('act').addClass('hdn');
 			parentDiv.find('.side-blur-action.hide-edit').addClass('act').removeClass('hdn');
 			parentDiv.find('.title .in_con_opt_w').hide();
@@ -1312,7 +1313,9 @@ $(document).ready(function(){
 			var edit_wrapper = parentDiv.find('.side-block-edit-wrapper');
 			parentDiv.find('.front').addClass('hdn');
 			edit_wrapper.removeClass('hdn');
-			edit_wrapper.find('.major-name-input-wrapper').removeClass('hdn');
+			var input_wrapper = edit_wrapper.find('.major-name-input-wrapper');
+			input_wrapper.removeClass('hdn');
+			input_wrapper.find('input').focus();
 			parentDiv.find('.side-blur-action.show-edit').removeClass('act').addClass('hdn');
 			parentDiv.find('.side-blur-action.hide-edit').addClass('act').removeClass('hdn');
 			parentDiv.find('.title .in_con_opt_w').hide();
@@ -1331,6 +1334,14 @@ $(document).ready(function(){
 		}
 	},'.school-name-suggest .school-name-item');
 
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.major-name-input-wrapper');
+			parentDiv.find('.major-name-suggest').addClass('hdn');
+			parentDiv.find('input').val($(this).text().trim()).focus();
+			
+		}
+	},'.major-name-suggest .major-name-item');
 
 	
 

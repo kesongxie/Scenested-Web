@@ -30,7 +30,7 @@
 							?>
 								<div  class="in_con_border_top" style="padding:6px;cursor:default;" data-key="<?php echo $row['id'] ?>">
 							<?php else:?>
-								<div  class="in_con_w_opt_it in_con_border_top selectable" style="padding:6px;" data-key="<?php echo $row['id'] ?>">
+								<div  class="in_con_w_opt_it in_con_border_top selectable" title="Connect to my <?php echo $row['name'] ?> interest group" style="padding:6px;" data-key="<?php echo $row['id'] ?>">
 							<?php endif; ?>	<!--ends first sent if-->
 								<img class="label-image" src="<?php echo $row['picture_url']; ?>" />
 								<div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;"><?php echo $row['name'] ?></div>

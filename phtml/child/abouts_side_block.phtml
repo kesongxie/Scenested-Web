@@ -44,14 +44,14 @@
 	<?php endif; ?>
 	
 	
-		<div class="side-block-main-wrapper front<?php echo ($education === false)?' hdn':' act' ?>">
-			<div class="name plain-lk pointer" style="color:rgb(48, 51, 198)">
-			<?php if($education !== false): ?>
-				<?php echo $education['school_name']; ?>
-			<?php endif; ?>	
-			</div>
-			<!-- <div style="font-size:12px;margin-top:2px;"><?php echo htmlentities($education['study']); ?></div> -->
-		</div>	
+	<div class="side-block-main-wrapper front<?php echo ($education === false)?' hdn':' act' ?>">
+		<div class="name plain-lk pointer" style="color:rgb(48, 51, 198)">
+		<?php if($education !== false): ?>
+			<?php echo $education['school_name']; ?>
+		<?php endif; ?>	
+		</div>
+		<div class="major" style="font-size:12px;margin-top:2px;"><?php echo htmlentities($education['study']); ?></div>
+	</div>	
 	
 		
 	
@@ -61,22 +61,9 @@
 	<?php if($user_id == $_SESSION['id']): ?>
 		You haven't added something about you yet, <span id="show-favor-edit" class="plain-lk pointer" style="color:#062AA3">Let your friends know</span>
 	<?php else:  ?>
-		<?php echo $fullname ?> hasn't updated something about
+		<?php echo $firstname ?> hasn't updated something about
 	<?php endif; ?>
 	</div>	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 </div>
 

@@ -91,7 +91,10 @@
   							}
  						}
  						$interest_list = trim($interest_list,', ');
- 						
+ 						include_once 'Education.php';
+						$educ = new Education();
+						$education = $educ->getEducationByUserId($u['id']);
+						
  						
 						ob_start();
  						include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
@@ -99,10 +102,7 @@
  						ob_start();
  						include(TEMPLATE_PATH_CHILD.'search_people_profile_wrapper.phtml');
  						$search_for_name_block .= ob_get_clean();
-				
-					
-			}
-				
+				}
 				ob_start();
 				include(TEMPLATE_PATH_CHILD.'search_people_result_wrapper.phtml');
 				$content = ob_get_clean();
@@ -118,6 +118,11 @@
 			
 			return $content;
 		}
+		
+		
+		
+		
+		
 		
 	
 		public function getContentForInterestType(){
@@ -149,11 +154,7 @@
 						}
 						
 						$result_array = array_merge($result_array,$rows);
-						
-						
-						
- 						$interest_list = '';
- 						
+						$interest_list = '';
  						if($result_array !== false){
 							$results = array_slice($result_array,0,2);
 							$count = 1;
@@ -166,6 +167,10 @@
 								$count++;
 							}
  						}
+ 						
+ 						include_once 'Education.php';
+						$educ = new Education();
+						$education = $educ->getEducationByUserId($u['id']);
  						
 						ob_start();
  						include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
@@ -204,6 +209,13 @@
 			return $content;	
 		}
 		
+		public function getContentForSchoolType(){
+			include_once 'Education.php';
+			$educ = new Education();
+			$result_found = $educ->returnMatchedUserBySearchkeyWord($this->search_keyword,-1);
+			var_dump($result_found);
+		
+		}
 		
 	
 		public function getSearchBarResult(){
@@ -331,7 +343,9 @@
   							}
  						}
  						$interest_list = trim($interest_list,', ');
- 						
+ 						include_once 'Education.php';
+						$educ = new Education();
+						$education = $educ->getEducationByUserId($u['id']);
  						
 						ob_start();
  						include(TEMPLATE_PATH_CHILD.'user_profile.phtml');

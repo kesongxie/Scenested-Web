@@ -162,24 +162,65 @@
 		
 		
 		public function returnMatchedUserBySearchkeyWord($key_word, $limit){
-			if($limit > 0){
-				$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `activated` = '1' LIMIT ? ");
+			//Get the user education
+			include_once 'Education.php';
+			$edu = new Education();
+			$school_id = $edu->getSchoolIdByUserId($_SESSION['id']);
+			if($school_id !== false){
+				if($limit > 0){
+					$stmt = $this->connection->prepare("
+					SELECT DISTINCT user.id,  CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url
+					FROM user
+					LEFT JOIN education
+					ON user.id = education.user_id 
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND user.activated = '1' AND education.school_id = ?
+					UNION 
+					SELECT  DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url
+					FROM user
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND user.activated = '1' 
+					LIMIT ?
+					");
+				}else{
+					$stmt = $this->connection->prepare("
+					SELECT DISTINCT user.id,  CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url
+					FROM user
+					LEFT JOIN education
+					ON user.id = education.user_id 
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND user.activated = '1' AND education.school_id = ?
+					UNION 
+					SELECT  DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url
+					FROM user
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND user.activated = '1' 
+					");
+				}
 			}else{
-				$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `activated` = '1'");
+				if($limit > 0){
+					$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `activated` = '1' LIMIT ? ");
+				}else{
+					$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `activated` = '1'");
+				}
 			}
 			if($stmt){
 				$key_word = '%' .$key_word. '%';
-				if($limit > 0){
-					$stmt->bind_param('si',$key_word, $limit);
+				if($school_id !== false){
+					if($limit > 0){
+						$stmt->bind_param('sisi',$key_word,$school_id,$key_word, $limit);
+					}else{
+						$stmt->bind_param('sis',$key_word, $school_id, $key_word);
+					}
 				}else{
-					$stmt->bind_param('s',$key_word);
+					if($limit > 0){
+						$stmt->bind_param('si',$key_word, $limit);
+					}else{
+						$stmt->bind_param('s',$key_word);
+					}
 				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
 						$row = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						return $row;
+					 	return $row;
 					 }
 				}
 			}
