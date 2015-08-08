@@ -70,42 +70,47 @@
 			return false;
 		}
 		
-		public function returnMatchedUserForMineInterest(){
-			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
+		public function returnMatchedUserForSchool($school_name){
+			include_once 'Interest.php';
+			$interest = new Interest();
+			$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
 			$interest_like = '';
 			if($mine_interests !== false){
 				foreach($mine_interests as $interest){
  					$interest_like .= $interest['name'].'|';	
 				}
 				$interest_like = trim($interest_like,'|');
-				include_once 'Education.php';
-				$edu = new Education();
-				$school_id = $edu->getSchoolIdByUserId($_SESSION['id']);
-				if($school_id !== false){
+				$search_school_id = School::getSchooIdBySchoolName($school_name);
+			
+				if($search_school_id !== false){
 					//use random offset to get random user
 					$stmt = $this->connection->prepare("
-					SELECT DISTINCT user.id,    CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 					FROM education 
 					LEFT JOIN user
 					ON education.user_id=user.id
 					LEFT JOIN interest
 					ON user.id = interest.user_id
-					AND user.id !=? WHERE (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
-						
+					WHERE education.school_id = ? AND (interest.name REGEXP ?  || interest.description REGEXP ?) AND user.id !=? 
+					
+					UNION 
+					
+					SELECT DISTINCT user.id,  CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM education 
+					LEFT JOIN user
+					ON education.user_id=user.id
+					WHERE  education.school_id = ?  AND user.id !=? 
 					");
-				}
-				if($stmt){
-					if($school_id !== false){
-						$stmt->bind_param('issi',$_SESSION['id'],$interest_like,$interest_like, $school_id);
-					}
-					if($stmt->execute()){
-						 $result = $stmt->get_result();
-						 if($result !== false && $result->num_rows >= 1){
-							$row = $result->fetch_all(MYSQLI_ASSOC);
-							$stmt->close();
-							var_dump($row);
-							return $row;
-						 }
+					if($stmt){
+						$stmt->bind_param('issiii',$search_school_id, $interest_like,$interest_like,$_SESSION['id'],$search_school_id, $_SESSION['id']);
+						if($stmt->execute()){
+							 $result = $stmt->get_result();
+							 if($result !== false && $result->num_rows >= 1){
+								$row = $result->fetch_all(MYSQLI_ASSOC);
+								$stmt->close();
+								return $row;
+							 }
+						}
 					}
 				}
 			}

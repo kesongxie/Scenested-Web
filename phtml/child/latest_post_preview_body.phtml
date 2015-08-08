@@ -1,0 +1,9 @@
+<div style="margin: 8px 16px 10px 16px; line-height: 1.48;margin-bottom:18px;">
+	<?php if($photo !== false && isMediaDisplayable($photo_url)): ?>
+		<div class="interest-image-label">
+			<img style="height:30px;width:30px;border-radius:4px" src="<?php echo U_IMGDIR.$photo_url; ?>">
+		</div>
+	<?php endif; ?>
+	<div style="color: #525252;font-weight: bold;"><?php echo $date ?></div>
+	<div><?php echo htmlentities($description) ?></div>
+</div>

@@ -1,6 +1,5 @@
 <?php
 	include_once 'core_table.php';
-	include_once 'Interest_Activity.php';
 	include_once 'User_Interest_Label_Image.php';
 	
 	class Interest extends Core_Table{
@@ -9,6 +8,7 @@
 		private $similar_interest_block_template_path = TEMPLATE_PATH_CHILD."similar_interest_block.phtml";
 		public function __construct(){
 			parent::__construct($this->table_name);
+			include_once 'Interest_Activity.php';
 			$this->interest_label_image = new User_Interest_Label_Image();
 			$this->interest_activity = new Interest_Activity();
 		}

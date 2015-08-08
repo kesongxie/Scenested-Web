@@ -56,10 +56,9 @@
 			
 			//delete the row itself
 			$this->deleteRowByNumericSelector('interest_activity_id', $this->activity_id);
-			
-
 		}
 		
+			
 
 	}
 ?>

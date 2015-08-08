@@ -1,128 +1,37 @@
 <?php
 	  include_once SCRIPT_INCLUDE_BASE.'php_inc/global_constant.php'; 
 ?>
-<div class="interest-profile post">
+<div class="interest-profile interest-content-inner-wrapper post">
 	<div class="interest-profile-intro sub">
 		<div class="dialog-header">
 			<div class="dialog-header-inner">
-				<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center main-title" title="<?php echo $interest['name'] ?>"><?php echo htmlentities($interest['name']); ?></div></div>
+				<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center main-title" title="<?php echo htmlentities($interest_name) ?>"><?php echo htmlentities($interest_name); ?></div></div>
 
 				<div class="inline-blk right-align dialog-header-right-item">
-				<?php  if($interest['user_id'] == $_SESSION['id']): ?>
-					<div class="bar-title dialog-header-bar-option inline-blk pointer side-title post" style="width:34%"><div class="vertical-center" >Post</div></div>
-				<?php  endif; ?>
+				<div class="bar-title dialog-header-bar-option inline-blk pointer side-title post" style="width:34%"><div class="vertical-center" >Post</div></div>
 				<div class="bar-title dialog-header-bar-option inline-blk pointer option side-title" style="width:34%"><div class="vertical-center" ><img src="<?php  echo IMGDIR ?>menu_navi_icon.png" width="20" height="13"></div></div>
 				</div>
 			</div>
 		</div>
 		<div class="dialog-body">
-			<div class="visible-post-scope">
-				<div class="visible-content limit-height">
-					<?php if($labelImage !== false && is_url_exist($labelImage)): ?>
-						<div class="interest-image-label">
-							<img src="<?php echo $labelImage ?>" />
-						</div>
-					<?php  endif;?>
-					<?php  if($interest['description'] != ''):?>
-					<?php if(substr($interest['description'],1,1)!=' ') :?>
-						<span  class="first-cap" style="margin-right:-3px;"><?php echo strtoupper(substr($interest['description'],0,1))?></span>
-					<?php else: ?>
-						<span class="first-cap" ><?php echo strtoupper(substr($interest['description'],0,1))?></span>
-					<?php endif; ?>
-					<span><?php echo htmlentities(substr($interest['description'],1)); ?></span>
-					<?php else: ?>
-						<span class="default-message">There is no description available for this interest yet</span>
-					<?php endif; ?>
-				</div>
-			</div>
-		
-			<div class="clr right-align exp" style="margin:0px 20px 16px 0px">
-				<?php echo $experience; ?>
-			</div>
-			
+			<?php echo $body; ?>
 		</div>
 		
 		<div class="in_con_opt_w popover" style="top:38px;right:7px;">
 			<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
 				<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
-				<?php  if($interest['user_id'] == $_SESSION['id']): ?>
-						<div class="in_con_w_opt_it edit_interest">Edit</div>
-				<?php  endif; ?>	
-						<div class="in_con_w_opt_it">Interest Friends</div>
-				<?php  if($interest['user_id'] == $_SESSION['id']): ?>
-						<div class="in_con_w_opt_it remove_interest">Remove This Interest</div>
-				<?php  endif; ?>
+				
 			</div>
 		</div>
 		
 	</div>
 	
-	<div class="interest-profile-edit hdn sub">
-		<div class="dialog-header">
-			<div class="dialog-header-inner">
-				<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center" title="Guitar and Music">Edit Interest</div></div>
-			</div>
-		</div>
-		<div class="dialog-body">
 
-			<div style="margin:10px 12px 0px 12px;">
-				<div style="position:relative">
-					<label class="pointer" title="Upload a picture label for your interest">
-						<div class="picture-upload-wrapper">
-								<?php if($labelImage !== false && is_url_exist($labelImage)): ?>
-										<img class="target-image"  src="<?php echo $labelImage ?>" height="36" width="36">
-								<?php else: ?>
-										<img class="target-image hdn"  src="" height="36" width="36">
-								<?php  endif;?>
-							
-								<div class="picture-upload-black-overlay"></div>
-								<div class="camera-center vertical-center" ><img class="camera-icon"  src="<?php echo IMGDIR ?>camera.png"  height="18" width="18"></div>
-						</div>
-						<form method="POST" enctype="multipart/form-data">
-							<input class="interest-picture hdn-input" data-key="<?php echo $interest['id'] ?>" data-set="false" type="file" name="picture-label" title="Upload a picture label for your interest">
-						</form>
-				
-					</label>
-	
-					<div class="in-name-input-wrapper">
-						<input type="text"  class="in-ed-input in-txt-n" value="<?php echo htmlentities($interest['name']); ?>" maxlength="32" placeholder="Add a name for your interest" title="add an name for your interest">
-					</div>
-					<textarea class="in-ed-input" style="height:80px;margin-top:3px;" placeholder="Let your friends know more about your interest, like experience, favoriate event, etc... "  title="add some descriptions about your interest"><?php echo htmlentities($interest['description']); ?></textarea>
-					<div style="text-align:right;padding:10px 0px">
-						<select class="ep">
-						
-							<option data-option="-1" <?php echo (($interest['experience']==-1)?'selected':'')  ?>>Add your experience</option>
-							<option data-option="0" <?php echo (($interest['experience']==0)?'selected':'')  ?>>less than 1 Year</option>
-							<option data-option="1" <?php echo (($interest['experience']==1)?'selected':'')  ?>>1 Year</option>
-							<?php
-								for($i = 2; $i<=10; $i++){
-									if($i == $interest['experience']){
-										echo '<option data-option="'.$i.'" selected>'.$i.' Years</option>';
-									}else{
-										echo '<option data-option="'.$i.'">'.$i.' Years</option>';
-									}
-								}
-							?>
-							<option data-option="11" <?php echo (($interest['experience']==11)?'selected':'')  ?>>more than 10 years</option>
-						</select>
-					</div>	
-					<div class="edit-dialog-footer">
-							<div class="inline-blk cancel-button">Cancel</div>
-						<div class="inline-blk action-button update_interest" style="margin-left:4px;">Update</div>
-					</div>
-					<div class="loading-icon-wrapper" style="border-radius:0px;"><div class="vertical-center" style="text-align:center;"><img class="loading-icon" src="<?php  echo IMGDIR ?>loading_icon.gif" height="40" width="40"></div></div>
-
-				</div>
-			</div>
-		</div>
-	
-	</div>
-	
 	
 	<div class="interest-profile-moment interest-profile-post hdn sub">
 		<div class="dialog-header">
 			<div class="dialog-header-inner">
-				<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center" title="Guitar and Music"><?php echo htmlentities($interest['name']);  ?></div></div>
+				<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center" title="<?php  echo htmlentities($interest_name); ?>"><?php echo htmlentities($interest_name);  ?></div></div>
 				<div class="inline-blk right-align dialog-header-right-item">
 						<div class="bar-title dialog-header-bar-option inline-blk pointer bar-evt" style="width:40%;"><div class="vertical-center" style="font-size:13px;">Event</div></div>
 						
@@ -133,7 +42,7 @@
 		<div class="dialog-body">
 			<div style="margin:10px 12px 0px 12px;position:relative">
 				<div style="width:100%;text-align:center;">
-					<textarea class="desc" placeholder="How's your <?php echo htmlentities($interest['name']); ?> going..."></textarea>
+					<textarea class="desc" placeholder="How's your <?php  echo htmlentities($interest_name); ?> going..."></textarea>
 				</div>
 				<div style="border-top:1px dashed #f0f0f0;width:100%;" class="pointer center-align">
 					<input type="text" class="add-date" placeholder="Add a date for this moment">
@@ -172,7 +81,7 @@
 	<div class="interest-profile-event interest-profile-post hdn sub">
 		<div class="dialog-header">
 			<div class="dialog-header-inner">
-				<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center" title="Guitar and Music"><?php echo htmlentities($interest['name']);  ?></div></div>
+				<div class="inline-blk left-align dialog-header-left-item"><div class="bar-title vertical-center" title="<?php  echo htmlentities($interest_name);  ?>"><?php  echo htmlentities($interest_name);  ?></div></div>
 				<div class="inline-blk right-align dialog-header-right-item">
 						<div class="bar-title dialog-header-bar-option inline-blk pointer" style="width:40%;background-color:#8a0000;"><div class="vertical-center" title="Post an event you had experienced or a new hangout" style="font-size:13px;">Event</div></div>
 						

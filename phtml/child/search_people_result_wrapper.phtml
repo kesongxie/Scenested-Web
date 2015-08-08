@@ -2,6 +2,8 @@
 	<?php echo $search_for_name_block; ?>
 <?php elseif($search_for_interest_block !== null): ?>	
 	<?php echo $search_for_interest_block; ?>
+<?php elseif($search_for_school_block !== null): ?>	
+	<?php echo $search_for_school_block; ?>
 <?php else: ?>
 	<div>No match result found <a href="<?php echo SEARCH_SIMILAR_PEOPLE_PATH; ?>" class="plain-lk red-act" >Search people match your interests?</a></div>
 <?php endif;?>

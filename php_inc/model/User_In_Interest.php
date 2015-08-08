@@ -105,6 +105,31 @@
 		
 		
 		
+		public function getAllFriendsInUsersInterest(){
+			$stmt = $this->connection->prepare("
+			SELECT DISTINCT `user_id` FROM user_in_interest WHERE (`user_in` = ? AND `user_id` != ?)
+			UNION 
+			SELECT DISTINCT `user_in` FROM user_in_interest WHERE (`user_id` = ? AND `user_in` != ?)
+			");			
+			
+			if($stmt){
+				$stmt->bind_param('iiii',$_SESSION['id'], $_SESSION['id'], $_SESSION['id'], $_SESSION['id']);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+		
+		
 		public function getAllFriendsInUsersInterestByUserId($user_id, $limit_num = -1, $offset = 0){
 			if($limit_num > 0){
 				$stmt = $this->connection->prepare("
@@ -270,7 +295,9 @@
 								}
 								$interest_list = trim($interest_list,', ');
 						
-						
+								include_once 'Education.php';
+								$educ = new Education();
+								$education = $educ->getEducationByUserId($u['id']);
 								ob_start();
 								include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
 								$user_profile= ob_get_clean();

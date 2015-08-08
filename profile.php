@@ -36,5 +36,4 @@
 
 	require_once 'phtml/profile.phtml';
 	
-	
 ?>

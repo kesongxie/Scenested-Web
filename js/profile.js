@@ -285,7 +285,7 @@ $(document).ready(function(){
 	$('body').on({
 		click:function(){
 			var parentDiv = $(this).parents('.interest-content-inner-wrapper');
-			parentDiv.find('.interest-profile-event').addClass('hdn');
+			parentDiv.find('.interest-profile-event').addClass('hdn').css('-webkit-animation',"").css('animation','');
 			parentDiv.find('.interest-profile-moment').removeClass('hdn');
 		}
 	},'.bar-moment');
@@ -756,6 +756,7 @@ $(document).ready(function(){
 						image_file.val('');
 						description_txtarea.val('');
 						date_input.val('');
+						caption_input.val('');
 						doneWithInterestEditing(parentDiv);
 						inner_wrapper.find('.interest-content-right').prepend(resp);
 						setVisibleContent();
@@ -1166,7 +1167,7 @@ $(document).ready(function(){
 							empty.removeClass('act').addClass('hdn');
 							edit.removeClass('act').addClass('hdn');
 							main.addClass('act').removeClass('hdn');
-							main.find('.name').text(name);
+							main.find('.name').text(name).attr('href', DEFAULT_SEARCH_PATH+name);
 							suggest.html(resp).removeClass('hdn');
 							parentDiv.find('.side-blur-action.hide-edit').removeClass('act').addClass('hdn');
 							parentDiv.find('.side-blur-action.show-edit').addClass('act').removeClass('hdn');

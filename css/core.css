@@ -14,7 +14,7 @@ body{
 	min-width: 1150px;
 	max-width:1750px;
 	background-color:#fff;
-/* 	background-color:#FBFBFB */
+/* 	background-color:#FBFBFB; */
 	margin: 0px auto;
 	line-height: 1.5;
 	font-family:Gill, Helvetica, sans-serif;
@@ -738,22 +738,24 @@ div.ui-datepicker{
 
 .post-owner-picture{
 	border-radius: 50%;
+	/* border-radius:9%; */
 	cursor: pointer;
 	margin-right: 8px;
-	margin-top:-2px;
+/* 	margin-top:-2px; */
+	margin-top:1px;
 	float: left;
-	height: 44px;
-	width: 44px;
+	height: 40px;
+	width: 40px;
 	/* box-shadow:1px 1px 3px #777777; */
 	/* box-shadow:1px 1px 3px #C6C6C6 */
 }
 .post-wrapper{
 	box-shadow: 1px 1px 10px #E8E8E8;
 	padding: 12px;
-	margin-bottom: 20px;
+	margin-bottom: 14px;
 	background:#fff;
 	position:relative;
-	border:1px solid #EAEAEA;
+	border:1px solid #f0f0f0;
 	border-radius:4px;
 }
 
@@ -1051,6 +1053,7 @@ div.ui-datepicker{
 	bottom:-40px;
 	border-top:1px solid #f0f0f0;
 	width:100%;
+	background-color:#fff;
 }
 
 #chat-outer-wrapper .chat-header #chat-search{
@@ -1296,7 +1299,7 @@ img.gallery-navi{
 	z-index:99;
 }
 
-#chat-box .arrow-up{
+#chat-box #chat-box-header .arrow-up{
  	position:absolute;
  	top:-13px;
  	left:91px;
