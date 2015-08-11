@@ -16,7 +16,7 @@
 		
 		
 		
-		public function addEventInterestActivityForUserByInterestId($user_id,$interest_id, $title,$description,$location, $date, $evt_time, $attached_picture, $caption){
+		public function addEventInterestActivityForUserByInterestId($user_id,$interest_id, $title,$description,$location, $date, $evt_time, $attached_picture, $caption, $with_interest_name){
 			$unique_hash = $this->generateUniqueHash();
 			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`interest_id`,`type`,`post_time`,`hash`) VALUES(?, ?, ?, ?, ?)");
 			if($stmt){
@@ -32,7 +32,7 @@
 						return false;
 					}
 					$stmt->close();
-					return $this->getEventInterestActivityBlockByActivityId($interest_activity_id);
+					return $this->getEventInterestActivityBlockByActivityId($interest_activity_id, $with_interest_name);
 				}
 			}
 			return false;
@@ -61,8 +61,9 @@
 						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
 						$left_content = "";
-						$left_content = $this->getRecentPostPreview();						
+						$left_content = $this->getIndexAvator();						
 						$right_content = "";
+						$right_content = $this->getRecentPostPreview();			
 						$count = 1;
 						foreach($rows as $row){
 							$content = '';
@@ -90,7 +91,45 @@
 		
 		
 		
-	
+		public function getIndexAvator(){
+			include_once 'Interest.php';
+			$interest  = new Interest();
+			include_once 'User_Profile_Picture.php';
+			$profile = new User_Profile_Picture();
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			include_once 'Education.php';
+			$educ = new Education();
+			
+			$profile_pic = $profile->getLatestProfileImageForUser($_SESSION['id']);
+			$cover_pic =  $user->getLatestCoverForuser($_SESSION['id']);
+			$fullname = $user->getUserFullnameByUserIden($_SESSION['id']);
+			$rows = $interest->getInterestNameForUser($_SESSION['id'], 2);
+			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($_SESSION['id']);
+			$interest_list = '';
+			if($rows !== false){
+				$count = 1;
+				foreach($rows as $row){
+					if($count == sizeof($rows) -1 ){
+						$interest_list .= $row['name'].' and ';
+					}else if($count < sizeof($rows)){
+						$interest_list .= $row['name'].', ';
+					}else{
+						$interest_list .= $row['name'];
+					}
+					$count++;
+				}
+			}
+			$interest_list = trim($interest_list,', ');
+			$education = $educ->getEducationByUserId($_SESSION['id']);
+			
+			
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'index_avator.phtml');
+			$content= ob_get_clean();
+			return $content;
+ 		
+	}
 		
 		
 		public function getRecentPostPreview(){
@@ -101,25 +140,59 @@
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){
-						$rows = $result->fetch_assoc();
-						if($rows['type'] == 'm'){
-							$body =  $this->loadLatestMomentPostByActivityId($rows['id']);
-						}
+						$row = $result->fetch_assoc();
+						$recent_post =  $this->getRecentPostBlockByInterestId($row['interest_id'], $row['id'], $row['type']);
 						ob_start();
-						include_once MODEL_PATH.'Interest.php';
-						$interest = new Interest();
-						$interest_name = $interest->getInterestNameByInterestId($rows['interest_id']);
-						include(TEMPLATE_PATH_CHILD.'index_recent_post_preview_block.phtml');
+						include(TEMPLATE_PATH_CHILD.'index_post_wrapper.phtml');
 						$content = ob_get_clean();
 						return $content;
 					}
 				}
 			}
-		
-		
-		
 			return false;
 		}
+		
+		public function renderRecentByActivityIdAndType($activity_id, $type){
+			$body = false;
+			if($type == 'm'){
+				$body =  $this->loadLatestMomentPostByActivityId($activity_id);
+			}else if($type == 'e'){
+				$body =  $this->loadLatestEventPostByActivityId($activity_id);
+			}
+			return $body;
+		}
+		
+		
+		/* if $activity_id is not equal to false, then type must not be false*/
+		public function getRecentPostBlockByInterestId($interest_id, $activity_id = false, $type = false){
+			include_once MODEL_PATH.'Interest.php';
+			$interest = new Interest();
+			if($interest->isInterestEditableByUser($interest_id, $_SESSION['id'])){
+				if($activity_id !== false){
+					$body = $this->renderRecentByActivityIdAndType($activity_id, $type);
+				}else{
+					$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` = ? AND `interest_id` = ? ORDER BY `id` DESC LIMIT 1");			
+					if($stmt){
+						$stmt->bind_param('ii',$_SESSION['id'], $interest_id);
+						if($stmt->execute()){
+							 $result = $stmt->get_result();
+							 if($result !== false && $result->num_rows == 1){
+								$row = $result->fetch_assoc();
+								$body = $this->renderRecentByActivityIdAndType($row['id'], $row['type']);
+							}
+						}
+					}
+				}
+		
+				$interest_name = $interest->getInterestNameByInterestId($interest_id);
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'index_recent_post_preview_block.phtml');
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
+		}
+		
 		
 		
 		public function getEventInterestActivityBlockByActivityId($activity_id, $with_interest_name = false){
@@ -172,15 +245,31 @@
 				$prefix = new User_Media_Prefix();
 				$event_photo = $this->event->event_photo->getEventPhotoResourceByMomentId($event['id']);
 				$event_photo_num = $this->event->event_photo->getPhotoNumberForEvent($event['id']);
-								
+				
 				$media_prefix = $prefix->getUserMediaPrefix($interest_activity['user_id']).'/';
 				if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo['picture_url'])){
 					$event_photo_url = U_IMGDIR.$media_prefix.$event_photo['picture_url'];
 					$event_photo_hash = $event_photo['hash'];
 				}
+				
+				
 				include_once 'Comment.php';
 				$comment = new Comment();
 				$comment_number = $comment->getCommentNumberForTarget($activity_id);
+				
+				$group_key = false;
+				include_once 'Event_Group.php';
+				$e_group = new Event_Group();
+				$group_id = $e_group->getGroupIdByEventId($event['id']);
+				if($group_id !== false){
+					include_once 'Groups.php';
+					$group = new Groups();
+					if($group->isUserInGroupByGroupId($_SESSION['id'], $group_id)){
+						$group_key = $group->getGroupKeyByGroupId($group_id);
+					}
+				}
+				
+				
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.'phtml/child/post_event_block.phtml');
 				$event_block = ob_get_clean();
@@ -191,7 +280,7 @@
 		
 		
 		
-		public function addMomentInterestActivityForUserByInterestId($user_id,$interest_id, $description, $date, $attached_picture, $caption){
+		public function addMomentInterestActivityForUserByInterestId($user_id,$interest_id, $description, $date, $attached_picture, $caption, $with_interest_name = false){
 			//the interest is editable by the given user
 			$unique_hash = $this->generateUniqueHash();
 			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`interest_id`,`type`,`post_time`,`hash`) VALUES(?, ?, ?, ?, ?)");
@@ -208,7 +297,7 @@
 						return false;
 					}
 					$stmt->close();
-					return $this->getMomentInterestActivityBlockByActivityId($interest_activity_id);
+					return $this->getMomentInterestActivityBlockByActivityId($interest_activity_id, $with_interest_name);
 				}
 			}
 			return false;
@@ -277,8 +366,33 @@
 			include_once 'User_Media_Prefix.php';
 			$prefix = new User_Media_Prefix();
 			$photo = $this->moment->moment_photo->getMomentPhotoResourceByMomentId($moment['id']);
+			$photo_url = false;
 			if($photo !== false){
 				$photo_url = $prefix->getUserMediaPrefix($_SESSION['id']).'/'.$photo['picture_url'];
+			}
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'latest_post_preview_body.phtml');
+			$content = ob_get_clean();
+			return $content;
+		}	
+		
+		
+		public function loadLatestEventPostByActivityId($activity_id){
+			$this->event = new Event($activity_id);
+			$event = $this->event->loadEventResource();
+			if($event['date'] !== null){
+				$date = returnShortDate($event['date']);
+			}else{
+				$date = 'Not Specified';
+			}
+			
+			$description = $event['title'];
+			include_once 'User_Media_Prefix.php';
+			$prefix = new User_Media_Prefix();
+			
+			$photo_url = $this->event->event_photo->getEventPhotoUrlByEventId($event['id']);
+			if($photo_url !== false){
+				$photo_url = $prefix->getUserMediaPrefix($_SESSION['id']).'/'.$photo_url;
 			}
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'latest_post_preview_body.phtml');

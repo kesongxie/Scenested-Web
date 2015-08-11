@@ -31,7 +31,6 @@
 	min-width: 180px;
 	box-shadow: 1px 1px 10px #EAEAEA;
 	z-index: 1;
-	overflow: hidden;
 	border-radius: 4px 4px 2px 2px;
 	background:#fff;
 	border:1px solid #f0f0f0;
@@ -241,7 +240,7 @@
 }
 
 .dialog-body .in-ed-input {
-	width: 95%;
+	width: 100%;
 	font-size: 13px;
 	padding: 6px 0px;
 	border: 0px;	

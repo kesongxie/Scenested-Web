@@ -23,6 +23,10 @@ body{
 	padding-bottom:80px;
 }
 
+button:focus {
+	outline:none;
+}
+
 
 
 div{
@@ -113,7 +117,7 @@ textarea{
 .fcy-txt{
 	position: relative;
 	border: 2px solid #c4140e;
-	font-size: 12px;
+	font-size: 13px;
 	cursor: pointer;
 	width: 94%;
 	border-radius: 3px;
@@ -256,9 +260,6 @@ textarea{
 	color: #fff;
 	font-size: 16px;
 	font-weight:bold;
-	position:absolute;
-	left: 64px;
- 	top: 10px;
 }
 
 .vertical-center{
@@ -306,10 +307,9 @@ div.ui-datepicker{
 	padding: 5px;
 	border-radius: 3px;
 	width: 60%;
+	min-width:160px;
 	z-index: 99;
 	overflow:visible !important;
-	display:none;
-	
 }
 
 .in_con_opt_w .in_con_w_opt_it {
@@ -393,7 +393,6 @@ div.ui-datepicker{
 	border-radius: 4px;
 	width: 140px;
 	z-index:99;
-	display:none;
 	padding:6px 0px 12px 0px;
 }
 
@@ -414,7 +413,6 @@ div.ui-datepicker{
 	box-shadow:-1px 2px 17px #E2E2E2;
 	right:-83px;
 	z-index: 99;
-	display:none;
 	font-size:14px;
 
 }
@@ -561,6 +559,7 @@ div.ui-datepicker{
 
 }
 
+/* 
 .cancel-button{
 	cursor:pointer;
 	background:#F6F6F6;
@@ -574,6 +573,32 @@ div.ui-datepicker{
 	border:1px solid #f0f0f0;
 	border-radius:4px;
 }
+ */
+
+.cancel-button{
+	padding: 6px;
+    border: 1px solid #eaeaea !important;
+    font-size: 13px;
+}
+
+
+.silver-button{
+	background: ##F5F5F5;
+	background: -webkit-linear-gradient(#FFFEFE,#F3F3F3, #ECEBEB);
+    background: -o-linear-gradient(#FFFEFE,#F3F3F3, #ECEBEB);
+    background: -moz-linear-gradient(#FFFEFE,#F3F3F3, #ECEBEB);
+    background: linear-gradient(#FFFEFE,#F3F3F3, #ECEBEB);
+    border: 1px solid #ADADAD;
+    border-radius: 4px;
+    cursor:pointer; 
+}
+
+.silver-button:hover{
+	opacity:0.82;
+}
+
+
+
 /*ends dialog  template*/
 
 /*starts popup dialog template*/
@@ -604,9 +629,6 @@ div.ui-datepicker{
 	border:1px solid #EAEAEA;
 }
 
-.popup-button:hover{
-	border:1px solid #000;
-}
 
 .cancel-button:hover{
 	border:1px solid #EAEAEA;
@@ -649,6 +671,7 @@ div.ui-datepicker{
 .interest-profile .dialog-body{
 	border-radius:0px 0px 3px 3px;
 	overflow:hidden;
+	min-height:60px;
 }
 
 .interest-profile .dialog-body .first-cap{
@@ -693,7 +716,7 @@ div.ui-datepicker{
 
 .media-detail .limit-height{
 	overflow:hidden;
-	max-height:44px;
+	max-height:43px;
 }
 
 
@@ -724,7 +747,7 @@ div.ui-datepicker{
 
 #frag-footer{
 	text-align: center;
-	font-size: 13px;
+	font-size: 11px;
 }
 #frag-footer #footer-item-wrapper{
 	margin-bottom:4px;
@@ -875,7 +898,6 @@ div.ui-datepicker{
 .time_picker_outer_wrapper{
 	position:absolute;
 	border-radius: 4px;
-	display:none;
 	z-index:2;
 	box-shadow: -1px -1px 17px #B6B6B6;
 }
@@ -1030,8 +1052,27 @@ div.ui-datepicker{
 	font-size: 12px;
 	position: fixed;
 	border-radius: 4px 0px 0px 0px;
+	max-width:246px;
 }
 
+#chat-outer-wrapper #broken-connect-overlay{
+	background:#fff;
+	opacity:0.4;
+	height:100%;
+	width:100%;
+	position:absolute;
+	top:0px;
+	left:0px;
+	z-index:1
+}
+#chat-outer-wrapper #broken-connect-msg{
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	z-index:2;
+	background:#F7F7F7;
+	padding:16px;
+}
 
 
 #chat-outer-wrapper .chat-header{
@@ -1168,6 +1209,11 @@ div.ui-datepicker{
 }
 
 
+.user-profile .cover-wrapper{
+	width:100%;height:140px;overflow:hidden;position:relative;
+}
+
+
 .sub .label-image{
 	box-shadow: 1px 1px 3px #777777;
 	height: 24px;
@@ -1299,7 +1345,7 @@ img.gallery-navi{
 	z-index:99;
 }
 
-#chat-box #chat-box-header .arrow-up{
+#chat-box .chat-header .arrow-up{
  	position:absolute;
  	top:-13px;
  	left:91px;

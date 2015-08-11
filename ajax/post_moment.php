@@ -53,8 +53,8 @@
 		}
 	}
 	
-
-	$moment = $interest_activity->addMomentInterestActivityForUserByInterestId($_SESSION['id'],$key, $description, $date, $attached_picture, $caption);
+	$with_interest_name = isset($_POST['i']);
+	$moment = $interest_activity->addMomentInterestActivityForUserByInterestId($_SESSION['id'],$key, $description, $date, $attached_picture, $caption, $with_interest_name);
 	if($moment !== false){
 		echo $moment;
 	}

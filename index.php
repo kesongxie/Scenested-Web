@@ -4,6 +4,7 @@
 	include_once PHP_INC_MODEL_ROOT_REF.'User_Table.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'User_Profile_Picture.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'Auth_Tokens.php';
+	include_once PHP_INC_MODEL_ROOT_REF.'Interest.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'Interest_Activity.php';
 	
 	
@@ -20,6 +21,8 @@
 	$session_user_profile_image_url = $user_profile_pic->getLatestProfileImageForUser($_SESSION['id']);
 	$session_user_access_url = $user->getUserAccessUrl($_SESSION['id']);
 	
+	$interest = new Interest();
+	$similar_interest_block = $interest->getSimilarInterestBlock();
 	
 	$interest_activity = new Interest_Activity();
 	

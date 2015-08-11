@@ -100,7 +100,8 @@
 		}
 	}
 	
-	$event = $interest_activity->addEventInterestActivityForUserByInterestId($_SESSION['id'],$key, $title,$description,$location, $date, $time, $attached_picture, $caption);
+	$with_interest_name = isset($_POST['i']);
+	$event = $interest_activity->addEventInterestActivityForUserByInterestId($_SESSION['id'],$key, $title,$description,$location, $date, $time, $attached_picture, $caption, $with_interest_name);
 	
 	
 	 if($event !== false){

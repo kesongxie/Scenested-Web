@@ -427,7 +427,11 @@ function resizePreviewImage(preview_image){
 
 function refreshMessage(){
 	$.post(AJAX_DIR+'refreshMessage.php',function(resp){
-		$('#chat-outer-wrapper #chat-bar .chat-body').html(resp);
+		if(resp != '1'){
+			$('#chat-outer-wrapper #chat-bar .chat-body').html(resp);
+		}else{
+			$('#chat-outer-wrapper .broken-connect').removeClass('hdn');
+		}
 	});
 }
 
@@ -587,7 +591,8 @@ $(document).keyup(function(evt){
 
 
 $(document).click(function(){
-	$('.popover').removeClass('act').hide();
+	$('.popover').removeClass('act').addClass('hdn');
+	$('.trigger-pop').addClass('hdn');
 	setVisibleForBlurAction();
 });
 
@@ -674,8 +679,8 @@ $(document).ready(function(){
 
 	$('#loggedin-menu').on({
 		click:function(){
-			$(this).parents('#loggedin-menu').find('#setting-menu').toggle();
-			$('#notification-center').hide();
+			$(this).parents('#loggedin-menu').find('#setting-menu').toggleClass('hdn');
+			$('#notification-center').addClass('hdn');
 			return false;
 		}
 	},'#loggin-user-icon');
@@ -697,8 +702,8 @@ $(document).ready(function(){
 					$.post(AJAX_DIR+"update_notification_queue.php");
 				});
 			}
-			notification_center.toggle();
-			$('#setting-menu').hide();
+			notification_center.toggleClass('hdn');
+			$('#setting-menu').addClass('hdn');
 			return false;
 		}
 	},'#header-notification-delegate');
@@ -1144,17 +1149,20 @@ $(document).ready(function(){
 			$(this).find('.toggle-operation').removeClass('hdn');
 		},
 		mouseleave:function(){
-			$(this).find('.toggle-operation').addClass('hdn');
-			$(this).find('.popover').hide();
+			var popover = $(this).find('.popover');
+			if(popover.length < 1 || popover.hasClass('hdn')){
+				$(this).find('.toggle-operation').addClass('hdn');	
+			}
 		}
 	},'.post-wrapper');
 	
 	
 	$('body').on({
 		click:function(){
+			$('.trigger-pop').not($(this)).addClass('hdn');
 			var selfPopover = $(this).parents('.post-wrapper').find('.popover');
-			$('.popover').not(selfPopover).hide();
-			selfPopover.toggle();
+			$('.popover').not(selfPopover).addClass('hdn');
+			selfPopover.toggleClass('hdn');
 			return false;
 		
 		}
@@ -1239,7 +1247,7 @@ $(document).ready(function(){
 	$('body').on({
 		click:function(){
 			var pos = $(this).offset();
-			$('.time_picker_outer_wrapper').css('top',pos.top+30).css('left',pos.left).show();
+			$('.time_picker_outer_wrapper').css('top',pos.top+30).css('left',pos.left).removeClass('hdn');
 			return false;		
 		},
 		blur:function(){
@@ -1366,10 +1374,14 @@ $(document).ready(function(){
 	$('body').on({
 		mouseover:function(){
 			$(this).find('.toggle-operation').removeClass('hdn');
+			return false;
 		},
 		mouseleave:function(){
-			$(this).find('.popover').hide();
-			$(this).find('.toggle-operation').addClass('hdn');
+			var popover = $(this).find('.popover');
+			if(popover.length < 1 || popover.hasClass('hdn')){
+				$(this).find('.toggle-operation').addClass('hdn');	
+			}
+			
 		}
 	
 	},'.operation-triggeable');
@@ -1378,7 +1390,7 @@ $(document).ready(function(){
 		click:function(){
 			var thisE = $(this);
 			var parentDiv = thisE.parents('.operation-triggeable');
-		
+			$('.trigger-pop').not($(this)).addClass('hdn');
 			if(parentDiv.find('.fri-oper').length < 1){
 				var key = parentDiv.attr('data-key');
 				$.ajax({
@@ -1388,14 +1400,14 @@ $(document).ready(function(){
  					success:function(resp){
  						parentDiv.append(resp);
  						var operationDiv = parentDiv.find('.fri-oper');
-						$('.popover').not(operationDiv).hide();
-						operationDiv.show();
+						$('.popover').not(operationDiv).addClass('hdn');
+						operationDiv.removeClass('hdn');
  					}
  				});
 			}else{
 				var operationDiv = parentDiv.find('.fri-oper');
-				$('.popover').not(operationDiv).hide();
-				operationDiv.toggle();
+				$('.popover').not(operationDiv).addClass('hdn');
+				operationDiv.toggleClass('hdn');
 			}
 			return false;
 		}
@@ -1715,13 +1727,19 @@ $(document).ready(function(){
 		}
 	},'.chat-body .individual-contact');
 	
+	$('body').on({
+		click:function(){
+			location.reload();
+		}	
+	},'#chat-bar .refresh');
+	
 	
 	
 	$('body').on({
 		click:function(){
 			loadGroupConversation($(this));
 		}
-	},'.chat-body .group-contact');
+	},'.group-contact');
 	
 	
 	
@@ -1932,7 +1950,7 @@ $(document).ready(function(){
 	$('body').on({
 		click:function(){
 			var selfPopover = $(this).parents('#chat-box').find('.in_con_opt_w');
-			selfPopover.toggle();
+			selfPopover.toggleClass('hdn');
 			return false;
 		}
 	},'#chat-box .toggle-option');

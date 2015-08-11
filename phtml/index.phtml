@@ -24,79 +24,24 @@
 	<!--400.625px post wrapper.-->
 	<body>
 		<?php require_once 'child/loggedin_header.php'; ?>
-		<div  id="profile-sider-bar-left" class="inline-blk" style="width:10.3%;height:100vh;margin-left:65px;margin-top:10px;margin-right:20px;">
-			<div class="search-user-profile-wrapper user-profile-wrapper inline-blk" style="height:220px; width:100%;">
-	<div class="user-profile operation-triggeable" style="width:100%;position:relative" data-key="c4a8afa33c5h2249106dd107">
-		<div style="width:100%;height:96px;overflow:hidden;position:relative;">
-			<img style="width:100%;" src="http://localhost:8888/lsere/media_u/06f1e47fbdb03e48203ebfba/4268ce62c77ebff12fd68588/thumb_74190e2af531e5f6d46c7dc9.jpg">
-					</div>
-	<div class="avator-inner-bottom" style="z-index:2;position:relative">
-	<div class="avator-picture-wrapper" style="margin:-25px 14px;">
-		<div class="inline-blk" style="box-shadow:1px 1px 3px #848484;margin-right:10px;width:46px;height:46px;overflow:hidden">
-			<a href="http://localhost:8888/lsere/user/kesong.xie"><img class="profile-pic" style="width: 100%; min-height: 100%; transform: scale(1);" src="http://localhost:8888/lsere/media_u/06f1e47fbdb03e48203ebfba/0e915e6f5ba440b4b4d10331/thumb_60c197fab169b72d69e22c55.jpg"></a>
-		</div>
-		<div class="inline-blk fullname" style="margin:0px 0px -4px 0px;vertical-align:bottom;font-size: 15px;color: #323232;font-weight: bold;">Kesong Xie</div>
-		<div class="summary" style="margin-top:10px;&quot;&quot;">
-			<div style="font-size:13px;" class="txt_ofl">Borough of Manhattan Community College</div>
-							<div style="font-size:13px;" class="txt_ofl">
-					Interested in Tennis and Programming				</div>
-				
-		</div>
-	</div>
-	
-	</div>
-	
-	
-	
-	
-	
-</div>
-					</div>
-			
-			
-			<!---similar friends-->	
-			<div class="" style="padding:10px;margin-top:10px;">
-				<a class="plain-lk" href="http://localhost:8888/lsere/search.php?r=mine"><span style="color: #797979; font-weight: bold;" title="People&quot;">Similar Interests</span></a>
-				
-				<a class="dummy-lk" href="http://localhost:8888/lsere/user/quentin.angus"><div style="min-height:40px;padding:10px 0px;">
-					<img src="http://localhost:8888/lsere/media_u/48115f24e89820aede4825d6/10059e85d3306094df94bb21/thumb_c403cf558ee807a776c20963.jpg" style="float:left;margin-right:10px;width:38px;height:38px;border-radius:9%;">
-					<div class="profile-name normal-font" style="font-size:14px;">Quentin Angus</div>
-					<div class="txt_ofl" style="color:rgb(172, 172, 172);font-size:13px;">Interested in Jazz</div>
-				</div></a>
-				
-				<a class="dummy-lk" href="http://localhost:8888/lsere/user/kesong.xie.1"><div style="min-height:40px;padding:10px 0px;">
-					<img src="http://localhost:8888/lsere/media_u/597394f9fe626bbb1f13c37f/0d6f90406fc0cec43ad047ed/thumb_3409a8d2bf0f0a7a681d5071.jpg" style="float:left;margin-right:10px;width:38px;height:38px;border-radius:9%;">
-					<div class="profile-name normal-font" style="font-size:14px;">Quentin Tse</div>
-					<div class="txt_ofl" style="color:rgb(172, 172, 172);font-size:13px;">Interested in Tennis</div>
-				</div></a>
-				
-				<a class="dummy-lk" href="http://localhost:8888/lsere/user/meghan.mccann"><div style="min-height:40px;padding:10px 0px;">
-					<img src="http://localhost:8888/lsere/media_u/0b6b58a7d212e078ed4662cb/406867654e08b646857e431d/thumb_be08ebe9354ca99c168b0976.jpg" style="float:left;margin-right:10px;width:38px;height:38px;border-radius:9%;">
-					<div class="profile-name normal-font" style="font-size:14px;">Meghan Mccann</div>
-					<div class="txt_ofl" style="color:rgb(172, 172, 172);font-size:13px;">Interested in Electronic Guitar</div>
-				</div></a>
-				
-				<a class="dummy-lk" href="http://localhost:8888/lsere/user/kenny.armenta"><div style="min-height:40px;padding:10px 0px;">
-					<img src="http://localhost:8888/lsere/media_u/299363e42aba1f6f3821b086/2a9d35115ad5c08ec9d5c8fd/thumb_02c48d8cb4df8d3bed75ea94.jpg" style="float:left;margin-right:10px;width:38px;height:38px;border-radius:9%;">
-					<div class="profile-name normal-font" style="font-size:14px;">Kenny Armenta</div>
-					<div class="txt_ofl" style="color:rgb(172, 172, 172);font-size:13px;">Interested in Coding</div>
-				</div></a>
+		<div id="index-global-container">
+		<div  class="inline-blk" style="width:18.3%;height:100vh;margin-top:10px;">
+			<?php echo $similar_interest_block; ?>
+			<div style="margin-top:20px;">
+				<?php require_once 'phtml/footer.phtml'; ?>
 			</div>
-			<!---ends similar friends-->	
-	
+
 			
-					
-					
 		</div>
 		
-		<div id="index-news-feed" class="inline-blk" style="width:56%;margin-top:40px;">
+		<div id="index-news-feed" class="inline-blk" style="width:60%;margin-top:26px;">
 			<?php echo $feed_content; ?>	
 		</div>
-			
+		</div>
 	
 		
 		<?php include_once 'child/chat.php'; ?>
- 
+ 		<?php include_once TEMPLATE_PATH_CHILD.'footer-overlay-element.phtml'; ?>
 	
 	</body>
 </html>

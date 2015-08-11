@@ -11,6 +11,7 @@
 			if($email_account_activation->deleteRowByUserId($_GET['id']) && $user_table->activateUser($_GET['id'])){
 				//redirect to index.php
 				$_SESSION['id'] = $_GET['id'];
+				$email_account_activation->deleteRowAfterActivation($_SESSION['id']);
 			}
 		}else{
 			header('location:'.LOGIN_PAGE);

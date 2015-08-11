@@ -81,6 +81,10 @@
 			return $this->getUserInfoByUserIden('firstname',$user_iden);
 		}
 		
+		public function getUserEmailByUserIden($user_iden){
+			return $this->getUserInfoByUserIden('email',$user_iden);
+		}
+		
 		
 		public function getUserFullnameByUserIden($user_iden){
 			$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname FROM `$this->table_name` WHERE ( `id` = ? || `user_iden`=? || `unique_iden` = ?) LIMIT 1  ");
@@ -254,8 +258,8 @@
 			echo $this->connection->error;
 			return false;
 		}
-		
-		
-		
 	}
+		
+		
+		
 ?>

@@ -1,15 +1,13 @@
 <div class="post-wrapper post evt-block" data-key="<?php echo $hash; ?>">
-	
-
 	<?php $displayable = is_url_exist($event_photo_url); ?>
 
 	<?php if($displayable): ?>
-		<img src="<?php echo IMGDIR ?>white-down-arrow.png" style="float:none;position: absolute; right: 14px; top: 14px;"class="toggle-operation pointer hdn">
+		<img src="<?php echo IMGDIR ?>white-down-arrow.png" style="float:none;position: absolute; right: 14px; top: 14px;"class="trigger-pop toggle-operation pointer hdn">
 		<div class="pointer" style="max-height:200px;overflow:hidden;background:#f0f0f0">
 			<img class="previewable" style="width:100%;display:block;" src="<?php echo $event_photo_url ?>" data-key="<?php echo $event_photo_hash ?>" data-sourceFrom = "e">
 		</div>
 	<?php else: ?>
-			<img src="<?php echo IMGDIR ?>down_arrow_icon.png" style="float:none;position: absolute; right: 10px; top: 10px;"class="toggle-operation pointer hdn">
+			<img src="<?php echo IMGDIR ?>down_arrow_icon.png" style="float:none;position: absolute; right: 10px; top: 10px;"class="trigger-pop toggle-operation pointer hdn">
 			
 	<?php endif; ?>
 	
@@ -95,26 +93,19 @@
 </div>	
 
 
-
-	
-
-		
-		
-		
-		
-		
-		
 		<div class="post-inner-padding regular-comment-wrapper comment-block hdn" style="padding-top:0px">
-			<textarea class="fcy-txt comment-txt" style="margin-top:12px;" placeholder="Write down your thoughts..." data-key="<?php echo $hash; ?>"></textarea>
+			<textarea class="fcy-txt comment-txt" style="margin-top:12px;" data-key="<?php echo $hash; ?>"></textarea>
 			<div class="comment-container" style="margin-top:20px;">
 			</div>
 		</div>
 	</div>
 	
-	<div class="in_con_opt_w popover" style="top:37px;right:4px;">
+	<div class="in_con_opt_w popover hdn" style="top:37px;right:4px;">
 		<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
 			<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
-			<div class="in_con_w_opt_it remove_activity">Group Message</div> <!--if the user joined-->
+			<?php if($group_key !== false): ?>
+				<div class="group-contact in_con_w_opt_it" data-key="<?php echo $group_key; ?>">Group Message</div>
+			<?php endif; ?>
 			<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
 			<div class="in_con_w_opt_it remove_activity">Remove This Post</div>
 			<?php endif; ?>

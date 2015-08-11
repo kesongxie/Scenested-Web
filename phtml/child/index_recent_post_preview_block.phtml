@@ -1,7 +1,7 @@
 <?php
 	  include_once SCRIPT_INCLUDE_BASE.'php_inc/global_constant.php'; 
 ?>
-<div class="interest-profile interest-content-inner-wrapper post">
+<div class="interest-profile interest-content-inner-wrapper post" data-key="<?php echo $interest_id; ?>">
 	<div class="interest-profile-intro sub">
 		<div class="dialog-header">
 			<div class="dialog-header-inner">
@@ -17,7 +17,7 @@
 			<?php echo $body; ?>
 		</div>
 		
-		<div class="in_con_opt_w popover" style="top:38px;right:7px;">
+		<div class="in_con_opt_w popover hdn" style="top:38px;right:7px;">
 			<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
 				<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
 				
@@ -67,7 +67,7 @@
 						</form>
 						<img src="<?php echo IMGDIR; ?>camera.png"title="Attach an image" height="20" width="20">
 					</label>
-					<div class="inline-blk cancel-button">Cancel</div>
+					<div class="inline-blk silver-button cancel-button">Cancel</div>
 					<div class="inline-blk action-button center-align post-moment" style="margin-left:4px;min-width:34px;">Post</div>
 				</div>
 				<div class="loading-icon-wrapper" style="border-radius:0px;"><div class="vertical-center" style="text-align:center;"><img class="loading-icon" src="<?php  echo IMGDIR ?>loading_icon.gif" height="50" width="50"></div></div>
@@ -129,7 +129,7 @@
 						</form>
 						<img src="<?php echo IMGDIR; ?>camera.png"title="Attach an image" height="20" width="20">
 					</label>
-					<div class="inline-blk cancel-button">Cancel</div>
+					<div class="inline-blk cancel-button silver-button">Cancel</div>
 					<div class="inline-blk action-button center-align post-event" style="margin-left:4px;min-width:34px;">Post</div>
 				</div>
 				<div class="loading-icon-wrapper" style="border-radius:0px;"><div class="vertical-center" style="text-align:center;"><img class="loading-icon" src="<?php  echo IMGDIR ?>loading_icon.gif" height="50" width="50"></div></div>

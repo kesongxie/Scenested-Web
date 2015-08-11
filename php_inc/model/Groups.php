@@ -126,6 +126,11 @@
 			return $this->getRowIdByHashkey($group_key);
 		}
 		
+		public function getGroupKeyByGroupId($group_id){
+			return $this->getColumnById('hash',$group_id);
+		}
+		
+		
 		
 		public function getGroupResourceByKey($group_key){
 			return $this->getMultipleColumnsBySelector(array('id','user_in'),'hash',$group_key);
@@ -174,7 +179,6 @@
 				return true;
 			}
 			return false;
-				
 		}
 		
 		

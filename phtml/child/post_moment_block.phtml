@@ -1,7 +1,9 @@
 <div class="post-wrapper post" style="padding:0px;" data-key="<?php echo $hash ?>">
 	<div style="padding:16px 14px 0px 14px;"><a href="<?php echo $user_page_redirect; ?>"><img class="post-owner-picture" src="<?php echo $post_owner_pic; ?>"></a>
 	<a class="plain-lk" href="<?php echo $user_page_redirect; ?>"><span class="profile-name pointer post-user-name"><?php echo htmlentities($fullname) ?></span></a>
-	<img src="<?php echo IMGDIR ?>down_arrow_icon.png" class="toggle-operation pointer hdn">
+	<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
+		<img src="<?php echo IMGDIR ?>down_arrow_icon.png" class="trigger-pop toggle-operation pointer hdn">
+	<?php endif; ?>
 	<div style="margin-left: 10px; color: #969696;"><?php echo $post_time ?></div>
 	</div>
 	<div class="content">
@@ -29,10 +31,10 @@
 		<div style="margin: 12px 18px;">
 			<div style="margin-top:10px">
 				<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer toggle-comment" src="<?php echo IMGDIR ?>ci.png"  title="Comment" height="16" width="16" ><div class="inline-blk cmt-num" style="margin:-3px 8px 0px 0px"><?php echo $comment_number; ?></div></div>
-				<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>favor_icon.png"  title="Pin" height="18" width="18"><div class="inline-blk" style="margin-top:-1px;"></div></div>
+				<div class="inline-blk" style="vertical-align:bottom"><img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>favor_icon.png"  title="Favor" height="18" width="18"><div class="inline-blk" style="margin-top:-1px;"></div></div>
 			</div>
 			<div class="regular-comment-wrapper comment-block hdn">
-				<textarea class="fcy-txt comment-txt" style="margin-top:12px;" placeholder="Write down your thoughts..." data-key="<?php echo $hash ?>"></textarea>
+				<textarea class="fcy-txt comment-txt" style="margin-top:12px;" data-key="<?php echo $hash ?>"></textarea>
 				<div class="comment-container" style="margin-top:20px;">
 				
 				</div>
@@ -42,8 +44,9 @@
 		
 	</div>
 	
-	
-	<div class="in_con_opt_w popover" style="top:38px;right:5px;">
+	<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
+
+	<div class="in_con_opt_w popover hdn" style="top:38px;right:5px;">
 		<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
 			<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
 		
@@ -52,5 +55,7 @@
 			<?php  endif;?>
 		</div>
 	</div>
+	
+	<?php endif;?>
 </div>
 		

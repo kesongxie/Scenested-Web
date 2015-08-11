@@ -1,13 +1,5 @@
-/* 
-.post-wrapper{
-	box-shadow: 1px 1px 10px #f0f0f0;
-	background:#fff;
-	position:relative;
-	border-radius:4px;
-	margin-bottom:0px;
-	border: 0px;
+#index-global-container{
+	width: 90%;
+    margin: 10px auto 0px auto;
+    min-height: 100vh;
 }
-.post-owner-picture{
-	border-radius:9%;
-}
- */

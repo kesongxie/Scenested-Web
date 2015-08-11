@@ -27,6 +27,7 @@
 	$page_own = ($request_user_page_id == $_SESSION['id']); // if it's true, allow editting
 	$request_user_page_fullname = $user->getUserFullnameByUserIden($request_user_page_id);	
 	$request_user_page_firstname = $user->getUserFirstNameByUserIden($request_user_page_id);
+	$request_user_page_hash = $user->getUniqueIdenForUser($request_user_page_id);
 	$gender_call = $user->getWhatShouldCallForUser($request_user_page_id);
 	$heOrShe = $gender_call[0];
 	$hisOrHer = $gender_call[1];

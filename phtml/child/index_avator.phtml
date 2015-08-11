@@ -1,9 +1,6 @@
-<div class="user-profile operation-triggeable" style="width:100%;position:relative" data-key="<?php echo $hash ?>">
-		<div class="cover-wrapper">
+ <div class="user-profile-wrapper" style="width:100%;position:relative" >
+		<div style="width:100%;height:140px;overflow:hidden;position:relative;background:#000;">
 			<img  style="width:100%;" src="<?php echo $cover_pic ?>">
-			<?php if($user_id != $_SESSION['id']): ?>
-				<img src="<?php echo IMGDIR ?>menu_navi_icon.png" style="float:none;width:20px;height:14px;position: absolute; right: 12px; top: 12px;"class="trigger-pop hdn toggle-operation pointer">
-			<?php endif; ?>
 		</div>
 	<div class="avator-inner-bottom" style="z-index:2;position:relative">
 	<div class="avator-picture-wrapper" style="margin-top:-40px;margin-left:14px;" >

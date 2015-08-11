@@ -26,10 +26,12 @@
 		<?php require_once 'child/loggedin_header.php'; ?>
 		<div id="profile-global-container" >
 			<div id="profile-sider-bar-left" class="inline-blk side-bar">
-					<div id="avator-wrapper" style="height:230px;">
+					<div id="avator-wrapper" class="user-profile operation-triggeable" style="height:230px;" data-key="<?php echo $request_user_page_hash; ?>">
 						<div class="avator-inner-top"  style="z-index:1">
 							<img class="profile-image" src="<?php echo $user->getLatestCoverForuser($request_user_page_id); ?>" >
-							
+							<?php if($request_user_page_id != $_SESSION['id']): ?>
+								<img src="<?php echo IMGDIR ?>menu_navi_icon.png" style="float:none;width:20px;height:14px;position: absolute; right: 12px; top: 12px;"class="trigger-pop hdn toggle-operation pointer">
+							<?php endif; ?>
 							<?php if($page_own):  //allow changing ?>
 								<label for="upload-cover" id="avator-change-cover-label"  class="pointer"  title="upload cover photo">Change Cover</label>
 								<form method="POST" style="position:absolute;top:0px;width:0px;height:0px;" enctype="multipart/form-data">
@@ -105,8 +107,10 @@
 						<a href="<?php echo $user_profile_url.'/interests'; ?>"><div  class="navi-item<?php if(!isset($_GET['s'])||($_GET['s']!='events' && $_GET['s']!='groups'&& $_GET['s']!='moments' && $_GET['s']!='friends' && $_GET['s']!='photos' && $_GET['s']!='about')){echo ' active-navi';}else{echo ' deactive-navi';}?>"   >Interests<div  class="sub-text" style="left:15px;">events & moments</div></div></a>
 						<a href="<?php echo $user_profile_url.'/events'; ?>" ><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='events'){echo ' active-navi';}else{echo ' deactive-navi';}?>">Events<div class="sub-text" style="left:15px;" >upcomings & joined</div></div></a>
 						<a href="<?php echo $user_profile_url.'/friends'; ?>"><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='friends'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Friends<div  class="sub-text" style="left:15px;">connections</div></div></a>
-						<a href="<?php echo $user_profile_url.'/groups'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='groups'){echo ' active-navi';}else{echo ' deactive-navi';}?>"  >Groups<div  class="sub-text" style="left:21px;" >similar interests</div></div></a>
-						
+					<!-- 
+	<a href="<?php echo $user_profile_url.'/groups'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='groups'){echo ' active-navi';}else{echo ' deactive-navi';}?>"  >Favored<div  class="sub-text" style="left:21px;" >similar interests</div></div></a>
+					
+ -->	
 
 						<a href="<?php echo $user_profile_url.'/photos';?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='photos'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Photos<div  class="sub-text" style="left:11px;">want to share</div></div></a>
 					<!-- 
@@ -134,26 +138,6 @@
 
  
  	<?php include_once 'child/chat.php'; ?>
- 
- 
- 	<div class="time_picker_outer_wrapper popover">
-		<div class="time_picker_inner_header">
-			Select Time
-		</div>
-		<div class="time_picker_inner_body">
-			<div class="time_picker_inner_wrapper">
-				<div class="time_picker_time_part">
-				<div class="time_picker_item">00:30</div><div class="time_picker_item asct">01:00</div><div class="time_picker_item">01:30</div><div class="time_picker_item">02:00</div><div class="time_picker_item">02:30</div><div class="time_picker_item">03:00</div><div class="time_picker_item">03:30</div><div class="time_picker_item">04:00</div><div class="time_picker_item">04:30</div><div class="time_picker_item">05:00</div><div class="time_picker_item">05:30</div><div class="time_picker_item">06:00</div><div class="time_picker_item">06:30</div><div class="time_picker_item">07:00</div><div class="time_picker_item">07:30</div><div class="time_picker_item">08:00</div><div class="time_picker_item">08:30</div><div class="time_picker_item">09:00</div><div class="time_picker_item">09:30</div><div class="time_picker_item">10:00</div><div class="time_picker_item">10:30</div><div class="time_picker_item">11:00</div><div class="time_picker_item">11:30</div><div class="time_picker_item">12:00</div></div>
-				
-				<div class="time_picker_ampm_part">
-					<div class="ampm_part_item asct">AM</div>
-					<div class="ampm_part_item">PM</div>
-				</div>
-			</div>
-		</div>
-	</div>
- 
- 	
  	<?php include_once TEMPLATE_PATH_CHILD.'footer-overlay-element.phtml'; ?>
  	</body>
 	

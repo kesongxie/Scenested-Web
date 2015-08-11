@@ -542,7 +542,7 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
-			$(this).parents('.interest-profile').find('.in_con_opt_w').toggle();
+			$(this).parents('.interest-profile').find('.in_con_opt_w').toggleClass('hdn');
 			return false;
 		}
 	
@@ -744,7 +744,7 @@ $(document).ready(function(){
 					}else if(resp == '2'){
 						return false;
 					}else if(resp == '3'){
-						presentPopupDialog("Interest Existed",'The interest <span class="plain-lk pointer" style="color:#062AA3">'+ name + '</span> has already existed', "Got it", "", null, null );
+						presentPopupDialog("Need some descriptions",'Please add some descriptions about this moment', "Got it", "", null, null );
 					}else if(resp == '4'){
 						presentPopupDialog("Need a Date",'Please add a date for your moment', "Got it", "", null, null );
 
@@ -1120,7 +1120,7 @@ $(document).ready(function(){
 	$('body').on({
 		click:function(){
 			var actionDiv = $(this).parents('.action');
-			actionDiv.find('.in_con_opt_w').toggleClass('act').toggle();	
+			actionDiv.find('.in_con_opt_w').toggleClass('act').toggleClass('hdn');	
 			return false;
 		}
 	},'.side-block-wrapper .show-edit');
@@ -1303,7 +1303,7 @@ $(document).ready(function(){
 			input_wrapper.find('input').focus();
 			parentDiv.find('.side-blur-action.show-edit').removeClass('act').addClass('hdn');
 			parentDiv.find('.side-blur-action.hide-edit').addClass('act').removeClass('hdn');
-			parentDiv.find('.title .in_con_opt_w').hide();
+			parentDiv.find('.title .in_con_opt_w').addClass('hdn');
 		}
 	},'.side-block-wrapper .add-school');
 	
@@ -1319,7 +1319,7 @@ $(document).ready(function(){
 			input_wrapper.find('input').focus();
 			parentDiv.find('.side-blur-action.show-edit').removeClass('act').addClass('hdn');
 			parentDiv.find('.side-blur-action.hide-edit').addClass('act').removeClass('hdn');
-			parentDiv.find('.title .in_con_opt_w').hide();
+			parentDiv.find('.title .in_con_opt_w').addClass('hdn');
 		}
 	},'.side-block-wrapper .add-study');
 	
