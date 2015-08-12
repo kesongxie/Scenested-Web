@@ -35,6 +35,16 @@
 			return false;
 		}
 		
+		public function resetPassword($password, $user_id){
+			$password = password_hash($password, PASSWORD_DEFAULT);
+			$this->setColumnById('password',$password, $user_id);
+			
+			//include_once 'Retrieve_Account_Code.php';
+// 			$retrive = new Retrieve_Account_Code();
+// 			$retrive->deleteEntryForUser($user_id);
+		}
+		
+		
 		public function checkUserRegistered($iden){
 			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE ( `id` = ? || `user_iden`=? || `unique_iden` = ?) LIMIT 1 ");
 			$stmt->bind_param('iss',$iden,$iden, $iden);
@@ -170,6 +180,7 @@
 			include_once 'Education.php';
 			$edu = new Education();
 			$school_id = $edu->getSchoolIdByUserId($_SESSION['id']);
+			
 			if($school_id !== false){
 				if($limit > 0){
 					$stmt = $this->connection->prepare("

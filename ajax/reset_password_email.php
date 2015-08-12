@@ -13,6 +13,8 @@
 			$to = $user->getUserEmailByUserIden($user_id);
 			$hash = $retrieve->generateUniqueHash();
 			$subject = 'Lsere account activation';
+			echo $reset_dir = ROOTDIR."password.php?reset=".trim($_POST['key'])."&code=".$hash;
+
 			ob_start();
 			include('phtml/reset_password_email_template.phtml');
 			$message = ob_get_clean();
@@ -23,11 +25,13 @@
 			// Additional headers
 			$headers .= 'From: Lsere <kesongxie1993@gmail.com>'."\r\n";
 			
-			if($retrieve->insertEntry($user_id, $hash) && mail($to, $subject, $message, $headers)){
-				echo 'true';
-			}else{
-				echo 'no';
-			}
+			$retrieve->insertEntry($user_id, $hash);
+			
+			// if($retrieve->insertEntry($user_id, $hash) && mail($to, $subject, $message, $headers)){
+// 				echo 'true';
+// 			}else{
+// 				echo 'no';
+// 			}
 		}
 		
 	}

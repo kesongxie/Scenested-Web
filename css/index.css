@@ -3,3 +3,7 @@
     margin: 10px auto 0px auto;
     min-height: 100vh;
 }
+
+#index-news-feed #add-new-interest{
+	width:100% !important;
+}

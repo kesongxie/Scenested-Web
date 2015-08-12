@@ -60,6 +60,7 @@ function deleteInterest(sender){
 				}else{
 					$('#interest-content-wrapper').addClass('hdn');
 					$('#add-new-interest-wrapper').removeClass('hdn');
+					$('#add-new-interest-wrapper').find('.cancel-button').addClass('hdn');
 				}
 			}, 600);
 		}	

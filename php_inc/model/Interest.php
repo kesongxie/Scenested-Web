@@ -5,12 +5,17 @@
 	class Interest extends Core_Table{
 		private  $table_name = "interest";
 		private $interest_activity = null;
-		private $similar_interest_block_template_path = TEMPLATE_PATH_CHILD."similar_interest_block.phtml";
+		private $suggest_friend_block = TEMPLATE_PATH_CHILD."suggest_friend_block.phtml";
 		public function __construct(){
 			parent::__construct($this->table_name);
 			include_once 'Interest_Activity.php';
 			$this->interest_label_image = new User_Interest_Label_Image();
 			$this->interest_activity = new Interest_Activity();
+		}
+		
+		
+		public function isUserHasInterest($user_id){
+			return $this->isRowForUserExists($user_id);
 		}
 
 		public function getInterestNameForUser($user_id, $limit_row){
@@ -559,11 +564,28 @@
 			$content = null;
 			if($user_found !== false){
 				ob_start();
-				include($this->similar_interest_block_template_path);
+				include($this->suggest_friend_block);
 				$content = ob_get_clean();
+			}else{
+					
 			}
 			return $content;
 		}
+		
+		
+		public function getAddNewInterestBlock(){
+			$request_user_page_has_interest = false;
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'add_new_interest_block.phtml');
+			$content = ob_get_clean();
+			return $content;
+		}
+		
+		
+		public function getIndexInterestPreviewBlock(){
+			
+		}
+		
 		
 		
 	}

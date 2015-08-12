@@ -1,52 +1,7 @@
 <!---interest page-->
 <?php if($page_own): //allow editing ?>
 	<div id="add-new-interest-wrapper" class="inline-blk <?php echo (($request_user_page_has_interest)?" hdn":"") ?>" style="width:80%">
-	<div id="add-new-interest" class="inline-blk" style="width:56%">
-		<div class="dialog-header"><div class="title">Add New Interest</div></div>
-		<div class="dialog-body">
-			<div style="margin:10px 10px 0px 8px;position:relative" >
-				<label class="pointer" title="Upload a picture label for your interest">
-					<div class="picture-upload-wrapper">
-							<img class="target-image hdn"  src="" height="36" width="36">
-							<div class="picture-upload-black-overlay"></div>
-							<div class="camera-center vertical-center" ><img class="camera-icon"  src="<?php echo IMGDIR ?>camera.png"  height="18" width="18"></div>
-					</div>
-					<form method="POST" enctype="multipart/form-data">
-						<input id="new-interest-picture" class="hdn-input" type="file" name="profile-pic" title="Upload a picture label for your interest">
-					</form>
-				
-				</label>
-	
-				<div class="in-name-input-wrapper">
-					<input class="in-ed-input in-txt-n" type="text" maxlength="32" placeholder="Add a name for your interest" title="add an name for your interest">
-				</div>
-				<textarea class="in-ed-input" style="height:80px;margin-top:3px;" placeholder="Let your friends know more about your interest, like experience, favoriate event, etc... "  title="add some descriptions about your interest"></textarea>
-				<div style="text-align:right;padding:10px 0px">
-					<select class="ep">
-						<option data-option="-1">Add your experience</option>
-						<option data-option="0">less than 1 Year</option>
-						<option data-option="1">1 Year</option>
-						<?php
-							for($i = 2; $i<=10; $i++){
-								echo '<option data-option="'.$i.'">'.$i.' Years</option>';
-							}
-						?>
-						<option data-option="11">more than 10 years</option>
-					</select>
-				</div>	
-				<div class="edit-dialog-footer">
-					<?php if($request_user_page_has_interest): ?>
-						<div class="inline-blk cancel-button">Cancel</div>
-					<?php endif; ?>
-					<div id="add-interest" class="inline-blk action-button" style="margin-left:4px;" >Add Interest</div>
-				</div>
-				
-				<div class="loading-icon-wrapper" style="border-radius:0px;"><div class="vertical-center" style="text-align:center;"><img class="loading-icon" src="<?php  echo IMGDIR ?>loading_icon.gif" height="40" width="40"></div></div>
-
-				
-			</div>
-		</div>
-	</div>	
+		<?php include_once 'add_new_interest_block.phtml'; ?>
 	</div>
 <?php endif; ?>
 

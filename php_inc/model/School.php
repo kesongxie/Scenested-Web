@@ -33,6 +33,23 @@
 		}
 		
 		
+		public static function getSchooIdsLikeSchoolName($school_name){
+			$database_connection = new Database_Connection();
+			$stmt = $database_connection->getConnection()->prepare("SELECT `id` FROM `school` WHERE `school_name` like ? || `picture_url` like ? ");
+			$school_name = '%'.trim($school_name).'%';
+			$stmt->bind_param('ss',$school_name, $school_name);
+			if($stmt->execute()){
+				 $result = $stmt->get_result();
+				 if($result !== false && $result->num_rows >= 1){
+				 	$row = $result->fetch_all(MYSQLI_ASSOC);
+				 	$stmt->close();
+					return $row;
+				 }
+			}
+			return false;
+		}
+		
+		
 		public static function getSuggestSchoolBlockByKeyWord($key_word,$limit){
 			$database_connection = new Database_Connection();
 			$connection = $database_connection->getConnection();

@@ -1,12 +1,14 @@
 <?php
 	include_once 'core_table.php';
 	class Email_Code_Validator extends Core_Table{
+		private $table_name;
 		public function __construct($table_name){
 			parent::__construct($table_name);
+			$this->table_name = $table_name;
 		}
 		
 		public function insertEntry($user_id, $code){
-			if($this->deleteRowByUserId($user_id)){
+			if($this->deleteEntryForUser($user_id)){
 				$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`code`) VALUES(?, ?)");
 				if($stmt){
 					$stmt->bind_param('is',$user_id,$code);
@@ -34,8 +36,8 @@
 			return false;
 		}
 		
-		public function deleteEntryWhenFinished($user_id){
-			$this->deleteRowByUserId($user_id);	
+		public function deleteEntryForUser($user_id){
+			return $this->deleteRowByUserId($user_id);	
 		}
 		
 	}

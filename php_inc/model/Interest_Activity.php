@@ -40,53 +40,63 @@
 		}
 		
 		
+		
+		
+		
 		public function getInitialPageFeed(){
 			include_once 'User_In_Interest.php';
 			$in = new User_In_Interest();
 			$friends = $in->getAllFriendsInUsersInterest();
-			$user_in = '';
-			foreach($friends as $friend){
-				$user_in.="'".$friend['user_id']."',";
+			$left_content = "";
+			$left_content = $this->getIndexAvator();						
+			$right_content = "";
+			
+			include_once 'Interest.php';
+			$interest  = new Interest();
+			if($interest->isUserHasInterest($_SESSION['id'])){
+				$right_content = $this->getRecentPostPreview();			
+			}else{
+				$right_content = $interest->getAddNewInterestBlock();			
 			}
 			
-			$user_in = $user_in.$_SESSION['id'];
 			
-			//$user_in = trim($user_in,',');
-			$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) ORDER BY `id` DESC");			
 			
-			if($stmt){
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows >= 1){
-						$rows = $result->fetch_all(MYSQLI_ASSOC);
-						$stmt->close();
-						$left_content = "";
-						$left_content = $this->getIndexAvator();						
-						$right_content = "";
-						$right_content = $this->getRecentPostPreview();			
-						$count = 1;
-						foreach($rows as $row){
-							$content = '';
-							if($row['type'] == 'm'){
-								$content = $this->getMomentInterestActivityBlockByActivityId($row['id'], true);
-							}else if($row['type'] == 'e'){
-								$content = $this->getEventInterestActivityBlockByActivityId($row['id'], true);
+			if($friends !== false && sizeof($friends >= 1 )){
+				$user_in = '';
+				foreach($friends as $friend){
+					$user_in.="'".$friend['user_id']."',";
+				}
+				$user_in = $user_in.$_SESSION['id'];
+				$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) ORDER BY `id` DESC");			
+			
+				if($stmt){
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$rows = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							$count = 1;
+							foreach($rows as $row){
+								$content = '';
+								if($row['type'] == 'm'){
+									$content = $this->getMomentInterestActivityBlockByActivityId($row['id'], true);
+								}else if($row['type'] == 'e'){
+									$content = $this->getEventInterestActivityBlockByActivityId($row['id'], true);
+								}
+								if($count++ % 2 == 0){
+									$left_content.= $content;
+								}else{
+									$right_content.= $content;
+								}
 							}
-							if($count++ % 2 == 0){
-								$left_content.= $content;
-							}else{
-								$right_content.= $content;
-							}
-						}
-						ob_start();
-						include(TEMPLATE_PATH_CHILD.'index_new_feed.phtml');
-						$content = ob_get_clean();
-						return $content;
-					 }
+						 }
+					}
 				}
 			}
-			echo $this->connection->error;
-			return false;
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'index_new_feed.phtml');
+			$content = ob_get_clean();
+			return $content;
 		}
 		
 		

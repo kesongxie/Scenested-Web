@@ -104,6 +104,14 @@ function setVisibleContent(){
 	});
 }
 
+function checkPassword(str)
+  {
+   	//combination of letters and numbers
+    // at least six characters
+    var re = /(?=.*\d)(?=.*[a-zA-Z]).{6,}/;
+    return re.test(str);
+}
+
 
 
 function setVisibleContentWithParent(parent, text){

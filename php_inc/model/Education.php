@@ -15,6 +15,16 @@
 			return $school_id;
 		}
 		
+		public function getSchoolName(){
+			$school_id = $this->getColumnByUserId('school_id',$_SESSION['id']);
+			$school_name = false;
+			if($school_id !== false){
+				$school_name = School::getSchoolNameBySchoolId($school_id);
+			}
+			return ($school_name !== false )?$school_name:'Borough of Manhattan Community College';
+		}
+		
+		
 		
 		public function getEducationByUserId($user_id){
 			$education = $this->getMultipleColumnsByUserId(array('school_id','major_id'),$user_id);
@@ -71,6 +81,7 @@
 		}
 		
 		public function returnMatchedUserForSchool($school_name){
+		
 			include_once 'Interest.php';
 			$interest = new Interest();
 			$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
@@ -80,10 +91,22 @@
  					$interest_like .= $interest['name'].'|';	
 				}
 				$interest_like = trim($interest_like,'|');
-				$search_school_id = School::getSchooIdBySchoolName($school_name);
+			}
 			
-				if($search_school_id !== false){
-					//use random offset to get random user
+			$search_school_array = School::getSchooIdsLikeSchoolName($school_name);
+			$search_school_id = '';
+			if($search_school_array !== false){
+				foreach($search_school_array as $id){
+					$search_school_id .= "'".$id['id']."',";
+				}
+				$search_school_id = trim($search_school_id,',');
+			}
+			
+			
+			
+			if($search_school_array !== false){
+				//use random offset to get random user
+				if($interest_like != ''){
 					$stmt = $this->connection->prepare("
 					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 					FROM education 
@@ -91,29 +114,41 @@
 					ON education.user_id=user.id
 					LEFT JOIN interest
 					ON user.id = interest.user_id
-					WHERE education.school_id = ? AND (interest.name REGEXP ?  || interest.description REGEXP ?) AND user.id !=? 
-					
+					WHERE education.school_id IN ($search_school_id) AND (interest.name REGEXP ?  || interest.description REGEXP ?) 
+				
 					UNION 
-					
+				
 					SELECT DISTINCT user.id,  CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 					FROM education 
 					LEFT JOIN user
 					ON education.user_id=user.id
-					WHERE  education.school_id = ?  AND user.id !=? 
+					WHERE  education.school_id IN ($search_school_id) 
 					");
-					if($stmt){
-						$stmt->bind_param('issiii',$search_school_id, $interest_like,$interest_like,$_SESSION['id'],$search_school_id, $_SESSION['id']);
-						if($stmt->execute()){
-							 $result = $stmt->get_result();
-							 if($result !== false && $result->num_rows >= 1){
-								$row = $result->fetch_all(MYSQLI_ASSOC);
-								$stmt->close();
-								return $row;
-							 }
-						}
+				}else{
+					$stmt = $this->connection->prepare("
+					SELECT DISTINCT user.id,  CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM education 
+					LEFT JOIN user
+					ON education.user_id=user.id
+					WHERE  education.school_id IN ($search_school_id) 
+					");
+				}
+				
+				if($stmt){
+					if($interest_like != ''){
+						$stmt->bind_param('ss', $interest_like,$interest_like);
+					}
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							return $row;
+						 }
 					}
 				}
 			}
+			
 			echo $this->connection->error;
 			return false;
 		}

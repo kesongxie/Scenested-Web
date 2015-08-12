@@ -169,6 +169,10 @@
 	}	
 	
 	
+	function checkPasswordValid($p){
+		return preg_match('/(?=.*\d)(?=.*[a-zA-Z]).{6,}/', $p ) == 1;
+	}
+	
 	
 	
 	

@@ -133,7 +133,7 @@ EOF;
 				// Additional headers
 				$headers .= 'From: Lsere <kesongxie1993@gmail.com>'."\r\n";
 				
-				if($email_account_activation->insertRegisterEntry($register_id, $code) && mail($to, $subject, $message, $headers)){
+				if($email_account_activation->insertEntry($register_id, $code) && mail($to, $subject, $message, $headers)){
 					echo '0';
 				}else{
 					echo '11'; //email failed

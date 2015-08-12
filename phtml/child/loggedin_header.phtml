@@ -8,11 +8,10 @@
 			<div id="global-search-bar-inner">
 				<form  id="search-submit-form" class="hdn-input">
 					<label for="search-submit"><img src="<?php echo IMGDIR ?>search_icon.png"  title="search" style="z-index:1;height:18px; width:18px;cursor:pointer"></label>
-					<input autocomplete="off" type="text" name="search_box" placeholder="Search your friend or event..." value="<?php echo (isset($_GET['q'])&&!empty(trim($_GET['q'])))?htmlentities($_GET['q']):'' ?>">
+					<input autocomplete="off" type="text" name="search_box" placeholder="Search friends, interests, moment, etc..." value="<?php echo (isset($_GET['q'])&&!empty(trim($_GET['q'])))?htmlentities($_GET['q']):'' ?>">
 					<input type="submit" id="search-submit" class="hdn-input hdn">
 				</form>
 				<div id="search-result-container" class="hdn"></div>
-				
 			</div>
 			
 			
