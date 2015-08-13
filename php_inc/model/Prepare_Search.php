@@ -149,29 +149,29 @@
 	
 						$result_array = array();
 						$count = 0;	
-						foreach($rows as $row){
-							if(stripos($row['name'], $this->search_keyword) !== false || stripos($row['description'], $this->search_keyword) !== false){
-								array_push($result_array, $row);
-								unset($rows[$count]);
-							}
-							$count++;
-						}
-						
-						$result_array = array_merge($result_array,$rows);
 						$interest_list = '';
- 						if($result_array !== false){
-							$results = array_slice($result_array,0,2);
-							$count = 1;
-							foreach($results as $result){
-								if($count == 2){
-									$interest_list .= ' and '.$result['name'];
-								}else{
-									$interest_list .=  $result['name'];
+						if($rows !== false){
+							foreach($rows as $row){
+								if(stripos($row['name'], $this->search_keyword) !== false || stripos($row['description'], $this->search_keyword) !== false){
+									array_push($result_array, $row);
+									unset($rows[$count]);
 								}
 								$count++;
 							}
+							$result_array = array_merge($result_array,$rows);
+							if($result_array !== false){
+								$results = array_slice($result_array,0,2);
+								$count = 1;
+								foreach($results as $result){
+									if($count == 2){
+										$interest_list .= ' and '.$result['name'];
+									}else{
+										$interest_list .=  $result['name'];
+									}
+									$count++;
+								}
  						}
- 						
+ 						}
  						include_once 'Education.php';
 						$educ = new Education();
 						$education = $educ->getEducationByUserId($u['id']);
@@ -277,10 +277,11 @@
 		public function getSearchBarResult(){
 			include_once 'User_Profile_Picture.php';
 			$interest  = new Interest();
+			include_once 'Education.php';
 			$profile = new User_Profile_Picture();
 			$user = new User_Table();
 			$result_found = array();
-			$user_found = $user->returnMatchedUserBySearchkeyWord($this->search_keyword, 8);
+			$user_found = $user->returnMatchedUserBySearchkeyWord($this->search_keyword, 6);
 			$serach_result_user_id_array = array();
 			if($user_found !== false){
 				$result_found = $user_found;
@@ -290,7 +291,7 @@
 			}	
 			
 			$count = sizeof($result_found);
-			$interest_found = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, 8);
+			$interest_found = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, 6-$count);
 			if($interest_found !== false){
 				foreach($interest_found as $i){
 					if($count <= 8){

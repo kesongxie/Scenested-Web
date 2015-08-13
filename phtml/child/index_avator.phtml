@@ -1,6 +1,8 @@
  <div class="user-profile-wrapper" style="width:100%;position:relative" >
-		<div style="width:100%;height:140px;overflow:hidden;position:relative;background:#102846;;">
-			<img  style="width:100%;" src="<?php echo $cover_pic ?>">
+		<div class="cover-wrapper">
+			<?php if($cover_pic !== false): ?>
+				<img  style="width:100%;" src="<?php echo $cover_pic ?>">
+			<?php endif; ?>
 		</div>
 	<div class="avator-inner-bottom" style="z-index:2;position:relative">
 	<div class="avator-picture-wrapper" style="margin-top:-40px;margin-left:14px;" >

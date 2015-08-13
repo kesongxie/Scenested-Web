@@ -11,29 +11,15 @@
 		<div style="background:#fff; padding:20px;">
 		<?php 
 			if($user_id != $_SESSION['id']){ 
-				echo $firstname." hasn't listed $hisOrHer passed event";
+				echo $firstname." has no event available";
 			}else{
-				echo "You haven't listed your passed event yet";
+				echo 'You have no event available<span class="plain-lk pointer suggest-message"> Search events match your interests</span>';
 			}
 		?>
 		</div>
 	<?php endif; ?>
 	
 </div>
-
-
-<!-- 
-<div id="upcom-evt" class="inline-blk hdn" style="width:82%"></div>
- -->
-
-<!-- 
-<div  class="inline-blk" style="width:14%;">
-  	<div id="show-upcom-evt" class="interest-sider-navi pointer" style="margin-bottom:10px;" data-key="<?php echo $hash ?>"><span class="plain-lk">Upcomings<?php echo ($upcoming_event_num > 0)?"($upcoming_event_num)":'' ?></span></div>
-	<div id="show-passed-evt" class="interest-sider-navi pointer act-evt-navi" style="margin-bottom:10px;"><span class="plain-lk">Passed</span></div>
-
-</div>
- -->
-
 
 
 

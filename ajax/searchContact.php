@@ -6,7 +6,11 @@
 	if(isset($_POST['q']) && !empty(trim($_POST['q']))){
 		$search = new Prepare_Contact_Search();
 		$search_bar_result =  $search->searchContactInSearchBarByKeyWord(trim($_POST['q']));
-		echo $search_bar_result;
+		if($search_bar_result == ''){
+			echo '<div style="margin: 10px 0px;font-size: 15px;">No contact found</div>';
+		}else{
+			echo $search_bar_result;
+		}
 	}
 	
 	

@@ -1,0 +1,9 @@
+<div style="margin: 8px 16px 10px 16px; line-height: 1.48;margin-bottom:18px;">
+		<?php if($labelImage !== false && is_url_exist($labelImage)): ?>
+			<div class="interest-image-label">
+				<img style="height:30px;width:30px;border-radius:4px" src="<?php echo $labelImage ?>">
+			</div>
+		<?php  endif;?>
+		<div style="color: #525252;font-weight: bold;"><?php echo $experience; ?></div>
+	<div class="txt_ofl"><?php echo $description; ?></div>
+</div>

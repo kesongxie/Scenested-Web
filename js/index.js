@@ -308,7 +308,6 @@ $(document).ready(function(){
 			}
 			return false;
 		}
-	
 	},'#index-post-wrapper .interest-profile .bar-title.option');
 	
 	
@@ -319,7 +318,7 @@ $(document).ready(function(){
 			var inner = $(this).parents('.interest-content-inner-wrapper');
 			var activeKey = inner.attr('data-key');
 			var key = $(this).attr('data-key');
-			$(this).parents('.switcher').hide();
+			$(this).parents('.switcher').addClass('hdn');
 			if(activeKey != key){
 				var request_inner = parentDiv.find('.interest-content-inner-wrapper[data-key='+key+']');
 				if(request_inner.length > 0){
@@ -339,7 +338,6 @@ $(document).ready(function(){
 				}
 			}
 		}
-	
 	},'#index-post-wrapper .interest-profile .switcher .in_con_w_opt_it');
 	
 	
@@ -347,13 +345,9 @@ $(document).ready(function(){
 	$('#add-new-interest').on({
 		click:function(){
 			var parentDiv = $('#add-new-interest');
-			
 			var loading_wrapper = parentDiv.find('.loading-icon-wrapper');
 			var actionButton = parentDiv.find('.edit-dialog-footer .action-button');
-			
-			
 			var image_label =parentDiv.find('.target-image');
-			
 			//elements
 			var image_file = parentDiv.find('input[type=file]');
 			var name_input =parentDiv.find('input[type=text]');
@@ -419,10 +413,57 @@ $(document).ready(function(){
 	},'#add-interest');
 	
 	
+	$('body').on({
+		mouseover:function(){
+			$(this).find(".camera-center").fadeIn('fast');
+			$(this).find(".picture-upload-black-overlay").fadeIn('fast');
+			
+		},
+		mouseleave:function(){
+			if($(this).find(".target-image").attr('src') != ''){
+				$(this).find(".camera-center").fadeOut('fast');
+			}
+			$(this).find(".picture-upload-black-overlay").fadeOut('fast');
+
+		}
+	
+	},'.picture-upload-wrapper');
 	
 	
 	
-	
+	$('#new-interest-picture').on('change',function(){
+		var parentLabel = $(this).parents('label');
+		var imgTarget = parentLabel.find('.target-image');
+		var old_src = imgTarget.attr('src');
+		var camera = parentLabel.find('.camera-center');
+		parentLabel.find('.picture-upload-black-overlay').hide();
+		var thisE = this;
+		var data=new FormData();
+		data.append('profile-pic',$(this)[0].files[0]);
+		readURL(thisE,imgTarget);
+
+		$.ajax({
+			url:AJAX_DIR+'validate_image_label.php',
+			type:'POST',
+			processData: false,
+			contentType: false,
+			data:data,
+			success:function(resp){
+				if(resp == '1'){
+					presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
+					imgTarget.attr('src',old_src);
+					if(old_src == ''){
+						imgTarget.addClass('hdn');	
+						camera.show();
+						return false;
+					}
+				}
+				imgTarget.removeClass("hdn");
+				camera.hide();
+			}
+		});
+		
+	});
 	
 	
 	

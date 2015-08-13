@@ -1202,6 +1202,16 @@ div.ui-datepicker{
 	height:280px;
 }
 
+
+.user-profile-wrapper .cover-wrapper{
+	width:100%;
+	height:140px;
+	overflow:hidden;
+	position:relative;
+	background:#630C1C;
+}
+
+
 .user-profile{
 	width:100%;
 	height:100%;
@@ -1358,5 +1368,7 @@ img.gallery-navi{
 	border-bottom:1px solid #f0f0f0;
 	cursor:default;
 }
-
+.suggest-message{
+	color:#062AA3;
+}
 

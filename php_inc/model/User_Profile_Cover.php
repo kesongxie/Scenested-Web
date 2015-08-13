@@ -16,7 +16,7 @@
 			if($prefix && $image_file){
 				return U_IMGDIR.$prefix.'/'.$image_file;
 			}else{
-				return DEFAULT_COVER_IMAGE;
+				return false;
 			}
 		}
 		

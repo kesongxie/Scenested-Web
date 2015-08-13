@@ -69,8 +69,8 @@
 					return true;
 				}else{
 					$hash =  $this->generateUniqueHash();
-					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`school_id`,`hash`) VALUES(?,  ?, ?)");
-					$stmt->bind_param('iis',$_SESSION['id'], $school_id, $hash);
+					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`major_id`,`hash`) VALUES(?,  ?, ?)");
+					$stmt->bind_param('iis',$_SESSION['id'], $major_id, $hash);
 					if($stmt->execute()){
 						$stmt->close();
 						return true;
@@ -81,7 +81,6 @@
 		}
 		
 		public function returnMatchedUserForSchool($school_name){
-		
 			include_once 'Interest.php';
 			$interest = new Interest();
 			$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);

@@ -8,21 +8,25 @@
 				</span>
 			</div>
 			<div class="chat-body" style="padding:0px 10px;position:relative;">
+<!-- 
 				<div style="margin-top:10px;font-size:13px;">
 						<div style="font-size:15px;">No contact available</div>
 						<a href="<?php echo SEARCH_PEOPLE_PATH.$school_name ?>" class="plain-lk" style="color:rgb(180, 40, 40)">Search friends with similar interests in campus</a>
 				</div>
-				<div class="hdn">
+ -->
+
+				
 				<?php if($contact_block !== false): ?>
 					<?php echo $contact_block; ?>
 				<?php else: ?>
 					<div style="margin-top:10px;font-size:13px;">
 						<div style="font-size:15px;">No contact available</div>
-						<div class="plain-lk" style="color:rgb(180, 40, 40)">Search friends</div>
+						<a href="<?php echo SEARCH_PEOPLE_PATH.$school_name ?>" class="plain-lk" style="color:rgb(180, 40, 40)">Search friends with similar interests in campus</a>
+
 					</div>
 					
 				<?php endif; ?>
-				</div>
+				
 				<div id="broken-connect-overlay" class="broken-connect<?php echo (isset($_SESSION['id']))?' hdn':'' ?>">
 				</div>	
 			</div>

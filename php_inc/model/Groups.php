@@ -145,11 +145,12 @@
 			ON groups.id = event_group.group_id 
 			LEFT JOIN event
 			ON event_group.event_id = event.id
-			WHERE  event.title LIKE ? || event.description LIKE ? || event.location LIKE ?
+			WHERE  groups.user_in LIKE ? AND (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?)
 			");			
 			if($stmt){
+				$user_in = '%'.$_SESSION['id'].',%';
 				$key_word = '%' .$key_word. '%';
-				$stmt->bind_param('sss',$key_word,$key_word,$key_word);
+				$stmt->bind_param('ssss',$user_in,$key_word,$key_word,$key_word);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){

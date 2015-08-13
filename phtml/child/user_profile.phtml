@@ -1,6 +1,8 @@
 <div class="user-profile operation-triggeable" style="width:100%;position:relative" data-key="<?php echo $hash ?>">
 		<div class="cover-wrapper">
-			<img  style="width:100%;" src="<?php echo $cover_pic ?>">
+			<?php if($cover_pic !== false): ?>
+				<img  style="width:100%;" src="<?php echo $cover_pic ?>">
+			<?php endif; ?>
 			<?php if($user_id != $_SESSION['id']): ?>
 				<img src="<?php echo IMGDIR ?>menu_navi_icon.png" style="float:none;width:20px;height:14px;position: absolute; right: 12px; top: 12px;"class="trigger-pop hdn toggle-operation pointer">
 			<?php endif; ?>
@@ -12,12 +14,25 @@
 		</div>
 		<div class="inline-blk fullname" style="margin:0px 0px -4px 0px;vertical-align:bottom;font-size: 15px;color: #323232;font-weight: bold;"><?php echo htmlentities($fullname); ?></div>
 		<div class="summary" style=margin-top:10px;"">
-			<div style="font-size:13px;" class="txt_ofl"><?php echo $education['school_name']; ?></div>
-			<?php if($interest_list != ''): ?>
+			<?php if($education !== false): ?>
 				<div style="font-size:13px;" class="txt_ofl">
-					Interested in <?php echo htmlentities($interest_list) ?>
+					<?php 
+						if($education !== false){
+							if($education['school_name'] !== false){
+								echo $education['school_name'];
+							}else if($education['study'] !== false){
+								echo $education['study'];
+							}
+						}
+					 ?>
 				</div>
-			<?php endif; ?>	
+			<?php endif;?>
+				<div style="font-size:13px;" class="txt_ofl">
+					<?php if($interest_list != ''): ?>
+						Interested in <?php echo htmlentities($interest_list) ?>
+					<?php endif; ?>
+				</div>
+			
 		</div>
 	</div>
 	

@@ -60,7 +60,6 @@
 			}
 			
 			
-			
 			if($friends !== false && sizeof($friends >= 1 )){
 				$user_in = '';
 				foreach($friends as $friend){
@@ -144,21 +143,27 @@
 		
 		public function getRecentPostPreview(){
 			$stmt = $this->connection->prepare("SELECT `id`,`interest_id`,`type` FROM `$this->table_name` WHERE `user_id` = ? ORDER BY `id` DESC LIMIT 1");			
-			
 			if($stmt){
 				$stmt->bind_param('i',$_SESSION['id']);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){
 						$row = $result->fetch_assoc();
-						$recent_post =  $this->getRecentPostBlockByInterestId($row['interest_id'], $row['id'], $row['type']);
-						ob_start();
-						include(TEMPLATE_PATH_CHILD.'index_post_wrapper.phtml');
-						$content = ob_get_clean();
-						return $content;
+						$content =  $this->getRecentPostBlockByInterestId($row['interest_id'], $row['id'], $row['type']);
+						
+					}else{
+						include_once 'Interest.php';
+						$interest = new Interest();
+						$content =  $interest->getIndexInterestPreviewBlock($_SESSION['id']);
 					}
+					ob_start();
+					include(TEMPLATE_PATH_CHILD.'index_post_wrapper.phtml');
+					$content = ob_get_clean();
+					return $content;
 				}
 			}
+			
+			
 			return false;
 		}
 		
@@ -193,7 +198,6 @@
 						}
 					}
 				}
-		
 				$interest_name = $interest->getInterestNameByInterestId($interest_id);
 				ob_start();
 				include(TEMPLATE_PATH_CHILD.'index_recent_post_preview_block.phtml');
@@ -490,7 +494,7 @@
 					LEFT JOIN event
 					ON event_group.event_id = event.id
 					LEFT JOIN interest_activity
-					ON event.interest_activity_id = interest_activity.id WHERE TIMESTAMP(event.date, event.time) < NOW()
+					ON event.interest_activity_id = interest_activity.id WHERE groups.user_in LIKE ? AND  TIMESTAMP(event.date, event.time) < NOW()
 		 
 				) dum ORDER BY TIMESTAMP(date,time) DESC
 				");
@@ -510,13 +514,14 @@
 					LEFT JOIN event
 					ON event_group.event_id = event.id
 					LEFT JOIN interest_activity
-					ON event.interest_activity_id = interest_activity.id 
+					ON event.interest_activity_id = interest_activity.id WHERE groups.user_in LIKE ?
 				) dum ORDER BY TIMESTAMP(date,time) DESC
 				");
 			}
 			
 			if($stmt){
-				$stmt->bind_param('i',$user_id);
+				$user_in = '%'.$user_id.',%';
+				$stmt->bind_param('is',$user_id, $user_in);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false){

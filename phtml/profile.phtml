@@ -28,7 +28,8 @@
 			<div id="profile-sider-bar-left" class="inline-blk side-bar">
 					<div id="avator-wrapper" class="user-profile operation-triggeable" style="height:230px;" data-key="<?php echo $request_user_page_hash; ?>">
 						<div class="avator-inner-top"  style="z-index:1">
-							<img class="profile-image" src="<?php echo $user->getLatestCoverForuser($request_user_page_id); ?>" >
+							<?php $cover_pic = $user->getLatestCoverForuser($request_user_page_id); ?>
+							<img class="profile-image<?php echo ($cover_pic === false)?' hdn':'' ?>" src="<?php echo $cover_pic; ?>" >
 							<?php if($request_user_page_id != $_SESSION['id']): ?>
 								<img src="<?php echo IMGDIR ?>menu_navi_icon.png" style="float:none;width:20px;height:14px;position: absolute; right: 12px; top: 12px;"class="trigger-pop hdn toggle-operation pointer">
 							<?php endif; ?>

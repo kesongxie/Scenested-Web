@@ -208,11 +208,6 @@ $(document).ready(function(){
 	
 	
 	
-	
-	
-	
-	
-	
 	$('#upload-cover').on('change',function(){
 		var imgTarget = $('#avator-wrapper .avator-inner-top .profile-image');
 		var old_src = imgTarget.attr('src');
@@ -231,7 +226,10 @@ $(document).ready(function(){
 				if(resp == '1'){
 					presentPopupDialog("Bad Image", BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 					imgTarget.attr('src',old_src);
+				}else{
+					imgTarget.removeClass('hdn');
 				}
+				
 				avator_loading_icon.hide();
 			}
 		});
@@ -392,6 +390,7 @@ $(document).ready(function(){
 	},'.avator-inner-top');
 	
 	
+	
 	$('body').on({
 		mouseover:function(){
 			$(this).find(".camera-center").fadeIn('fast');
@@ -407,7 +406,6 @@ $(document).ready(function(){
 		}
 	
 	},'.picture-upload-wrapper');
-	
 	
 	
 	$('body').on({
@@ -1120,7 +1118,7 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
-			var actionDiv = $(this).parents('.action');
+			var actionDiv = $(this).parents('.side-block-wrapper').find('.action');
 			actionDiv.find('.in_con_opt_w').toggleClass('act').toggleClass('hdn');	
 			return false;
 		}
@@ -1142,6 +1140,8 @@ $(document).ready(function(){
 	
 	$('body').on({
 		keyup:function(evt){
+		
+		
 			var thisE = $(this);
 			var name = thisE.val();
 			var parentDiv = thisE.parents('.side-block-wrapper');
@@ -1150,6 +1150,7 @@ $(document).ready(function(){
 			var empty = parentDiv.find('.empty');
 			var input_wrapper = thisE.parents('.edit-input');
 			suggest = input_wrapper.find('.school-name-suggest');
+			parentDiv.find('.popover-dialog-wrapper').remove();
 			if(name.trim() == ''){
 				suggest.html('').addClass('hdn');
 			}
@@ -1165,15 +1166,16 @@ $(document).ready(function(){
 					success:function(resp){
 						console.log(resp);
 						if(resp != '1'){
+							console.log(resp);
 							empty.removeClass('act').addClass('hdn');
 							edit.removeClass('act').addClass('hdn');
 							main.addClass('act').removeClass('hdn');
 							main.find('.name').text(name).attr('href', DEFAULT_SEARCH_PATH+name);
-							suggest.html(resp).removeClass('hdn');
 							parentDiv.find('.side-blur-action.hide-edit').removeClass('act').addClass('hdn');
 							parentDiv.find('.side-blur-action.show-edit').addClass('act').removeClass('hdn');
 							input_wrapper.addClass('hdn');
 						}else{
+							suggest.addClass('hdn');
 							showPopOverDialog(thisE, parentDiv, "School name not found");
 						}
 					}	

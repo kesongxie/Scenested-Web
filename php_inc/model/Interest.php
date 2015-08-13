@@ -371,7 +371,7 @@
 		
 		
 		
-		public function returnMatchedUserForMineInterest(){
+		public function returnMatchedUserForMineInterest($limit = -1){
 			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
 			$interest_like = '';
 			if($mine_interests !== false){
@@ -379,9 +379,14 @@
  					$interest_like .= $interest['name'].'|';	
 				}
 				$interest_like = trim($interest_like,'|');
-				include_once 'Education.php';
-				$edu = new Education();
-				$school_id = $edu->getSchoolIdByUserId($_SESSION['id']);
+			}
+			include_once 'Education.php';
+			$edu = new Education();
+			$school_id = $edu->getSchoolIdByUserId($_SESSION['id']);
+			
+			
+			if($interest_like != ''){
+			if($limit < 0){
 				if($school_id !== false){
 					//use random offset to get random user
 					$stmt = $this->connection->prepare("
@@ -390,39 +395,111 @@
 					LEFT JOIN interest
 					ON interest.user_id=user.id
 					LEFT JOIN education
-					ON user.id = education.user_id
-					AND user.id !=? WHERE (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
+					ON user.id = education.user_id  AND  user.id !=? 
+					WHERE (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
+					
 					UNION
 					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 					FROM user 
 					LEFT JOIN interest
-					ON interest.user_id=user.id  AND user.id !=? WHERE interest.name REGEXP ?  || interest.description REGEXP ? 
-					
+					ON interest.user_id=user.id   AND  user.id !=?  WHERE  interest.name REGEXP ?  || interest.description REGEXP ? 
 					");
-				}else{
+				}
+				else{
 					$stmt = $this->connection->prepare("
 					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 					FROM user 
 					LEFT JOIN interest
-					ON interest.user_id=user.id  AND user.id !=? WHERE interest.name REGEXP ?  || interest.description REGEXP ?
+					ON interest.user_id=user.id  AND  user.id !=?   WHERE  interest.name REGEXP ?  || interest.description REGEXP ?
 					");
 				}
-				if($stmt){
-					if($school_id !== false){
-						$stmt->bind_param('issiiss',$_SESSION['id'],$interest_like,$interest_like, $school_id,$_SESSION['id'],$interest_like,$interest_like);
-					}else{
-						$stmt->bind_param('iss',$_SESSION['id'],$interest_like,$interest_like);
-					}
-					if($stmt->execute()){
-						 $result = $stmt->get_result();
-						 if($result !== false && $result->num_rows >= 1){
-							$row = $result->fetch_all(MYSQLI_ASSOC);
-							$stmt->close();
-							return $row;
-						 }
-					}
+			}else{
+				if($school_id !== false){
+					//use random offset to get random user
+					$stmt = $this->connection->prepare("
+					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id
+					LEFT JOIN education
+					ON user.id = education.user_id  AND  user.id !=? 
+					WHERE  (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
+					
+					UNION
+					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id   AND  user.id !=?  WHERE   interest.name REGEXP ?  || interest.description REGEXP ? 
+					LIMIT ?
+					
+					");
+				}
+				else{
+					$stmt = $this->connection->prepare("
+					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM user 
+					LEFT JOIN interest
+					ON interest.user_id=user.id  AND  user.id !=?  WHERE interest.name REGEXP ?  || interest.description REGEXP ?
+					LIMIT ?
+					");
 				}
 			}
+			}else{
+				if($school_id !== false){
+					if($limit < 0){
+						$stmt = $this->connection->prepare("
+							SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+							FROM user 
+							LEFT JOIN education
+							ON user.id = education.user_id  AND  user.id !=? WHERE education.school_id = ? 
+						");
+					}else{
+						$stmt = $this->connection->prepare("
+							SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+							FROM user 
+							LEFT JOIN education
+							ON user.id = education.user_id  AND  user.id !=? WHERE education.school_id = ? LIMIT ?
+						");
+					}
+				}else{
+					$stmt = false;
+				}
+			}
+			
+			if($stmt){
+				if($interest_like != ''){
+					if($limit < 0){
+						if($school_id !== false){
+							$stmt->bind_param('issiiss',$_SESSION['id'],$interest_like,$interest_like, $school_id,$_SESSION['id'],$interest_like,$interest_like);
+						}else{
+							$stmt->bind_param('iss',$_SESSION['id'],$interest_like,$interest_like);
+						}
+					}else{
+						if($school_id !== false){
+							$stmt->bind_param('issiissi',$_SESSION['id'],$interest_like,$interest_like, $school_id,$_SESSION['id'],$interest_like,$interest_like, $limit);
+						}else{
+							$stmt->bind_param('issi',$_SESSION['id'],$interest_like,$interest_like, $limit);
+						}
+					}
+				}else{
+					if($school_id !== false){
+						if($limit < 0){
+							$stmt->bind_param('ii',$_SESSION['id'], $school_id);
+						}else{
+							$stmt->bind_param('iii',$_SESSION['id'], $school_id, $limit);
+						}
+					}
+				}
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			
 			echo $this->connection->error;
 			return false;
 		}
@@ -560,17 +637,36 @@
 			$interest  = new Interest();
 			$profile = new User_Profile_Picture();
 			$user = new User_Table();
-			$user_found = $this->returnMatchedUserForMineInterest();
+			$user_found = $this->returnMatchedUserForMineInterest(4);
+			
+			// if($user_found === false){
+// 				//get suggest user 
+// 				$user_found = $this->getSuggestFriends();
+// 			}else if(sizeof($user_found) < 4){
+// 				//load 4-sizeof suggest friends, and make sure the friends doesn't repeat
+// 				
+// 			}
+// 			
 			$content = null;
 			if($user_found !== false){
 				ob_start();
 				include($this->suggest_friend_block);
 				$content = ob_get_clean();
-			}else{
-					
 			}
 			return $content;
 		}
+		
+		
+		public function getSuggestFriends($limit = 4, $exclusive_users = false){
+			
+			
+		}
+		
+		
+		
+		
+		
+		
 		
 		
 		public function getAddNewInterestBlock(){
@@ -582,8 +678,23 @@
 		}
 		
 		
-		public function getIndexInterestPreviewBlock(){
-			
+		public function getIndexInterestPreviewBlock($user_id){
+			$interest = $this->getUserLastInterestByUserId($user_id);
+			if($interest !== false){
+				$interest_id = $interest['id'];
+				$labelImage = $this->interest_label_image->hasLabelImageForInterest($interest['id']);
+				$experience = $this->translateExperienceByNumber($interest['experience']);
+				$description = $interest['description'];
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'interest_preview_block.phtml');
+				$body = ob_get_clean();
+				$interest_name = $interest['name'];
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'index_recent_post_preview_block.phtml');
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
 		}
 		
 		
