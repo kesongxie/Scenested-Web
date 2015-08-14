@@ -639,14 +639,19 @@
 			$user = new User_Table();
 			$user_found = $this->returnMatchedUserForMineInterest(4);
 			
-			// if($user_found === false){
-// 				//get suggest user 
-// 				$user_found = $this->getSuggestFriends();
-// 			}else if(sizeof($user_found) < 4){
-// 				//load 4-sizeof suggest friends, and make sure the friends doesn't repeat
-// 				
-// 			}
-// 			
+			 if($user_found === false){
+				//get suggest user 
+				$user_found = $this->getSuggestFriends();
+			}else if(sizeof($user_found) < 4){
+				//load 4-sizeof suggest friends, and make sure the friends doesn't repeat
+				$exclusive_users = '';
+				foreach($user_found as $u){
+					$exclusive_users.="'".$u['id']."',";
+				}
+				$addition_suggest = $this->getSuggestFriends(4-sizeof($user_found), trim($exclusive_users,','));
+				$user_found = array_merge($user_found, $addition_suggest);
+			}
+			
 			$content = null;
 			if($user_found !== false){
 				ob_start();
@@ -658,7 +663,34 @@
 		
 		
 		public function getSuggestFriends($limit = 4, $exclusive_users = false){
-			
+			if($exclusive_users !== false){
+				$stmt = $this->connection->prepare("
+					SELECT DISTINCT interest.user_id AS user_id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM interest 
+					LEFT JOIN user
+					ON interest.user_id = user.id WHERE  interest.user_id != ?  AND interest.user_id NOT IN($exclusive_users) LIMIT ? 
+				");
+			}else{
+				$stmt = $this->connection->prepare("
+					SELECT DISTINCT interest.user_id AS user_id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+					FROM interest 
+					LEFT JOIN user
+					ON interest.user_id = user.id  WHERE  interest.user_id != ? AND interest.user_id LIMIT ?
+				");
+			}
+			if($stmt){
+				$stmt->bind_param('ii',$_SESSION['id'],$limit);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						
+						return $row;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
 			
 		}
 		
