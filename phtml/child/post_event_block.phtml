@@ -103,6 +103,9 @@
 	<div class="in_con_opt_w popover hdn" style="top:37px;right:4px;">
 		<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
 			<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
+			<?php //for those who have joined the event are able to upload the photos ?>
+				<div class="group-contact in_con_w_opt_it" data-key="<?php echo $group_key; ?>">Photo Collection</div>
+
 			<?php if($group_key !== false): ?>
 				<div class="group-contact in_con_w_opt_it" data-key="<?php echo $group_key; ?>">Group Message</div>
 			<?php endif; ?>

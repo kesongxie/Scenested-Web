@@ -81,7 +81,8 @@
 						$stmt->bind_param('iissss',$assoc_id, $user_id,$picture_url, $time, $caption, $hash);
 						if($stmt->execute()){
 							$stmt->close();
-							return $picture_url;
+							
+							return array('picture_url'=>$picture_url,'insert_id'=>$this->connection->insert_id);
 						}
 					}
 				}

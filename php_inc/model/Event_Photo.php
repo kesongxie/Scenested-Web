@@ -63,8 +63,17 @@
 		
 		public function uploadEventPhotoByEventId($photo_file, $user_id, $event_id, $caption = null){
 			$hash = $this->generateUniqueHash();
-			if($this->uploadCaptionableMediaForAssocColumn($photo_file, $user_id, $caption,$hash, 'event_id' , $event_id)!==false){
-				return $hash;
+			$result = $this->uploadCaptionableMediaForAssocColumn($photo_file, $user_id, $caption,$hash, 'event_id' , $event_id);
+			if($result !== false){
+				include_once 'User_Media_Prefix.php';
+				$prefix = new User_Media_Prefix();
+				$picture_url = convertThumbPathToOriginPath($prefix->getUserMediaPrefix($user_id).'/'.$result['picture_url']);
+				$previous_photo_hash = $this->getPreviousPhotoBeforeRowForEvent($result['insert_id'],$event_id);
+				$next_photo_hash = $this->getNextPhotoAfterRowForEvent($result['insert_id'],$event_id);
+				ob_start();
+				include TEMPLATE_PATH_CHILD.'single_evt_photo.phtml';
+				$content = ob_get_clean();
+				return $content;
 			}
 			return false;
 		}
@@ -72,6 +81,11 @@
 		public function getEventPhotoCaptionByPictureUrl($picture_url){
 			return $this->getColumnBySelector('caption', 'picture_url',$picture_url);
 		}
+		
+		
+		
+		
+		
 		
 		
 		public function loadEventPhotoPreviewBlock($hash){

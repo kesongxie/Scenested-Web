@@ -15,7 +15,6 @@
 		}
 		
 		
-		
 		public function addEventInterestActivityForUserByInterestId($user_id,$interest_id, $title,$description,$location, $date, $evt_time, $attached_picture, $caption, $with_interest_name){
 			$unique_hash = $this->generateUniqueHash();
 			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`interest_id`,`type`,`post_time`,`hash`) VALUES(?, ?, ?, ?, ?)");
@@ -706,12 +705,15 @@
 		public function isEvtPhotoUploadableByUserForEvent($user_id, $key){
 			//either in the joining list or the post owner, and the event should have already passed. true return an event id, false otherwise
 			$activity_id = $this->getRowIdByHashkey($key);
-			$this->event = new Event($activity_id);
-	
-			if($this->event->isEventPassedForActivityId($activity_id)){
-				return true;
-			}	
-			return false;
+ 			if($activity_id !== false){
+ 				$this->event = new Event($activity_id);
+ 				return true;
+ 			}
+ 			return false;
+// 			if($this->event->isEventPassedForActivityId($activity_id)){
+// 				return true;
+// 			}	
+// 			return false;
 		}
 		
 		/* $user_id is the user who is uploading the photo*/
