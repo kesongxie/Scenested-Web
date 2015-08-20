@@ -256,8 +256,9 @@
 				$event_joined = $this->event->hasUserJoinedEvent($_SESSION['id'], $event['id']);
 				include_once 'User_Media_Prefix.php';
 				$prefix = new User_Media_Prefix();
+				
 				$event_photo = $this->event->event_photo->getEventPhotoResourceByMomentId($event['id']);
-				$event_photo_num = $this->event->event_photo->getPhotoNumberForEvent($event['id']);
+				//$event_photo_num = $this->event->event_photo->getPhotoNumberForEvent($event['id']);
 				
 				$media_prefix = $prefix->getUserMediaPrefix($interest_activity['user_id']).'/';
 				if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo['picture_url'])){
@@ -290,6 +291,28 @@
 			}
 			return false;
 		}	
+		
+		
+		
+		public function getEventCoverForEventByPostKey($key){
+			$activity = $this->getMultipleColumnsBySelector(array('id','user_id'),'hash',$key);
+			if($activity !== false){
+				$this->event = new event($activity['id']);
+				$event_photo = $this->event->event_photo->getEventPhotoResourceByMomentId($this->event->event_id);
+				include_once 'User_Media_Prefix.php';
+				$prefix = new User_Media_Prefix();
+				$media_prefix = $prefix->getUserMediaPrefix($activity['user_id']).'/';
+				if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo['picture_url'])){
+					$event_photo_url = U_IMGDIR.$media_prefix.$event_photo['picture_url'];
+					$event_photo_hash = $event_photo['hash'];
+					ob_start();
+					include(TEMPLATE_PATH_CHILD.'event_cover.phtml');
+					$cover = ob_get_clean();
+					return $cover;
+				}
+			}
+			return false;
+		}
 		
 		
 		

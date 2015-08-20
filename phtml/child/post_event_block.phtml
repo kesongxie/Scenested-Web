@@ -3,7 +3,7 @@
 
 	<?php if($displayable): ?>
 		<img src="<?php echo IMGDIR ?>white-down-arrow.png" style="float:none;position: absolute; right: 14px; top: 14px;"class="trigger-pop toggle-operation pointer hdn">
-		<div class="pointer" style="max-height:200px;overflow:hidden;background:#f0f0f0">
+		<div class="pointer evt-cover">
 			<img class="previewable" style="width:100%;display:block;" src="<?php echo $event_photo_url ?>" data-key="<?php echo $event_photo_hash ?>" data-sourceFrom = "e">
 		</div>
 	<?php else: ?>
@@ -104,7 +104,7 @@
 		<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
 			<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
 			<?php //for those who have joined the event are able to upload the photos ?>
-				<div class="group-contact in_con_w_opt_it" data-key="<?php echo $group_key; ?>">Photo Collection</div>
+				<!-- <div class="group-contact in_con_w_opt_it" data-key="<?php echo $group_key; ?>">Photo Collection</div> -->
 
 			<?php if($group_key !== false): ?>
 				<div class="group-contact in_con_w_opt_it" data-key="<?php echo $group_key; ?>">Group Message</div>

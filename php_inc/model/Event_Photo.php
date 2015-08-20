@@ -78,6 +78,39 @@
 			return false;
 		}
 		
+		
+		public function loadSingleEvtPhotoByKey($hash, $user_id){
+			$result = $this->getMultipleColumnsBySelector(array('id','event_id','picture_url'),'hash',$hash);
+			if($result !== false){
+				include_once 'User_Media_Prefix.php';
+				$prefix = new User_Media_Prefix();
+				$picture_url = convertThumbPathToOriginPath($prefix->getUserMediaPrefix($user_id).'/'.$result['picture_url']);
+				$previous_photo_hash = $this->getPreviousPhotoBeforeRowForEvent($result['id'],$result['event_id']);
+				$next_photo_hash = $this->getNextPhotoAfterRowForEvent($result['id'],$result['event_id']);
+				ob_start();
+				include TEMPLATE_PATH_CHILD.'single_evt_photo.phtml';
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
+		}
+		
+		
+		//key for the photo
+		public function isPhotoDeletable($key){
+			$result = $this->getMultipleColumnsBySelector(array('event_id','user_id'),'hash',$key);
+			if($result !== false){
+				if($result['user_id'] == $_SESSION['id']){
+					$photo_num = $this->getRowsNumberForNumericColumn('event_id', $result['event_id']);
+					return $photo_num > 1;
+				}
+			}
+			return false;
+		}
+		
+		
+		
+		
 		public function getEventPhotoCaptionByPictureUrl($picture_url){
 			return $this->getColumnBySelector('caption', 'picture_url',$picture_url);
 		}

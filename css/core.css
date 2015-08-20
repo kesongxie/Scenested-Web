@@ -169,6 +169,11 @@ textarea{
 .evt-block .visible-control{
 	margin-left:20px;
 }
+.evt-block .evt-cover{
+	max-height:200px;
+	overflow:hidden;
+	background:#f0f0f0;
+}
 
 #side-event-info .evt-block .visible-control{
 	margin-left:6px;
@@ -1282,6 +1287,29 @@ div.ui-datepicker{
  	height:400px;
  	position:relative;
  	border-radius:6px;
+}
+.media-asset .navigate{
+	position:absolute;
+	top:0px;
+	height:100%;
+}
+
+.media-asset .caption{
+	position:absolute;
+	bottom:-24px;
+	right:10px;
+	opacity:0.6;
+	font-size:13px;
+}
+
+.media-asset .toggle-operation{
+	float:none;
+	width:20px;
+	height:14px;
+	position: absolute; 
+	right: 12px; 
+	top: 12px;
+	z-index:2;
 }
 
 .preview-image-wrapper{
