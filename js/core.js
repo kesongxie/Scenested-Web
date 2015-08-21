@@ -570,6 +570,19 @@ function setVisibleForBlurAction(){
 }
 
 
+function loadFavorNumberForActivity(parentDiv){
+	var key = parentDiv.attr('data-key');
+	$.ajax({
+		url:AJAX_DIR+'activity_favor_num.php',
+		method:'post',
+		data:{key:key},
+		success:function(resp){
+			parentDiv.find('.favor-num').text(resp);
+		}				
+	});
+}
+
+
 $(function(){
 	setInterval(function(){
 		//fetch new notification
@@ -1316,8 +1329,15 @@ $(document).ready(function(){
 			var data=new FormData();
 			data.append('profile-pic',$(this)[0].files[0]);
 			data.append('key',key);
-			
 			var thisE = this;
+			content_wrapper.find('.popover').remove();
+			photo_preview.find('.preview-image-wrapper').remove();
+			photo_preview.find('.preview-parent-wrapper').html('<div class="preview-image-wrapper act"><img src="" class="preview-image"></div>');
+			var imgTarget = parentDiv.find('.preview-image-wrapper.act').find('img');
+			readURL(thisE,imgTarget);
+			resizePreviewImage(imgTarget);
+			parentDiv.find('.preview-loading-wrapper').removeClass('hdn');
+			
 			$.ajax({
 				url:AJAX_DIR+'upload_evt_pht.php',
 				type:'POST',
@@ -1325,26 +1345,23 @@ $(document).ready(function(){
 				contentType: false,
 				data:data,
 				success:function(resp){
-					photo_preview.find('.preview-image-wrapper').remove();
-					photo_preview.find('.preview-parent-wrapper').html(resp);
-					var imgTarget = parentDiv.find('.preview-image-wrapper.act').find('img');
-					content_wrapper.find('.popover').remove();
-					resizePreviewImage(imgTarget);
-					resetNavigable(photo_preview);
-					console.log(resp);
-					return false;
 					if(resp == '1'){
 						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 						new_evt_pht_frame.remove();
 						preview_loading_wrapper.addClass('hdn');
-						return false;
+					}else if(resp !== '2'){
+						photo_preview.find('.preview-image-wrapper').remove();
+						photo_preview.find('.preview-parent-wrapper').html(resp);
+						var imgTarget = parentDiv.find('.preview-image-wrapper.act').find('img');
+					
+						resizePreviewImage(imgTarget);
+						resetNavigable(photo_preview);
+						parentDiv.find('.preview-loading-wrapper').addClass('hdn');
 					}
 					$(thisE).val('');
-					
 				}
 			});
 		}
-		
 	},'.upload-evt-pic');
 	
 	
@@ -1616,7 +1633,7 @@ $(document).ready(function(){
 			var src = thumb_src.replace('thumb_','');
 			var key = $(this).attr('data-key');
 			var from  =$(this).attr('data-sourcefrom');
-			var postKey = $(this).parents('.post-wrapper').attr('data-key');
+			var postKey = $(this).parents('.evt').attr('data-key');
 			$.ajax({
 				url:AJAX_DIR+'ld_preview_photo.php',
 				method:'post',
@@ -1723,6 +1740,9 @@ $(document).ready(function(){
 	$('body').on({
 		click:function(){
 			closePhotoPreview();
+		},
+		mouseover:function(){
+			return false;
 		}
 	},'#photo-preview .navigate')
 	
@@ -1753,7 +1773,7 @@ $(document).ready(function(){
 		click:function(){
 			window.location.href=$(this).attr('href');
 		}
-	},'#photo-preview .content-wrapper .dummy-lk');
+	},'#photo-preview .content-wrapper a');
 	
 	 $('body').on({
 		click:function(){
@@ -1768,7 +1788,16 @@ $(document).ready(function(){
 		click:function(){
 			loadIndividualConversation($(this));
 		}
-	},'.chat-body .individual-contact');
+	},'#chat-bar .individual-contact');
+	
+	$('body').on({
+		click:function(){
+			$(this).parents('.in_con_opt_w').addClass('hdn');
+			loadIndividualConversation($(this).parents('.user-profile'));
+		}
+	},'.user-profile .individual-contact');
+	
+	
 	
 	$('body').on({
 		click:function(){
@@ -2100,6 +2129,51 @@ $(document).ready(function(){
 		}
 	
 	},'.evt-block .evt-joined');
+	
+	
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.post-wrapper');
+			var key = parentDiv.attr('data-key');
+			var thisE = $(this);
+			$.ajax({
+				url:AJAX_DIR+'favor_activity.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					thisE.removeClass('favor-activity').addClass('undo-favor-activity').attr('title','Undo Favor');
+					loadFavorNumberForActivity(parentDiv);
+				}
+			});
+		}
+	
+	},'.post-wrapper .favor-activity');
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.post-wrapper');
+			var key = parentDiv.attr('data-key');
+			var thisE = $(this);
+			$.ajax({
+				url:AJAX_DIR+'undo_favor_activity.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					thisE.removeClass('undo-favor-activity').addClass('favor-activity').attr('title','Favor');
+					loadFavorNumberForActivity(parentDiv);
+				}
+			});
+		}
+	
+	},'.post-wrapper .undo-favor-activity')
+	
+	
+	
+	
+	
 	
 	
 	

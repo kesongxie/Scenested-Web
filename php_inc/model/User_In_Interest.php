@@ -129,18 +129,54 @@
 		
 		
 		
-		
-		public function getAllFriendsInUsersInterestByUserId($user_id, $limit_num = -1, $offset = 0){
+		public function getAllFriendsPlainListInUsersInterestByUserId($user_id, $limit_num = -1, $offset = 0){
 			if($limit_num > 0){
 				$stmt = $this->connection->prepare("
-				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+				SELECT DISTINCT user.id
 				FROM user_in_interest 
 				LEFT JOIN user
 				ON user_in_interest.user_in = user.id || user_in_interest.user_id = user.id WHERE (user.id != ? && (user_in_interest.user_id = ? || user_in_interest.user_in = ?)) LIMIT ?,?
 				");
 			}else{
 				$stmt = $this->connection->prepare("
-				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+				SELECT DISTINCT user.id
+				FROM user_in_interest 
+				LEFT JOIN user
+				ON user_in_interest.user_in = user.id || user_in_interest.user_id = user.id WHERE (user.id != ? && (user_in_interest.user_id = ? || user_in_interest.user_in = ?)) 
+				");			
+			}
+			if($stmt){
+				if($limit_num > 0){
+					$stmt->bind_param('iiiii',$user_id,$user_id, $user_id,$offset, $limit_num);
+				}else{
+					$stmt->bind_param('iii',$user_id, $user_id,$user_id);
+				}
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			return false;
+		}
+		
+		
+		
+		
+		public function getAllFriendsInUsersInterestByUserId($user_id, $limit_num = -1, $offset = 0){
+			if($limit_num > 0){
+				$stmt = $this->connection->prepare("
+				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url 
+				FROM user_in_interest 
+				LEFT JOIN user
+				ON user_in_interest.user_in = user.id || user_in_interest.user_id = user.id WHERE (user.id != ? && (user_in_interest.user_id = ? || user_in_interest.user_in = ?)) LIMIT ?,?
+				");
+			}else{
+				$stmt = $this->connection->prepare("
+				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url 
 				FROM user_in_interest 
 				LEFT JOIN user
 				ON user_in_interest.user_in = user.id || user_in_interest.user_id = user.id WHERE (user.id != ? && (user_in_interest.user_id = ? || user_in_interest.user_in = ?)) 
@@ -335,6 +371,20 @@
 		public function deleteAllUserInByInterestId($user_id, $interest_id){
 			$this->deleteRowBySelectorForUser('interest_id', $interest_id, $user_id, true);
 		}
+		
+		
+		public function getFriendPlainListForUser($user_id){
+			$user_friends = $this->getAllFriendsPlainListInUsersInterestByUserId($user_id);
+			$list = "";
+			if($user_friends !== false && sizeof($user_friends) > 0){
+				foreach($user_friends as $f){
+					$list.="'".$f['id']."',";
+				}
+				$list = trim($list,',');
+			}
+			return $list;
+		}
+		
 			
 		
 	}

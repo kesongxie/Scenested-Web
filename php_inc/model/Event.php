@@ -1,7 +1,7 @@
 <?php
 	include_once 'core_table.php';
-	include_once 'Event_Photo.php';
-	
+
+
 	
 	class Event extends Core_Table{
 		private  $table_name = "event";
@@ -10,13 +10,16 @@
 		public $event_id;
 		public $event_photo = null;
 		
-		public function __construct($interest_activity_id = null){
+		public function __construct($interest_activity_id = null, $include_photo = true){
 			parent::__construct($this->table_name);
 			if($interest_activity_id !== null){
 				$this->activity_id = $interest_activity_id;
 				$this->event_id = $this->getColumnBySelector('id', 'interest_activity_id', $this->activity_id);
 			}
-			$this->event_photo = new Event_Photo();
+			if($include_photo){
+				include_once 'Event_Photo.php';
+				$this->event_photo = new Event_Photo();
+			}
 		}
 		
 		public function addEventForUser($user_id, $title, $description, $location, $date, $evt_time, $photoFile, $caption){
@@ -228,6 +231,11 @@
 				return $content;
 			}
 			return false;
+		}
+		
+		
+		public function isEvtPhotoUploadableByUserForEvent($user_id, $event_id){
+			return  $this->hasUserJoinedEvent($user_id, $event_id) || ($this->getPostUserByEventId($event_id) == $user_id);
 		}
 		
 		

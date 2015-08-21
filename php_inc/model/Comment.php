@@ -10,7 +10,6 @@
 		}
 		
 		public function addPostComment($key, $user_sent, $text){
-
 			$unique_hash = $this->generateUniqueHash();
 			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`activity_id`,`user_id`,`user_id_get`,`text`,`sent_time`,`hash`) VALUES(?, ?, ?, ?, ?, ?)");
 			include_once 'Interest_Activity.php';
@@ -124,10 +123,16 @@
 		}
 		
 		public function deleteAllCommentsByActivityId($activity_id){
-			$this->deleteRowByNumericSelector('activity_id', $activity_id);
+			$rows = $this->getAllRowsMultipleColumnsBySelector(array('id','hash'), 'activity_id',$activity_id);
 			include_once 'Reply.php';
 			$reply = new Reply();
-			$reply->deleteAllReplyByActivityId($activity_id);
+			if($rows !== false && sizeof($rows) > 0){
+				foreach($rows as $row){
+					$this->deleteNotiQueueForKey($row['hash']);
+					$reply->deleteAllReplysForCommentId($row['id']);
+				}
+				$this->deleteRowByNumericSelector('activity_id', $activity_id);
+			}
 		}
 		
 		public function getSelfIdCollectionByTargetId($target_id){

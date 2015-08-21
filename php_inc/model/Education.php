@@ -8,8 +8,6 @@
 			parent::__construct($this->table_name);
 		}
 		
-		
-		
 		public function getSchoolIdByUserId($user_id){
 			$school_id = $this->getColumnByUserId('school_id',$user_id);
 			return $school_id;

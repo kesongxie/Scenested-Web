@@ -1,7 +1,14 @@
-<div class="in_con_opt_w popover" style="top:38px;right:7px;max-width:140px;">
+<div class="in_con_opt_w popover" style="top:38px;right:7px;max-width:200px;">
 	<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
 		<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
-			<label class="in_con_w_opt_it" for="upload-evt-pic" style="display:block;" >
+			<div class="upload-info">
+				<a href="<?php echo $upload_info['redirect'] ?>"><img src="<?php echo $upload_info['profile_pic'] ?>" class="upload-user"  ></a>
+				<div class="name"><?php echo htmlentities($upload_info['fullname']) ?></div>
+				<div class="time">Uploaded at <?php echo $upload_info['upload_time'] ?></div>
+			</div>
+			
+			
+			<label class="in_con_w_opt_it" for="upload-evt-pic" style="display:block;clear:both;position:relative;overflow:hidden;" >
 				<form method="POST" class="hdn-form" enctype="multipart/form-data">
 				<input id="upload-evt-pic" class="upload-evt-pic hdn-input"  type="file" name="picture-label" title="Add photo to this event collection">
 				</form>

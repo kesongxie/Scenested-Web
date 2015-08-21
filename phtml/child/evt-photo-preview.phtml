@@ -10,8 +10,14 @@
 	</div>
 
 	<div class="caption"><?php echo htmlentities($caption) ?></div>
-	<img src="<?php echo IMGDIR ?>menu_navi_icon.png" class="trigger-pop toggle-operation pointer hdn">
-
+	<?php if($uploadable): ?>
+		<img src="<?php echo IMGDIR ?>menu_navi_icon.png" class="trigger-pop toggle-operation pointer hdn">
+	<?php endif; ?>
+	<div class="preview-loading-wrapper hdn" style="background:#000;opacity:0.4;z-index:1;">
+	</div>
+	<div class="preview-loading-wrapper hdn"  style="z-index:2;">
+		<div class="center-align vertical-center"><img src="<?php echo IMGDIR ?>animated-loading-bar.gif" width="22" height="22"></div>
+	</div>
 	
 	</div>
 </div>

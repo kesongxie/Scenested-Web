@@ -101,7 +101,22 @@
 		public function renderPhotoStreamByPictureUrl($url, $user_id, $source_from, $hash){
 			$user_media_prefix = new User_Media_Prefix();
 			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
-			
+			$post_key = false;
+			if($source_from == 'e'){
+				include_once 'Event_Photo.php';
+				$evt_pht = new Event_Photo();
+				$event_id = $evt_pht->getColumnBySelector('event_id','hash',$hash);
+				if($event_id !== false){
+					include_once 'Event.php';
+					$evt = new Event(null, false);
+					$activity_id = $evt->getColumnById('interest_activity_id',$event_id);
+					if($activity_id !== false){
+						include_once 'Interest_Activity.php';
+						$activity = new Interest_Activity();
+						$post_key  = $activity->getColumnById('hash',$activity_id);
+					}
+				}
+			}
 			if($prefix !== false){
 				if(!empty($url) && !empty($prefix) && isMediaDisplayable($prefix.'/'.$url)){
 					$url =  U_IMGDIR.$prefix.'/'.$url;

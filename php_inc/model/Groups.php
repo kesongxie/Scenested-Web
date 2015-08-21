@@ -19,7 +19,6 @@
 						$stmt->close();
 						$group_id =  $this->connection->insert_id;
 						return array('group_id'=>$group_id,'hash'=>$hash);
-					
 					}
 				}
 			}

@@ -5,13 +5,11 @@
 	if(isset($_POST['key']) && !empty(trim($_POST['key'])) ){
 		$evt_pht = new Event_Photo();
 		$deletable = $evt_pht->isPhotoDeletable(trim($_POST['key']));
-		var_dump($deletable);
+		$upload_info = $evt_pht->getPhotoUploadInfo(trim($_POST['key']));
 		ob_start();
 		include(AJAX_TEMPLATE_PATH.'evt_photo_option.phtml');
 		$content = ob_get_clean();
 		echo $content;
-	
 	}
-	
 
 ?>

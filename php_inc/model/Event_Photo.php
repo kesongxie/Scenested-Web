@@ -123,10 +123,13 @@
 		
 		public function loadEventPhotoPreviewBlock($hash){
 			$stmt = $this->connection->prepare("
-			SELECT event_photo.id,event_photo.event_id, event_photo.user_id, event_photo.picture_url, event_photo.upload_time, event_photo.caption,event.title, event.description, event.location, event.date, event.time
+			SELECT event_photo.id,event_photo.event_id, event_photo.user_id AS picture_owner, event_photo.picture_url, event_photo.caption,event.title, event.description, event.location, event.date, event.time, interest_activity.user_id, interest_activity.post_time 
 			FROM event_photo 
 			LEFT JOIN event
-			ON event_photo.event_id=event.id WHERE event_photo.hash = ? LIMIT 1
+			ON event_photo.event_id=event.id
+			LEFT JOIN interest_activity
+			ON event.interest_activity_id = interest_activity.id
+			WHERE event_photo.hash = ? LIMIT 1
 			");
 			if($stmt){
 				$stmt->bind_param('s',$hash);
@@ -139,7 +142,7 @@
 						include_once 'User_Profile_Picture.php';
 						$profile = new User_Profile_Picture();
 						$profile_pic = $profile->getLatestProfileImageForUser($row['user_id']);
-						$post_time = convertDateTimeToAgo($row['upload_time'], false);	
+						$post_time = convertDateTimeToAgo($row['post_time'], false);	
 						$user = new User_Table();
 						$caption = ($row['caption']!==null)?$row['caption']:$row['title'];
 						$time = "";
@@ -159,6 +162,9 @@
 						$previous_photo_hash = $this->getPreviousPhotoBeforeRowForEvent($row['id'],$row['event_id']);
 						$next_photo_hash = $this->getNextPhotoAfterRowForEvent($row['id'],$row['event_id']);
 						
+						include_once 'Event.php';
+						$evt = new Event(null, false);
+						$uploadable = $evt->isEvtPhotoUploadableByUserForEvent($_SESSION['id'], $row['event_id']);
 						include TEMPLATE_PATH_CHILD.'evt-photo-preview.phtml';
 					 }
 				}
@@ -166,6 +172,14 @@
 			echo $this->connection->error;
 			return false;
 		}
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		public function getPreviousPhotoBeforeRowForEvent($row_id, $event_id){
 			$result =  $this->getColumnRowsLessThanRowId('hash', $row_id, 'event_id',$event_id,  $limit = 1 );
@@ -225,6 +239,23 @@
 			}
 			return false;
 		}
+		
+		public function getPhotoUploadInfo($key){
+			$upload_info = $this->getMultipleColumnsBySelector(array('user_id','picture_url','upload_time'),'hash',$key);
+			if($upload_info !== false){
+				include_once 'User_Profile_Picture.php';
+				$profile = new User_Profile_Picture();
+				$profile_pic = $profile->getLatestProfileImageForUser($upload_info['user_id']);
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				$fullname = $user->getUserFullnameByUserIden($upload_info['user_id']);
+				$upload_time = convertDateTimeToAgo($upload_info['upload_time'], true);	
+				$redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($upload_info['user_id']);
+				return array('profile_pic'=>$profile_pic, 'fullname'=>$fullname, 'redirect'=>$redirect,'upload_time'=>$upload_time);	
+			}
+			return false;
+		}
+		
 		
 	}		
 ?>

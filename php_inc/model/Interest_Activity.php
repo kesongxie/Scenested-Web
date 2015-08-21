@@ -40,8 +40,6 @@
 		
 		
 		
-		
-		
 		public function getInitialPageFeed(){
 			include_once 'User_In_Interest.php';
 			$in = new User_In_Interest();
@@ -381,6 +379,11 @@
 					include_once 'Comment.php';
 					$comment = new Comment();
 					$comment_number = $comment->getCommentNumberForTarget($activity_id);
+					
+					include_once 'Favor_Activity.php';
+					$favor = new Favor_Activity();
+					$favor_number = $favor->getTotalFavorNumForActivity($activity_id);
+					$favored = $favor->isSessionUserAlreadyFavorActivity($activity_id);
 					ob_start();
 					include(SCRIPT_INCLUDE_BASE.'phtml/child/post_moment_block.phtml');
 					$moment_block = ob_get_clean();
@@ -588,11 +591,6 @@
 		
 		
 		
-		
-		
-		
-		
-		
 		public function loadUpComingEventCollectionForUser($key){
 			$user = new User_Table();
 			$user_id = $user->getUserIdByKey($key);
@@ -632,6 +630,8 @@
 		public function deleteActivityForUserByActivityKey($user_id, $key){
 			include_once 'Comment.php';
 			$comment = new Comment();
+			include_once 'Favor_Activity.php';
+			$favor = new Favor_Activity();
 			$column_array = array('id','type');
 			$result = $this->getMultipleColumnsBySelector($column_array, 'hash', $key);
 			$activity_id = $result['id'];
@@ -646,6 +646,7 @@
 						$this->event->deleteEventForUserByActivityId($user_id);
 					}
 					$comment->deleteAllCommentsByActivityId($activity_id);
+					$favor->deleteAllFavorForTarget($activity_id);
 				}
 			}
 		}
@@ -654,6 +655,10 @@
 		public function deleteActivityForUserByActivityId($user_id, $activity_id){
 			include_once 'Comment.php';
 			$comment = new Comment();
+			include_once 'Favor_Activity.php';
+			$favor = new Favor_Activity();
+			
+			
 			$type = $this->getColumnById('type', $activity_id);
 			if($activity_id !== false){
 				if($this->deleteRowForUserById($user_id, $activity_id) !== false){
@@ -665,13 +670,10 @@
 						$this->event->deleteEventForUserByActivityId($user_id);
 					}
 					$comment->deleteAllCommentsByActivityId($activity_id);
+					$favor->deleteAllFavorForTarget($activity_id);
 				}
 			}
 		}
-		
-		
-		
-		
 		
 		
 		
@@ -725,26 +727,18 @@
 		}
 		
 		
-		public function isEvtPhotoUploadableByUserForEvent($user_id, $key){
-			//either in the joining list or the post owner, and the event should have already passed. true return an event id, false otherwise
-			$activity_id = $this->getRowIdByHashkey($key);
- 			if($activity_id !== false){
- 				$this->event = new Event($activity_id);
- 				return true;
- 			}
- 			return false;
-// 			if($this->event->isEventPassedForActivityId($activity_id)){
-// 				return true;
-// 			}	
-// 			return false;
-		}
+	
 		
 		/* $user_id is the user who is uploading the photo*/
 		public function uploadEvtPhotoByKey($key, $user_id, $photo_file){
-			if($this->isEvtPhotoUploadableByUserForEvent($user_id, $key)){
-				//upload the photo
-				$event_id = $this->event->event_id;
-				return $this->event->event_photo->uploadEventPhotoByEventId($photo_file, $user_id, $event_id);
+			$activity_id  = $this->getRowIdByHashkey($key);
+			if($activity_id !== false){
+				$this->event = new Event($activity_id);
+				if($this->event->isEvtPhotoUploadableByUserForEvent($user_id, $this->event->event_id)){
+					//upload the photo
+					$event_id = $this->event->event_id;
+					return $this->event->event_photo->uploadEventPhotoByEventId($photo_file, $user_id, $event_id);
+				}
 			}
 			return false;
 		}
@@ -985,11 +979,6 @@
 		}
 		
 		
-		
-		
-		
-		
-		
 		public function returnMatchedMomentForMineInterest(){
 			include_once MODEL_PATH.'Interest.php';
 			$interest = new Interest();
@@ -1054,6 +1043,16 @@
 				}
 			}	
 			return false;
+		}
+		
+		
+		public function getActivityIdByKey($key){
+			return $this->getRowIdByHashkey($key);
+		}
+		
+		
+		public function getPostUserByActivityId($activity_id){
+			return $this->getColumnById('user_id', $activity_id);
 		}
 		
 		public function getEventPostUserByActivityId($activity_id){

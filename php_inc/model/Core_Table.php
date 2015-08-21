@@ -141,6 +141,27 @@
 		}
 		
 		
+		
+		public function getColumnBySelectorForUser($column,$selector_column,$selector_value,$user_id){
+				$column = $this->connection->escape_string($column);
+				$selector_column = $this->connection->escape_string($selector_column);
+				$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `user_id`=? AND `$selector_column` = ? LIMIT 1");
+				if($stmt){
+					$stmt->bind_param('is',$user_id, $selector_value);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_assoc();
+							$stmt->close();
+							return $row[$column];
+						 }
+					}
+				}
+				return false;
+		}
+		
+		
+		
 		public function getAllRowsColumnBySelectorForUser($column,$selector_column,$selector_value,$user_id, $asc = false){
 				$column = $this->connection->escape_string($column);
 				$selector_column = $this->connection->escape_string($selector_column);
@@ -247,10 +268,11 @@
 				$targets = implode('`,`',$column_array);
 				$targets = '`'.$targets.'`';
 				if($asc){
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT ?,? ");
+					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT ?,? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC LIMIT ?,? ");
-				}			if($stmt){
+					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC LIMIT ?,? ");
+				}
+				if($stmt){
 				$stmt->bind_param('sii', $selector_value, $offset,$limit_num);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
@@ -263,11 +285,6 @@
 			}
 			return false;
 		}
-		
-		
-		
-		
-		
 		
 		public function getAllRowsMultipleColumnsBySelector($column_array, $selector_column, $selector_value, $asc = false){
 			$selector_column = $this->connection->escape_string($selector_column);
@@ -368,6 +385,23 @@
 			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? AND `user_id` = ? LIMIT 1 ");
 			if($stmt){
 				$stmt->bind_param('si', $column_value, $user_id);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$stmt->close();
+						return true;
+					 }
+				}
+			}
+			return false;
+		}
+		
+		public function checkNumericColumnValueExistForUser($column, $column_value, $user_id){
+			$column = $this->connection->escape_string($column);
+			$column_value = $this->connection->escape_string($column_value);
+			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? AND `user_id` = ? LIMIT 1 ");
+			if($stmt){
+				$stmt->bind_param('ii', $column_value, $user_id);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){

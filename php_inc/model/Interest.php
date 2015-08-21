@@ -371,7 +371,26 @@
 		
 		
 		
-		public function returnMatchedUserForMineInterest($limit = -1){
+		
+		
+		
+		
+		
+		
+		
+		
+		public function returnMatchedUserForMineInterest($limit = -1, $exclue_existed_friend = false){
+			$list = '';
+			if($exclue_existed_friend){
+				include_once 'User_In_Interest.php';
+				$in = new User_In_Interest();
+				$list = $in->getFriendPlainListForUser($_SESSION['id']);
+			}
+			if($list == ''){
+				$list = "'-1'";
+			}
+			
+			
 			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
 			$interest_like = '';
 			if($mine_interests !== false){
@@ -386,64 +405,65 @@
 			
 			
 			if($interest_like != ''){
-			if($limit < 0){
-				if($school_id !== false){
-					//use random offset to get random user
-					$stmt = $this->connection->prepare("
-					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-					FROM user 
-					LEFT JOIN interest
-					ON interest.user_id=user.id
-					LEFT JOIN education
-					ON user.id = education.user_id  AND  user.id !=? 
-					WHERE (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
+				if($limit < 0){
+					if($school_id !== false){
+						//use random offset to get random user
+						$stmt = $this->connection->prepare("
+						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM user 
+						LEFT JOIN interest
+						ON interest.user_id=user.id
+						LEFT JOIN education
+						ON user.id = education.user_id  AND  user.id !=? 
+						WHERE user.id  NOT IN($list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
 					
-					UNION
-					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-					FROM user 
-					LEFT JOIN interest
-					ON interest.user_id=user.id   AND  user.id !=?  WHERE  interest.name REGEXP ?  || interest.description REGEXP ? 
-					");
+						UNION
+						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM user 
+						LEFT JOIN interest
+						ON interest.user_id=user.id   AND  user.id !=? WHERE  user.id  NOT IN($list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?) 
+						");
+					}
+					else{
+						$stmt = $this->connection->prepare("
+						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM user 
+						LEFT JOIN interest
+						ON interest.user_id=user.id  AND  user.id !=?   WHERE user.id  NOT IN($list) AND  ( interest.name REGEXP ?  || interest.description REGEXP ?)
+						");
+					}
 				}
 				else{
-					$stmt = $this->connection->prepare("
-					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-					FROM user 
-					LEFT JOIN interest
-					ON interest.user_id=user.id  AND  user.id !=?   WHERE  interest.name REGEXP ?  || interest.description REGEXP ?
-					");
-				}
-			}else{
-				if($school_id !== false){
-					//use random offset to get random user
-					$stmt = $this->connection->prepare("
-					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-					FROM user 
-					LEFT JOIN interest
-					ON interest.user_id=user.id
-					LEFT JOIN education
-					ON user.id = education.user_id  AND  user.id !=? 
-					WHERE  (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
+					if($school_id !== false){
+						//use random offset to get random user
+						$stmt = $this->connection->prepare("
+						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM user 
+						LEFT JOIN interest
+						ON interest.user_id=user.id
+						LEFT JOIN education
+						ON user.id = education.user_id  AND  user.id !=? 
+						WHERE  user.id  NOT IN($list) AND (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
 					
-					UNION
-					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-					FROM user 
-					LEFT JOIN interest
-					ON interest.user_id=user.id   AND  user.id !=?  WHERE   interest.name REGEXP ?  || interest.description REGEXP ? 
-					LIMIT ?
+						UNION
+						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM user 
+						LEFT JOIN interest
+						ON interest.user_id=user.id   AND  user.id !=?   WHERE user.id  NOT IN($list) AND   (interest.name REGEXP ?  || interest.description REGEXP ? )
+						LIMIT ?
 					
-					");
+						");
+					}
+					else{
+						$stmt = $this->connection->prepare("
+						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM user 
+						LEFT JOIN interest
+						ON interest.user_id=user.id  AND  user.id !=?   WHERE  user.id  NOT IN($list) AND (interest.name REGEXP ?  || interest.description REGEXP ?)
+						LIMIT ?
+						");
+					}
 				}
-				else{
-					$stmt = $this->connection->prepare("
-					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-					FROM user 
-					LEFT JOIN interest
-					ON interest.user_id=user.id  AND  user.id !=?  WHERE interest.name REGEXP ?  || interest.description REGEXP ?
-					LIMIT ?
-					");
-				}
-			}
 			}else{
 				if($school_id !== false){
 					if($limit < 0){
@@ -451,14 +471,14 @@
 							SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 							FROM user 
 							LEFT JOIN education
-							ON user.id = education.user_id  AND  user.id !=? WHERE education.school_id = ? 
+							ON user.id = education.user_id  AND  user.id !=?  WHERE user.id  NOT IN($list) AND  education.school_id = ? 
 						");
 					}else{
 						$stmt = $this->connection->prepare("
 							SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 							FROM user 
 							LEFT JOIN education
-							ON user.id = education.user_id  AND  user.id !=? WHERE education.school_id = ? LIMIT ?
+							ON user.id = education.user_id  AND  user.id !=? WHERE user.id  NOT IN($list) AND  education.school_id = ? LIMIT ?
 						");
 					}
 				}else{
@@ -637,8 +657,7 @@
 			$interest  = new Interest();
 			$profile = new User_Profile_Picture();
 			$user = new User_Table();
-			$user_found = $this->returnMatchedUserForMineInterest(4);
-			
+			$user_found = $this->returnMatchedUserForMineInterest(4, true);
 			 if($user_found === false){
 				//get suggest user 
 				$user_found = $this->getSuggestFriends();
@@ -649,7 +668,9 @@
 					$exclusive_users.="'".$u['id']."',";
 				}
 				$addition_suggest = $this->getSuggestFriends(4-sizeof($user_found), trim($exclusive_users,','));
-				$user_found = array_merge($user_found, $addition_suggest);
+				if($addition_suggest !== false){
+					$user_found = array_merge($user_found, $addition_suggest);
+				}
 			}
 			
 			$content = null;
@@ -663,19 +684,25 @@
 		
 		
 		public function getSuggestFriends($limit = 4, $exclusive_users = false){
+			include_once 'User_In_Interest.php';
+			$in = new User_In_Interest();
+			$list = $in->getFriendPlainListForUser($_SESSION['id']);
+			if($list == ''){
+				$list = "'-1'";
+			}
 			if($exclusive_users !== false){
 				$stmt = $this->connection->prepare("
 					SELECT DISTINCT interest.user_id AS user_id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 					FROM interest 
 					LEFT JOIN user
-					ON interest.user_id = user.id WHERE  interest.user_id != ?  AND interest.user_id NOT IN($exclusive_users) LIMIT ? 
+					ON interest.user_id = user.id WHERE  user.id NOT IN($list) AND interest.user_id != ?  AND interest.user_id NOT IN($exclusive_users) LIMIT ? 
 				");
 			}else{
 				$stmt = $this->connection->prepare("
 					SELECT DISTINCT interest.user_id AS user_id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 					FROM interest 
 					LEFT JOIN user
-					ON interest.user_id = user.id  WHERE  interest.user_id != ? AND interest.user_id LIMIT ?
+					ON interest.user_id = user.id  WHERE  user.id NOT IN($list) AND  interest.user_id != ? AND interest.user_id LIMIT ?
 				");
 			}
 			if($stmt){
