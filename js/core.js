@@ -314,6 +314,7 @@ function onVisibilityChange (el, callback) {
 function loadComment(thisE){
 	var postWrapper = thisE.parents('.post');
 	var joined_list = postWrapper.find('.joined-list');
+	var favor_list = postWrapper.find('.favor-list');
 	var key = postWrapper.attr('data-key');
 	var commentBlock = postWrapper.find('.regular-comment-wrapper');
 	if(commentBlock.hasClass('hdn')){
@@ -323,6 +324,7 @@ function loadComment(thisE){
 			method:'post',
 			data:{key:key},
 			success:function(resp){
+				favor_list.addClass('hdn');
 				joined_list.addClass('hdn');
 				commentBlock.find('.comment-container').html(resp);
 				postWrapper.find('.cmt-num').text( commentBlock.find('.cmt').length);
@@ -336,6 +338,7 @@ function loadComment(thisE){
 function loadJoinedMember(thisE){
 	var parentDiv = thisE.parents('.evt-block');
 	var joined_list = parentDiv.find('.joined-list');
+	var favor_list = parentDiv.find('.favor-list');
 	var commentBlock = parentDiv.find('.regular-comment-wrapper');
 	var key = parentDiv.attr('data-key');
 	$.ajax({
@@ -346,11 +349,52 @@ function loadJoinedMember(thisE){
 			if(resp != '1'){
 				joined_list.find('.joined-list-inner').html(resp);
 				commentBlock.addClass('hdn');
+				favor_list.addClass('hdn');
 				joined_list.toggleClass('hdn');
 			}
 		}
 	});
 }
+
+
+
+function loadFavorActivityMember(thisE, always_show){
+	var parentDiv = thisE.parents('.post-wrapper');
+	var favor_list = parentDiv.find('.favor-list');
+	var commentBlock = parentDiv.find('.regular-comment-wrapper');
+	var joined_list = parentDiv.find('.joined-list');
+	var key = parentDiv.attr('data-key');
+	$.ajax({
+		url:AJAX_DIR+'load_favor_activity_member.php',
+		method:'post',
+		data:{key:key},
+		success:function(resp){
+			if(resp != '1'){
+				favor_list.find('.favor-list-inner').html(resp);
+				commentBlock.addClass('hdn');
+				joined_list.addClass('hdn');
+				if(always_show){
+					if(parseInt(parentDiv.find('.favor-num').text()) > 0){
+						favor_list.removeClass('hdn');
+						parentDiv.find('.favor-num').addClass('toggle-activity-favor plain-lk pointer');
+
+					}else{
+						favor_list.addClass('hdn');
+						parentDiv.find('.favor-num').removeClass('toggle-activity-favor plain-lk pointer');
+					}
+				}else{
+					favor_list.toggleClass('hdn');
+				}
+			}else{
+				parentDiv.find('.favor-num').removeClass('toggle-activity-favor plain-lk pointer');
+				favor_list.find('.favor-list-inner').html('');
+				favor_list.addClass('hdn');
+			}
+		}
+	});
+}
+
+
 
 
 function removeFromInterestGroup(thisE){
@@ -470,7 +514,12 @@ function setPageTitleWithNewMessageNum(message_num){
 			if( notification_num > 0 ){
 				page_title.text('Notification('+notification_num+')');
 			}else{
-				page_title.text('Lsere');
+				if(page_title.attr('data-from') !== undefined){
+					page_title.text(page_title.attr('data-from'));
+				}
+				else{
+					page_title.text('Lsere');
+				}
 			}
 		}
 		page_title.attr('data-m',message_num);
@@ -489,7 +538,12 @@ function setPageTitleWithNewNotificationNum(notification_num){
 			if( message_num > 0 ){
 				page_title.text('Message('+message_num+')');
 			}else{
-				page_title.text('Lsere');
+				if(page_title.attr('data-from') !== undefined){
+					page_title.text(page_title.attr('data-from'));
+				}
+				else{
+					page_title.text('Lsere');
+				}
 			}
 		}
 		page_title.attr('data-n',notification_num);
@@ -534,6 +588,7 @@ function loadIndividualConversation(thisE){
 		method:'post',
 		data:{key:key},
 		success:function(resp){
+			console.log(resp);
 			refreshMessage();
 			thisE.find('.n_r_s').addClass('hdn').text('0');
 			$('#chat-side-content #chat-box').remove();
@@ -2145,6 +2200,8 @@ $(document).ready(function(){
 					console.log(resp);
 					thisE.removeClass('favor-activity').addClass('undo-favor-activity').attr('title','Undo Favor');
 					loadFavorNumberForActivity(parentDiv);
+					loadFavorActivityMember(thisE, true);
+					
 				}
 			});
 		}
@@ -2164,7 +2221,8 @@ $(document).ready(function(){
 					console.log(resp);
 					thisE.removeClass('undo-favor-activity').addClass('favor-activity').attr('title','Favor');
 					loadFavorNumberForActivity(parentDiv);
-				}
+					loadFavorActivityMember(thisE, true);
+				}	
 			});
 		}
 	
@@ -2174,7 +2232,12 @@ $(document).ready(function(){
 	
 	
 	
+	$('body').on({
+		click:function(){
+			loadFavorActivityMember($(this), false);
+		}
 	
+	},'.post-wrapper .toggle-activity-favor');
 	
 	
 	

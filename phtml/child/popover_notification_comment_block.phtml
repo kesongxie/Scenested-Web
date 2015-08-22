@@ -18,9 +18,9 @@
 				</div>
 			</div>
 			<div style="position:relative;top:2px;left:-2px;font-size:12px;">
-				<div class="txt_ofl" title="<?php echo ($post_text !== false)?htmlentities($post_text):'The post might have been deleted or is not available to display'; ?>" style="margin-bottom:3px;"><span style="opacity:0.8;">Commented on your post
-				 <?php if($post_text !== false): ?>
-					 <span class="target plain-lk">"<?php echo htmlentities($post_text) ?>"</span>
+				<div class="txt_ofl" title="<?php echo ($post_detail !== false)?htmlentities($post_detail['text']):'The post might have been deleted or is not available to display'; ?>" style="margin-bottom:3px;"><span style="opacity:0.8;">Commented on your <?php echo $post_detail['from']; ?>
+				 <?php if($post_detail !== false): ?>
+					 <span class="target plain-lk">"<?php echo htmlentities($post_detail['text']) ?>"</span>
 				 <?php else: ?>
 				 	 <span class="plain-lk">"<?php echo 'The post might have been deleted or is not available to display' ?>"</span>
 				<?php  endif; ?>

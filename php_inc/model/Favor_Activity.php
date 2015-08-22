@@ -2,43 +2,37 @@
 	include_once 'Favor.php';
 	class Favor_Activity extends Favor{
 		private $table_name = "favor_activity";
-		private $activity_id = null;
-		private $activity = null;
+		private $popover_notification_template_path = TEMPLATE_PATH_CHILD."popover_notification_favor_activity.phtml";
 		
-		public function __construct($key = null){
+		//key is the hash for activity
+		public function __construct(){
 			parent::__construct($this->table_name);
-			if($key !== null){
+		}
+		
+		
+		public function renderFavorActivityForNotificationBlock($row_id){
+			$column_array = array('target_id','user_id','sent_time');
+			$result = $this->getMultipleColumnsById($column_array, $row_id);
+			if($result !== false){
+				include_once 'User_Profile_Picture.php';
+				$profile = new User_Profile_Picture();
+				$profile_pic = $profile->getLatestProfileImageForUser($result['user_id']);
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				$fullname = $user->getUserFullnameByUserIden($result['user_id']);
+				$time = convertDateTimeToAgo($result['sent_time'], false);	
+				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($result['user_id']);
+				
 				include_once 'Interest_Activity.php';
-				$this->activity = new Interest_Activity();
-				$this->activity_id = $this->activity->getActivityIdByKey($key);
+				$activity  = new Interest_Activity();
+				$post_detail = $activity->getNotificationPostDetailByActivityId($result['target_id']);
+				ob_start();
+				include($this->popover_notification_template_path);
+				$content = ob_get_clean();
+				return $content;
 			}
+			return false;
 		}
-		
-		public function favorActivity(){
-			if($this->activity_id !== null && $this->activity_id !== false ){
-				$user_id_get = $this->activity->getPostUserByActivityId($this->activity_id );
-				$this->addFavor($this->activity_id , $_SESSION['id'], $user_id_get);
-			}
-		}
-		
-		public function undoFavorActivity(){
-			if($this->activity_id !== null && $this->activity_id !== false ){
-				$this->undoFavorForSessionUser($this->activity_id);
-			}
-		}
-		
-		public function getFavorNumForActivity(){
-			if($this->activity_id !== null && $this->activity_id !== false ){
-				return $this->getFavorNum($this->activity_id);
-			}
-			return 0;
-		}
-		
-		
-		
-		
-		
-		
 		
 	}
 ?>

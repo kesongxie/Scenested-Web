@@ -84,9 +84,12 @@
 				
 					</label>
 	
-					<div class="in-name-input-wrapper">
-						<input type="text"  class="in-ed-input in-txt-n" value="<?php echo htmlentities($interest['name']); ?>" maxlength="32" placeholder="Add a name for your interest" title="add an name for your interest">
-					</div>
+					<div class="in-name-input-wrapper" style="opacity:0.8;cursor:default">
+				<!-- 
+		<input type="text"  class="in-ed-input in-txt-n" value="<?php echo htmlentities($interest['name']); ?>" maxlength="32" placeholder="Add a name for your interest" title="add an name for your interest">
+				
+ -->				<?php echo htmlentities($interest['name']); ?>
+ 					</div>
 					<textarea class="in-ed-input child-scrollable" style="height:90px;margin-top:3px;" placeholder="Let your friends know more about your interest, like experience, favoriate event, etc... "  title="add some descriptions about your interest"><?php echo htmlentities($interest['description']); ?></textarea>
 					<div style="text-align:right;padding:10px 0px;border-top:1px solid #eaeaea">
 						<select class="ep">

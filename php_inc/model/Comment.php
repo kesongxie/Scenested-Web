@@ -161,8 +161,8 @@
 			
 				include_once 'Interest_Activity.php';
 				$activity  = new Interest_Activity();
-				$post_text = $activity->getPostTextByActivityId($comment['activity_id']);
-			
+				
+				$post_detail = $activity->getNotificationPostDetailByActivityId($comment['activity_id']);
 				$post_owner_id = $this->getPostUserIdByActivityId($comment['activity_id']);
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.$this->popover_notification_template_path);

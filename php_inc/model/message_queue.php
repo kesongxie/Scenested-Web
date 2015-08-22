@@ -105,6 +105,7 @@
 			$user = new User_Table();
 			$fullname = $user->getUserFullnameByUserIden($conversation_with_key);
 			$user_with = $user->getUserIdByKey($conversation_with_key);
+			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($user_with);
 			$conversations = $this->message->getMessagesForUser($user_id, $user_with);
 			ob_start();
 			include($this->chat_box_template_path);

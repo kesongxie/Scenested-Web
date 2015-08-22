@@ -67,6 +67,10 @@
 		public function getPostText(){
 			return $this->getColumnBySelector('description', 'interest_activity_id', $this->activity_id);	
 		}
+		
+		public function getPostTitle(){
+			return $this->getColumnBySelector('title', 'interest_activity_id', $this->activity_id);	
+		}
 	
 		
 		public function deleteEventForUserByActivityId($user_id){
@@ -195,7 +199,7 @@
 						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u);
 						$hash = $user->getUniqueIdenForUser($u);
 						ob_start();
-						include(TEMPLATE_PATH_CHILD.'event_joined_member.phtml');
+						include(TEMPLATE_PATH_CHILD.'list_item.phtml');
 						$content .= ob_get_clean();
 					}
 				}else{
@@ -209,7 +213,7 @@
 					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u);
 					$hash = $user->getUniqueIdenForUser($u);
 					ob_start();
-					include(TEMPLATE_PATH_CHILD.'event_joined_member.phtml');
+					include(TEMPLATE_PATH_CHILD.'list_item.phtml');
 					$content .= ob_get_clean();
 				}else{
 					return false;

@@ -12,22 +12,8 @@
 		}	
 	} 
 	$interest = new Interest();
-	if(!isset($_POST['name']) || empty(trim($_POST['name']))){
-		echo '2'; //bad interest name or is not set
-		exit();
-	}
 	
-	$name = false;
-	if(isset($_POST['key']) && !empty(trim($_POST['key']))){
-		$old_interest_name = $interest->getInterestNameByInterestId($_POST['key']);
-		if($old_interest_name != trim($_POST['name'])){
-			$name = trim($_POST['name']);
-			if($interest->interestExistForUser($name,$_SESSION['id'])){
-				echo '3'; //interest has already existed
-				exit();
-			}
-		}
-	}else{
+	if(!isset($_POST['key']) || empty(trim($_POST['key']))){
 		echo '4'; //key is not available
 		exit();
 	}
@@ -52,7 +38,7 @@
 	
 	
 	
-	$content = $interest->updateInterestForUserByInterestId($_POST['key'], $_SESSION['id'], $name, $description, $experience, $image_label);
+	$content = $interest->updateInterestForUserByInterestId($_POST['key'], $_SESSION['id'], $description, $experience, $image_label);
 	
 
 ?>

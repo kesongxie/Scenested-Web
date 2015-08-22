@@ -14,6 +14,7 @@
 					case 'reply_notify_post_user':return $this->replyNotifyPostUserRenderer($row_id);break;
 					case 'interest_request':return $this->interestRequestRenderer($row_id);break;
 					case 'interest_request_accept':return $this->interestRequestAcceptRenderer($row_id);break;
+					case 'favor_activity':return $this->favorActivityRenderer($row_id);break;
 					default:break;			
 				}
 			}
@@ -47,6 +48,12 @@
 			include_once 'Interest_Request.php';
 			$request = new Interest_Request();
 			return $request->renderInterestRequestAcceptForNotificationBlock($row_id);
+		}
+		
+		public function favorActivityRenderer($row_id){
+			include_once 'Favor_Activity.php';
+			$favor = new Favor_Activity();
+			return $favor->renderFavorActivityForNotificationBlock($row_id);
 		}
 		
 		

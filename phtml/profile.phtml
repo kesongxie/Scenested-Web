@@ -4,7 +4,9 @@
 	<head>
 	<meta charset="utf-8">
 
-	<title id="page-title" data-m="<?php echo $new_message_notification_num; ?>"  data-n="<?php echo $notification_number; ?>"  ><?php echo $title; ?></title>
+	<title id="page-title" data-m="<?php echo $new_message_notification_num; ?>"  data-n="<?php echo $notification_number; ?>" data-from="<?php echo  $request_user_page_fullname; ?>"  >
+		<?php echo ($title == 'Lsere')?$request_user_page_fullname:$title; ?>
+	</title>
 	<link rel="shortcut icon" type="image/x-icon" href="<?php echo ROOTDIR; ?>favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/core.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/animate.css">
@@ -108,10 +110,9 @@
 						<a href="<?php echo $user_profile_url.'/interests'; ?>"><div  class="navi-item<?php if(!isset($_GET['s'])||($_GET['s']!='events' && $_GET['s']!='groups'&& $_GET['s']!='moments' && $_GET['s']!='friends' && $_GET['s']!='photos' && $_GET['s']!='about')){echo ' active-navi';}else{echo ' deactive-navi';}?>"   >Interests<div  class="sub-text" style="left:15px;">events & moments</div></div></a>
 						<a href="<?php echo $user_profile_url.'/events'; ?>" ><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='events'){echo ' active-navi';}else{echo ' deactive-navi';}?>">Events<div class="sub-text" style="left:15px;" >upcomings & joined</div></div></a>
 						<a href="<?php echo $user_profile_url.'/friends'; ?>"><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='friends'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Friends<div  class="sub-text" style="left:15px;">connections</div></div></a>
-					<!-- 
-	<a href="<?php echo $user_profile_url.'/groups'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='groups'){echo ' active-navi';}else{echo ' deactive-navi';}?>"  >Favored<div  class="sub-text" style="left:21px;" >similar interests</div></div></a>
+						<a href="<?php echo $user_profile_url.'/Favored'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='groups'){echo ' active-navi';}else{echo ' deactive-navi';}?>"  >Favored<div  class="sub-text" style="left:21px;" >moment liked</div></div></a>
 					
- -->	
+	
 
 						<a href="<?php echo $user_profile_url.'/photos';?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='photos'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Photos<div  class="sub-text" style="left:11px;">want to share</div></div></a>
 					<!-- 

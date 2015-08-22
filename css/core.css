@@ -454,7 +454,7 @@ div.ui-datepicker{
 	height:32px;
 	width:32px;
 	position:absolute;
-	border-radius:4%;
+	border-radius:4px;
 }
 
 #notification-center .body .target{
@@ -1000,7 +1000,7 @@ div.ui-datepicker{
 	background-color:#AB1C21;
 }
 
-.evt-block .joined-list{
+.post-wrapper .list{
 	width:100%;
 	background-color:#fff;
 	z-index: 1;
@@ -1010,13 +1010,12 @@ div.ui-datepicker{
     padding-top: 10px;
 }
 
-.evt-block .joined-list .joined-list-inner {
+.post-wrapper .list .list-inner {
 	margin:10px auto;
 	width:90%;
-	position:relative;
 }
 
-.joined-list-item{
+.list-item{
 	border: 1px solid #eaeaea;
 	height:30px;
 	background:#f0f0f0;
@@ -1026,7 +1025,7 @@ div.ui-datepicker{
 	margin-bottom:10px;
 }
 
-.joined-list-item:nth-child(even){
+.list-item:nth-child(even){
 	float:right;
 }
 

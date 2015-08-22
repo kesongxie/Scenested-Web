@@ -599,11 +599,6 @@ $(document).ready(function(){
 			var select = parentDiv.find('select'); //experience select
 			
 			//values
-			var name = name_input.val().trim();
-			if(name == ''){
-				presentPopupDialog("Need a Name", "Please add a name for your interest", "Got it", "", null, null );
-				return false;
-			}
 			var imageSet = image_file.attr('data-set');
 			var key = image_file.attr('data-key');
 			var description = description_txtarea.val().trim();
@@ -612,7 +607,6 @@ $(document).ready(function(){
 			var data=new FormData();
 			data.append('image-label',$(image_file)[0].files[0]);
 			data.append('key', key);
-			data.append('name', name);
 			data.append('imageSet', imageSet);
 			data.append('description',description);
 			data.append('experience',experience);
@@ -630,10 +624,6 @@ $(document).ready(function(){
 					console.log(resp);
 					if(resp == '1'){
 						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
-					}else if(resp == '2'){
-						presentPopupDialog("Need a Name", "Please add a name for your interest", "Got it", "", null, null );
-					}else if(resp == '3'){
-						presentPopupDialog("Interest Existed",'The interest <span class="plain-lk pointer" style="color:#062AA3">'+ name + '</span> has already existed', "Got it", "", null, null );
 					}else{	
 						parentDiv.find('.loading-icon-wrapper').hide();
 						actionButton.text("Update");
@@ -642,14 +632,14 @@ $(document).ready(function(){
 						if(imageSet != 'false'){
 							sideBarParent.find('img').attr('src',updated_image_src);
 						}
-						sideBarParent.find('.txt_ofl').text(name).attr('title',name);
+						// sideBarParent.find('.txt_ofl').text(name).attr('title',name);
 						sideBarParent.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
 						var intro = doneWithInterestEditing(parentDiv).find('.interest-profile-intro');
 						setTimeout(function(){
 							sideBarParent.css('-webkit-animation',"").css('animation',"");
 						},200);
 						//modify the intro
-						intro.find('.main-title').text(name);
+						//intro.find('.main-title').text(name);
 						if(experience != '-1'){
 							intro.find('.exp').text(exp);
 						}

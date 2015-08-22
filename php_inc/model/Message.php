@@ -75,6 +75,7 @@
 							$user = new User_Table();
 							$fullname = $user->getUserFullnameByUserIden($row['user_id']);
 							$text = $row['text'];
+							$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($row['user_id']);
 							ob_start();
 							if($row['user_id'] == $user_id){
 								//render my own dialog
@@ -112,6 +113,7 @@
 							$user = new User_Table();
 							$fullname = $user->getUserFullnameByUserIden($row['user_id']);
 							$text = $row['text'];
+							$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($row['user_id']);
 							ob_start();
 							if($row['user_id'] == $user_id){
 								//render my own dialog

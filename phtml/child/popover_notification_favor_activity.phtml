@@ -1,0 +1,18 @@
+<div class="popover-child interest-request" data-key="69700bd586c141c361658cb5">
+	<a href="<?php echo $user_page_redirect; ?>"><img src="<?php echo $profile_pic; ?>" class="sender-avator"></a>
+	<div class="inner">
+		<div class="inner-container">
+			<div class="inline-blk txt_ofl" style="max-width:50%;margin-bottom:2px;"><a class="profile-name plain-lk normal-font" href="<?php echo $user_page_redirect; ?>"><?php echo htmlentities($fullname) ?></a></div><span class="react" style="margin-left:4px;font-size:12px;"><?php echo $time; ?></span>
+			<div style="position:relative;top:2px;left:-2px;font-size:12px;">
+				<div class="txt_ofl" title="<?php echo ($post_detail !== false)?htmlentities($post_detail['text']):'The post might have been deleted or is not available to display'; ?>" style="margin-bottom:3px;"><span style="opacity:0.8;">Favored your <?php echo $post_detail['from']; ?>
+				 <?php if($post_detail !== false): ?>
+					 <span class="target plain-lk">"<?php echo htmlentities($post_detail['text']) ?>"</span>
+				 <?php else: ?>
+				 	 <span class="plain-lk">"<?php echo 'The post might have been deleted or is not available to display' ?>"</span>
+				<?php  endif; ?>
+				 </span></div>
+			</div>
+		</div>
+	</div>
+
+</div>

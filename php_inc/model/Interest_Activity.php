@@ -4,12 +4,12 @@
 	include_once 'User_Media_Prefix.php';
 	include_once 'Moment.php';
 	include_once 'Event.php';
+	include_once  MODEL_PATH.'Favor_Activity.php';
 	
 	class Interest_Activity extends Core_Table{
 		private  $table_name = "interest_activity";
 		private $moment = null;
 		private $event = null;
-		
 		public function __construct(){
 			parent::__construct($this->table_name);
 		}
@@ -380,10 +380,9 @@
 					$comment = new Comment();
 					$comment_number = $comment->getCommentNumberForTarget($activity_id);
 					
-					include_once 'Favor_Activity.php';
 					$favor = new Favor_Activity();
-					$favor_number = $favor->getTotalFavorNumForActivity($activity_id);
-					$favored = $favor->isSessionUserAlreadyFavorActivity($activity_id);
+					$favor_number = $favor->getFavorNum($activity_id);
+					$favored = $favor->isSessionUserAlreadyFavor($activity_id);
 					ob_start();
 					include(SCRIPT_INCLUDE_BASE.'phtml/child/post_moment_block.phtml');
 					$moment_block = ob_get_clean();
@@ -630,7 +629,6 @@
 		public function deleteActivityForUserByActivityKey($user_id, $key){
 			include_once 'Comment.php';
 			$comment = new Comment();
-			include_once 'Favor_Activity.php';
 			$favor = new Favor_Activity();
 			$column_array = array('id','type');
 			$result = $this->getMultipleColumnsBySelector($column_array, 'hash', $key);
@@ -655,10 +653,7 @@
 		public function deleteActivityForUserByActivityId($user_id, $activity_id){
 			include_once 'Comment.php';
 			$comment = new Comment();
-			include_once 'Favor_Activity.php';
 			$favor = new Favor_Activity();
-			
-			
 			$type = $this->getColumnById('type', $activity_id);
 			if($activity_id !== false){
 				if($this->deleteRowForUserById($user_id, $activity_id) !== false){
@@ -703,6 +698,26 @@
 				return $this->event->getPostText();
 			}
 		}
+		
+		
+		
+		public function getNotificationPostDetailByActivityId($activity_id){
+			$type = $this->getColumnById('type',$activity_id);
+			if($type == 'm'){
+				$this->moment = new Moment($activity_id);
+				$text =  $this->moment->getPostText();
+				$from = 'moment';
+			}else if($type == 'e'){
+				$this->event = new Event($activity_id);
+				$text = $this->event->getPostTitle();
+				$from = 'event';
+			}
+			if($type !== false && $text !== false){
+				return array('from'=>$from, 'text'=>$text);
+			}
+			return false;
+		}
+		
 		
 		public function loadEventPreviewBlockByKey($key, $user_id){
 			$column_array = array('id','user_id','interest_id');
@@ -1083,6 +1098,61 @@
 			}
 			return false;
 		}
+		
+		public function getFavorMemberBlockByActivityKey($key){
+			$activity_id = $this->getRowIdByHashkey($key);
+			if($activity_id !== false){
+				include_once 'User_Profile_Picture.php';
+				$profile = new User_Profile_Picture();
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				$favor = new Favor_Activity();
+				$user_favor = $favor->getFavorListForTarget($activity_id); //22,28,29,
+				$content = '';
+				if($user_favor !== false){
+					$users = explode(',',trim($user_favor, ','));
+					foreach($users as $u){
+						$profile_pic = $profile->getLatestProfileImageForUser($u);
+						$firstname = $user->getUserFirstNameByUserIden($u);
+						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u);
+						$hash = $user->getUniqueIdenForUser($u);
+						ob_start();
+						include(TEMPLATE_PATH_CHILD.'list_item.phtml');
+						$content .= ob_get_clean();
+					}
+					return $content;
+				}
+			}
+			return false;
+		}
+		
+		
+		
+		public function favorActivity($key){
+			$activity_id = $this->getRowIdByHashkey($key);
+			if($activity_id !== false){
+				$favor = new Favor_Activity();
+				$user_id_get = $this->getPostUserByActivityId($activity_id);
+				$favor->addFavor($activity_id, $_SESSION['id'], $user_id_get);
+			}
+		}
+		
+		public function undoFavorActivity($key){
+			$activity_id = $this->getRowIdByHashkey($key);
+			if($activity_id !== false){
+				$favor = new Favor_Activity();
+				$favor->undoFavorForSessionUser($activity_id);
+			}
+		}
+		
+		public function getFavorNumForActivity($key){
+			$activity_id = $this->getRowIdByHashkey($key);
+			if($activity_id !== false){
+				$favor = new Favor_Activity();
+				return $favor->getTotalFavorNumForTarget($activity_id);
+			}
+		}
+		
 		
 	}
 ?>

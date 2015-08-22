@@ -86,13 +86,10 @@
 		}
 		
 		
-		public function updateInterestForUserByInterestId($interest_id, $user_id, $name, $description, $experience, $label_image_file){
+		public function updateInterestForUserByInterestId($interest_id, $user_id, $description, $experience, $label_image_file){
 			$user_id_for_interest_id = $this->getColumnById('user_id',$interest_id);
 			if($user_id_for_interest_id !== false && $user_id_for_interest_id == $user_id){
 				//the same, then allow editing
-				if($name !== false){
-					$this->setColumnById('name', $name, $interest_id);
-				}
 				if($description !== false){
 					$this->setColumnById('description', $description, $interest_id);
 				}

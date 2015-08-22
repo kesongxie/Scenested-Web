@@ -8,7 +8,7 @@
 		}
 		
 		public function addFavor($target_id, $user_id, $user_id_get){
-			if($this->isUserAlreadyFavorActivity($target_id, $user_id) === false){
+			if($this->isUserAlreadyFavor($target_id, $user_id) === false){
 				$unique_hash = $this->generateUniqueHash();
 				$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`target_id`,`user_id`,`user_id_get`,`sent_time`,`hash`) VALUES(?, ?, ?,  ?, ?)");
 				$time = date('Y-m-d H:i:s');
@@ -24,22 +24,22 @@
 			return false;
 		}
 		
-		public function getTotalFavorNumForActivity($target_id){
+		public function getTotalFavorNumForTarget($target_id){
 			return $this->getRowsNumberForNumericColumn('target_id',$target_id);
 		}
 		
-		public function isUserAlreadyFavorActivity($target_id,$user_id){
+		public function isUserAlreadyFavor($target_id,$user_id){
 			return $this->checkNumericColumnValueExistForUser('target_id',$target_id,$user_id);
 		}
 		
 		
-		public function isSessionUserAlreadyFavorActivity($target_id){
+		public function isSessionUserAlreadyFavor($target_id){
 			return $this->checkNumericColumnValueExistForUser('target_id',$target_id,$_SESSION['id']);
 		}
 		
 		
 		public function undoFavorForSessionUser($target_id){
-			if($this->isSessionUserAlreadyFavorActivity($target_id)){
+			if($this->isSessionUserAlreadyFavor($target_id)){
 				$key = $this->getColumnBySelectorForUser('hash','target_id',$target_id ,$_SESSION['id']);
 				if($key !== false){
 					$this->deleteNotiQueueForKey($key);
@@ -61,11 +61,20 @@
 				}
 				$this->deleteRowByNumericSelector('target_id', $target_id);
 			}
-			
-
 		}
 		
+		public function getFavorListForTarget($target_id){
+			$rows = $this->getAllRowsColumnBySelector('user_id', 'target_id',$target_id);
+			if($rows !== false && sizeof($rows) > 0){
+				$list = '';
+				foreach($rows as $row){
+					$list.=$row['user_id'].',';
+				}
+				return trim($list,',');
+			}
+			return false;	
 		
+		}	
 		
 	}
 ?>
