@@ -28,8 +28,5 @@
 	
 	
 	$feed_content = $interest_activity->getInitialPageFeed();
-	
-	$suggest_feed_content = $interest_activity->getSuggestPost();
-	
 	include_once 'phtml/index.phtml';
 ?>

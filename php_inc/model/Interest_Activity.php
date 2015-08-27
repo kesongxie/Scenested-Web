@@ -54,43 +54,50 @@
 			if($interest->isUserHasInterest($_SESSION['id'])){
 				$right_content = $this->getRecentPostPreview();			
 			}else{
-				$right_content = $interest->getAddNewInterestBlock();			
+				$content = $interest->getAddNewInterestBlock();
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'index_post_wrapper.phtml');
+				$right_content = ob_get_clean();			
 			}
 			
 			
+			
+			$user_in = '';
 			if($friends !== false && sizeof($friends >= 1 )){
-				$user_in = '';
 				foreach($friends as $friend){
 					$user_in.="'".$friend['user_id']."',";
 				}
-				$user_in = $user_in.$_SESSION['id'];
-				$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) ORDER BY `id` DESC");			
+			}
+			$user_in = $user_in.$_SESSION['id'];
+			$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) ORDER BY `id` DESC");			
 			
-				if($stmt){
-					if($stmt->execute()){
-						 $result = $stmt->get_result();
-						 if($result !== false && $result->num_rows >= 1){
-							$rows = $result->fetch_all(MYSQLI_ASSOC);
-							$stmt->close();
-							$count = 1;
-							$feed_id_list = '';
-							foreach($rows as $row){
-								$content = '';
-								$feed_id_list .= $row['id'].',';
-								if($row['type'] == 'm'){
-									$content = $this->getMomentInterestActivityBlockByActivityId($row['id'], true);
-								}else if($row['type'] == 'e'){
-									$content = $this->getEventInterestActivityBlockByActivityId($row['id'], true);
-								}
-								if($count++ % 2 == 0){
-									$left_content.= $content;
-								}else{
-									$right_content.= $content;
-								}
+			if($stmt){
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						$count = 1;
+						$feed_id_list = '';
+						foreach($rows as $row){
+							$content = '';
+							$feed_id_list .= $row['id'].',';
+							if($row['type'] == 'm'){
+								$content = $this->getMomentInterestActivityBlockByActivityId($row['id'], true);
+							}else if($row['type'] == 'e'){
+								$content = $this->getEventInterestActivityBlockByActivityId($row['id'], true);
 							}
-							$this->feed_id_list = trim($feed_id_list,',');
-						 }
-					}
+							if($count++ % 2 == 0){
+								$left_content.= $content;
+							}else{
+								$right_content.= $content;
+							}
+						}
+						$this->feed_id_list = trim($feed_id_list,',');
+						$suggest_content = $this->getSuggestPost();
+						$left_content .= $suggest_content['suggest_left_content'];
+						$right_content .= $suggest_content['suggest_right_content'];
+					 }
 				}
 			}
 			ob_start();
@@ -1192,7 +1199,6 @@
 			$result_from_school = $this->returnPostFromSameSchool($school_id);
 			$result_from_school = ($result_from_school !== false)?$result_from_school:array();
 			$rows = array_merge($result_from_interest_and_school,$result_from_interest, $result_from_school);
-			
 			if(sizeof($rows) >= 1 ){
 				$count = 1;
 				$left_content = "";
@@ -1211,10 +1217,7 @@
 					}
 				}
 			
-				ob_start();
-				include(TEMPLATE_PATH_CHILD.'index_new_feed.phtml');
-				$content = ob_get_clean();
-				return $content;
+				return array("suggest_left_content"=>$left_content,"suggest_right_content"=>$right_content );
 			}
 			return false;
 		
@@ -1308,9 +1311,9 @@
 							
 								foreach($rows as $row){
 									if($this->feed_id_list != '-1'){
-										$this->feed_id_list .= $row['activity_id'].',';
+										$this->feed_id_list .= ','.$row['activity_id'];
 									}else{
-										$this->feed_id_list = $row['activity_id'].',';
+										$this->feed_id_list = ','.$row['activity_id'];
 									}
 								}
 								$this->feed_id_list = trim($this->feed_id_list , ',');
@@ -1405,9 +1408,9 @@
 							
 								foreach($rows as $row){
 									if($this->feed_id_list != '-1'){
-										$this->feed_id_list .= $row['activity_id'].',';
+										$this->feed_id_list .= ','.$row['activity_id'];
 									}else{
-										$this->feed_id_list = $row['activity_id'].',';
+										$this->feed_id_list = ','.$row['activity_id'];
 									}
 								}
 								$this->feed_id_list = trim($this->feed_id_list , ',');
@@ -1450,6 +1453,97 @@
 			}
 			return false;
 		}
+		
+		public function returnMomentFromSchoolKeyWord($school_key_word, $exclusive_list = '-1'){
+			include_once 'School.php';
+			$search_school_array = School::getSchooIdsLikeSchoolName($school_key_word);
+			$search_school_id = '';
+			if($search_school_array !== false){
+				foreach($search_school_array as $id){
+					$search_school_id .= "'".$id['id']."',";
+				}
+				$search_school_id = trim($search_school_id,',');
+			}
+			
+			$stmt = $this->connection->prepare("
+			SELECT interest_activity.id AS activity_id, interest_activity.type
+			FROM  education
+			LEFT JOIN interest_activity
+			ON education.user_id = interest_activity.user_id
+			WHERE interest_activity.id NOT IN($exclusive_list) AND education.school_id IN($search_school_id) AND interest_activity.type = 'm' ORDER BY interest_activity.id DESC");			
+			if($stmt){
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						$left_content = "";
+						$right_content = "";
+						$count = 0;
+						foreach($rows as $row){
+							$content = '';
+							$content = $this->getMomentInterestActivityBlockByActivityId($row['activity_id']);
+							if($count++ % 2 == 0){
+								$left_content.= $content;
+							}else{
+								$right_content.= $content;
+							}
+						}
+						return array('left_content'=>$left_content, 'right_content'=>$right_content);
+							
+					}
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+		public function returnEventFromSchoolKeyWord($school_key_word, $exclusive_list = '-1'){
+			include_once 'School.php';
+			$search_school_array = School::getSchooIdsLikeSchoolName($school_key_word);
+			$search_school_id = '';
+			if($search_school_array !== false){
+				foreach($search_school_array as $id){
+					$search_school_id .= "'".$id['id']."',";
+				}
+				$search_school_id = trim($search_school_id,',');
+			}
+			
+			$stmt = $this->connection->prepare("
+			SELECT interest_activity.id AS activity_id, interest_activity.type
+			FROM  education
+			LEFT JOIN interest_activity
+			ON education.user_id = interest_activity.user_id
+			WHERE interest_activity.id NOT IN($exclusive_list) AND education.school_id IN($search_school_id) AND interest_activity.type = 'e' ORDER BY interest_activity.id DESC");			
+			if($stmt){
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						$left_content = "";
+						$right_content = "";
+						$count = 0;
+						foreach($rows as $row){
+							$content = '';
+							$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id']);
+							if($count++ % 2 == 0){
+								$left_content.= $content;
+							}else{
+								$right_content.= $content;
+							}
+						}
+						return array('left_content'=>$left_content, 'right_content'=>$right_content);
+							
+					}
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
 		
 		
 		

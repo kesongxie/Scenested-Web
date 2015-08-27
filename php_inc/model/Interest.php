@@ -63,7 +63,7 @@
 			$stmt->bind_param('issis',$user_id, $name, $description, $experience, $create_time);
 			if($stmt->execute()){
 				$interest_id = $this->connection->insert_id;
-				if($with_return_render){
+				
 					$label_image_url = "";
 					if($label_image_file !== null){
 						//upload image
@@ -76,13 +76,14 @@
 						}
 					}
 					$stmt->close();
-					$main_content = $this->initContentForInterest($user_id,false); //main-block
-					$side_content = $this->getInterestLabelByInterestId($interest_id);
-					ob_start();
-					include(TEMPLATE_PATH_CHILD.'new_interest.phtml');
-					$content = ob_get_clean();
-					return $content;
-				}
+					if($with_return_render){
+						$main_content = $this->initContentForInterest($user_id,false); //main-block
+						$side_content = $this->getInterestLabelByInterestId($interest_id);
+						ob_start();
+						include(TEMPLATE_PATH_CHILD.'new_interest.phtml');
+						$content = ob_get_clean();
+						return $content;
+					}
 				return true;
 			}
 			return false;

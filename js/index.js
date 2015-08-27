@@ -18,7 +18,8 @@ function loadIndexRecentPreview(){
 		url:AJAX_DIR+'loadIndexRecentPostPreview.php',
 		method:'post',
 		success:function(resp){
-			console.log(resp);
+			$('#index-post-wrapper').find('#add-new-interest').addClass('hdn');
+			$('#index-post-wrapper').html(resp);
 		}	
 	});
 

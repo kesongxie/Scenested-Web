@@ -252,11 +252,13 @@
 			$interest_activity = new Interest_Activity();
 			$rows = $interest_activity->returnMatchedEventBySearchkeyWord($this->search_keyword);
 			$content = null;
+			$feed_id_list = "";
+			$left_content = "";
+			$right_content = "";
 			if($rows !== false){
-				$left_content = "";
-				$right_content = "";
-				$count = 0;
+				$count = 1;
 				foreach($rows as $row){
+					$feed_id_list .= $row['activity_id'].',';
 					$content = $interest_activity->getEventInterestActivityBlockByActivityId($row['activity_id']);
 					if($count++ % 2 == 0){
 						$left_content.= $content;
@@ -264,7 +266,15 @@
 						$right_content.= $content;
 					}
 				}
-			}	
+			}
+			$feed_id_list = empty($feed_id_list)?'-1':$feed_id_list;
+			$content_from_campus = $interest_activity->returnEventFromSchoolKeyWord($this->search_keyword, $feed_id_list);
+			if($content_from_campus !== false){
+				$left_content.= $content_from_campus['left_content'];
+				$right_content.= $content_from_campus['right_content'];
+				$rows = true;
+			}
+				
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'search_event.phtml');
 			$content= ob_get_clean();
@@ -317,11 +327,14 @@
 			$interest_activity = new Interest_Activity();
 			$rows = $interest_activity->returnMatchedPostBySearchkeyWord($this->search_keyword);
 			$content = null;
+			$feed_id_list = "";
+			$left_content = "";
+			$right_content = "";
 			if($rows !== false){
-				$left_content = "";
-				$right_content = "";
-				$count = 0;
+				$count = 1;
 				foreach($rows as $row){
+					$content = '';
+					$feed_id_list .= $row['activity_id'].',';
 					$content = $interest_activity->getMomentInterestActivityBlockByActivityId($row['activity_id']);
 					if($count++ % 2 == 0){
 						$left_content.= $content;
@@ -330,8 +343,41 @@
 					}
 				}
 			}	
+			$feed_id_list = empty($feed_id_list)?'-1':$feed_id_list;
+			$content_from_campus = $interest_activity->returnMomentFromSchoolKeyWord($this->search_keyword, $feed_id_list);
+			if($content_from_campus !== false){
+				$left_content.= $content_from_campus['left_content'];
+				$right_content.= $content_from_campus['right_content'];
+				$rows = true;
+			}
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'search_post.phtml');
+			$content= ob_get_clean();
+			return $content;	
+		}
+		
+	
+		
+		public function getContentEventForMineInterestType(){
+			include_once MODEL_PATH.'Interest_Activity.php';
+			$interest_activity  = new Interest_Activity();
+			$rows = $interest_activity->returnMatchedEventForMineInterest();
+			$content = null;
+			if($rows !== false){
+				$left_content = "";
+				$right_content = "";
+				$count = 0;
+				foreach($rows as $row){
+					$content = $interest_activity->getEventInterestActivityBlockByActivityId($row['activity_id']);
+					if($count++ % 2 == 0){
+						$left_content.= $content;
+					}else{
+						$right_content.= $content;
+					}
+				}
+			}	
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'search_mine_event.phtml');
 			$content= ob_get_clean();
 			return $content;	
 		}
@@ -366,6 +412,7 @@
 		}
 		
 		
+			
 		public function getContentPeopleForMineInterestType(){
 			$user = new User_Table();
 			$interest  = new Interest();
@@ -414,32 +461,6 @@
 			}
 			return $content;
 		}
-		
-		
-		public function getContentEventForMineInterestType(){
-			include_once MODEL_PATH.'Interest_Activity.php';
-			$interest_activity  = new Interest_Activity();
-			$rows = $interest_activity->returnMatchedEventForMineInterest();
-			$content = null;
-			if($rows !== false){
-				$left_content = "";
-				$right_content = "";
-				$count = 0;
-				foreach($rows as $row){
-					$content = $interest_activity->getEventInterestActivityBlockByActivityId($row['activity_id']);
-					if($count++ % 2 == 0){
-						$left_content.= $content;
-					}else{
-						$right_content.= $content;
-					}
-				}
-			}	
-			ob_start();
-			include(TEMPLATE_PATH_CHILD.'search_mine_event.phtml');
-			$content= ob_get_clean();
-			return $content;	
-		}
-		
 		
 		public function getContentMomentForMineInterestType(){
 			include_once MODEL_PATH.'Interest_Activity.php';

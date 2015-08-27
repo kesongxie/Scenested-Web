@@ -26,11 +26,10 @@
 					<?php if($similar_interest_block !== null):	?>
 						<?php echo $similar_interest_block; ?>
 					<?php endif; ?>
-					<!-- 
-<div style="margin-top:100px;">
+					<div style="margin-top:20px;">
 						<?php require_once 'phtml/footer.phtml'; ?>
 					</div>
- -->
+
 				</div>
 			
 				<div id="search-sider-bar-right"  class="inline-blk">
@@ -41,9 +40,7 @@
 							}else if($_GET['r']){
 								$title_url = $BASE_PATH.'?r='.$_GET['r'];
 							}
-						
 						 ?>
-					
 						<a href="<?php echo $title_url ?>"><div class="navi-item<?php echo ( (!isset($_GET['t']) || ($_GET['t']!='event' && $_GET['t']!='photo' && $_GET['t']!='post' ))?' active-navi':' deactive-navi'   ) ?>">People<div class="sub-text" style="left:15px;">events</div></div></a>
 						<a href="<?php echo $title_url ?>&t=event"><div class="navi-item<?php echo (isset($_GET['t']) && $_GET['t'] == 'event')?' active-navi':' deactive-navi' ?>" >Events<div class="sub-text" style="left:15px;">upcomings &amp; collected</div></div></a>
 						<a href="<?php echo $title_url ?>&t=post"><div class="navi-item<?php echo (isset($_GET['t']) && $_GET['t'] == 'post')?' active-navi':' deactive-navi' ?>" >Moments<div class="sub-text" style="left:15px;">post</div></div></a>
