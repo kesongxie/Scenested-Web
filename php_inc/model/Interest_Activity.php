@@ -10,6 +10,7 @@
 		private  $table_name = "interest_activity";
 		private $moment = null;
 		private $event = null;
+		private $feed_id_list = '-1'; //activity_id in the user's feed
 		public function __construct(){
 			parent::__construct($this->table_name);
 		}
@@ -72,8 +73,10 @@
 							$rows = $result->fetch_all(MYSQLI_ASSOC);
 							$stmt->close();
 							$count = 1;
+							$feed_id_list = '';
 							foreach($rows as $row){
 								$content = '';
+								$feed_id_list .= $row['id'].',';
 								if($row['type'] == 'm'){
 									$content = $this->getMomentInterestActivityBlockByActivityId($row['id'], true);
 								}else if($row['type'] == 'e'){
@@ -85,6 +88,7 @@
 									$right_content.= $content;
 								}
 							}
+							$this->feed_id_list = trim($feed_id_list,',');
 						 }
 					}
 				}
@@ -281,6 +285,7 @@
 					}
 				}
 				
+				$operation_dispable = ($group_key !== false || $interest_activity['user_id'] == $_SESSION['id']);
 				
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.'phtml/child/post_event_block.phtml');
@@ -761,7 +766,7 @@
 		
 		public function returnMatchedEventBySearchkeyWord($key_word){
 			$stmt = $this->connection->prepare("
-			SELECT event.title, event.description, event.location, event.date, event.time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+			SELECT interest_activity.id AS activity_id
 			FROM event 
 			LEFT JOIN interest_activity
 			ON event.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'e'  AND  (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?) ORDER BY TIMESTAMP(event.date, event.time) DESC
@@ -790,15 +795,17 @@
 			$stmt = $this->connection->prepare("
 			SELECT * 
 			FROM(
-				SELECT moment.id, moment.description, moment.date, interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+				SELECT interest_activity.id AS activity_id
 				FROM interest 
 				LEFT JOIN interest_activity
 				ON interest.id = interest_activity.interest_id 
 				LEFT JOIN moment
 				ON moment.interest_activity_id = interest_activity.id 
 				WHERE interest.name Like ? AND interest_activity.type = 'm' 
+				
 				UNION
-				SELECT  moment.id, moment.description, moment.date, interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+				
+				SELECT  interest_activity.id AS activity_id
 				FROM moment 
 				LEFT JOIN interest_activity
 				ON moment.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'm' And   ( moment.description LIKE ? ) 
@@ -902,6 +909,7 @@
 					$result_rows = $rowFromUpcoming;
 				}
 				
+				
 				$rowFromPassed = $this->returnPassedMatchedEventForMinInterest($interest_like);
 				if($rowFromPassed !== false){
 					if($result_rows !== false){
@@ -924,7 +932,7 @@
 				SELECT * 
 				FROM
 				(
-					SELECT event.title, event.description, event.location, event.date AS date, event.time AS time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
 					FROM interest 
 					LEFT JOIN interest_activity
 					ON interest.id = interest_activity.interest_id 
@@ -934,17 +942,19 @@
 			
 					UNION
 			
-					SELECT event.title, event.description, event.location, event.date AS date, event.time AS time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+					SELECT interest_activity.id AS activity_id,  event.date AS date, event.time AS time
 					FROM event 
 					LEFT JOIN interest_activity
 					ON   event.interest_activity_id = interest_activity.id  WHERE TIMESTAMP(date, time) > NOW() AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?)
 				
-					
 				) dum ORDER BY TIMESTAMP(date, time) ASC
 				");	
 				
 				if($stmt){
+					//$stmt->bind_param('ssss',$interest_like,$interest_like,$interest_like, $interest_like);
 					$stmt->bind_param('ssss',$interest_like,$interest_like,$interest_like, $interest_like);
+					
+					
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
 						 if($result !== false && $result->num_rows >= 1){
@@ -961,7 +971,7 @@
 				SELECT * 
 				FROM
 				(
-					SELECT event.title, event.description, event.location, event.date AS date, event.time AS time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
 					FROM interest 
 					LEFT JOIN interest_activity
 					ON interest.id = interest_activity.interest_id 
@@ -971,7 +981,7 @@
 			
 					UNION
 			
-					SELECT event.title, event.description, event.location, event.date AS date, event.time AS time,interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
 					FROM event 
 					LEFT JOIN interest_activity
 					ON   event.interest_activity_id = interest_activity.id  WHERE  interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?) AND TIMESTAMP(date, time) <= NOW() 
@@ -1010,7 +1020,7 @@
 			SELECT * 	
 			FROM
 			(
-				SELECT moment.id, moment.description, moment.date, interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+				SELECT interest_activity.id AS activity_id
 				FROM interest 
 				LEFT JOIN interest_activity
 				ON interest.id = interest_activity.interest_id 
@@ -1020,7 +1030,7 @@
 			
 				UNION
 			
-				SELECT moment.id, moment.description, moment.date, interest_activity.id AS activity_id, interest_activity.user_id, interest_activity.post_time,interest_activity.hash
+				SELECT interest_activity.id AS activity_id
 				FROM moment 
 				LEFT JOIN interest_activity
 				ON moment.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'm' And   ( moment.description REGEXP ? ) 
@@ -1152,6 +1162,295 @@
 				return $favor->getTotalFavorNumForTarget($activity_id);
 			}
 		}
+		
+		
+		
+		
+		
+		public function getSuggestPost(){
+			include_once MODEL_PATH.'Interest.php';
+			$interest = new Interest();
+			$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
+			$interest_like = '';
+			$suggest_feed  = false;
+			if($mine_interests !== false){
+				foreach($mine_interests as $interest){
+ 					$interest_like .= $interest['name'].'|';	
+				}
+				$interest_like = trim($interest_like,'|');
+			}	
+			include_once 'Education.php';
+			$edu = new Education();
+			$school_id =  $edu->getSchoolIdByUserId($_SESSION['id']);
+			$school_id = ($school_id === false)?-1:$school_id;
+			
+			//use random offset to get random user
+			$result_from_interest_and_school = $this->returnSimilarInterestPostInSameCampus($interest_like, $school_id);
+			$result_from_interest_and_school = ($result_from_interest_and_school !== false)?$result_from_interest_and_school:array();
+			$result_from_interest = $this->returnSimilarInterestPost($interest_like);
+			$result_from_interest = ($result_from_interest !== false)?$result_from_interest:array();
+			$result_from_school = $this->returnPostFromSameSchool($school_id);
+			$result_from_school = ($result_from_school !== false)?$result_from_school:array();
+			$rows = array_merge($result_from_interest_and_school,$result_from_interest, $result_from_school);
+			
+			if(sizeof($rows) >= 1 ){
+				$count = 1;
+				$left_content = "";
+				$right_content = "";
+				foreach($rows as $row){
+					$content = '';
+					if($row['type'] == 'm'){
+						$content = $this->getMomentInterestActivityBlockByActivityId($row['activity_id'], true);
+					}else if($row['type'] == 'e'){
+						$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id'], true);
+					}
+					if($count++ % 2 == 0){
+						$left_content.= $content;
+					}else{
+						$right_content.= $content;
+					}
+				}
+			
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'index_new_feed.phtml');
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
+		
+		}
+		
+		
+		public function returnSimilarInterestPostInSameCampus($interest_like = false, $school_id = false){
+			//there is no interest_like passed as parameter
+			if($interest_like === false ){
+				include_once MODEL_PATH.'Interest.php';
+				$interest = new Interest();
+				$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
+				$interest_like = '';
+				if($mine_interests !== false){
+					foreach($mine_interests as $interest){
+						$interest_like .= $interest['name'].'|';	
+					}
+					$interest_like = trim($interest_like,'|');
+				}else{
+					return false;
+				}
+			}
+			if($school_id === false){
+				//there is no school_id passed as parameter
+				include_once 'Education.php';
+				$edu = new Education();
+				$school_id =  $edu->getSchoolIdByUserId($_SESSION['id']);
+				if($school_id === false){
+					return false;
+				}
+			}
+			
+			if($interest_like != ''){
+				$stmt = $this->connection->prepare("
+				SELECT * 	
+				FROM
+				(
+					SELECT  interest_activity.id AS activity_id, interest_activity.type
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN moment
+					ON moment.interest_activity_id = interest_activity.id 
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'm' AND education.school_id = '$school_id'
+			
+					UNION
+			
+					SELECT interest_activity.id AS activity_id, interest_activity.type
+					FROM moment 
+					LEFT JOIN interest_activity
+					ON moment.interest_activity_id = interest_activity.id
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'm' AND   ( moment.description REGEXP ? ) AND education.school_id = '$school_id'
+			
+					UNION 
+				
+					SELECT  interest_activity.id AS activity_id, interest_activity.type
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN event
+					ON event.interest_activity_id = interest_activity.id 
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'e' AND education.school_id = '$school_id'
+				
+					UNION
+				
+					SELECT interest_activity.id AS activity_id, interest_activity.type
+					FROM event 
+					LEFT JOIN interest_activity
+					ON   event.interest_activity_id = interest_activity.id
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE  interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?)  AND education.school_id = '$school_id'
+			
+				) dum ORDER BY activity_id DESC
+				");	
+			
+				if($stmt){
+						$stmt->bind_param('ssssss',$interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like);
+						if($stmt->execute()){
+							 $result = $stmt->get_result();
+							 if($result !== false && $result->num_rows >= 1){
+								$rows = $result->fetch_all(MYSQLI_ASSOC);
+								$stmt->close();
+							
+							
+								foreach($rows as $row){
+									if($this->feed_id_list != '-1'){
+										$this->feed_id_list .= $row['activity_id'].',';
+									}else{
+										$this->feed_id_list = $row['activity_id'].',';
+									}
+								}
+								$this->feed_id_list = trim($this->feed_id_list , ',');
+								return $rows;
+						}
+					}
+			}
+			}
+			echo $this->connection->error;
+			return false;
+			
+			
+			
+		
+		}
+		
+		
+		public function returnSimilarInterestPost($interest_like = false){
+			if($interest_like === false ){
+				include_once MODEL_PATH.'Interest.php';
+				$interest = new Interest();
+				$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
+				$interest_like = '';
+				if($mine_interests !== false){
+					foreach($mine_interests as $interest){
+						$interest_like .= $interest['name'].'|';	
+					}
+					$interest_like = trim($interest_like,'|');
+				}else{
+					return false;
+				}
+			}
+			
+			if($interest_like != ''){
+				$stmt = $this->connection->prepare("
+				SELECT * 	
+				FROM
+				(
+					SELECT  interest_activity.id AS activity_id, interest_activity.type
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN moment
+					ON moment.interest_activity_id = interest_activity.id 
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'm' 
+			
+					UNION
+			
+					SELECT interest_activity.id AS activity_id, interest_activity.type
+					FROM moment 
+					LEFT JOIN interest_activity
+					ON moment.interest_activity_id = interest_activity.id
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'm' AND   ( moment.description REGEXP ? )
+			
+					UNION 
+				
+					SELECT  interest_activity.id AS activity_id, interest_activity.type
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN event
+					ON event.interest_activity_id = interest_activity.id 
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'e' 
+				
+					UNION
+				
+					SELECT interest_activity.id AS activity_id, interest_activity.type
+					FROM event 
+					LEFT JOIN interest_activity
+					ON   event.interest_activity_id = interest_activity.id
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE  interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?) 
+			
+				) dum ORDER BY activity_id DESC
+				");	
+			
+				if($stmt){
+						$stmt->bind_param('ssssss',$interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like);
+						if($stmt->execute()){
+							 $result = $stmt->get_result();
+							 if($result !== false && $result->num_rows >= 1){
+								$rows = $result->fetch_all(MYSQLI_ASSOC);
+								$stmt->close();
+							
+							
+								foreach($rows as $row){
+									if($this->feed_id_list != '-1'){
+										$this->feed_id_list .= $row['activity_id'].',';
+									}else{
+										$this->feed_id_list = $row['activity_id'].',';
+									}
+								}
+								$this->feed_id_list = trim($this->feed_id_list , ',');
+								return $rows;
+						}
+					}
+				}
+			}
+			echo $this->connection->error;
+			return false;
+			
+			
+		}
+		
+		public function returnPostFromSameSchool($school_id = false){
+			if($school_id === false){
+				//there is no school_id passed as parameter
+				include_once 'Education.php';
+				$edu = new Education();
+				$school_id =  $edu->getSchoolIdByUserId($_SESSION['id']);
+				if($school_id === false){
+					return false;
+				}
+			}
+			$stmt = $this->connection->prepare("
+			SELECT interest_activity.id AS activity_id, interest_activity.type
+			FROM  education
+			LEFT JOIN interest_activity
+			ON education.user_id = interest_activity.user_id
+			WHERE interest_activity.id NOT IN($this->feed_id_list) AND education.school_id = '$school_id' ORDER BY interest_activity.id DESC");			
+			if($stmt){
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $rows;
+					}
+				}
+			}
+			return false;
+		}
+		
 		
 		
 	}

@@ -12,6 +12,19 @@ function doneWithInterestEditing(editingDiv){
 	
 	return parentDiv;
 }
+
+function loadIndexRecentPreview(){
+	$.ajax({
+		url:AJAX_DIR+'loadIndexRecentPostPreview.php',
+		method:'post',
+		success:function(resp){
+			console.log(resp);
+		}	
+	});
+
+}
+
+
 $(document).ready(function(){
 	$('body').on({
 		click:function(){
@@ -372,7 +385,7 @@ $(document).ready(function(){
 			loading_wrapper.show();
 			actionButton.text("Loading...");
 			$.ajax({
-				url:AJAX_DIR+'add_interest.php',
+				url:AJAX_DIR+'index_add_interest.php',
 				type:'POST',
 				processData: false,
 				contentType: false,
@@ -387,24 +400,7 @@ $(document).ready(function(){
 					}else if(resp == '3'){
 						presentPopupDialog("Interest Existed",'The interest <span class="plain-lk pointer" style="color:#062AA3">'+ name + '</span> has already existed', "Got it", "", null, null );
 					}else{	
-						var add_interest_wrapper = $('#add-new-interest-wrapper');
-						add_interest_wrapper.css('-webkit-animation',"zoomOut 0.5s").css('animation',"zoomOut 0.5s").addClass('hdn');
-						$('.interest-content-inner-wrapper').addClass('hdn');
-						var mid_content = $($.parseHTML(resp)).filter('#node-mid-content');								
-						var side_content = $($.parseHTML(resp)).filter('#node-side-content');			
-						$('#interest-content-wrapper').append(mid_content.html()).removeClass('hdn');
-						side_content.children('.interest-side-label').css('-webkit-animation',' bounceInUp 1s');
-						$('#i-interest-navi').append(side_content.html());
-
-						setVisibleContentWithParent(mid_content.find('.interest-content-inner-wrapper'),'Read more');
-						//reset elements
-						parentDiv.find('input, textarea, select').val('');
-						parentDiv.find('.camera-center').show();
-						image_label.attr('src','').addClass('hdn');
-						
-						setTimeout(function(){
-							add_interest_wrapper.css('-webkit-animation',"").css('animation',"");
-						},200);
+						loadIndexRecentPreview();
 					}
 				}
 			});

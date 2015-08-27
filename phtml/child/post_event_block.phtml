@@ -2,13 +2,17 @@
 	<?php $displayable = is_url_exist($event_photo_url); ?>
 
 	<?php if($displayable): ?>
+		<?php if($operation_dispable): ?>
 		<img src="<?php echo IMGDIR ?>white-down-arrow.png" style="float:none;position: absolute; right: 14px; top: 14px;"class="trigger-pop toggle-operation pointer hdn">
+		<?php endif; ?>
+		
 		<div class="pointer evt-cover">
 			<img class="previewable" style="width:100%;display:block;" src="<?php echo $event_photo_url ?>" data-key="<?php echo $event_photo_hash ?>" data-sourceFrom = "e">
 		</div>
 	<?php else: ?>
+		<?php if($operation_dispable): ?>
 			<img src="<?php echo IMGDIR ?>down_arrow_icon.png" style="float:none;position: absolute; right: 10px; top: 10px;"class="trigger-pop toggle-operation pointer hdn">
-			
+		<?php endif; ?>
 	<?php endif; ?>
 	
 	<?php if($displayable): ?>
@@ -100,6 +104,9 @@
 		</div>
 	</div>
 	
+	
+	
+	<?php if($operation_dispable): ?>
 	<div class="in_con_opt_w popover hdn" style="top:37px;right:4px;">
 		<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
 			<div class="arrow-up" style="position:absolute;top:-12px;right:1px;border-bottom:10px solid #FFFFFF"></div>
@@ -114,7 +121,7 @@
 			<?php endif; ?>
 		</div>
 	</div>
-	
+	<?php endif;?>
 	
 	
 	

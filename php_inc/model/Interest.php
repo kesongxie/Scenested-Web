@@ -56,31 +56,34 @@
 		
 		
 		
-		public function addInterestForUser($user_id, $name, $description, $experience, $label_image_file){
+		public function addInterestForUser($user_id, $name, $description, $experience, $label_image_file, $with_return_render = true){
 			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`name`,`description`,`experience`,`create_time`) VALUES(?, ?, ?, ?, ?)");
 			$create_time = date('Y-m-d H:i:s');
 			$name =  ucwords(strtolower($name));
 			$stmt->bind_param('issis',$user_id, $name, $description, $experience, $create_time);
 			if($stmt->execute()){
 				$interest_id = $this->connection->insert_id;
-				$label_image_url = "";
-				if($label_image_file !== null){
-					//upload image
-					$hash = $this->interest_label_image->generateUniqueHash();
-					$label_image_url = $this->interest_label_image->uploadMediaForAssocColumn($label_image_file,$user_id, $hash,'interest_id', $interest_id);
-					if($label_image_url === false){
-						$this->deleteRowById($interest_id);
-						$stmt->close();
-						return false;
+				if($with_return_render){
+					$label_image_url = "";
+					if($label_image_file !== null){
+						//upload image
+						$hash = $this->interest_label_image->generateUniqueHash();
+						$label_image_url = $this->interest_label_image->uploadMediaForAssocColumn($label_image_file,$user_id, $hash,'interest_id', $interest_id);
+						if($label_image_url === false){
+							$this->deleteRowById($interest_id);
+							$stmt->close();
+							return false;
+						}
 					}
+					$stmt->close();
+					$main_content = $this->initContentForInterest($user_id,false); //main-block
+					$side_content = $this->getInterestLabelByInterestId($interest_id);
+					ob_start();
+					include(TEMPLATE_PATH_CHILD.'new_interest.phtml');
+					$content = ob_get_clean();
+					return $content;
 				}
-				$stmt->close();
-				$main_content = $this->initContentForInterest($user_id,false); //main-block
-				$side_content = $this->getInterestLabelByInterestId($interest_id);
-				ob_start();
-				include(TEMPLATE_PATH_CHILD.'new_interest.phtml');
-				$content = ob_get_clean();
-				return $content;
+				return true;
 			}
 			return false;
 		}
@@ -717,12 +720,6 @@
 			return false;
 			
 		}
-		
-		
-		
-		
-		
-		
 		
 		
 		public function getAddNewInterestBlock(){
