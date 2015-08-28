@@ -284,44 +284,6 @@
 		}
 		
 		
-		public function getSearchBarResult(){
-			include_once 'User_Profile_Picture.php';
-			$interest  = new Interest();
-			include_once 'Education.php';
-			$profile = new User_Profile_Picture();
-			$user = new User_Table();
-			$result_found = array();
-			$user_found = $user->returnMatchedUserBySearchkeyWord($this->search_keyword, 6);
-			$serach_result_user_id_array = array();
-			if($user_found !== false){
-				$result_found = $user_found;
-				foreach($user_found as $u){
-					array_push($serach_result_user_id_array,$u['id']);
-				}			
-			}	
-			
-			$count = sizeof($result_found);
-			$interest_found = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, 6-$count);
-			if($interest_found !== false){
-				foreach($interest_found as $i){
-					if($count <= 8){
-						if(!in_array($i['id'], $serach_result_user_id_array)){
-							array_push($result_found,$i);
-							$count++;
-						}
-					}else{
-						break;
-					}
-				}
-			}
-			
-			ob_start();
-			include(TEMPLATE_PATH_CHILD.'search_bar_result.phtml');
-			$content = ob_get_clean();
-			return $content;
-		}
-		
-		
 		public function getContentForPostType(){
 			include_once PHP_INC_MODEL_ROOT_REF.'Interest_Activity.php';
 			$interest_activity = new Interest_Activity();
@@ -357,6 +319,44 @@
 		}
 		
 	
+		public function getContentForPhotoType(){
+			include_once PHP_INC_MODEL_ROOT_REF.'Interest_Activity.php';
+			include_once PHP_INC_MODEL_ROOT_REF.'User_Media_Base.php';
+			$interest_activity = new Interest_Activity();
+			$media_base = new User_Media_Base();
+			$rows = $interest_activity->returnMatchedPhotoBySearchkeyWord($this->search_keyword);
+			$content = null;
+			$left_content = "";
+			$right_content = "";
+			if($rows !== false){
+				$count = 1;
+				foreach($rows as $row){
+					$content= $media_base->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id'],$row['source_from'], $row['hash']);
+					if($content !== false){
+						if($count++ % 2 == 0){
+							$left_content.= $content;
+						}else{
+							$right_content.= $content;
+						}
+					}
+				}
+			}
+			
+			$school_content = $media_base->returnPhotoBySchoolKeyWord($this->search_keyword);
+			if($school_content !== false){
+				$left_content.= $school_content['left_content'];
+				$right_content.= $school_content['right_content'];
+				$rows = true;
+			}
+			
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'double_column_photo_stream_block.phtml');
+			$content= ob_get_clean();
+			return $content;
+			
+		}
+			
+	
 		
 		public function getContentEventForMineInterestType(){
 			include_once MODEL_PATH.'Interest_Activity.php';
@@ -382,34 +382,6 @@
 			return $content;	
 		}
 		
-		public function getContentForPhotoType(){
-			include_once PHP_INC_MODEL_ROOT_REF.'Interest_Activity.php';
-			include_once PHP_INC_MODEL_ROOT_REF.'User_Media_Base.php';
-			$interest_activity = new Interest_Activity();
-			$media_base = new User_Media_Base();
-			$rows = $interest_activity->returnMatchedPhotoBySearchkeyWord($this->search_keyword);
-			$content = null;
-			if($rows !== false){
-				$left_content = "";
-				$right_content = "";
-				$count = 0;
-				foreach($rows as $row){
-					$content= $media_base->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id'],$row['source_from'], $row['hash']);
-					if($content !== false){
-						if($count++ % 2 == 0){
-							$left_content.= $content;
-						}else{
-							$right_content.= $content;
-						}
-					}
-				}
-			}
-			ob_start();
-			include(TEMPLATE_PATH_CHILD.'double_column_photo_stream_block.phtml');
-			$content= ob_get_clean();
-			return $content;
-			
-		}
 		
 		
 			
@@ -516,6 +488,42 @@
 		}
 		
 		
+		public function getSearchBarResult(){
+			include_once 'User_Profile_Picture.php';
+			$interest  = new Interest();
+			include_once 'Education.php';
+			$profile = new User_Profile_Picture();
+			$user = new User_Table();
+			$result_found = array();
+			$user_found = $user->returnMatchedUserBySearchkeyWord($this->search_keyword, 6);
+			$serach_result_user_id_array = array();
+			if($user_found !== false){
+				$result_found = $user_found;
+				foreach($user_found as $u){
+					array_push($serach_result_user_id_array,$u['id']);
+				}			
+			}	
+			
+			$count = sizeof($result_found);
+			$interest_found = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, 6-$count);
+			if($interest_found !== false){
+				foreach($interest_found as $i){
+					if($count <= 8){
+						if(!in_array($i['id'], $serach_result_user_id_array)){
+							array_push($result_found,$i);
+							$count++;
+						}
+					}else{
+						break;
+					}
+				}
+			}
+			
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'search_bar_result.phtml');
+			$content = ob_get_clean();
+			return $content;
+		}
 		
 		
 		

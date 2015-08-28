@@ -216,7 +216,64 @@
 			return $c->loadProfileCoverPhotoPreviewBlock($hash);
 		}
 		
-		
+		public function returnPhotoBySchoolKeyWord($school_key_word){
+			include_once 'School.php';
+			$search_school_array = School::getSchooIdsLikeSchoolName($school_key_word);
+			$search_school_id = '';
+			if($search_school_array !== false){
+				foreach($search_school_array as $id){
+					$search_school_id .= "'".$id['id']."',";
+				}
+				$search_school_id = trim($search_school_id,',');
+			}
+			
+			$stmt = $this->connection->prepare("
+			SELECT * 	
+			FROM
+			(
+			SELECT 'm' AS `source_from`, moment_photo.user_id, moment_photo.picture_url, moment_photo.upload_time AS time, moment_photo.hash
+			FROM  education
+			LEFT JOIN moment_photo
+			ON education.user_id = moment_photo.user_id
+			WHERE  education.school_id IN($search_school_id)
+			
+			UNION 
+			
+			SELECT 'e' AS `source_from`, event_photo.user_id, event_photo.picture_url, event_photo.upload_time AS time, event_photo.hash
+			FROM  education
+			LEFT JOIN event_photo
+			ON education.user_id = event_photo.user_id
+			WHERE  education.school_id IN($search_school_id)
+			) dum ORDER BY time DESC
+			");			
+			
+			if($stmt){
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						$left_content = "";
+						$right_content = "";
+						$count = 0;
+						foreach($rows as $row){
+							$content= $this->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id'],$row['source_from'], $row['hash']);
+							if($content !== false){
+								if($count++ % 2 == 0){
+									$left_content.= $content;
+								}else{
+									$right_content.= $content;
+								}
+							}
+						}
+						
+						return array('left_content'=>$left_content, 'right_content'=>$right_content);
+					}
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
 		
 		
 		
