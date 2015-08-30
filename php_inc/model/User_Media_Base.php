@@ -225,6 +225,8 @@
 					$search_school_id .= "'".$id['id']."',";
 				}
 				$search_school_id = trim($search_school_id,',');
+			}else{
+				return false;
 			}
 			
 			$stmt = $this->connection->prepare("

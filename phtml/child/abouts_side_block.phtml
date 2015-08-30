@@ -45,12 +45,25 @@
 	
 	
 	<div class="side-block-main-wrapper front<?php echo ($education === false)?' hdn':' act' ?>">
+			<div class="school-name-wrapper">
 			<a href="<?php echo SEARCH_PEOPLE_PATH.$education['school_name'] ?>" class="name plain-lk" style="color:rgb(48, 51, 198)">
 				<?php if($education !== false): ?>
 					<?php echo $education['school_name']; ?>
 				<?php endif; ?>	
 			</a>
-		<div class="major" style="font-size:12px;margin-top:2px;"><?php echo htmlentities($education['study']); ?></div>
+			<?php if($user_id == $_SESSION['id']): ?>
+				<img src="<?php echo IMGDIR ?>minus_icon.png" class="remove pointer hdn" height="18" width="18" title="Remove this school" style="margin-right:-2px;float:right">
+			<?php endif; ?>
+			</div>
+			
+		<div class="major major-wrapper" style="font-size:12px;margin-top:2px;">
+			<a class="name dummy-lk">
+				<?php echo htmlentities($education['study']); ?>
+			</a>
+			<?php if($user_id == $_SESSION['id']): ?>
+				<img src="<?php echo IMGDIR ?>minus_icon.png" class="remove pointer hdn" height="18" width="18" title="Remove the study" style="margin-right:-2px;float:right">
+			<?php endif; ?>
+		</div>
 	</div>	
 	
 		

@@ -800,10 +800,10 @@ div.ui-datepicker{
 }
 .post-wrapper .moment-date{
 	text-align: right;
-	margin-right: 6px;
-	color: #0D0D0D;
-	font-weight: 600;
-	margin-top: 12px;
+    margin-right: 6px;
+    color: #0D0D0D;
+    font-weight: 600;
+    margin-top: 12px;
 }
 
 .post-operation-icon{

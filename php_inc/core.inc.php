@@ -156,12 +156,21 @@
 	*/
 	function returnShortDate($date, $delimeter = '-'){
 		$ts = strtotime($date);
+		if(isToday($date)){
+			return 'Today';	
+		}
 		if(date('Y',$ts) ==  date('Y'))
 			return date('M d',$ts);
 		else{
 			return date('M d '.$delimeter.' Y',$ts);
 		}
 	}	
+	
+	
+	function isToday($date){
+		return date('Ymd') == date('Ymd', strtotime($date));
+	}
+	
 	
 	
 	function convertThumbPathToOriginPath($src){

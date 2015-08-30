@@ -58,10 +58,17 @@
 							<div class="joined-num inline-blk" ><?php  echo $joined_user_num; ?></div>
 							<div class="joined-label inline-blk" >
 							<?php if($joined_user_num > 1): ?>
-								people going
+								people 
 							<?php else: ?>
-								person going							
+								person
 							<?php endif; ?>
+							
+							<?php if($isEventPassed): ?>
+								went
+							<?php else: ?>
+								going
+							<?php endif; ?>
+							
 							</div>
 						</div>
 					</div>

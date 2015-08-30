@@ -60,8 +60,6 @@
 				$right_content = ob_get_clean();			
 			}
 			
-			
-			
 			$user_in = '';
 			if($friends !== false && sizeof($friends >= 1 )){
 				foreach($friends as $friend){
@@ -70,14 +68,13 @@
 			}
 			$user_in = $user_in.$_SESSION['id'];
 			$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) ORDER BY `id` DESC");			
-			
 			if($stmt){
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
 						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						$count = 1;
+						$count = 0;
 						$feed_id_list = '';
 						foreach($rows as $row){
 							$content = '';
@@ -94,12 +91,18 @@
 							}
 						}
 						$this->feed_id_list = trim($feed_id_list,',');
-						$suggest_content = $this->getSuggestPost();
-						$left_content .= $suggest_content['suggest_left_content'];
-						$right_content .= $suggest_content['suggest_right_content'];
 					 }
 				}
 			}
+			
+			$suggest_content = $this->getSuggestPost();
+			if($suggest_content !== false){
+				$left_content .= $suggest_content['suggest_left_content'];
+				$right_content .= $suggest_content['suggest_right_content'];
+			}
+
+			
+			
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'index_new_feed.phtml');
 			$content = ob_get_clean();
@@ -1200,7 +1203,7 @@
 			$result_from_school = ($result_from_school !== false)?$result_from_school:array();
 			$rows = array_merge($result_from_interest_and_school,$result_from_interest, $result_from_school);
 			if(sizeof($rows) >= 1 ){
-				$count = 1;
+				$count = 0;
 				$left_content = "";
 				$right_content = "";
 				foreach($rows as $row){
@@ -1454,7 +1457,7 @@
 			return false;
 		}
 		
-		public function returnMomentFromSchoolKeyWord($school_key_word, $exclusive_list = '-1'){
+		public function returnMomentFromSchoolKeyWord($school_key_word, $exclusive_list = "'-1'"){
 			include_once 'School.php';
 			$search_school_array = School::getSchooIdsLikeSchoolName($school_key_word);
 			$search_school_id = '';
@@ -1463,8 +1466,9 @@
 					$search_school_id .= "'".$id['id']."',";
 				}
 				$search_school_id = trim($search_school_id,',');
+			}else{
+				return false;
 			}
-			
 			$stmt = $this->connection->prepare("
 			SELECT interest_activity.id AS activity_id, interest_activity.type
 			FROM  education
@@ -1499,7 +1503,7 @@
 		}
 		
 		
-		public function returnEventFromSchoolKeyWord($school_key_word, $exclusive_list = '-1'){
+		public function returnEventFromSchoolKeyWord($school_key_word, $exclusive_list = "'-1'"){
 			include_once 'School.php';
 			$search_school_array = School::getSchooIdsLikeSchoolName($school_key_word);
 			$search_school_id = '';
@@ -1508,7 +1512,11 @@
 					$search_school_id .= "'".$id['id']."',";
 				}
 				$search_school_id = trim($search_school_id,',');
+			}else{
+				return false;
 			}
+			
+			
 			
 			$stmt = $this->connection->prepare("
 			SELECT interest_activity.id AS activity_id, interest_activity.type
@@ -1535,10 +1543,11 @@
 							}
 						}
 						return array('left_content'=>$left_content, 'right_content'=>$right_content);
-							
+					
 					}
 				}
 			}
+			
 			echo $this->connection->error;
 			return false;
 		}

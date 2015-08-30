@@ -256,7 +256,7 @@
 			$left_content = "";
 			$right_content = "";
 			if($rows !== false){
-				$count = 1;
+				$count = 0;
 				foreach($rows as $row){
 					$feed_id_list .= $row['activity_id'].',';
 					$content = $interest_activity->getEventInterestActivityBlockByActivityId($row['activity_id']);
@@ -293,7 +293,7 @@
 			$left_content = "";
 			$right_content = "";
 			if($rows !== false){
-				$count = 1;
+				$count = 0;
 				foreach($rows as $row){
 					$content = '';
 					$feed_id_list .= $row['activity_id'].',';
@@ -329,7 +329,7 @@
 			$left_content = "";
 			$right_content = "";
 			if($rows !== false){
-				$count = 1;
+				$count = 0;
 				foreach($rows as $row){
 					$content= $media_base->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id'],$row['source_from'], $row['hash']);
 					if($content !== false){

@@ -151,8 +151,21 @@
 		}
 		
 		
+		public function removeSchoolForSessionUser(){
+			if($this->getColumnByUserId('major_id',$_SESSION['id']) === null){
+				$this->deleteRowByUserId($_SESSION['id']);	
+			}else{
+				$this->setColumnByUserId('school_id', NULL, $_SESSION['id']);
+			}
+		}
 		
-		
+		public function removeStudyForSessionUser(){
+			if($this->getColumnByUserId('school_id',$_SESSION['id']) === null){
+				$this->deleteRowByUserId($_SESSION['id']);	
+			}else{
+				$this->setColumnByUserId('major_id', NULL, $_SESSION['id']);
+			}
+		}
 		
 		
 		

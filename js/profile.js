@@ -161,6 +161,45 @@ function removeRecentFavor(sender){
 	});
 }
 
+function removeSchool(sender){
+	var parentDiv = sender.parents('.school-name-wrapper');
+	var side_block = parentDiv.parents('.side-block-wrapper');
+	$.ajax({
+		url:AJAX_DIR+'remove_school.php',
+		method:'post',
+		success:function(resp){
+			parentDiv.find('.name').text('').attr('href',DEFAULT_SEARCH_PATH);
+			parentDiv.find('.remove').remove();
+			parentDiv.parents('.side-block-wrapper').find('.school-name-input-wrapper input').val('');
+			if(side_block.find('.major-wrapper').text().trim() == ''){
+				side_block.find('.empty').removeClass('hdn').addClass('act');
+			}
+		}	
+	
+	});
+}
+
+function removeStudy(sender){
+	var parentDiv = sender.parents('.major-wrapper');
+	var side_block = parentDiv.parents('.side-block-wrapper');
+	$.ajax({
+		url:AJAX_DIR+'remove_study.php',
+		method:'post',
+		success:function(resp){
+			parentDiv.find('.name').text('').attr('href',DEFAULT_SEARCH_PATH);
+			parentDiv.find('.remove').remove();
+			parentDiv.parents('.side-block-wrapper').find('.major-name-input-wrapper input').val('');
+			if(side_block.find('.school-name-wrapper').text().trim() == ''){
+				side_block.find('.empty').removeClass('hdn').addClass('act');;
+			}
+		}	
+	
+	});
+}
+
+
+
+
 $(document).ready(function(){
 
 	var in_navi_count = 0;
@@ -1160,9 +1199,15 @@ $(document).ready(function(){
 							empty.removeClass('act').addClass('hdn');
 							edit.removeClass('act').addClass('hdn');
 							main.addClass('act').removeClass('hdn');
-							main.find('.name').text(name).attr('href', DEFAULT_SEARCH_PATH+name);
+							main.find('.school-name-wrapper .name').text(name).attr('href', DEFAULT_SEARCH_PATH+name);
 							parentDiv.find('.side-blur-action.hide-edit').removeClass('act').addClass('hdn');
 							parentDiv.find('.side-blur-action.show-edit').addClass('act').removeClass('hdn');
+							var school_name_wrapper = parentDiv.find('.school-name-wrapper')
+							if(school_name_wrapper.find('.remove').length < 1){
+								school_name_wrapper.find('.name').after('<img src="'+IMGDIR+'minus_icon.png" class="remove pointer hdn" height="18" width="18" title="Remove this school" style="margin-right:-2px;float:right">');
+							}
+							
+							
 							input_wrapper.addClass('hdn');
 						}else{
 							suggest.addClass('hdn');
@@ -1221,10 +1266,14 @@ $(document).ready(function(){
 							empty.removeClass('act').addClass('hdn');
 							edit.removeClass('act').addClass('hdn');
 							main.addClass('act').removeClass('hdn');
-							main.find('.major').text(name);
+							main.find('.major-wrapper .name').text(name);
 							suggest.html(resp).removeClass('hdn');
 							parentDiv.find('.side-blur-action.hide-edit').removeClass('act').addClass('hdn');
 							parentDiv.find('.side-blur-action.show-edit').addClass('act').removeClass('hdn');
+							var major_wrappr = parentDiv.find('.major-wrapper')
+							if(major_wrappr.find('.remove').length < 1){
+								major_wrappr.find('.name').after('<img src="'+IMGDIR+'minus_icon.png" class="remove pointer hdn" height="18" width="18" title="Remove this study" style="margin-right:-2px;float:right">');
+							}
 							input_wrapper.addClass('hdn');
 						}else{
 							showPopOverDialog(thisE, parentDiv, "Major not found");
@@ -1338,6 +1387,41 @@ $(document).ready(function(){
 	},'.major-name-suggest .major-name-item');
 
 	
+	
+	$('body').on({
+		mouseover:function(){
+			$(this).find('.remove').removeClass('hdn');
+		},
+		mouseleave:function(){
+			$(this).find('.remove').addClass('hdn');
+		}
+	},'.school-name-wrapper');
+	
+	
+	$('body').on({
+		click:function(){
+			var school_name = $(this).parents('.school-name-wrapper').find('.name').text().trim();
+			presentPopupDialog("Remove School", "Do you want to remove school \""+school_name+"\"", "Cancel", "Remove", removeSchool, $(this) );
+		}
+	},'.school-name-wrapper .remove');
+	
+	
+	$('body').on({
+		mouseover:function(){
+			$(this).find('.remove').removeClass('hdn');
+		},
+		mouseleave:function(){
+			$(this).find('.remove').addClass('hdn');
+		}
+	},'.major-wrapper');
+	
+	
+	$('body').on({
+		click:function(){
+			var major_name = $(this).parents('.major-wrapper').find('.name').text().trim();
+			presentPopupDialog("Remove Study", "Do you want to remove the study \""+major_name+"\"", "Cancel", "Remove", removeStudy, $(this) );
+		}
+	},'.major-wrapper .remove');
 
 
 });
