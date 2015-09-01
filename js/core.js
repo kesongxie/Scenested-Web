@@ -2240,10 +2240,17 @@ $(document).ready(function(){
 	},'.post-wrapper .toggle-activity-favor');
 });
 
-
+function getCurrentHoveringOffset(){
+	 var curElement = $('.hover-user-profile:hover');
+	 var offset = curElement.offset();
+	 var width = curElement.width();
+	 var height = curElement.height();
+	 return {offset:offset, width:width, height:height};
+}
 
 $(function($) {
 	var initMouse ={x:-1,y:-1};
+	var vpMouse ={x:-1,y:-1};
 	var preDiv = {w:0,h:0};
 	var mouseMove = {x:-1,y:-1};
     $('body').delegate('.hover-user-profile','mouseover mouseleave', function(event) {
@@ -2252,45 +2259,72 @@ $(function($) {
     		tOut = setTimeout(function(){
     		initMouse.x = event.pageX;
     		initMouse.y = event.pageY;
+    		
+    		vpMouse.x = event.clientX;
+    		vpMouse.y = event.clientY;
+    		
+    		var window_w = $(window).width();
+    		var window_h = $(window).height();
     		$('.hover-avator-wrapper').html('');
-        	$('.hover-avator-wrapper').css('left',event.pageX+14).css('top',event.pageY+8).show();
-        	$.ajax({
+    		
+    		$.ajax({
         		url:AJAX_DIR+'load_user_hover_avator.php',
         		method:'post',
         		data:{key:key},
         		success:function(data){
-        			console.log(data);
         			if(data != '1'){
         				$('.hover-avator-wrapper').html(data).removeClass('hdn');
-        			}
+						preDiv.h =  $('.hover-avator-wrapper').height();
+						preDiv.w =  $('.hover-avator-wrapper').width();
+						var hover_elememnt_properties = getCurrentHoveringOffset();
+						var newTop;
+						
+						if( preDiv.h + vpMouse.y > window_h){
+							newTop = hover_elememnt_properties.offset.top - preDiv.h + 10;
+							$('.hover-avator-wrapper').css('top',newTop).show();
+						}else{
+							newTop = hover_elememnt_properties.offset.top + hover_elememnt_properties.height + 10;
+							$('.hover-avator-wrapper').css('top',newTop).show();
+						}
+						var newLeft;
+						if( preDiv.w + vpMouse.x > window_w){
+							newLeft = hover_elememnt_properties.offset.left - (preDiv.w - hover_elememnt_properties.width) + 20;
+							$('.hover-avator-wrapper').css('left',newLeft);
+						}else{
+							newLeft = hover_elememnt_properties.offset.left;
+							$('.hover-avator-wrapper').css('left', newLeft);
+						}
+					}
         		}
         	
         	});
-        	preDiv.h =  $('.hover-avator-wrapper').height();
-        	preDiv.w =  $('.hover-avator-wrapper').width();
-        	
-    		},'1000');
-    	}
+			},'1000');
+		}
     	else if(event.type === 'mouseleave'){
     		clearTimeout(tOut);
     	}
-	
 	});
 	
 	$(document).mousemove(function(event){
     	mouseMove.x = event.pageX;
     	mouseMove.y = event.pageY;
-    	if((initMouse.x-mouseMove.x)>30 || (initMouse.y-mouseMove.y)>30){
-    		 $('.hover-avator-wrapper').html('').addClass('hdn');
-    	}
+    	if((initMouse.x-mouseMove.x)>30 || (initMouse.y-mouseMove.y)>30){	
+    		if(!($('.hover-avator-wrapper:hover').length != 0)){
+   				$('.hover-avator-wrapper').html('').addClass('hdn');
+   			}
+     	}
     });
     
     
+    
     $('body').on({
-		mouseleave:function(){
+    	mouseleave:function(){
 			$(this).html('').addClass('hdn');
-		},
+		}
 	},'.hover-avator-wrapper');
+	
+	
+	
 });
 
 

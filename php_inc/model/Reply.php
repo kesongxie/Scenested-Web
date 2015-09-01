@@ -151,6 +151,7 @@
 			$at_fullname = $user->getUserFullnameByUserIden($sub_reply['user_id_get']);
 			$post_time = convertDateTimeToAgo($sub_reply['sent_time'], false);	
 			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($sub_reply['user_id']);
+			$unique_iden = $user->getUniqueIdenForUser($sub_reply['user_id']);
 			$text = $sub_reply['text'];
 			$user_id = $sub_reply['user_id'];
 			$hash = $sub_reply['hash'];
@@ -231,6 +232,7 @@
 				$fullname = $user->getUserFullnameByUserIden($reply['user_id']);
 				$post_time = convertDateTimeToAgo($reply['sent_time'], false);	
 				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($reply['user_id']);
+				$unique_iden = $user->getUniqueIdenForUser($reply['user_id']);
 				$text = $reply['text'];
 				$user_id = $reply['user_id'];
 				$hash = $reply['hash'];
@@ -265,6 +267,7 @@
 				$fullname = $user->getUserFullnameByUserIden($reply['user_id']);
 				$post_time = convertDateTimeToAgo($reply['sent_time'], false);	
 				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($reply['user_id']);
+				$unique_iden = $user->getUniqueIdenForUser($reply['user_id']);
 				$text = $reply['text'];
 				$user_id = $reply['user_id'];
 				$hash = $reply['hash'];
