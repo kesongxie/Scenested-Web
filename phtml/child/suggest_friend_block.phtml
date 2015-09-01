@@ -24,11 +24,12 @@
 			$interest_list = trim($interest_list,', ');
 				
 			$user_page_redirect =  USER_PROFILE_ROOT.$u['user_access_url'];
+			$unique_iden = $user->getUniqueIdenForUser($u['id']);
 			?>
 	
 		<div style="min-height:40px;padding:10px 0px;">
-			<a class="dummy-lk" href="<?php echo $user_page_redirect; ?>"><img src="<?php echo $profile_pic ?>" style="float:left;margin-right:10px;width:38px;height:38px;border-radius:9%;" /></a>
-			<a class="dummy-lk" href="<?php echo $user_page_redirect; ?>"><div class="profile-name normal-font inline-blk plain-lk" style="font-size:14px;"><?php echo htmlentities($fullname) ?></div></a>
+			<a class="dummy-lk hover-user-profile" data-key="<?php echo $unique_iden ?>"  href="<?php echo $user_page_redirect; ?>"><img src="<?php echo $profile_pic ?>" style="float:left;margin-right:10px;width:38px;height:38px;border-radius:9%;" /></a>
+			<a class="dummy-lk hover-user-profile" data-key="<?php echo $unique_iden ?>"  href="<?php echo $user_page_redirect; ?>"><div class="profile-name normal-font inline-blk plain-lk" style="font-size:14px;"><?php echo htmlentities($fullname) ?></div></a>
 			<div class="txt_ofl" style="color:rgb(172, 172, 172);font-size:13px;">
 			<?php 
 				if($interest_list != ''){

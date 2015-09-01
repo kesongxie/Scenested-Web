@@ -58,6 +58,7 @@
 						$user = new User_Table();
 						$fullname = $user->getUserFullnameByUserIden($row['user_id']);
 						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($row['user_id']);
+						$unique_iden = $user->getUniqueIdenForUser($row['user_id']);
 						include TEMPLATE_PATH_CHILD.'profile-cover-photo-preview.phtml';
 					 }
 				}

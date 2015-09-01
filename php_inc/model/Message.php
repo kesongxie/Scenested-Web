@@ -32,7 +32,7 @@
 				$hasMessage = true;
 			}
 			
-			$user_iden = $user->getUniqueIdenForUser($user_id);
+			$unique_iden = $user->getUniqueIdenForUser($user_id);
 			ob_start();
 			include($this->contact_block_template_path);
 			$content = ob_get_clean();
@@ -76,6 +76,8 @@
 							$fullname = $user->getUserFullnameByUserIden($row['user_id']);
 							$text = $row['text'];
 							$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($row['user_id']);
+							$unique_iden = $user->getUniqueIdenForUser($row['user_id']);
+
 							ob_start();
 							if($row['user_id'] == $user_id){
 								//render my own dialog
@@ -114,6 +116,7 @@
 							$fullname = $user->getUserFullnameByUserIden($row['user_id']);
 							$text = $row['text'];
 							$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($row['user_id']);
+							$unique_iden = $user->getUniqueIdenForUser($row['user_id']);
 							ob_start();
 							if($row['user_id'] == $user_id){
 								//render my own dialog

@@ -43,6 +43,7 @@
 			$fullname = $user->getUserFullnameByUserIden($comment['user_id']);
 			$post_time = convertDateTimeToAgo($comment['sent_time'], false);	
 			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($comment['user_id']);
+			$unique_iden = $user->getUniqueIdenForUser($comment['user_id']);
 			$text = $comment['text'];
 			$user_id = $comment['user_id'];
 			$hash = $comment['hash'];
@@ -151,6 +152,7 @@
 				$fullname = $user->getUserFullnameByUserIden($comment['user_id']);
 				$post_time = convertDateTimeToAgo($comment['sent_time'], false);	
 				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($comment['user_id']);
+				$unique_iden = $user->getUniqueIdenForUser($comment['user_id']);
 				$text = $comment['text'];
 				$user_id = $comment['user_id'];
 				$hash = $comment['hash'];

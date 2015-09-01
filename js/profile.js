@@ -16,7 +16,6 @@ function doneWithInterestEditing(editingDiv){
 function renderVisibleScope(desc,src){
 	desc = desc.trim();
 	var description = "";
-	
 	if(desc != ''){
 		if(desc.substr(1,1) != ' '){
 			description+='<span  class="first-cap" style="position:relative;top:4px;margin-right:-3px;">'+desc.substr(0,1).toUpperCase()+'</span>';

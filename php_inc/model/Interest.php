@@ -712,7 +712,6 @@
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
 						$row = $result->fetch_all(MYSQLI_ASSOC);
-						
 						return $row;
 					 }
 				}

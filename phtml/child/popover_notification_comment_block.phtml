@@ -1,11 +1,11 @@
 <div class="popover-child comment cmt" data-key="<?php echo $hash; ?>">
-	<a href="<?php echo $user_page_redirect ?>"><img src="<?php  echo $post_owner_pic ?>" class="sender-avator"></a>
+	<a href="<?php echo $user_page_redirect ?>" class="hover-user-profile" data-key="<?php echo $unique_iden ?>"><img src="<?php  echo $post_owner_pic ?>" class="sender-avator"></a>
 	
 	<div class="inner">
 		<div class="inner-container">
 			<div class="visible-post-scope">
 				<div class="visible-content limit-height">
-				<a class="profile-name plain-lk normal-font"  href="<?php echo $user_page_redirect ?>"><?php echo htmlentities($fullname); ?>:</a>
+				<a   href="<?php echo $user_page_redirect ?>" class="profile-name plain-lk normal-font hover-user-profile" data-key="<?php echo $unique_iden ?>"><?php echo htmlentities($fullname); ?>:</a>
 				<span class="noti-text"><?php echo htmlentities($text) ?></span>
 				
 				

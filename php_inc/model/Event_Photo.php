@@ -158,6 +158,7 @@
 						}
 						$fullname = $user->getUserFullnameByUserIden($row['user_id']);
 						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($row['user_id']);
+						$unique_iden = $user->getUniqueIdenForUser($row['user_id']);
 						//check whether there is a next and previous
 						$previous_photo_hash = $this->getPreviousPhotoBeforeRowForEvent($row['id'],$row['event_id']);
 						$next_photo_hash = $this->getNextPhotoAfterRowForEvent($row['id'],$row['event_id']);

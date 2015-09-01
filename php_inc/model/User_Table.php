@@ -269,6 +269,79 @@
 			echo $this->connection->error;
 			return false;
 		}
+		
+		
+		public function loadUserHoverProfilenByUiqueIden($iden){
+			$resource = $this->getUserAvatorResourceUniqueIden($iden);
+			if($resource !== false){
+				return $this->returnUserAvatorByResource($resource);
+			}
+			return false;
+		}
+		
+		
+		
+		public function getUserAvatorResourceUniqueIden($iden){
+			$resource = $this->getMultipleColumnsBySelector(array('id','firstname','lastname'), 'unique_iden', $iden);
+			if($resource !== false){
+				$resource['fullname'] = $resource['firstname'].' '.$resource['lastname'];
+				$resource['hash'] = $iden;
+				return $resource;
+			}
+			return false;
+		}
+		
+		
+		
+		/*
+			the $u is an asscotive array contains the user's information, including id, fullname, hash, 
+		*/
+		public function returnUserAvatorByResource($u){
+			include_once 'Interest.php';
+			$interest = new Interest();
+			include_once 'User_Profile_Picture.php';
+			$profile = new User_Profile_Picture();
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
+			$cover_pic =  $user->getLatestCoverForuser($u['id']);
+			$fullname = $u['fullname'];
+			$hash = $u['hash'];
+			$rows = $interest->getInterestNameForUser($u['id'], 2);
+			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
+			$user_id = $u['id'];
+			$result_array = array();
+
+			$interest_list = '';
+			if($rows !== false){
+				$count = 1;
+				foreach($rows as $row){
+					if($count == sizeof($rows) -1 ){
+						$interest_list .= $row['name'].' and ';
+					}else if($count < sizeof($rows)){
+						$interest_list .= $row['name'].', ';
+					}else{
+						$interest_list .= $row['name'];
+					}
+					$count++;
+				}
+			}
+			$interest_list = trim($interest_list,', ');
+	
+			include_once 'Education.php';
+			$educ = new Education();
+			$education = $educ->getEducationByUserId($u['id']);
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
+			$user_profile= ob_get_clean();
+			include(TEMPLATE_PATH_CHILD.'hover_profile_wrapper.phtml');
+			$content = ob_get_clean();
+			return $content;
+		}
+		
+		
+		
+		
 	}
 		
 		

@@ -240,6 +240,8 @@
 					$post_time = convertDateTimeToAgo($interest_activity['post_time'], false);	
 				}
 				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($interest_activity['user_id']);
+				$unique_iden = $user->getUniqueIdenForUser($interest_activity['user_id']);
+
 				$hash = $interest_activity['hash'];
 				
 				/*get data from the moment*/
@@ -363,6 +365,7 @@
 					$profile = new User_Profile_Picture();
 					$post_owner_pic = $profile->getLatestProfileImageForUser($interest_activity['user_id']);
 					$user = new User_Table();
+					
 					$fullname = $user->getUserFullnameByUserIden($interest_activity['user_id']);
 					if($with_interest_name){
 						include_once MODEL_PATH.'Interest.php';
@@ -374,6 +377,7 @@
 					}
 					
 					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($interest_activity['user_id']);
+					$unique_iden = $user->getUniqueIdenForUser($interest_activity['user_id']);
 					$hash = $interest_activity['hash'];
 					
 					/*get data from the moment*/

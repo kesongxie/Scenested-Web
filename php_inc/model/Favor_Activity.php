@@ -22,6 +22,7 @@
 				$fullname = $user->getUserFullnameByUserIden($result['user_id']);
 				$time = convertDateTimeToAgo($result['sent_time'], false);	
 				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($result['user_id']);
+				$unique_iden = $user->getUniqueIdenForUser($result['user_id']);
 				
 				include_once 'Interest_Activity.php';
 				$activity  = new Interest_Activity();

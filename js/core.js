@@ -2238,13 +2238,60 @@ $(document).ready(function(){
 		}
 	
 	},'.post-wrapper .toggle-activity-favor');
-	
-	
-	
-	
-	
-	
-	
 });
+
+
+
+$(function($) {
+	var initMouse ={x:-1,y:-1};
+	var preDiv = {w:0,h:0};
+	var mouseMove = {x:-1,y:-1};
+    $('body').delegate('.hover-user-profile','mouseover mouseleave', function(event) {
+    	if(event.type === 'mouseover' ){
+    		var key = $(this).attr('data-key');
+    		tOut = setTimeout(function(){
+    		initMouse.x = event.pageX;
+    		initMouse.y = event.pageY;
+    		$('.hover-avator-wrapper').html('');
+        	$('.hover-avator-wrapper').css('left',event.pageX+14).css('top',event.pageY+8).show();
+        	$.ajax({
+        		url:AJAX_DIR+'load_user_hover_avator.php',
+        		method:'post',
+        		data:{key:key},
+        		success:function(data){
+        			console.log(data);
+        			if(data != '1'){
+        				$('.hover-avator-wrapper').html(data).removeClass('hdn');
+        			}
+        		}
+        	
+        	});
+        	preDiv.h =  $('.hover-avator-wrapper').height();
+        	preDiv.w =  $('.hover-avator-wrapper').width();
+        	
+    		},'1000');
+    	}
+    	else if(event.type === 'mouseleave'){
+    		clearTimeout(tOut);
+    	}
+	
+	});
+	
+	$(document).mousemove(function(event){
+    	mouseMove.x = event.pageX;
+    	mouseMove.y = event.pageY;
+    	if((initMouse.x-mouseMove.x)>30 || (initMouse.y-mouseMove.y)>30){
+    		 $('.hover-avator-wrapper').html('').addClass('hdn');
+    	}
+    });
+    
+    
+    $('body').on({
+		mouseleave:function(){
+			$(this).html('').addClass('hdn');
+		},
+	},'.hover-avator-wrapper');
+});
+
 
 

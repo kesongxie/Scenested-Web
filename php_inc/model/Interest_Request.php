@@ -80,6 +80,8 @@
 				$fullname = $user->getUserFullnameByUserIden($request_row['user_id']);
 				$sent_time = convertDateTimeToAgo($request_row['sent_time'], false);	
 				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($request_row['user_id']);
+				$unique_iden =  $user->getUniqueIdenForUser($request_row['user_id']);
+
 				$hash = $request_row['hash'];
 			
 				include_once 'Interest.php';
@@ -114,6 +116,7 @@
 				$fullname = $user->getUserFullnameByUserIden($request_row['user_to']);
 				$sent_time = convertDateTimeToAgo($request_row['process_time'], false);	
 				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($request_row['user_to']);
+				$unique_iden =  $user->getUniqueIdenForUser($request_row['user_to']);
 				$hash = $request_row['hash'];
 			
 				include_once 'Interest.php';

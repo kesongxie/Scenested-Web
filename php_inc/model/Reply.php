@@ -122,6 +122,7 @@
 			$fullname = $user->getUserFullnameByUserIden($reply['user_id']);
 			$post_time = convertDateTimeToAgo($reply['sent_time'], false);	
 			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($reply['user_id']);
+			$unique_iden = $user->getUniqueIdenForUser($reply['user_id']);
 			$text = $reply['text'];
 			$user_id = $reply['user_id'];
 			$hash = $reply['hash'];

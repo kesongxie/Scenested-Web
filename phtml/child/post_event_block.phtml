@@ -21,14 +21,14 @@
 		<div style="padding:20px 14px 0px 14px" ?>
 	<?php endif ?>
 			
-			<div class="inline-blk"><a href="<?php echo $user_page_redirect; ?>"><img class="post-owner-picture" style="float:none;width:50px;height:50px"src="<?php echo $post_owner_pic; ?>"></a></div>
+			<div class="inline-blk"><a href="<?php echo $user_page_redirect; ?>"  class="hover-user-profile"  data-key="<?php echo $unique_iden; ?>"><img class="post-owner-picture" style="float:none;width:50px;height:50px"src="<?php echo $post_owner_pic; ?>"></a></div>
 			<?php if($displayable): ?>
 			<div class="inline-blk" style="vertical-align:bottom;padding-bottom:4px;">
 			<?php  else:?>
 			<div class="inline-blk" style="vertical-align:top;padding-bottom:4px;">
 			<?php endif ?>
 			
-			<a class="plain-lk"  href="<?php echo $user_page_redirect; ?>">
+			<a href="<?php echo $user_page_redirect; ?>" class="hover-user-profile plain-lk"  data-key="<?php echo $unique_iden; ?>">
 				<span class="profile-name pointer post-user-name"><?php echo htmlentities($fullname) ?></span>
 			</a>
 			

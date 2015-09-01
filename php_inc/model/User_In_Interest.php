@@ -297,8 +297,6 @@
 					 if($result !== false){
 						$user_found = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						
-						
 						$content = false;
 						if($user_found !== false && sizeof($user_found) >=1 ){
 							include_once 'User_Profile_Picture.php';
