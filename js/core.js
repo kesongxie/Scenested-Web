@@ -597,6 +597,25 @@ function loadIndividualConversation(thisE){
 		}				
 	});
 }
+
+
+function sendPrivateMessage(thisE){
+	var key = thisE.attr('data-key');
+	$.ajax({
+		url:AJAX_DIR+'send_private_message.php',
+		method:'post',
+		data:{key:key},
+		success:function(resp){
+			console.log(resp);
+			refreshMessage();
+			$('#chat-side-content #chat-box').remove();
+			$('#chat-side-content').append(resp);
+			$('#chat-box #chat-box-body').scrollTop(1000000000);
+		}				
+	});
+}
+
+
 	
 	
 function loadGroupConversation(thisE){
@@ -845,7 +864,6 @@ $(document).ready(function(){
 					freshBodyChild.each(function(){
 						previous_body.find('.popover-child[data-key='+$(this).attr('data-key')+']').remove();
 					});
-					
 				});
 				previous_body.attr('data-set','true');
 			}
@@ -1481,9 +1499,9 @@ $(document).ready(function(){
  					success:function(resp){
  						parentDiv.append(resp);
  						var operationDiv = parentDiv.find('.fri-oper');
-						$('.popover').not(operationDiv).addClass('hdn');
+						$('.fri-oper.popover').not(operationDiv).addClass('hdn');
 						operationDiv.removeClass('hdn');
- 					}
+					}
  				});
 			}else{
 				var operationDiv = parentDiv.find('.fri-oper');
@@ -1491,10 +1509,27 @@ $(document).ready(function(){
 				operationDiv.toggleClass('hdn');
 			}
 			return false;
+			
+			
 		}
 	},'.user-profile.operation-triggeable .toggle-operation');
 	
 	
+	
+	$('body').on({
+		click:function(){
+			$(this).find('.popover').addClass('hdn');
+			return false;
+		}
+	
+	},'.hover-user-profile');
+	
+	$('body').on({
+		click:function(){
+			window.location.href = $(this).attr('href');
+		}
+	
+	},'.user-profile a');
 	
 	
 	
@@ -1530,7 +1565,6 @@ $(document).ready(function(){
 	$('body').on({
 		click:function(){
 			var target_name = $(this).parents('.user-profile').find('.fullname').text();
-		
 			presentPopupDialog("Remove from Interest Group", "Do you want to remove \""+target_name+"\" from this interest group", "Cancel", "Remove", removeFromInterestGroup, $(this) );
 			return false;
 		}
@@ -1817,7 +1851,6 @@ $(document).ready(function(){
 	$('body').on({
 		click:function(evt){
 			evt.stopPropagation();
-			// alert('he');
 		}
 	},'#photo-preview .content-wrapper .media-asset label');
 	
@@ -1851,6 +1884,13 @@ $(document).ready(function(){
 			loadIndividualConversation($(this).parents('.user-profile'));
 		}
 	},'.user-profile .individual-contact');
+	
+	$('body').on({
+		click:function(){
+			$(this).parents('.hover-avator-wrapper').html('').addClass('hdn');
+			sendPrivateMessage($(this).parents('.user-profile'));
+		}
+	},'.hover-avator-wrapper .user-profile .individual-contact');
 	
 	
 	
@@ -2319,7 +2359,7 @@ $(function($) {
     
     $('body').on({
     	mouseleave:function(){
-			$(this).html('').addClass('hdn');
+			 $(this).html('').addClass('hdn');
 		}
 	},'.hover-avator-wrapper');
 	

@@ -58,6 +58,8 @@
 						$text = $latest_message['text'];
 						if($latest_message['user_sent'] == $_SESSION['id']){
 							$text = 'Me: '.$text;
+						}else{
+							$text =  $user->getUserFirstnameByUserIden($latest_message['user_sent']).': '.$text;
 						}
 					}
 					$hasMessage = true;

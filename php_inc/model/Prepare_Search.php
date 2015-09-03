@@ -66,7 +66,6 @@
 			$educ = new Education();
 			$user = new User_Table();
 			$result_found = $user->returnMatchedUserBySearchkeyWord($this->search_keyword,-1);
-			
 			$interest  = new Interest();
 			$content = null;
 			$search_for_interest_block = null;
@@ -109,6 +108,7 @@
  						ob_start();
  						include(TEMPLATE_PATH_CHILD.'search_people_profile_wrapper.phtml');
  						$search_for_name_block .= ob_get_clean();
+ 						return $search_for_name_block;
 				}
 				
 			}else{
@@ -120,8 +120,9 @@
  				ob_start();
 				include(TEMPLATE_PATH_CHILD.'search_people_result_wrapper.phtml');
 				$content = ob_get_clean();
+				return $content;
 			}
-			return $content;
+			
 		}
 		
 		
@@ -495,7 +496,7 @@
 			$profile = new User_Profile_Picture();
 			$user = new User_Table();
 			$result_found = array();
-			$user_found = $user->returnMatchedUserBySearchkeyWord($this->search_keyword, 6);
+			$user_found = $user->returnMatchedUserBySearchkeyWord($this->search_keyword, 5);
 			$serach_result_user_id_array = array();
 			if($user_found !== false){
 				$result_found = $user_found;
@@ -505,7 +506,7 @@
 			}	
 			
 			$count = sizeof($result_found);
-			$interest_found = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, 6-$count);
+			$interest_found = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, 5-$count);
 			if($interest_found !== false){
 				foreach($interest_found as $i){
 					if($count <= 8){

@@ -4,7 +4,7 @@
 	
 	if(isset($_POST['key']) && !empty(trim($_POST['key'])) ){
 		$queue = new Message_Queue();
-		$result = $queue->makeIndividualTopAtContactLis(trim($_POST['key']));
+		$result = $queue->makeIndividualTopAtContactList(trim($_POST['key']));
 		if($result === false){
 			echo '1';
 		}

@@ -100,7 +100,9 @@
 		}
 		
 		
-		public function loadMessageChatBoxByKey($user_id, $conversation_with_key){
+		
+		
+		public function loadMessageChatBoxByKey($user_id, $conversation_with_key, $top_to_contact = false){
 			include_once 'User_Table.php';
 			$user = new User_Table();
 			$fullname = $user->getUserFullnameByUserIden($conversation_with_key);
@@ -108,6 +110,9 @@
 			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($user_with);
 			$unique_iden = $user->getUniqueIdenForUser($user_with);
 			$conversations = $this->message->getMessagesForUser($user_id, $user_with);
+			if($top_to_contact){
+				$this->makeIndividualTopAtContactListById($user_with);
+			}
 			ob_start();
 			include($this->chat_box_template_path);
 			$content = ob_get_clean();
@@ -130,12 +135,17 @@
 			include_once 'User_Table.php';
 			$user = new User_Table();
 			$user_get = $user->getUserIdByKey($user_get_key);
-			return $this->message->sentMessage($user_sent, $user_get, $text);
+			if($user_get !== false){
+				$this->makeIndividualTopAtContactList($user_get_key);
+				return $this->message->sentMessage($user_sent, $user_get, $text);
+			}
+			return false;
 		}
 		
 		
 		
 		public function  sentGroupMessage($group_key, $text){
+			$this->makeGroupTopAtContactList($group_key);
 			return $this->group_message->sentMessageForEventGroup($group_key, $text);
 		}
 		
@@ -186,10 +196,7 @@
 		
 		
 		
-		public function makeIndividualTopAtContactLis($conversation_with_key){
-			include_once 'User_Table.php';
-			$user = new User_Table();
-			$user_id = $user->getUserIdByKey($conversation_with_key);
+		public function makeIndividualTopAtContactListById($user_id){
 			if($user_id !== false){
 				$user_queue = 'm-'.$user_id.',';
 				$queue= $this->getQueueForUser($_SESSION['id']);
@@ -201,6 +208,17 @@
 				return true;
 			}
 			return false;
+		}
+		
+		
+		
+		public function makeIndividualTopAtContactList($conversation_with_key){
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			$user_id = $user->getUserIdByKey($conversation_with_key);
+			if($user_id !== false){
+				return $this->makeIndividualTopAtContactListById($user_id);
+			}
 		}
 		
 		public function makeGroupTopAtContactList($group_key, $user_id = false){
