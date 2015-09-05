@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:8889
--- Generation Time: Aug 21, 2015 at 06:20 PM
+-- Generation Time: Sep 04, 2015 at 11:14 PM
 -- Server version: 5.5.42
 -- PHP Version: 5.6.7
 
@@ -32,7 +32,7 @@ CREATE TABLE `auth_tokens` (
   `token` varchar(64) NOT NULL,
   `user_id` int(11) NOT NULL,
   `expire` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=240 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `auth_tokens`
@@ -46,8 +46,8 @@ INSERT INTO `auth_tokens` (`id`, `selector`, `token`, `user_id`, `expire`) VALUE
 (103, '$2y$10$CwOKSxxkFzu7UlxaUYS6tOPE89J9D51x2AQ8reAnatKbcAvz487vq', '84c7ec89e165b51e3c992e66fd6ad4b98151a56b4199fbea795b70ad9e87defb', 22, '2015-10-12 10:49:03'),
 (185, '$2y$10$uRBgY57NptE05K0COArHVeS/ILM8iQy24WH2ahZVE213Ie5IIZ8ea', '1913b6be19fda25843e4c802a9594e87a1497c9bf126880f49c4cb8bfc37fa0f', 33, '2015-11-09 15:15:42'),
 (189, '$2y$10$alFclVQCOXWeLsEK1gDwzuJX541SqYLKYAzSmbY.duL1tcWz/x8R6', '557df6ee3db434df8513aee65e44376f926130447f1e314e0398a1ebfea4c25e', 33, '2015-11-18 20:33:48'),
-(198, '$2y$10$d1TUQ3GaK38zwjnoVOXP0Ox5yGhFpSUHvifmFMU4qr2NAxE6/M2ai', '7b8c355d6ed71f4bc1f2e5798749bb0a2b06079ef4a187c842338d574158c518', 22, '2015-11-19 16:14:29'),
-(199, '$2y$10$SUkIRel7dbepy2gefNaDOeSWqcLKPVpYqD9yJAS9apsWEPJLnVhrG', '4d4be3e20ab9ab991417aa941ef2c0d14667be266d36f7ba8fb8eabd5b057346', 29, '2015-11-19 16:16:21');
+(238, '$2y$10$aUcKr953EyBEu5hA0Pb7UugG8Kj8HSONG0MuHd2VqagqE.RBtHb0C', '3aee3144f14bfb5a2311d1206e19e727aa6d6dadd40a6483568acb981787b4d5', 33, '2015-12-02 14:17:01'),
+(239, '$2y$10$sN60NYF4WzIquB86cBg8rO8Yl6AbzMOT/yeLS7SXMJkv97A0xjAMW', '31b64ce13140e939b6e61369f11d387d8e25af3c2987019f3dc84c97a35b56ac', 22, '2015-12-03 15:52:44');
 
 -- --------------------------------------------------------
 
@@ -65,7 +65,16 @@ CREATE TABLE `comment` (
   `user_view` enum('y','n') NOT NULL DEFAULT 'n',
   `view_time` datetime DEFAULT NULL,
   `hash` varchar(30) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `comment`
+--
+
+INSERT INTO `comment` (`id`, `activity_id`, `user_id`, `user_id_get`, `text`, `sent_time`, `user_view`, `view_time`, `hash`) VALUES
+(80, 92, 29, 22, 'I would like to hangout with you', '2015-08-21 18:50:15', 'n', NULL, '6761571a0897d4dec6cd94b2'),
+(81, 93, 28, 22, 'Nice racket, it seems you are a fan of Roger, how does the racket feel', '2015-08-21 19:04:08', 'n', NULL, '71671025e21d5fa4fc3e337e'),
+(84, 93, 33, 22, 'i got you, and I have won over you for two times with 6:0, 6:0', '2015-08-22 21:58:46', 'n', NULL, '4fe02ce668c6f49c34c57d1d');
 
 -- --------------------------------------------------------
 
@@ -89,7 +98,6 @@ INSERT INTO `education` (`id`, `user_id`, `school_id`, `major_id`, `hash`) VALUE
 (2, 22, 1, 1, '6b492962add213d46dc73a28'),
 (3, 29, 2, NULL, '2620767b2ae94752a8999355'),
 (4, 31, 1, NULL, '6c73fd758ddfb9321fa14411'),
-(16, 33, 1, 1, '5ffb4e57d184873910042720'),
 (17, 28, 2, NULL, 'e953668bf07d0d7d7ba93ed5');
 
 -- --------------------------------------------------------
@@ -184,7 +192,7 @@ CREATE TABLE `event_photo` (
   `upload_time` datetime NOT NULL,
   `caption` text,
   `hash` varchar(40) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `event_photo`
@@ -207,11 +215,11 @@ INSERT INTO `event_photo` (`id`, `user_id`, `event_id`, `picture_url`, `upload_t
 (79, 22, 6, 'cad244714f18b4f0835ca5aa/thumb_f15f7487449c9838a72e4fb5.jpeg', '2015-07-05 22:28:26', NULL, '5bfc0d969f425952bc194fc6'),
 (80, 22, 6, '56e07684caad417ce49f9626/thumb_74b288d2fbb115e86a461cbe.jpeg', '2015-07-05 22:28:33', NULL, '02329cc08e34fc0cf4c2673d'),
 (81, 22, 6, '93f13c4ba3be432f9736b782/thumb_5da0aff53f480759095e60db.jpeg', '2015-07-05 22:28:44', NULL, '7631e0a0b371086722caceeb'),
-(82, 22, 9, '9e154fcf620b77a6a0f7a6be/thumb_b8d4e3a7b29930de49611309.jpg', '2015-07-07 06:45:10', NULL, '8ea3feadb29488660c377688'),
 (83, 28, 11, '0a73b5fc9f3602791aebb63e/thumb_ed7befa2cc6af5116b77f09e.jpg', '2015-07-19 09:24:02', 'US Open', 'f72ab0c442e2daaae3e5f256'),
 (117, 22, 12, 'c1c3324a1cdfb6a8e308dfeb/thumb_06834e14eb5ea72a0e3d8c75.jpg', '2015-08-20 14:24:00', NULL, '8fa624f347fc75b7410140a4'),
 (137, 22, 6, '566ffcd70f2dda60796ba671/thumb_1de6b606412a0613857d2007.jpg', '2015-08-20 17:30:00', NULL, '1cdb07677ec242f17595512c'),
-(146, 22, 11, '485beaa2e05538dfe4ee0f85/thumb_5042eddf1ff98024d2b73ae0.jpg', '2015-08-20 18:53:53', NULL, '7c7b034476ef1ae659e8c700');
+(146, 22, 11, '485beaa2e05538dfe4ee0f85/thumb_5042eddf1ff98024d2b73ae0.jpg', '2015-08-20 18:53:53', NULL, '7c7b034476ef1ae659e8c700'),
+(147, 22, 11, '005999cd8feb34aa3aa1cc2a/thumb_65e14815adc9e6f3bde278d7.jpg', '2015-08-27 08:26:41', NULL, '7b5097dec8367a6ab966b6a4');
 
 -- --------------------------------------------------------
 
@@ -228,16 +236,46 @@ CREATE TABLE `favor_activity` (
   `user_view` enum('y','n') NOT NULL DEFAULT 'n' COMMENT 'the user has viewed the favored or not',
   `view_time` datetime DEFAULT NULL,
   `hash` varchar(40) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `favor_activity`
 --
 
 INSERT INTO `favor_activity` (`id`, `target_id`, `user_id`, `user_id_get`, `sent_time`, `user_view`, `view_time`, `hash`) VALUES
-(16, 96, 28, 22, '2015-08-21 17:09:28', 'n', NULL, '892996aebd3e4b260c73b016'),
-(17, 96, 29, 22, '2015-08-21 17:10:11', 'n', NULL, '9ee0fad5e39ba133b21f9eca'),
-(18, 97, 29, 22, '2015-08-21 17:14:14', 'n', NULL, '6b6b219ab267fa606db729b5');
+(35, 58, 22, 22, '2015-08-22 11:40:14', 'n', NULL, '70d87bf8c8a2e39b379e8f53'),
+(41, 85, 28, 22, '2015-08-22 11:41:03', 'n', NULL, 'a9d3992193065ca0ab1c7cdd'),
+(53, 93, 28, 22, '2015-08-22 11:53:45', 'n', NULL, 'd798de6183574e3d50309e0f'),
+(104, 32, 22, 22, '2015-08-22 14:19:17', 'n', NULL, 'e59c85766f8acedd405b5d8d'),
+(106, 93, 29, 22, '2015-08-22 14:55:23', 'n', NULL, '9b2c0bd5f60c6bbc42503a8b'),
+(110, 93, 33, 22, '2015-08-22 21:58:17', 'n', NULL, 'ff473d7eef3a08977cd8cfe0'),
+(111, 85, 33, 22, '2015-08-22 22:10:45', 'n', NULL, '770722a0f0e2d8cfd63695e4'),
+(113, 85, 22, 22, '2015-09-03 19:09:46', 'n', NULL, 'd9be199bf7c6720361f7d415'),
+(114, 56, 22, 22, '2015-09-04 13:58:25', 'n', NULL, 'e9cfd5c2b613906ca3d96ded'),
+(115, 93, 22, 22, '2015-09-04 21:48:33', 'n', NULL, 'afee8601572bdf837a642fb7');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `favor_comment`
+--
+
+CREATE TABLE `favor_comment` (
+  `id` int(11) NOT NULL,
+  `target_id` int(11) NOT NULL COMMENT 'alias for comment id',
+  `user_id` int(11) NOT NULL,
+  `user_id_get` int(11) NOT NULL,
+  `sent_time` datetime NOT NULL,
+  `hash` varchar(40) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `favor_comment`
+--
+
+INSERT INTO `favor_comment` (`id`, `target_id`, `user_id`, `user_id_get`, `sent_time`, `hash`) VALUES
+(10, 84, 33, 33, '2015-09-04 15:33:25', 'a76c834e794089bebe70d5d3'),
+(20, 84, 22, 33, '2015-09-04 21:48:29', '04a3f02696e6449d8a49c531');
 
 -- --------------------------------------------------------
 
@@ -262,6 +300,29 @@ INSERT INTO `favor_event` (`id`, `user_id`, `title`, `description`, `update_time
 (25, 22, 'Programming Hackathon', 'let''s code something together', '2015-07-07 12:01:45', '296742d7a992fc5fddad7917'),
 (26, 22, 'Guitar Meetup', 'I always want to find someone who plays guitar in the campus, it seems there is no Guitar Club in BMCC, that''s bad : (', '2015-07-07 12:02:34', '6d8c78c3d08ef925ac956a30'),
 (27, 22, 'Tennis Hangout', 'I would like to find someone to hangout to the Tennis court during this lovely summer time', '2015-07-07 12:11:46', 'f07e6517ed8a4b54bf51f6a3');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `favor_reply`
+--
+
+CREATE TABLE `favor_reply` (
+  `id` int(11) NOT NULL,
+  `target_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_id_get` int(11) NOT NULL,
+  `sent_time` datetime NOT NULL,
+  `hash` varchar(40) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `favor_reply`
+--
+
+INSERT INTO `favor_reply` (`id`, `target_id`, `user_id`, `user_id_get`, `sent_time`, `hash`) VALUES
+(8, 29, 33, 22, '2015-09-04 23:04:27', '249f617f4dd947ee478d16fa'),
+(9, 29, 22, 22, '2015-09-04 23:04:47', 'e405251b19d590fcd4761576');
 
 -- --------------------------------------------------------
 
@@ -300,7 +361,7 @@ CREATE TABLE `group_message` (
   `message_type` enum('n','m') DEFAULT NULL COMMENT 'n stands for new member, m for event notification',
   `view_list` text NOT NULL,
   `hash` varchar(40) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `group_message`
@@ -336,13 +397,17 @@ INSERT INTO `group_message` (`id`, `user_id`, `group_id`, `text`, `sent_time`, `
 (59, 22, 15, '', '2015-07-31 12:30:20', 'n', '28,22,29,', 'ad70824845496d8d6edb99b3'),
 (60, 22, 15, '', '2015-07-31 12:30:25', 'n', '28,22,29,', 'a10b038bb800011cffcb90d2'),
 (61, 28, 15, 'it''s seems the member now is working?', '2015-07-31 17:51:39', NULL, '29,22,28,', '1ef4e1f9299f9e3ec83ca7ed'),
-(62, 28, 1, 'This is awesome and the weather seems to be fascinating', '2015-08-07 09:23:47', NULL, '22,29,', 'a351c6f61e35ceb9a687c150'),
-(63, 29, 1, 'that is awesome', '2015-08-07 23:27:53', NULL, '22,29,', '484e32e7d2629f8a132006fb'),
+(62, 28, 1, 'This is awesome and the weather seems to be fascinating', '2015-08-07 09:23:47', NULL, '22,29,28,', 'a351c6f61e35ceb9a687c150'),
+(63, 29, 1, 'that is awesome', '2015-08-07 23:27:53', NULL, '22,29,28,', '484e32e7d2629f8a132006fb'),
 (64, 22, 15, 'It seems this event is so sweet', '2015-08-10 12:30:59', NULL, '29,28,22,', 'b3f73384590d4c56b68adcdc'),
 (65, 29, 15, 'That''s correct!', '2015-08-10 12:31:46', NULL, '28,22,29,', 'dc2663707c3acaaf4052d29e'),
 (66, 28, 15, 'i have been told by this', '2015-08-10 12:32:45', NULL, '22,29,28,', '61c110ade8b441ba57974f4c'),
 (67, 22, 15, 'I will, definitely', '2015-08-10 12:34:09', NULL, '22,29,28,', 'c2a8df69d704f7a15cc137f5'),
-(68, 28, 15, 'Yesterday Shane won over 6:0 6:0, I have never lost a match like that, but I will try harder. Failed again, try again. failed better', '2015-08-13 09:38:59', NULL, '22,', '4e1fdf6c18954364ba056015');
+(68, 28, 15, 'Yesterday Shane won over 6:0 6:0, I have never lost a match like that, but I will try harder. Failed again, try again. failed better', '2015-08-13 09:38:59', NULL, '22,28,29,', '4e1fdf6c18954364ba056015'),
+(69, 22, 15, 'Ever tried, Ever failed. Tried again, failed again, failed better', '2015-08-21 19:28:22', NULL, '28,22,29,', '9a8a164688a0bfb4f4ca46e7'),
+(70, 22, 15, 'will this work?', '2015-09-02 14:10:50', NULL, '22,', '2fe059303d1b0e5440a1f533'),
+(71, 22, 1, 'Yes, it works', '2015-09-02 16:03:35', NULL, '29,', '15bd902bb549e029f1f4a0c8'),
+(72, 29, 1, 'I wonder how should I implement the photo upload notification on the chat box', '2015-09-02 16:12:03', NULL, '29,', '790d6ce5ec69cd5c6ad2dd18');
 
 -- --------------------------------------------------------
 
@@ -357,20 +422,21 @@ CREATE TABLE `interest` (
   `description` text NOT NULL,
   `experience` int(2) NOT NULL,
   `create_time` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `interest`
 --
 
 INSERT INTO `interest` (`id`, `user_id`, `name`, `description`, `experience`, `create_time`) VALUES
-(55, 22, 'Tennis', 'I have been playing Tennis for 4 years. My favorite hangout location is Huston River park pier 40, just 15 mins walk from BMCC. I enjoy going to US Open and last year I saw my favorite Tennis player Roger Federer performed in the semi-final.', 4, '2015-06-20 19:43:24'),
+(55, 22, 'Tennis', 'I have been playing Tennis for 4 years. My favorite hangout location is Huston River park pier 40, just 15 mins walk from BMCC. I enjoy going to US Open and last year I saw my favorite Tennis player Roger Federer performed in the semi-finals', 8, '2015-06-20 19:43:24'),
 (58, 22, 'Programming', 'I''m always occupied by coding. I''ve learnt web development for 2 years, and I started to build this website for fun. Now I decide to take this website a little bit more serious, and spent my time working on the aesthetic design', 2, '2015-06-22 10:57:18'),
 (67, 22, 'Guitar', 'I have been playing guitar for 3 years and I almost practice guitar every nights since the first day I picked up the guitar. I prefer fingerstyle and enjoy going to acoustic guitar concerts and performance.One of my favorite guitarist is Trace Bundy, and I saw my first acoustic guitar concert last May by Trace Bundy in a nice Doom Venue	.', 4, '2015-06-24 07:41:36'),
 (68, 29, 'Guitar', 'I have been playing Electronic Guitar for 5 years and perform professionally with my band. I''m crazy about music and rock style', 5, '2015-07-08 07:18:36'),
 (69, 31, 'Jazz', 'Quentin has received numerous awards and scholarships since he began studying and performing. These have included The Helpmann Academy''s Keith Michell Award[5] in 2010, The first time a jazz musician had ever won the award. He has also won Downbeat Jazz Awards for ''Jazz Soloist'' (2012)[6] and ''Jazz Composition'' (2011 and 2012).[7] He has also been part of The Betty Carter Jazz Ahead residency at the Kennedy Center, Washington DC in 2011 and 2013. He plays guitar for more than 20 years', 11, '2015-07-14 10:23:45'),
 (70, 30, 'Coding', 'I think why not build a website that allows me to find someone who also plays tennis in the campus. Without any knowledge about web development, I started to spend a lot of time on several new programming languages.', 2, '2015-07-15 13:36:00'),
-(71, 28, 'Tennis', 'I enjoy going to US Open and Wimbledon. I have been playing tennis for 3 years by now and am able to play a decent rally.  My favorite player is Roger Federer', 3, '2015-07-15 23:57:26');
+(71, 28, 'Tennis', 'I enjoy going to US Open and Wimbledon. I have been playing tennis for 3 years by now and am able to play a decent rally.  My favorite player is Roger Federer', 3, '2015-07-15 23:57:26'),
+(86, 33, 'Tennis', 'I didn''t expect Roger today. He was practicing with hewitt today on the practice court. It was so close that I can even hear his voice. Good luck to his US Open 2015', 5, '2015-08-29 18:53:37');
 
 -- --------------------------------------------------------
 
@@ -408,7 +474,12 @@ INSERT INTO `interest_activity` (`id`, `user_id`, `interest_id`, `type`, `post_t
 (88, 31, 69, 'm', '2015-08-07 13:53:39', 'efd7c108e643b6317be8ceff'),
 (89, 29, 68, 'm', '2015-08-07 16:46:35', 'b302996b4d7638d5d2e08244'),
 (92, 22, 55, 'e', '2015-08-09 10:53:25', 'd8fd5b96bfd1e81cd2cd9870'),
-(93, 22, 55, 'm', '2015-08-13 11:15:18', '425a583d613d41c656ba0e0c');
+(93, 22, 55, 'm', '2015-08-13 11:15:18', '425a583d613d41c656ba0e0c'),
+(94, 22, 55, 'm', '2015-08-26 00:55:03', 'ddc4f4e93f01a31f5319e5a9'),
+(95, 22, 55, 'm', '2015-08-26 22:05:43', '94d02ea0376c7019d8eb7a65'),
+(96, 22, 55, 'm', '2015-08-30 08:53:58', '0ea74d7a100909e9ab38d367'),
+(97, 33, 86, 'm', '2015-08-30 09:51:14', '2a106a9b23f2dc8e572dd5d5'),
+(98, 22, 55, 'm', '2015-08-31 23:08:14', '09dc13e6cd65bcb004b6b640');
 
 -- --------------------------------------------------------
 
@@ -425,7 +496,7 @@ CREATE TABLE `interest_request` (
   `process` enum('i','y','n') NOT NULL DEFAULT 'n' COMMENT 'whether the user who receives the request have choose to accept or ignore or not, i is for ignore, y is for accept, n is for not process',
   `process_time` datetime DEFAULT NULL,
   `hash` varchar(40) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `interest_request`
@@ -450,7 +521,9 @@ INSERT INTO `interest_request` (`id`, `user_id`, `user_to`, `interest_id`, `sent
 (27, 22, 29, 67, '2015-07-23 12:40:38', 'y', '2015-07-23 12:40:42', '11a54d859f617d9bb970043e'),
 (28, 22, 29, 55, '2015-08-10 23:29:46', 'i', '2015-08-10 23:30:44', '1c128e776a00b2af03a1c9b6'),
 (29, 22, 33, 55, '2015-08-13 18:20:57', 'i', '2015-08-13 18:21:04', 'bc9e7dc5c824d13db560f2ea'),
-(30, 22, 29, 58, '2015-08-21 16:26:09', 'y', '2015-08-21 16:26:13', '69700bd586c141c361658cb5');
+(30, 22, 29, 58, '2015-08-21 16:26:09', 'y', '2015-08-21 16:26:13', '69700bd586c141c361658cb5'),
+(31, 22, 31, 67, '2015-08-25 23:40:32', 'y', '2015-08-25 23:40:43', '320386955ddf4b0bb7091e69'),
+(32, 22, 29, 58, '2015-09-02 14:48:40', 'n', NULL, 'cdbbd2b46ab2a063c9d3be0b');
 
 -- --------------------------------------------------------
 
@@ -485,7 +558,7 @@ CREATE TABLE `message` (
   `sent_time` datetime NOT NULL,
   `view` enum('y','n') NOT NULL DEFAULT 'n',
   `hash` varchar(40) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `message`
@@ -517,9 +590,18 @@ INSERT INTO `message` (`id`, `user_id`, `user_id_get`, `text`, `sent_time`, `vie
 (109, 22, 28, 'I hope this site would become sucessful!', '2015-08-09 01:06:36', 'y', '30816dfe0c9f139f6e805027'),
 (110, 28, 22, 'what would you do, if it doesn''t', '2015-08-10 12:34:32', 'y', '548d7743150d3e853561b1dc'),
 (111, 22, 28, 'I don''t know, I just don''t want to give up so easily', '2015-08-13 17:56:02', 'y', 'ac1f7774c9af5d859d338c3f'),
-(112, 28, 22, 'This is really nice', '2015-08-19 13:41:49', 'n', 'a43043e46c2791afe15f03e7'),
+(112, 28, 22, 'This is really nice', '2015-08-19 13:41:49', 'y', 'a43043e46c2791afe15f03e7'),
 (113, 29, 22, 'What would this turn out to be, kesong, I really don''t know', '2015-08-20 00:32:33', 'y', 'e94444b7a1f8080e618bf57d'),
-(114, 22, 29, 'Sometime you just keep working on what you deem to be important, regardless all the facts that impede you', '2015-08-20 00:34:00', 'y', 'd83d02b4da47cc776b56921e');
+(114, 22, 29, 'Sometime you just keep working on what you deem to be important, regardless all the facts that impede you', '2015-08-20 00:34:00', 'y', 'd83d02b4da47cc776b56921e'),
+(115, 22, 29, 'what?', '2015-08-22 18:29:56', 'y', '4204e52cb6b732060b0dd730'),
+(116, 22, 29, 'what the hack are u working on?', '2015-08-22 18:30:14', 'y', '848ce900dbe2655075e10e6e'),
+(117, 29, 22, 'nice to hear from u?', '2015-08-22 18:32:18', 'y', 'caa9cdd2b76b02dd7c609bde'),
+(118, 33, 22, 'This is a message from Shane', '2015-08-22 22:08:11', 'y', '91170b653e6add7950f3df40'),
+(119, 22, 33, 'How are u, shane?', '2015-08-29 22:23:12', 'y', '531700149551979b5530080b'),
+(120, 22, 28, 'I know how it feels', '2015-09-02 14:07:26', 'n', '7595ba8e03f980b9d8399888'),
+(121, 22, 29, 'Alright, I finally want to change it to hipout', '2015-09-02 23:11:03', 'n', 'fbf259f372b90083e44c0f77'),
+(122, 22, 29, 'I need the ultimate guts and enormous investment to see whether I''m right or wrong', '2015-09-03 06:41:44', 'n', 'b33d75aadfcdb4ea40424e8e'),
+(123, 22, 28, 'I want to say that''s all I want to', '2015-09-04 11:56:26', 'n', '7e139162c5aafb66da7dd128');
 
 -- --------------------------------------------------------
 
@@ -531,17 +613,18 @@ CREATE TABLE `message_queue` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `queue` text NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `message_queue`
 --
 
 INSERT INTO `message_queue` (`id`, `user_id`, `queue`) VALUES
-(1, 22, 'm-28,m-29,g-15,g-1,m-30,'),
-(2, 29, 'g-15,m-22,g-1,'),
+(1, 22, 'g-1,m-28,m-29,g-15,m-30,'),
+(2, 29, 'm-22,g-15,g-1,'),
 (5, 30, 'm-22,'),
-(6, 28, 'g-1,m-22,g-15,');
+(6, 28, 'm-22,g-1,g-15,'),
+(7, 33, 'm-22,');
 
 -- --------------------------------------------------------
 
@@ -572,7 +655,12 @@ INSERT INTO `moment` (`id`, `interest_activity_id`, `description`, `date`) VALUE
 (68, 85, 'It''s almost this year''s #USOpen, I hope this year Roger is able to get into the final and I will definitely try to see his match', '2015-08-05'),
 (71, 88, 'Just tried to find some idea about improvising a song and it should be Jazz genre.', '2015-08-07'),
 (72, 89, 'I have got to play in the scene for a long time, and will pick up my guitar again', '2015-08-07'),
-(73, 93, 'When I bought my second racket, I have already decided to get back to Tennis.', '2015-08-13');
+(73, 93, 'When I bought my second racket, I have already decided to get back to Tennis.', '2015-08-13'),
+(74, 94, 'Late at the night and can''t fall asleep, because I''m thinking how to play a graceful single backhand', '2015-08-26'),
+(75, 95, 'I didn''t expect Roger today. He was practicing with hewitt today on the practice court. It was so close that I can even hear his voice. Good luck to his US Open 2015', '2015-08-26'),
+(76, 96, 'The second time I string the racket, @Shane is quite professional on it.', '2015-08-30'),
+(77, 97, 'I like Tennis and I have 5 years experience and am looking forward to make friends with similar interest', '2015-08-30'),
+(78, 98, 'Having a nice day on the Tennis court and a nice match against Alex', '2015-08-30');
 
 -- --------------------------------------------------------
 
@@ -588,7 +676,7 @@ CREATE TABLE `moment_photo` (
   `upload_time` datetime NOT NULL,
   `caption` text,
   `hash` varchar(40) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `moment_photo`
@@ -606,7 +694,11 @@ INSERT INTO `moment_photo` (`id`, `user_id`, `moment_id`, `picture_url`, `upload
 (13, 22, 68, 'e132c3df0a9309684b2a3ac4/thumb_afafb680ab12d5c063880de7.jpg', '2015-08-05 19:27:54', 'US Open 2015', '991c15f2364898b5a1ad09c9'),
 (14, 31, 71, '97e14362173e839b968d4301/thumb_15aa794100f2636f7060bf1f.jpg', '2015-08-07 13:53:39', '', '0c50586be4fed572a178dec2'),
 (15, 29, 72, '91c1b56b36aeadcd7a7be353/thumb_03b36a3f91504394c5a3685c.jpg', '2015-08-07 16:46:35', '', '099fcdf95baa9a6d1bdc9442'),
-(16, 22, 73, '0bf7a45adad01bbf5db12304/thumb_07754f8fc1d6ababf38994b7.jpg', '2015-08-13 11:15:19', 'My second racket', 'd5021929b38ebbd6074d12f6');
+(16, 22, 73, '0bf7a45adad01bbf5db12304/thumb_07754f8fc1d6ababf38994b7.jpg', '2015-08-13 11:15:19', 'My second racket', 'd5021929b38ebbd6074d12f6'),
+(17, 22, 74, 'd17e9b13bdd47f1ed7073556/thumb_4fd2a26e6d3edfb404703c2a.jpg', '2015-08-26 00:55:03', 'Roger''s Graceful Backhand', '33f96f2545d425948ebe1a04'),
+(18, 22, 75, 'a012b5f4479dd9417c8042a7/thumb_03dfb9c6a249810be97349e4.jpg', '2015-08-26 22:05:44', 'Roger Federer practice with hewitt', 'bea75753b83425ba0069e551'),
+(19, 22, 76, '8d12243ab529793ed6374b45/thumb_e2da6341343880ee075fd366.jpeg', '2015-08-30 08:53:58', 'New String of My Racket', '4d55f1b78a5f0b359612221f'),
+(20, 22, 78, '45f32953c9d258ca5228c507/thumb_7b9c466125854e4c2e184510.png', '2015-08-31 23:08:14', 'Before the Sserving', '2b246817d7e6eeb6f6d5c8bd');
 
 -- --------------------------------------------------------
 
@@ -626,7 +718,14 @@ CREATE TABLE `reply` (
   `view_time` datetime NOT NULL,
   `target_id` int(11) DEFAULT NULL,
   `hash` varchar(30) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `reply`
+--
+
+INSERT INTO `reply` (`id`, `activity_id`, `comment_id`, `user_id`, `user_id_get`, `text`, `sent_time`, `user_view`, `view_time`, `target_id`, `hash`) VALUES
+(29, 93, 81, 22, 28, 'It''s extremely powerful', '2015-08-21 19:07:40', 'n', '0000-00-00 00:00:00', NULL, '4148d91fb028d435569fb8dd');
 
 -- --------------------------------------------------------
 
@@ -726,7 +825,7 @@ CREATE TABLE `user_interest_label_image` (
   `picture_url` varchar(255) NOT NULL,
   `upload_time` datetime NOT NULL,
   `hash` varchar(40) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user_interest_label_image`
@@ -739,7 +838,8 @@ INSERT INTO `user_interest_label_image` (`id`, `user_id`, `interest_id`, `pictur
 (37, 28, 71, '8bb6c0be055dfce0fa58ad2b/thumb_c5874aa8794bfcbf2a3090fe.jpg', '2015-07-15 23:57:26', '69e4257ef395656f29dcdeae'),
 (38, 29, 68, '46831e698f03188806a4751e/thumb_1128cb72459ca15d12344841.jpeg', '2015-07-18 22:09:52', '1b16c8fbc2564cf68abdd8dd'),
 (40, 22, 58, '8e7d76f8cbdca960ec12987a/thumb_f8c23cc82ee6c13fa3b23dad.png', '2015-08-07 21:45:24', '60dcce125d0efcc8f09139f0'),
-(42, 22, 55, '358d30b1b67fe1460e4a222c/thumb_0ffde29ca8d0e29c51b6d19e.jpg', '2015-08-10 23:25:51', '2585b0db0a5bf7563a41946f');
+(45, 22, 55, '2f4e65379762238df898abfd/thumb_2cdfa3247cd0bfb27212a9e6.jpg', '2015-08-22 10:14:56', '5b2ba524a67c5934e5b1279c'),
+(54, 33, 86, '28848bede12c5ed434ac35c6/thumb_f408081da16102579d94407e.jpg', '2015-08-29 18:53:37', '2482e60d083836d9b38cbf64');
 
 -- --------------------------------------------------------
 
@@ -766,7 +866,7 @@ INSERT INTO `user_in_interest` (`id`, `interest_id`, `user_id`, `user_in`, `in_t
 (14, 55, 22, 28, '2015-07-16 00:01:27', 'd5bd84657e85dfd9a7b118b2'),
 (15, 68, 29, 22, '2015-07-23 12:07:58', '134b9a04439016230b6e292c'),
 (16, 67, 22, 29, '2015-07-23 12:40:42', 'e9d9383624c240d032520d67'),
-(17, 58, 22, 29, '2015-08-21 16:26:13', 'bb3dc3329cbd7bc3c715ea45');
+(17, 67, 22, 31, '2015-08-25 23:40:43', 'cc7c205253ed631704e5432a');
 
 -- --------------------------------------------------------
 
@@ -811,12 +911,12 @@ CREATE TABLE `user_notification_queue` (
 --
 
 INSERT INTO `user_notification_queue` (`id`, `user_id`, `queue`, `read_queue`) VALUES
-(4, 22, '', 'ira-30,'),
-(5, 29, '', 'r-26,ir-30,ir-28,ir-29,r-23,ir-27,ira-26,ir-12,i'),
+(4, 22, '', 'fr-8,ira-31,fa-111,c-84,fa-110,fa-106,fa-53,fa-41,c-81,c-80,ira-30,'),
+(5, 29, '', 'ir-32,r-26,ir-30,ir-28,ir-29,r-23,ir-27,ira-26,ir-12,i'),
 (7, 30, '', 'r-21,iira-19,ir-16,'),
-(8, 31, '', 'ira-17,ira-16,ira-15,ira-14,ir-13,'),
-(9, 28, '', 'ir-30,iira-25,ira-24,ira-23,ir-22,'),
-(10, 33, '', 'ir-29,');
+(8, 31, '', 'ir-31,ira-17,ira-16,ira-15,ira-14,ir-13,'),
+(9, 28, '', 'r-29,ir-30,iira-25,ira-24,ira-23,ir-22,'),
+(10, 33, '', 'fc-20,ir-29,');
 
 -- --------------------------------------------------------
 
@@ -830,7 +930,7 @@ CREATE TABLE `user_profile_cover` (
   `picture_url` varchar(255) NOT NULL,
   `upload_time` datetime NOT NULL,
   `hash` varchar(40) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user_profile_cover`
@@ -842,10 +942,10 @@ INSERT INTO `user_profile_cover` (`id`, `user_id`, `picture_url`, `upload_time`,
 (18, 31, '007385c5178d67bb17435f90/thumb_876013b7593d3f1b83a25110.jpg', '2015-07-14 10:25:45', 'bc07ceb8c33d95531d2560ae'),
 (24, 30, '9420864a86b06079af3f75a8/thumb_6b7f7a966894ec2e448a0cd4.png', '2015-07-14 22:00:07', 'dd7e9a79998acad3db6e6ec9'),
 (25, 28, '8211d78875aafbe92e59a98d/thumb_347d5436b433f27f3dbab721.jpg', '2015-07-15 23:55:35', 'a4a7a2559c418685a807d10c'),
-(28, 32, 'd7f68bc7d9e110924a34d1ae/thumb_c66c4240542c458edebba021.jpg', '2015-07-17 13:33:35', '10d9d60a9a870e7c7c2cb3b2'),
 (31, 29, 'd9d988615a51692803827e34/thumb_214ee8c418959f6781f226b2.jpg', '2015-07-17 14:46:38', '950b79ae7c023796834be0e9'),
 (59, 33, '447d834efe6b0ec89c8ebe3c/thumb_8e3071c4b39cfabc54b67325.jpg', '2015-08-13 18:35:35', 'ee1ecb0c757fe1d0d3413b2a'),
-(65, 22, 'a0fba382b0b8d6f5e0039fd9/thumb_857b56f8c29d2aa21f6fa4f5.jpg', '2015-08-21 08:30:20', '12cba6647224c0ed06d80b9a');
+(65, 22, 'a0fba382b0b8d6f5e0039fd9/thumb_857b56f8c29d2aa21f6fa4f5.jpg', '2015-08-21 08:30:20', '12cba6647224c0ed06d80b9a'),
+(66, 32, '3e7c1a1c62955b81e93b95e1/thumb_3de4dafe0c43c564d6772a7c.jpg', '2015-08-29 22:46:17', '086c6e4c8e52b78831f80c4b');
 
 -- --------------------------------------------------------
 
@@ -859,7 +959,7 @@ CREATE TABLE `user_profile_picture` (
   `picture_url` varchar(255) NOT NULL,
   `upload_time` datetime NOT NULL,
   `hash` varchar(40) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user_profile_picture`
@@ -874,10 +974,10 @@ INSERT INTO `user_profile_picture` (`id`, `user_id`, `picture_url`, `upload_time
 (35, 28, '4358d1f8e26a23e87ad92964/thumb_6e90cee991f25c6c904eabbb.jpg', '2015-07-15 23:56:07', '2780d3fd067a1b2ada0057f1'),
 (36, 29, '406867654e08b646857e431d/thumb_be08ebe9354ca99c168b0976.jpg', '2015-07-16 10:29:14', '997043ef5b026476616d413a'),
 (37, 30, '2a9d35115ad5c08ec9d5c8fd/thumb_02c48d8cb4df8d3bed75ea94.jpg', '2015-07-16 10:29:34', 'c277682918c76b4014183242'),
-(40, 32, 'bc0174b02fe5735dfb780057/thumb_1b38cdf53f2033c68d682c51.jpg', '2015-07-17 13:31:49', '0c65acb473ccbc2aeb73dcac'),
 (41, 28, '0d6f90406fc0cec43ad047ed/thumb_3409a8d2bf0f0a7a681d5071.jpg', '2015-07-30 18:57:11', 'a9bf28fe54e5c403053dccd7'),
 (44, 33, '55317761875fe07bb5141442/thumb_aab8c57ff7774fd6ac48c1be.jpg', '2015-08-13 18:29:57', 'a4c4b22c9f87553ff5bed29d'),
-(48, 22, 'd326325e0d36d498fe8e2e38/thumb_c6a09106ddd63245eafc86e9.jpg', '2015-08-16 21:00:36', '17af3a354b6c5e71745142cf');
+(48, 22, 'd326325e0d36d498fe8e2e38/thumb_c6a09106ddd63245eafc86e9.jpg', '2015-08-16 21:00:36', '17af3a354b6c5e71745142cf'),
+(49, 32, '0b235cf8f2598f345f4a6329/thumb_e50b881438476eaaecbaf6e9.jpg', '2015-08-29 22:46:23', '3aa6c1098f61379514b06146');
 
 -- --------------------------------------------------------
 
@@ -954,9 +1054,21 @@ ALTER TABLE `favor_activity`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `favor_comment`
+--
+ALTER TABLE `favor_comment`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `favor_event`
 --
 ALTER TABLE `favor_event`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `favor_reply`
+--
+ALTER TABLE `favor_reply`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1107,12 +1219,12 @@ ALTER TABLE `user_upcoming_event`
 -- AUTO_INCREMENT for table `auth_tokens`
 --
 ALTER TABLE `auth_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=200;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=240;
 --
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=80;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=86;
 --
 -- AUTO_INCREMENT for table `education`
 --
@@ -1137,17 +1249,27 @@ ALTER TABLE `event_group`
 -- AUTO_INCREMENT for table `event_photo`
 --
 ALTER TABLE `event_photo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=150;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=148;
 --
 -- AUTO_INCREMENT for table `favor_activity`
 --
 ALTER TABLE `favor_activity`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=116;
+--
+-- AUTO_INCREMENT for table `favor_comment`
+--
+ALTER TABLE `favor_comment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `favor_event`
 --
 ALTER TABLE `favor_event`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=28;
+--
+-- AUTO_INCREMENT for table `favor_reply`
+--
+ALTER TABLE `favor_reply`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `groups`
 --
@@ -1157,12 +1279,12 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `group_message`
 --
 ALTER TABLE `group_message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=69;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=73;
 --
 -- AUTO_INCREMENT for table `interest`
 --
 ALTER TABLE `interest`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=72;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=87;
 --
 -- AUTO_INCREMENT for table `interest_activity`
 --
@@ -1172,7 +1294,7 @@ ALTER TABLE `interest_activity`
 -- AUTO_INCREMENT for table `interest_request`
 --
 ALTER TABLE `interest_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `major`
 --
@@ -1182,12 +1304,12 @@ ALTER TABLE `major`
 -- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=115;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=124;
 --
 -- AUTO_INCREMENT for table `message_queue`
 --
 ALTER TABLE `message_queue`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `moment`
 --
@@ -1197,12 +1319,12 @@ ALTER TABLE `moment`
 -- AUTO_INCREMENT for table `moment_photo`
 --
 ALTER TABLE `moment_photo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `reply`
 --
 ALTER TABLE `reply`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT for table `reply_notify_post_user`
 --
@@ -1227,7 +1349,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user_interest_label_image`
 --
 ALTER TABLE `user_interest_label_image`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=55;
 --
 -- AUTO_INCREMENT for table `user_in_interest`
 --
@@ -1247,12 +1369,12 @@ ALTER TABLE `user_notification_queue`
 -- AUTO_INCREMENT for table `user_profile_cover`
 --
 ALTER TABLE `user_profile_cover`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=66;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=67;
 --
 -- AUTO_INCREMENT for table `user_profile_picture`
 --
 ALTER TABLE `user_profile_picture`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=50;
 --
 -- AUTO_INCREMENT for table `user_upcoming_event`
 --
