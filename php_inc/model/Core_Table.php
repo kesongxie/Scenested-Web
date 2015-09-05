@@ -354,6 +354,8 @@
 					 }
 				}
 			}
+			echo $this->connection->error;
+		
 			return false;
 		}
 		

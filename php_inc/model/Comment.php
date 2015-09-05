@@ -32,27 +32,37 @@
 		}
 		
 		
+		public function getCommentTextByCommentId($comment_id){
+			return $this->getColumnById('text', $comment_id);
+		}
+		
+		
 		public function renderCommentBlockByCommentId($comment_id){
 			$column_array = array('activity_id','user_id','text','sent_time','hash');
 			$comment = $this->getMultipleColumnsById($column_array, $comment_id);
-			include_once 'User_Profile_Picture.php';
-			$profile = new User_Profile_Picture();
-			$post_owner_pic = $profile->getLatestProfileImageForUser($comment['user_id']);
-			include_once 'User_Table.php';
-			$user = new User_Table();
-			$fullname = $user->getUserFullnameByUserIden($comment['user_id']);
-			$post_time = convertDateTimeToAgo($comment['sent_time'], false);	
-			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($comment['user_id']);
-			$unique_iden = $user->getUniqueIdenForUser($comment['user_id']);
-			$text = $comment['text'];
-			$user_id = $comment['user_id'];
-			$hash = $comment['hash'];
-			$post_owner_id = $this->getPostUserIdByActivityId($comment['activity_id']);
-			$reply_block = $this->getReplyBlockByCommentId($comment_id);
-			ob_start();
-			include(SCRIPT_INCLUDE_BASE.$this->template_path);
-			$comment_block = ob_get_clean();
-			return $comment_block;
+			if($comment !== false){
+				include_once 'User_Profile_Picture.php';
+				$profile = new User_Profile_Picture();
+				$post_owner_pic = $profile->getLatestProfileImageForUser($comment['user_id']);
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				$fullname = $user->getUserFullnameByUserIden($comment['user_id']);
+				$post_time = convertDateTimeToAgo($comment['sent_time'], false);	
+				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($comment['user_id']);
+				$unique_iden = $user->getUniqueIdenForUser($comment['user_id']);
+				$text = $comment['text'];
+				$user_id = $comment['user_id'];
+				$hash = $comment['hash'];
+				$favor_number = $this->getCommentLikeNumber($comment_id);
+				$post_owner_id = $this->getPostUserIdByActivityId($comment['activity_id']);
+				$reply_block = $this->getReplyBlockByCommentId($comment_id);
+				$favored = $this->isSessionUserFavorComment($comment_id);
+				ob_start();
+				include(SCRIPT_INCLUDE_BASE.$this->template_path);
+				$comment_block = ob_get_clean();
+				return $comment_block;
+			}
+			return false;
 		}
 		
 		
@@ -175,6 +185,59 @@
 		
 		}
 		
+		public function favorComment($key){
+			$result = $this->getMultipleColumnsBySelector(array('id', 'user_id'), 'hash', $key);
+			if($result !== false){
+				include_once MODEL_PATH.'Favor_Comment.php';
+				$favor = new Favor_Comment();
+				$user_id_get = $result['user_id'];
+				$favor->addFavor($result['id'], $_SESSION['id'], $user_id_get);
+			}
+			return false;
+		}
+		
+		public function getCommentLikeNumber($comment_id){
+			include_once MODEL_PATH.'Favor_Comment.php';
+			$favor = new Favor_Comment();
+			return $favor->getTotalFavorNumForTarget($comment_id);
+		}
+		
+		
+		public function getCommentLikeNumberByKey($key){
+			$comment_id = $this->getRowIdByHashkey($key);
+			if($comment_id !== false){
+				include_once MODEL_PATH.'Favor_Comment.php';
+				$favor = new Favor_Comment();
+				return $favor->getTotalFavorNumForTarget($comment_id);
+			}
+			return 0;
+		}
+		
+		public function isSessionUserFavorComment($comment_id){
+			include_once MODEL_PATH.'Favor_Comment.php';
+			$favor = new Favor_Comment();
+			return $favor->isSessionUserAlreadyFavor($comment_id);
+		}
+		
+		
+		public function undoFavorComment($key){
+			$comment_id = $this->getRowIdByHashkey($key);
+			if($comment_id !== false){
+				include_once MODEL_PATH.'Favor_Comment.php';
+				$favor = new Favor_Comment();
+				$favor->undoFavorForSessionUser($comment_id);
+			}
+		}
+		
+		public function getCommentFavorPlainListByKey($key){
+			$comment_id = $this->getRowIdByHashkey($key);
+			if($comment_id !== false){
+				include_once MODEL_PATH.'Favor_Comment.php';
+				$favor = new Favor_Comment();
+				return $favor->getFavorPlainListForTarget($comment_id);
+			}
+			return false;
+		}
 		
 		
 	}

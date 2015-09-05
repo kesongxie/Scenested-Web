@@ -15,6 +15,9 @@
 					case 'interest_request':return $this->interestRequestRenderer($row_id);break;
 					case 'interest_request_accept':return $this->interestRequestAcceptRenderer($row_id);break;
 					case 'favor_activity':return $this->favorActivityRenderer($row_id);break;
+					case 'favor_comment':return $this->favorCommentRenderer($row_id);break;
+					case 'favor_reply':return $this->favorReplyRenderer($row_id);break;
+					
 					default:break;			
 				}
 			}
@@ -56,7 +59,17 @@
 			return $favor->renderFavorActivityForNotificationBlock($row_id);
 		}
 		
+		public function favorCommentRenderer($row_id){
+			include_once MODEL_PATH.'Favor_Comment.php';
+			$favor = new Favor_Comment();
+			return $favor->renderFavorCommentForNotificationBlock($row_id);
+		}
 		
+		public function favorReplyRenderer($row_id){
+			include_once MODEL_PATH.'Favor_Reply.php';
+			$favor = new Favor_Reply();
+			return $favor->renderFavorReplyForNotificationBlock($row_id);
+		}
 		
 	
 	}

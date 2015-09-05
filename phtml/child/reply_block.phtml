@@ -9,11 +9,13 @@
 				</div>
 			</div>
 			<div style="position:relative;top:2px;left:-2px">
-				<span class="react"><?php echo $post_time ?></span>
+				<div class="inline-blk"><span class="react"><?php echo $post_time ?></span></div>
 				<?php if($user_id != $_SESSION['id']): ?>
-					<span class="reply-comment react pointer">Reply</span>
+					<div class="inline-blk"><span class="reply-comment react pointer">Reply</span></div>
 				<?php endif; ?>
-				<img src="<?php echo IMGDIR ?>thumb_icon.png" class="thumb" title="like" height="16" width="16"> <span></span>
+				<div class="inline-blk popover-throwable">
+					<img  src="<?php echo IMGDIR ?>thumb_icon.png"   class="thumb reply-thumb favor-reply <?php echo ($favored)?'undo-favor-reply':'favor-reply' ?>" height="16" width="16"><div class="inline-blk reply-favor-num" style="position: relative; top: 1px;"><?php echo $favor_number; ?></div>			
+				</div>
 				<?php if($user_id == $_SESSION['id'] || $post_owner_id == $_SESSION['id']): ?>
 					<img src="<?php echo IMGDIR ?>trashcan_icon.png" class="react pointer trashcan trash-reply hdn"  height="16" width="16" title="delete this comment">
 				<?php  endif; ?>

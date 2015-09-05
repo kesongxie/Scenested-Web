@@ -12,14 +12,17 @@
 				$unique_hash = $this->generateUniqueHash();
 				$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`target_id`,`user_id`,`user_id_get`,`sent_time`,`hash`) VALUES(?, ?, ?,  ?, ?)");
 				$time = date('Y-m-d H:i:s');
-				$stmt->bind_param('iiiss',$target_id, $user_id, $user_id_get, $time,$unique_hash);
-				if($stmt->execute()){
-					$stmt->close();
-					if($user_id != $user_id_get){
-						$favor_id = $this->connection->insert_id;
-						$this->noti_queue->addNotificationQueueForUser($user_id_get, $favor_id);
+				if($stmt){
+					$stmt->bind_param('iiiss',$target_id, $user_id, $user_id_get, $time,$unique_hash);
+					if($stmt->execute()){
+						$stmt->close();
+						if($user_id != $user_id_get){
+							$favor_id = $this->connection->insert_id;
+							$this->noti_queue->addNotificationQueueForUser($user_id_get, $favor_id);
+						}
 					}
 				}
+				echo $this->connection->error;
 			}
 			return false;
 		}
@@ -27,6 +30,8 @@
 		public function getTotalFavorNumForTarget($target_id){
 			return $this->getRowsNumberForNumericColumn('target_id',$target_id);
 		}
+		
+		
 		
 		public function isUserAlreadyFavor($target_id,$user_id){
 			return $this->checkNumericColumnValueExistForUser('target_id',$target_id,$user_id);
@@ -73,8 +78,27 @@
 				return trim($list,',');
 			}
 			return false;	
-		
 		}	
+		
+		public function getFavorPlainListForTarget($target_id){
+			$rows = $this->getAllRowsColumnBySelector('user_id', 'target_id',$target_id);
+			if($rows !== false){
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				if(sizeof($rows) > 1){
+					$result = '';
+					foreach($rows as $row){
+						 $result .= $user->getUserFullnameByUserIden($row['user_id']).', ';
+					}
+					return trim($result,', ').' favor this';
+					
+				}else{
+					$fullname = $user->getUserFullnameByUserIden($rows[0]['user_id']);
+					return $fullname.' favors this';
+				}
+			}
+			return false;
+		}
 		
 	}
 ?>

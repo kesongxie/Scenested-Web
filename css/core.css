@@ -883,7 +883,7 @@ div.ui-datepicker{
 }
 .comment .thumb{
 	opacity:0.3;
-	margin-left:10px;
+	margin: 0px 4px 0px 10px;
 	position: relative;
 	top: 2px;
 	cursor: pointer;
@@ -1425,3 +1425,22 @@ img.gallery-navi{
 	color:#062AA3;
 }
 
+.comment .inline-blk{
+	vertical-align:bottom;
+}
+
+.post-wrapper .popover-dialog-wrapper{
+	white-space:nowrap;
+	width:auto !important;
+}
+.post-wrapper .popover-dialog-wrapper .arrow-up{
+	border-bottom: 10px solid #3E3C3C;
+	left: 9px !important;
+}
+.post-wrapper .popover-dialog-wrapper .popover-dialog-content{
+	padding:6px !important;
+	font-size:11px;
+}
+.post-wrapper .popover-dialog-wrapper .popover-overlay{
+	opacity:1.0 !important;
+}

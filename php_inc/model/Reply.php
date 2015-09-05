@@ -127,6 +127,11 @@
 			$user_id = $reply['user_id'];
 			$hash = $reply['hash'];
 			$post_owner_id =$this->getPostUserIdByActivityId($reply['activity_id']);
+			
+			
+			$favor_number = $this->getReplyLikeNumber($reply_id);
+			$favored = $this->isSessionUserFavorReply($reply_id);
+			
 			ob_start();
 			include(SCRIPT_INCLUDE_BASE.$this->reply_template_path);
 			$reply_block = ob_get_clean();
@@ -290,7 +295,63 @@
 			return false;
 		}
 		
+		public function getReplyTextByReplyId($reply_id){
+			return $this->getColumnById('text', $reply_id);
+		}
 		
+		public function favorReply($key){
+			$result = $this->getMultipleColumnsBySelector(array('id', 'user_id'), 'hash', $key);
+			if($result !== false){
+				include_once MODEL_PATH.'Favor_Reply.php';
+				$favor = new Favor_Reply();
+				$user_id_get = $result['user_id'];
+				$favor->addFavor($result['id'], $_SESSION['id'], $user_id_get);
+			}
+			return false;
+		}
+		
+		public function getReplyLikeNumber($reply_id){
+			include_once MODEL_PATH.'Favor_Reply.php';
+			$favor = new Favor_Reply();
+			return $favor->getTotalFavorNumForTarget($reply_id);
+		}
+		
+		
+		public function getReplyLikeNumberByKey($key){
+			$reply_id = $this->getRowIdByHashkey($key);
+			if($reply_id !== false){
+				include_once MODEL_PATH.'Favor_Reply.php';
+				$favor = new Favor_Reply();
+				return $favor->getTotalFavorNumForTarget($reply_id);
+			}
+			return 0;
+		}
+		
+		public function isSessionUserFavorReply($reply_id){
+			include_once MODEL_PATH.'Favor_Reply.php';
+			$favor = new Favor_Reply();
+			return $favor->isSessionUserAlreadyFavor($reply_id);
+		}
+		
+		
+		public function undoFavorReply($key){
+			$reply_id = $this->getRowIdByHashkey($key);
+			if($reply_id !== false){
+				include_once MODEL_PATH.'Favor_Reply.php';
+				$favor = new Favor_Reply();
+				$favor->undoFavorForSessionUser($reply_id);
+			}
+		}
+		
+		public function getReplyFavorPlainListByKey($key){
+			$reply_id = $this->getRowIdByHashkey($key);
+			if($reply_id !== false){
+				include_once MODEL_PATH.'Favor_Reply.php';
+				$favor = new Favor_Reply();
+				return $favor->getFavorPlainListForTarget($reply_id);
+			}
+			return false;
+		}
 		
 		
 		

@@ -396,7 +396,6 @@ function loadFavorActivityMember(thisE, always_show){
 
 
 
-
 function removeFromInterestGroup(thisE){
 	var parentDiv =  thisE.parents('.in_con_border_top');
 	var hash = parentDiv.attr('data-hash');
@@ -656,6 +655,58 @@ function loadFavorNumberForActivity(parentDiv){
 	});
 }
 
+function loadFavorNumberForComment(parentDiv){
+	var key = parentDiv.attr('data-key');
+	$.ajax({
+		url:AJAX_DIR+'comment_favor_num.php',
+		method:'post',
+		data:{key:key},
+		success:function(resp){
+			parentDiv.find('.comment-favor-num').text(resp);
+		}
+	});
+}
+
+
+function loadFavorNumberForReply(parentDiv){
+	var key = parentDiv.attr('data-key');
+	$.ajax({
+		url:AJAX_DIR+'reply_favor_num.php',
+		method:'post',
+		data:{key:key},
+		success:function(resp){
+			parentDiv.find('.reply-favor-num').text(resp);
+		}
+	});
+}
+
+function loadCommentFavorPlainList(thisE,key){
+	thisE.parents('.popover-throwable').find('.popover-dialog-wrapper').remove();
+	$.ajax({
+		url:AJAX_DIR+'comment_favor_plain_list.php',
+		method:'post',
+		data:{key:key},
+		success:function(resp){
+			if(resp != '1'){
+				showPopOverDialog(thisE,thisE.parents('.comment-container'),resp);
+			}
+		}	
+	});
+}
+
+function loadReplyFavorPlainList(thisE,key){
+	thisE.parents('.popover-throwable').find('.popover-dialog-wrapper').remove();
+	$.ajax({
+		url:AJAX_DIR+'reply_favor_plain_list.php',
+		method:'post',
+		data:{key:key},
+		success:function(resp){
+			if(resp != '1'){
+				showPopOverDialog(thisE,thisE.parents('.comment-container'),resp);
+			}
+		}	
+	});
+}
 
 $(function(){
 	setInterval(function(){
@@ -802,7 +853,7 @@ $(document).ready(function(){
 			notification_center.find('.body.previous').addClass('hdn');
 			notification_center.find('.body.fresh').removeClass('hdn');
 			var noti = $('#index-noti-red-spot');
-				if(parseInt(noti.text()) > 0 ){
+			if(parseInt(noti.text()) > 0 ){
 				$.get(AJAX_DIR+"ld_popover_notification.php", function(resp) {
 					var freshDiv = notification_center.find('.body.child-scrollable.fresh');
 					freshDiv.prepend(resp);
@@ -2345,6 +2396,8 @@ $(function($) {
     	}
 	});
 	
+	
+	
 	$(document).mousemove(function(event){
     	mouseMove.x = event.pageX;
     	mouseMove.y = event.pageY;
@@ -2362,6 +2415,121 @@ $(function($) {
 			 $(this).html('').addClass('hdn');
 		}
 	},'.hover-avator-wrapper');
+	
+	
+	
+	$('body').delegate('.comment-thumb','mouseover mouseleave', function(event) {
+		var thisE = $(event.target);
+		if(event.type === 'mouseover' ){
+    		var key = thisE.parents('.comment').attr('data-key');
+    		tOut = setTimeout(function(){
+    			loadCommentFavorPlainList(thisE, key);
+    		},'500');
+		}
+    	else if(event.type === 'mouseleave'){
+    		clearTimeout(tOut);
+    		thisE.parents('.popover-throwable').find('.popover-dialog-wrapper').remove();
+    	}
+	});
+	
+	
+	$('body').delegate('.reply-thumb','mouseover mouseleave', function(event) {
+		var thisE = $(event.target);
+		if(event.type === 'mouseover' ){
+    		var key = thisE.parents('.comment').attr('data-key');
+    		tOut = setTimeout(function(){
+    			loadReplyFavorPlainList(thisE, key);
+    		},'500');
+		}
+    	else if(event.type === 'mouseleave'){
+    		clearTimeout(tOut);
+    		thisE.parents('.popover-throwable').find('.popover-dialog-wrapper').remove();
+    	}
+	});
+	
+	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var parentDiv = thisE.parents('.comment');
+			var key = parentDiv.attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'favor_comment.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					thisE.addClass('undo-favor-comment').removeClass('favor-comment');
+					loadFavorNumberForComment(parentDiv);
+					loadCommentFavorPlainList(thisE, key);
+					return false;
+				}	
+			});
+		}
+	},'.favor-comment');
+	
+	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var parentDiv = thisE.parents('.comment');
+			var key = parentDiv.attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'undo_favor_comment.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					thisE.removeClass('undo-favor-comment').addClass('favor-comment');
+					loadFavorNumberForComment(parentDiv);
+					loadCommentFavorPlainList(thisE, key);
+					return false;
+				}	
+			});
+		}
+	},'.undo-favor-comment');
+	
+	
+	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var parentDiv = thisE.parents('.comment');
+			var key = parentDiv.attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'favor_reply.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					thisE.addClass('undo-favor-reply').removeClass('favor-reply');
+					loadFavorNumberForReply(parentDiv);
+					loadReplyFavorPlainList(thisE, key);
+					return false;
+				}	
+			});
+		}
+	},'.favor-reply');
+	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var parentDiv = thisE.parents('.comment');
+			var key = parentDiv.attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'undo_favor_reply.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					thisE.removeClass('undo-favor-reply').addClass('favor-reply');
+					loadFavorNumberForComment(parentDiv);
+					loadReplyFavorPlainList(thisE, key);
+					return false;
+				}	
+			});
+		}
+	},'.undo-favor-reply');
 	
 	
 	

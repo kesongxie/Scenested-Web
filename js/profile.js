@@ -1422,5 +1422,5 @@ $(document).ready(function(){
 		}
 	},'.major-wrapper .remove');
 
-
+	
 });
