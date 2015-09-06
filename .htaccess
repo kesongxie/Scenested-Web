@@ -41,37 +41,50 @@ ExpiresDefault "access 2 days"
 
 
 
+
+
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-	RewriteBase /lsere/
+	RewriteBase /
 	RewriteRule ^user/([a-zA-Z0-9]+).([a-zA-Z0-9]+)$ profile.php?f=$1&l=$2 [NC,L]
 </IfModule>
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-	RewriteBase /lsere/
+	RewriteBase /
 	RewriteRule ^user/([a-zA-Z0-9]+).([a-zA-Z0-9]+)/$ profile.php?f=$1&l=$2 [NC,L]
 </IfModule>
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-	RewriteBase /lsere/
+	RewriteBase /
 	RewriteRule ^user/([a-zA-Z0-9]+).([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ profile.php?f=$1&l=$2&s=$3 [NC,L]
 </IfModule>
 
+
+
+
+
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-	RewriteBase /lsere/
+	RewriteBase /
+	RewriteRule ^user/([a-zA-Z0-9]+).([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ profile.php?f=$1&l=$2&s=$3&a=$4 [NC,L]
+</IfModule>
+
+
+
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
 	RewriteRule ^user/([a-zA-Z0-9]+).([a-zA-Z0-9]+).([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ profile.php?f=$1&l=$2&s=$4 [NC,L]
 </IfModule>
 
 
 
-
-
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-	RewriteBase /lsere/
+	RewriteBase /
 	RewriteRule ^user/([a-zA-Z0-9]+).([a-zA-Z0-9]+).([a-zA-Z0-9]+)$ profile.php?f=$1&l=$2 [NC,L]
 </IfModule>
 

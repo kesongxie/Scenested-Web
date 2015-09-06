@@ -34,6 +34,12 @@
 			}
 		}
 		
+		
+		public function getInterestIdByNameForUser($name, $user_id){
+			 return $this->getColumnBySelectorForUser('id','name',$name,$user_id);
+		}
+		
+		
 
 		//return the result set of the first row for the given user id
 		public function getUserFirstInterestByUserId($user_id){
@@ -165,6 +171,10 @@
 		
 		public function loadInterestBlockByInterestResource($interest){
 			if($interest !== false){
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				$access_url = $user->getUserAccessUrl($interest['user_id']);
+				$url_to_friend = USER_PROFILE_ROOT.$access_url.'/friends/'.strtolower($interest['name']);
 				//get interest profile
 				$left_content = "";
 				$right_content = "";
@@ -232,6 +242,9 @@
 						$prefix = new User_Media_Prefix();
 						$media_prefix = $prefix->getUserMediaPrefix($user_id).'/';
 						
+						
+						include_once 'User_Table.php';
+						$user = new User_Table();
 						foreach($row as &$r){
 							if(isset($r['picture_url']) && $r['picture_url'] !== null){
 								$url = U_IMGDIR.$media_prefix.$r['picture_url'];
@@ -239,6 +252,8 @@
 							}else{
 								$url = DEFAULT_INTEREST_LABEL_IMAGE;
 							}
+							$access_url = $user->getUserAccessUrl($user_id);
+							$r['data_href'] = USER_PROFILE_ROOT.$access_url.'/friends/'.strtolower($r['name']);
 							$r['picture_url'] = $url;
 						}
 						$stmt->close();
@@ -600,13 +615,24 @@
 		}
 		
 		
-		public function initContentForFriend($user_id, $All){
+		
+		public function initContentForFriendForUserKey($user_key){
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			$user_id = $user->getUserIdByKey($user_key);
+			if($user_id !== false){
+				return $this->initContentForFriend($user_id);
+			}
+			return false;
+		}
+		public function initContentForFriend($user_id, $all = true){
 			include_once 'User_In_Interest.php';
 			include_once 'User_Table.php';
 			$user = new User_Table();
 			$in = new User_In_Interest();
 			$user_found = $in->getAllFriendsInUsersInterestByUserId($user_id);
 			$friend_block = null;
+			$content = '';
 			if($user_found !== false){
 				include_once 'User_Profile_Picture.php';
 				$profile = new User_Profile_Picture();
@@ -646,10 +672,14 @@
  						$user_profile= ob_get_clean();
  						ob_start();
  						include(TEMPLATE_PATH_CHILD.'friend_profile_wrapper.phtml');
- 						$friend_block .= ob_get_clean();
+ 						$content .= ob_get_clean();
 				}
-				return $friend_block;
 			}
+			
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'friend-initial-content-inner-wrapper-block.phtml');
+			$friend_block= ob_get_clean();
+			return $friend_block;
 		}
 		
 		

@@ -1,6 +1,6 @@
 <?php
 	require_once 'Database_Connection.php';
-	require_once  $_SERVER['DOCUMENT_ROOT'].'/lsere/php_inc/global_constant.php';
+	require_once  $_SERVER['DOCUMENT_ROOT'].'/php_inc/global_constant.php';
 
 	/*
 		core_table is the base class for other table class

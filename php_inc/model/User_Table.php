@@ -154,12 +154,16 @@
 		*/
 		public function requestUserPageValid($request_page){
 			$request_info = explode('/',trim($request_page,'/'));
-			$access_url = $request_info[2]; //when is site is live, should change this to request_info[1]
-			$user_id = $this->getColumnBySelector('id', 'user_access_url', $access_url);	
+			$access_url = $request_info[1]; 
+			$user_id = $this->getUserIdByAccessUrl($access_url);
 			if($user_id !== false && $this->getUserInfoByUserIden('activated',$user_id) == 1){
 				return array("id"=>$user_id, "access_url"=>$access_url);
 			}
 			return false;
+		}
+		
+		public function getUserIdByAccessUrl($access_url){
+			return  $this->getColumnBySelector('id', 'user_access_url', $access_url);
 		}
 		
 		public function getLatestCoverForuser($user_id){

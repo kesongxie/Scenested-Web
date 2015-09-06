@@ -3,7 +3,7 @@
 	
 	
 	//for page rendering 
-	define("ROOTDIR","http://localhost:8888/lsere/");
+	define("ROOTDIR","http://localhost:8888/");
 	define("IMGDIR",ROOTDIR."media/");
 	define("E_IMGDIR",IMGDIR.'e/');
 	define("DEFAULT_IMAGE",IMGDIR.'default_image/');
@@ -18,7 +18,7 @@
 	define("U_MEDAI_FOLDER_DIR",DOCUMENT_ROOT.'media_u/');
 	define("MEDIA_THUMBNAIL_PREFIX","thumb_");
 
-	define("SCRIPT_INCLUDE_BASE",$_SERVER['DOCUMENT_ROOT'].'/lsere/');
+	define("SCRIPT_INCLUDE_BASE",$_SERVER['DOCUMENT_ROOT'].'/');
 	define("MEDIA_U",SCRIPT_INCLUDE_BASE."media_u/");
 	define("TEMPLATE_PATH",SCRIPT_INCLUDE_BASE.'phtml/');
 	define("AJAX_TEMPLATE_PATH", SCRIPT_INCLUDE_BASE.'/ajax/phtml/');

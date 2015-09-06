@@ -1,6 +1,6 @@
 /* global javascript file, contains core functions */
 var SIGNUP_ALERT_MESSAGE = new Array();
-var DOCUMENT_ROOT = "http://localhost:8888/lsere/";
+var DOCUMENT_ROOT = "http://localhost:8888/";
 var INDEX_PAGE = DOCUMENT_ROOT + "index.php";
 var AJAX_DIR = DOCUMENT_ROOT+"ajax/";
 var AJAX_PHTML_DIR = AJAX_DIR+"phtml/";
@@ -2333,10 +2333,13 @@ $(document).ready(function(){
 
 function getCurrentHoveringOffset(){
 	 var curElement = $('.hover-user-profile:hover');
-	 var offset = curElement.offset();
-	 var width = curElement.width();
-	 var height = curElement.height();
-	 return {offset:offset, width:width, height:height};
+	 if(curElement.length > 0){
+	 	var offset = curElement.offset();
+	 	var width = curElement.width();
+	 	var height = curElement.height();
+	 	return {offset:offset, width:width, height:height};
+	 }
+	 return false;
 }
 
 $(function($) {
@@ -2368,22 +2371,23 @@ $(function($) {
 						preDiv.h =  $('.hover-avator-wrapper').height();
 						preDiv.w =  $('.hover-avator-wrapper').width();
 						var hover_elememnt_properties = getCurrentHoveringOffset();
-						var newTop;
-						
-						if( preDiv.h + vpMouse.y > window_h){
-							newTop = hover_elememnt_properties.offset.top - preDiv.h + 10;
-							$('.hover-avator-wrapper').css('top',newTop).show();
-						}else{
-							newTop = hover_elememnt_properties.offset.top + hover_elememnt_properties.height + 10;
-							$('.hover-avator-wrapper').css('top',newTop).show();
-						}
-						var newLeft;
-						if( preDiv.w + vpMouse.x > window_w){
-							newLeft = hover_elememnt_properties.offset.left - (preDiv.w - hover_elememnt_properties.width) + 20;
-							$('.hover-avator-wrapper').css('left',newLeft);
-						}else{
-							newLeft = hover_elememnt_properties.offset.left;
-							$('.hover-avator-wrapper').css('left', newLeft);
+						if(hover_elememnt_properties != false){
+							var newTop;
+							if( preDiv.h + vpMouse.y > window_h){
+								newTop = hover_elememnt_properties.offset.top - preDiv.h + 10;
+								$('.hover-avator-wrapper').css('top',newTop).show();
+							}else{
+								newTop = hover_elememnt_properties.offset.top + hover_elememnt_properties.height + 10;
+								$('.hover-avator-wrapper').css('top',newTop).show();
+							}
+							var newLeft;
+							if( preDiv.w + vpMouse.x > window_w){
+								newLeft = hover_elememnt_properties.offset.left - (preDiv.w - hover_elememnt_properties.width) + 20;
+								$('.hover-avator-wrapper').css('left',newLeft);
+							}else{
+								newLeft = hover_elememnt_properties.offset.left;
+								$('.hover-avator-wrapper').css('left', newLeft);
+							}
 						}
 					}
         		}

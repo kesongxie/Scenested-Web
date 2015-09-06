@@ -17,7 +17,6 @@
 					case 'favor_activity':return $this->favorActivityRenderer($row_id);break;
 					case 'favor_comment':return $this->favorCommentRenderer($row_id);break;
 					case 'favor_reply':return $this->favorReplyRenderer($row_id);break;
-					
 					default:break;			
 				}
 			}

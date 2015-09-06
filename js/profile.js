@@ -572,7 +572,6 @@ $(document).ready(function(){
 	$('#i-interest-navi').on({
 		click:function(){
 			loadInterest($(this));
-			
 		}
 	},'.interest-side-label');
 	
@@ -1421,6 +1420,8 @@ $(document).ready(function(){
 			presentPopupDialog("Remove Study", "Do you want to remove the study \""+major_name+"\"", "Cancel", "Remove", removeStudy, $(this) );
 		}
 	},'.major-wrapper .remove');
+
+	
 
 	
 });

@@ -80,12 +80,6 @@
 		}
 		
 		
-		
-		
-		
-		
-		
-		
 		public function removeUserFromInterest($user_id, $key, $hash){
 			include_once 'User_Table.php';
 			$user = new User_Table();
@@ -163,9 +157,6 @@
 			return false;
 		}
 		
-		
-		
-		
 		public function getAllFriendsInUsersInterestByUserId($user_id, $limit_num = -1, $offset = 0){
 			if($limit_num > 0){
 				$stmt = $this->connection->prepare("
@@ -199,6 +190,45 @@
 			}
 			return false;
 		}
+		
+		
+		public function getUserInInterestByInterestId($interest_id, $limit_num = -1, $offset = 0){
+			include_once 'Interest.php';
+			$interest = new Interest();
+			$user_id = $interest->getInterestUserIdByInterestId($interest_id);
+			if($limit_num > 0){
+				$stmt = $this->connection->prepare("
+				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+				FROM user_in_interest 
+				LEFT JOIN user
+				ON user_in_interest.user_in = user.id WHERE user_in_interest.interest_id = ? AND user_in_interest.user_id = ? LIMIT ?,?
+				");
+			}else{
+				$stmt = $this->connection->prepare("
+				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+				FROM user_in_interest 
+				LEFT JOIN user
+				ON user_in_interest.user_in = user.id WHERE user_in_interest.interest_id = ? AND user_in_interest.user_id = ?
+				");			
+			}
+			if($stmt){
+				if($limit_num > 0){
+					$stmt->bind_param('iiii',$interest_id,$user_id,$offset, $limit_num);
+				}else{
+					$stmt->bind_param('ii',$interest_id, $user_id);
+				}
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false){
+						$user_found = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $user_found;
+					}
+				}
+			}
+			return false;
+		}
+		
 		
 		
 		public function getContactSearchByKeyWord($key_word){
@@ -268,87 +298,55 @@
 		
 		
 		public function getUserFriendBlockByInterestId($interest_id, $limit_num = -1, $offset = 0){
-			include_once 'Interest.php';
-			$interest = new Interest();
-			$user_id = $interest->getInterestUserIdByInterestId($interest_id);
-			if($limit_num > 0){
-				$stmt = $this->connection->prepare("
-				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-				FROM user_in_interest 
-				LEFT JOIN user
-				ON user_in_interest.user_in = user.id WHERE user_in_interest.interest_id = ? AND user_in_interest.user_id = ? LIMIT ?,?
-				");
-			}else{
-				$stmt = $this->connection->prepare("
-				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-				FROM user_in_interest 
-				LEFT JOIN user
-				ON user_in_interest.user_in = user.id WHERE user_in_interest.interest_id = ? AND user_in_interest.user_id = ?
-				");			
-			}
-			if($stmt){
-				if($limit_num > 0){
-					$stmt->bind_param('iiii',$interest_id,$user_id,$offset, $limit_num);
-				}else{
-					$stmt->bind_param('ii',$interest_id, $user_id);
-				}
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false){
-						$user_found = $result->fetch_all(MYSQLI_ASSOC);
-						$stmt->close();
-						$content = false;
-						if($user_found !== false && sizeof($user_found) >=1 ){
-							include_once 'User_Profile_Picture.php';
-							$profile = new User_Profile_Picture();
-							include_once 'User_Table.php';
-							$user = new User_Table();
-							foreach($user_found as $u){
-								$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
-								$cover_pic =  $user->getLatestCoverForuser($u['id']);
-								$fullname = $u['fullname'];
-								$hash = $u['hash'];
-								$rows = $interest->getInterestNameForUser($u['id'], 2);
-								$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
-								$user_id = $u['id'];
-								$result_array = array();
-					
-								$interest_list = '';
-								if($rows !== false){
-									$count = 1;
-									foreach($rows as $row){
-										if($count == sizeof($rows) -1 ){
-											$interest_list .= $row['name'].' and ';
-										}else if($count < sizeof($rows)){
-											$interest_list .= $row['name'].', ';
-										}else{
-											$interest_list .= $row['name'];
-										}
-										$count++;
-									}
-								}
-								$interest_list = trim($interest_list,', ');
-						
-								include_once 'Education.php';
-								$educ = new Education();
-								$education = $educ->getEducationByUserId($u['id']);
-								ob_start();
-								include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
-								$user_profile= ob_get_clean();
-								ob_start();
-								include(TEMPLATE_PATH_CHILD.'friend_profile_wrapper.phtml');
-								$content .= ob_get_clean();
+			$user_found = $this->getUserInInterestByInterestId($interest_id, $limit_num, $offset);
+			$content = false;
+			if($user_found !== false && sizeof($user_found) >=1 ){
+				include_once 'Interest.php';
+				$interest = new Interest();
+				include_once 'User_Profile_Picture.php';
+				$profile = new User_Profile_Picture();
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				foreach($user_found as $u){
+					$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
+					$cover_pic =  $user->getLatestCoverForuser($u['id']);
+					$fullname = $u['fullname'];
+					$hash = $u['hash'];
+					$rows = $interest->getInterestNameForUser($u['id'], 2);
+					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
+					$user_id = $u['id'];
+					$result_array = array();
+		
+					$interest_list = '';
+					if($rows !== false){
+						$count = 1;
+						foreach($rows as $row){
+							if($count == sizeof($rows) -1 ){
+								$interest_list .= $row['name'].' and ';
+							}else if($count < sizeof($rows)){
+								$interest_list .= $row['name'].', ';
+							}else{
+								$interest_list .= $row['name'];
 							}
+							$count++;
 						}
-						else{
-						 	$interest_name = $interest->getInterestNameByInterestId($interest_id);
-						}
-						 ob_start();
-						include(TEMPLATE_PATH_CHILD.'friend-content-inner-wrapper-block.phtml');
-						$friend_block= ob_get_clean();
-						return $friend_block;
 					}
+					$interest_list = trim($interest_list,', ');
+			
+					include_once 'Education.php';
+					$educ = new Education();
+					$education = $educ->getEducationByUserId($u['id']);
+					ob_start();
+					include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
+					$user_profile= ob_get_clean();
+					ob_start();
+					include(TEMPLATE_PATH_CHILD.'friend_profile_wrapper.phtml');
+					$content .= ob_get_clean();
 				}
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'friend-content-inner-wrapper-block.phtml');
+				$friend_block= ob_get_clean();
+				return $friend_block;
 			}
 			return false;
 		}
@@ -383,6 +381,26 @@
 			return $list;
 		}
 		
+			
+		public function getUserFriendBlockByFriendUrl($url){
+			// /user/kesong.xie/friends/tennis
+			$segments = explode('/', trim($url,'/'));
+			if(sizeof($segments) == 4 && $segments[0] == 'user' && $segments[2] == 'friends'){
+				include_once 'Interest.php';
+				$interest = new Interest();
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				$user_id = $user->getUserIdByAccessUrl($segments[1]);
+				if($user_id !== false){
+					$interest_id = $interest->getInterestIdByNameForUser($segments[3], $user_id);
+					if($interest_id !== false){
+						return $this->getUserFriendBlockByInterestId($interest_id);
+					}
+				}
+			}
+			return false;
+			
+		}	
 			
 		
 	}

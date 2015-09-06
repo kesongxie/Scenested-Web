@@ -108,8 +108,8 @@
  						ob_start();
  						include(TEMPLATE_PATH_CHILD.'search_people_profile_wrapper.phtml');
  						$search_for_name_block .= ob_get_clean();
- 						return $search_for_name_block;
 				}
+				return $search_for_name_block;
 				
 			}else{
 				$search_for = $this->search_keyword;

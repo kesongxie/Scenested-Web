@@ -48,7 +48,7 @@
 				<?php  if($interest['user_id'] == $_SESSION['id']): ?>
 						<div class="in_con_w_opt_it edit_interest">Edit</div>
 				<?php  endif; ?>	
-						<div class="in_con_w_opt_it">Friends</div>
+						<a href="<?php  echo $url_to_friend; ?>" class="dummy-lk"><div class="in_con_w_opt_it">Friends</div></a>
 				<?php  if($interest['user_id'] == $_SESSION['id']): ?>
 						<div class="in_con_w_opt_it remove_interest">Remove This Interest</div>
 				<?php  endif; ?>

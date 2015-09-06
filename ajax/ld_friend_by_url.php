@@ -2,9 +2,11 @@
 	include_once '../php_inc/core.inc.php';
 	include_once PHP_INC_MODEL.'User_In_interest.php';
 	
-	if(isset($_POST['label_key']) && !empty($_POST['label_key'])){
+	if(isset($_POST['url']) && !empty(trim($_POST['url']))){
 		$in = new User_In_interest();
-		$fetch_friend_block = $in->getUserFriendBlockByInterestId($_POST['label_key']);
+		//  /user/kesong.xie/friends/tennis
+		
+		$fetch_friend_block = $in->getUserFriendBlockByFriendUrl($_POST['url']);
 	 	if($fetch_friend_block !== false){
 	 		echo $fetch_friend_block;
 	 	}else{
