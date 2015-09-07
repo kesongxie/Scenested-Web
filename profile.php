@@ -13,6 +13,7 @@
 		header('location:'.LOGIN_PAGE);
 	}
 	
+
 	
 	$request_info = $user->requestUserPageValid($_SERVER['REQUEST_URI']);
 

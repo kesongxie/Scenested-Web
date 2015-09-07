@@ -34,37 +34,6 @@ function renderVisibleScope(desc,src){
 }
 
 
-function deleteInterest(sender){
-	var key = sender.parents('.interest-content-inner-wrapper').attr('data-key');
-	$.ajax({
-		url:AJAX_DIR+'deleteInterest.php',
-		method:'post',
-		data: {key:key},
-		success:function(resp){
-			console.log(resp);
-			resetDialog();
-			var inner_wrapper = $('#interest-content-wrapper .interest-content-inner-wrapper[data-key='+key+']');
-			inner_wrapper.css('-webkit-animation',"bounceOutDown 1s").css('animation',"bounceOutDown 1s");
-			var side_label = $('#i-interest-navi .interest-side-label[data-labelfor='+key+']');
-			side_label.css('-webkit-animation',"bounceOutDown 1s").css('animation',"bounceOutDown 1s");
-			setTimeout( function() {
-				inner_wrapper.remove();
-				side_label.remove();
-			}, 500);
-			setTimeout( function() {
-				var labels =  $('#i-interest-navi').find('.interest-side-label');
-				if(labels.length >= 1){
-					var firstInterestLabel = labels.first();
-					loadInterest(firstInterestLabel);
-				}else{
-					$('#interest-content-wrapper').addClass('hdn');
-					$('#add-new-interest-wrapper').removeClass('hdn');
-					$('#add-new-interest-wrapper').find('.cancel-button').addClass('hdn');
-				}
-			}, 600);
-		}	
-	});
-}
 
 
 function loadInterest(thisE){
@@ -102,6 +71,7 @@ function loadInterest(thisE){
 		thisE.css('-webkit-animation',"").css('animation',"");
 	},200);
 }
+
 
 	
 
@@ -456,79 +426,7 @@ $(document).ready(function(){
 	}
 	},'.deactive-navi');
 	
-	$('#add-new-interest').on({
-		click:function(){
-			var parentDiv = $('#add-new-interest');
-			
-			var loading_wrapper = parentDiv.find('.loading-icon-wrapper');
-			var actionButton = parentDiv.find('.edit-dialog-footer .action-button');
-			
-			
-			var image_label =parentDiv.find('.target-image');
-			
-			//elements
-			var image_file = parentDiv.find('input[type=file]');
-			var name_input =parentDiv.find('input[type=text]');
-			var description_txtarea = parentDiv.find('textarea');
-			var select = parentDiv.find('select'); //experience select
-			
-			//values
-			var name = name_input.val().trim();
-			if(name == ''){
-				presentPopupDialog("Need a Name", "Please add a name for your interest", "Got it", "", null, null );
-				return false;
-			}
-			var description = description_txtarea.val();
-			var experience = $('option:selected', select).attr('data-option');
-			
-			var data=new FormData();
-			data.append('image-label',$(image_file)[0].files[0]);
-			data.append('name', name);
-			data.append('description',description);
-			data.append('experience',experience);
-			
-			loading_wrapper.show();
-			actionButton.text("Loading...");
-			$.ajax({
-				url:AJAX_DIR+'add_interest.php',
-				type:'POST',
-				processData: false,
-				contentType: false,
-				data:data,
-				success:function(resp){
-					loading_wrapper.hide();
-					actionButton.text("Add Interest");
-					if(resp == '1'){
-						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
-					}else if(resp == '2'){
-						presentPopupDialog("Need a Name", "Please add a name for your interest", "Got it", "", null, null );
-					}else if(resp == '3'){
-						presentPopupDialog("Interest Existed",'The interest <span class="plain-lk pointer" style="color:#062AA3">'+ name + '</span> has already existed', "Got it", "", null, null );
-					}else{	
-						var add_interest_wrapper = $('#add-new-interest-wrapper');
-						add_interest_wrapper.css('-webkit-animation',"zoomOut 0.5s").css('animation',"zoomOut 0.5s").addClass('hdn');
-						$('.interest-content-inner-wrapper').addClass('hdn');
-						var mid_content = $($.parseHTML(resp)).filter('#node-mid-content');								
-						var side_content = $($.parseHTML(resp)).filter('#node-side-content');			
-						$('#interest-content-wrapper').append(mid_content.html()).removeClass('hdn');
-						side_content.children('.interest-side-label').css('-webkit-animation',' bounceInUp 1s');
-						$('#i-interest-navi').append(side_content.html());
-
-						setVisibleContentWithParent(mid_content.find('.interest-content-inner-wrapper'),'Read more');
-						//reset elements
-						parentDiv.find('input, textarea, select').val('');
-						parentDiv.find('.camera-center').show();
-						image_label.attr('src','').addClass('hdn');
-						
-						setTimeout(function(){
-							add_interest_wrapper.css('-webkit-animation',"").css('animation',"");
-						},200);
-					}
-				}
-			});
-		}
 	
-	},'#add-interest');
 	
 	$('body').on({
 		click:function(){
@@ -571,6 +469,9 @@ $(document).ready(function(){
 	
 	$('#i-interest-navi').on({
 		click:function(){
+			var url = $(this).attr('data-href');
+			var key = $(this).attr('data-labelfor');
+			history.pushState({request_url:url, key: key}, null ,url);
 			loadInterest($(this));
 		}
 	},'.interest-side-label');
@@ -601,12 +502,6 @@ $(document).ready(function(){
 	},'.interest-profile .edit_interest');
 	
 	
-	$('body').on({
-		click:function(){
-			presentPopupDialog("Delete Interest",'Are you sure to delete this interest?<div style="color:#c4140e;font-size:13px;">*Note, all the interest posts and friends and other relavant data in this interest will lost, and the removal can not be recovered</div>', "Cancel", "Delete", deleteInterest, $(this) );
-		}
-	
-	},'.interest-profile .remove_interest');
 	
 	
 	

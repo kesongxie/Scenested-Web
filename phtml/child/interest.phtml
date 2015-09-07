@@ -1,5 +1,4 @@
-<!---interest page-->
-<?php if($page_own): //allow editing ?>
+<?php if($page_own): ?>
 	<div id="add-new-interest-wrapper" class="inline-blk <?php echo (($request_user_page_has_interest)?" hdn":"") ?>" style="width:80%">
 		<?php include_once 'add_new_interest_block.phtml'; ?>
 	</div>
@@ -17,8 +16,11 @@
 	
 	<?php if($user_interests !== false): ?>
 	<?php $count = 0; ?>
-	<?php foreach($user_interests as $user_interest): //start display navi interests label ?>
-			<div class="interest-side-label interest-sider-navi pointer" data-labelfor="<?php echo $user_interest['id'];?>"  title="<?php echo htmlentities($user_interest['name']);?>"><div class="vertical-center"><img src="<?php echo $user_interest['picture_url']; ?>"><div class="inline-blk txt_ofl<?php echo (++$count == 1)?' red-act':''; ?>" style="width:95px;margin-top:3px;font-size:13px;"><?php echo htmlentities($user_interest['name']);?></div></div></div>	
+	<?php foreach($user_interests as $user_interest): ?>
+			<?php $count++; ?>
+			<div class="interest-side-label interest-sider-navi pointer<?php echo ($active_interest_id == $user_interest['id'] ||  ($count == 1 && !isset($_GET['a'])))?' active':'' ?>" data-labelfor="<?php echo $user_interest['id'];?>" data-href="<?php echo $user_interest['data_href']; ?>"  title="<?php echo htmlentities($user_interest['name']);?>">
+				<div class="vertical-center"><img src="<?php echo $user_interest['picture_url']; ?>"><div class="inline-blk txt_ofl<?php echo ($active_interest_id == $user_interest['id']  || ($count == 1 && !isset($_GET['a'])) ) ?' red-act':''; ?>" style="width:95px;margin-top:3px;font-size:13px;"><?php echo htmlentities($user_interest['name']);?></div></div>
+			</div>	
  	<?php  endforeach;  //end display side ?>
 	<?php endif ?>
 </div>

@@ -17,6 +17,6 @@
 	}
 	
 	$request_user_page_has_interest = ($content !== false)?true:false;
-	$user_interests =$interest->getUserInterestsLabel($request_user_page_id);
+	$user_interests =$interest->getUserInterestsLabel($request_user_page_id, 'friends');
 	require_once TEMPLATE_PATH_CHILD.'friend.phtml';
 ?>

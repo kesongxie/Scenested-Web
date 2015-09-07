@@ -11,7 +11,7 @@
 		
 		
 		public function renderFavorCommentForNotificationBlock($row_id){
-			$column_array = array('target_id','user_id','sent_time');
+			$column_array = array('target_id','user_id','sent_time', 'hash');
 			$result = $this->getMultipleColumnsById($column_array, $row_id);
 			if($result !== false){
 				include_once 'User_Profile_Picture.php';
@@ -23,7 +23,7 @@
 				$time = convertDateTimeToAgo($result['sent_time'], false);	
 				$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($result['user_id']);
 				$unique_iden = $user->getUniqueIdenForUser($result['user_id']);
-				
+				$hash = $result['hash'];
 				include_once 'Comment.php';
 				$cmt  = new Comment();
 				$comment = $cmt->getCommentTextByCommentId($result['target_id']);

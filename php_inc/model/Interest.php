@@ -84,7 +84,7 @@
 					$stmt->close();
 					if($with_return_render){
 						$main_content = $this->initContentForInterest($user_id,false); //main-block
-						$side_content = $this->getInterestLabelByInterestId($interest_id);
+						$side_content = $this->getInterestLabelByInterestId($interest_id, true, 'interests');
 						ob_start();
 						include(TEMPLATE_PATH_CHILD.'new_interest.phtml');
 						$content = ob_get_clean();
@@ -225,7 +225,7 @@
 			return false;
 		}
 		
-		public function getUserInterestsLabel($user_id){
+		public function getUserInterestsLabel($user_id, $session = false){
 			$stmt = $this->connection->prepare("
 			SELECT interest.name, interest.id, user_interest_label_image.picture_url
 			FROM interest 
@@ -253,7 +253,11 @@
 								$url = DEFAULT_INTEREST_LABEL_IMAGE;
 							}
 							$access_url = $user->getUserAccessUrl($user_id);
-							$r['data_href'] = USER_PROFILE_ROOT.$access_url.'/friends/'.strtolower($r['name']);
+							if($session !== false){
+								$r['data_href'] = USER_PROFILE_ROOT.$access_url.'/'.$session.'/'.strtolower($r['name']);
+							}else{
+								$r['data_href'] = 'null';
+							}
 							$r['picture_url'] = $url;
 						}
 						$stmt->close();
@@ -266,14 +270,29 @@
 		}
 		
 		
-		public function getInterestLabelByInterestId($interest_id){
+		public function getInterestLabelByInterestId($interest_id, $set_to_active = false, $session){
 			$label_image = new User_Interest_Label_Image();
 			$url = $label_image->getLabelImageUrlByInterestId($interest_id);
 			$name = $this->getInterestNameByInterestId($interest_id);
-			ob_start();
-			include(TEMPLATE_PATH_CHILD.'inetrest_label.phtml');
-			$content = ob_get_clean();
-			return $content;
+			
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			$user_id = $this->getInterestUserIdByInterestId($interest_id);
+			if($user_id !== false){
+				$access_url = $user->getUserAccessUrl($user_id);
+				if($session !== false){
+					$data_href = USER_PROFILE_ROOT.$access_url.'/'.$session.'/'.strtolower($name);
+				}else{
+					$data_href = 'null';
+				}
+			
+			
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'inetrest_label.phtml');
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
 		}
 		
 		
@@ -384,16 +403,6 @@
 			echo $this->connection->error;
 			return false;
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		public function returnMatchedUserForMineInterest($limit = -1, $exclue_existed_friend = false){
 			$list = '';
@@ -780,6 +789,10 @@
 			return false;
 		}
 		
+		
+		
+	
+			
 		
 		
 	}

@@ -859,7 +859,12 @@ $(document).ready(function(){
 					freshDiv.prepend(resp);
 					freshDiv.find('.empty-feed').remove();
 					noti.text('').addClass('hdn');
+					freshDiv.find('.popover-child').each(function(){
+						 notification_center.find('.body.previous').find('.popover-child[data-key='+$(this).attr('data-key')+']').remove();
+					});
 					$.post(AJAX_DIR+"update_notification_queue.php");
+					
+					
 				});
 			}
 			notification_center.toggleClass('hdn');

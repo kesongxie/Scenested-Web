@@ -306,19 +306,26 @@ div.ui-datepicker{
 }
 .in_con_opt_w {
 	position: absolute;
-	text-align:left;
-	background: #fff;
-	box-shadow: -1px -1px 17px #B6B6B6;
-	padding: 5px;
-	border-radius: 3px;
-	width: 60%;
-	min-width:160px;
-	z-index: 99;
-	overflow:visible !important;
+    text-align: left;
+    background: #fff;
+    box-shadow: -1px -1px 17px #B6B6B6;
+    padding: 0px;
+    border-radius: 4px;
+    width: 60%;
+    min-width: 160px;
+    z-index: 99;
+    overflow: visible !important;
+    padding: 6px 0px 10px 0px;
+}
+.in_con_opt_w .arrow-up{
+	position: absolute;
+    top: -11px;
+    right: 6px;
+    border-bottom: 10px solid #FFFFFF;
 }
 
 .in_con_opt_w .in_con_w_opt_it {
-	padding: 10px;
+	padding: 12px;
 	cursor: default;
 	border-bottom: 1px solid #f0f0f0;
 }
@@ -1313,7 +1320,7 @@ div.ui-datepicker{
 }
 
 .media-asset .upload-info{
-	padding:16px 6px 16px 6px;
+	padding:16px 10px 16px 11px;
 	border-bottom:1px solid #f0f0f0;
 	font-size:11px;
 }
@@ -1402,7 +1409,7 @@ img.gallery-navi{
 #chat-box .in_con_opt_w{
 	top:26px;
 	left: -90px;
-	width:174px;
+	width:184px;
 	font-size:13px;
 	font-weight:normal;
 	z-index:99;
@@ -1411,7 +1418,7 @@ img.gallery-navi{
 #chat-box .chat-header .arrow-up{
  	position:absolute;
  	top:-13px;
- 	left:91px;
+ 	left:96px;
  	border-bottom:10px solid #FFFFFF;
 }
 

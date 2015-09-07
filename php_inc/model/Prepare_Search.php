@@ -260,7 +260,7 @@
 				$count = 0;
 				foreach($rows as $row){
 					$feed_id_list .= $row['activity_id'].',';
-					$content = $interest_activity->getEventInterestActivityBlockByActivityId($row['activity_id']);
+					$content = $interest_activity->getEventInterestActivityBlockByActivityId($row['activity_id'], true);
 					if($count++ % 2 == 0){
 						$left_content.= $content;
 					}else{
@@ -298,7 +298,7 @@
 				foreach($rows as $row){
 					$content = '';
 					$feed_id_list .= $row['activity_id'].',';
-					$content = $interest_activity->getMomentInterestActivityBlockByActivityId($row['activity_id']);
+					$content = $interest_activity->getMomentInterestActivityBlockByActivityId($row['activity_id'], true);
 					if($count++ % 2 == 0){
 						$left_content.= $content;
 					}else{
@@ -369,7 +369,7 @@
 				$right_content = "";
 				$count = 0;
 				foreach($rows as $row){
-					$content = $interest_activity->getEventInterestActivityBlockByActivityId($row['activity_id']);
+					$content = $interest_activity->getEventInterestActivityBlockByActivityId($row['activity_id'], true);
 					if($count++ % 2 == 0){
 						$left_content.= $content;
 					}else{
@@ -445,7 +445,7 @@
 				$right_content = "";
 				$count = 0;
 				foreach($rows as $row){
-					$content = $interest_activity->getMomentInterestActivityBlockByActivityId($row['activity_id']);
+					$content = $interest_activity->getMomentInterestActivityBlockByActivityId($row['activity_id'], true);
 					if($count++ % 2 == 0){
 						$left_content.= $content;
 					}else{

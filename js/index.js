@@ -22,7 +22,6 @@ function loadIndexRecentPreview(){
 			$('#index-post-wrapper').html(resp);
 		}	
 	});
-
 }
 
 

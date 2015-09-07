@@ -16,9 +16,14 @@
 	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/jquery-ui.js"></script>
 	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/core.js"></script>
 	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/profile.js"></script>
+
 	<?php if(isset($_GET['s']) && $_GET['s']=='friends'): ?>	
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/child_js/profile_friend.js"></script>
+	<?php else: ?>	
+		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/child_js/profile_interest.js"></script>
 	<?php endif;?>
+
+	
 	<!--[if lt IE 9]>
 	<script src="dist/html5shiv.js"></script>
 	<![endif]-->

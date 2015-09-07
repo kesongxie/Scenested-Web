@@ -348,6 +348,11 @@
 				$friend_block= ob_get_clean();
 				return $friend_block;
 			}
+			
+			
+			
+			
+			
 			return false;
 		}
 		
@@ -383,7 +388,6 @@
 		
 			
 		public function getUserFriendBlockByFriendUrl($url){
-			// /user/kesong.xie/friends/tennis
 			$segments = explode('/', trim($url,'/'));
 			if(sizeof($segments) == 4 && $segments[0] == 'user' && $segments[2] == 'friends'){
 				include_once 'Interest.php';

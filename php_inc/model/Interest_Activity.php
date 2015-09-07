@@ -235,7 +235,9 @@
 					include_once MODEL_PATH.'Interest.php';
 					$interest = new Interest();
 					$interest_name = $interest->getInterestNameByInterestId($interest_activity['interest_id']);
-					$post_time = $interest_name.' - '.convertDateTimeToAgo($interest_activity['post_time'], false);	
+					$access_url = $user->getUserAccessUrl($interest_activity['user_id']);
+					$interest_access_url = USER_PROFILE_ROOT.$access_url.'/interests/'.strtolower($interest_name);
+					$post_time = convertDateTimeToAgo($interest_activity['post_time'], false);	
 				}else{
 					$post_time = convertDateTimeToAgo($interest_activity['post_time'], false);	
 				}
@@ -371,7 +373,9 @@
 						include_once MODEL_PATH.'Interest.php';
 						$interest = new Interest();
 						$interest_name = $interest->getInterestNameByInterestId($interest_activity['interest_id']);
-						$post_time = $interest_name.' - '.convertDateTimeToAgo($interest_activity['post_time'], false);	
+						$access_url = $user->getUserAccessUrl($interest_activity['user_id']);
+						$interest_access_url = USER_PROFILE_ROOT.$access_url.'/interests/'.strtolower($interest_name);
+						$post_time = convertDateTimeToAgo($interest_activity['post_time'], false);
 					}else{
 						$post_time = convertDateTimeToAgo($interest_activity['post_time'], false);	
 					}
