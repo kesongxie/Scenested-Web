@@ -1572,13 +1572,13 @@ $(document).ready(function(){
 	
 	
 	
-	$('body').on({
-		click:function(){
-			$(this).find('.popover').addClass('hdn');
-			return false;
-		}
-	
-	},'.hover-user-profile');
+	// $('body').on({
+// 		click:function(){
+// 			$(this).find('.popover').addClass('hdn');
+// 			return false;
+// 		}
+// 	
+// 	},'.hover-user-profile');
 	
 	$('body').on({
 		click:function(){
