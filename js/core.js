@@ -2541,6 +2541,19 @@ $(function($) {
 	},'.undo-favor-reply');
 	
 	
+	// $('body').on({
+// 		click:function(){
+// 			var key = $(this).parents('.evt-block').attr('data-key');
+// 			$.ajax({
+// 			
+// 			
+// 			
+// 			});
+// 		}
+// 	},'.invite-friend');
+	
+	
+	
 	
 });
 

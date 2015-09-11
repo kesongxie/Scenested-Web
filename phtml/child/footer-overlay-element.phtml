@@ -25,48 +25,97 @@
 
 
 
-<div id="dialog-popup-overlay" class="overlay ol hdn"></div>	
+<div id="dialog-popup-overlay" class="overlay ol"></div>	
 <div id="popup-dialog-wrapper" class="vertical-center dl hdn"style="position:fixed;width:100%;margin-top:-40px;z-index:10001;text-align:center;"></div>
 
 <div class="hover-avator-wrapper hdn" style="z-index:9999;position:absolute">
 </div>
 
-<div class="hdn" style="z-index:9999;position:absolute; top:100px;background:#fff;width:70%;height:500px;left:150px;border-radius:6px;overflow:hidden;">
-	<div  style="width:100%;background:#fff;height:10%;border-bottom:1px solid #f0f0f0;box-shadow:1px 1px 10px #eaeaea;">
-		<div class="vertical-center" style="font-size:17px;margin-left:15px;color:#A01212">Invite People</div>
-	</div>
-	<div style="height:90%;width:100%;">
-	<div class="inline-blk" style="height:100%;width:24%;background:#fff;height:100%;border-right:1px solid #f0f0f0;">
-		<div style=margin-left:6px;"">
-			<div class="interest-sider-navi pointer active" data-labelfor="-1" style="color: #797979; font-weight: bold;padding:20px 0PX 6px 10px;"><span class="plain-lk">All Friends</span></div>
-	
-			<div class="inner-w" style="position: relative; overflow: hidden; width: 100%;">
-				<!--starts int-group-->
-				<div class="sub" style="margin-top: 6px;">
-					<div style="max-height:130px;overflow:scroll">
-						<div class="in_con_w_opt_it" style="padding:6px 10px;cursor:default;" data-key="55">
-							<img class="label-image" src="http://localhost:8888/media_u/06f1e47fbdb03e48203ebfba/2f4e65379762238df898abfd/thumb_2cdfa3247cd0bfb27212a9e6.jpg">
-							<div class="inline-blk txt_ofl red-act" style="width:95px;margin-top:3px;font-size:13px;">Tennis</div>
-						</div>
-
-						<div class="in_con_w_opt_it" style="padding:6px 10px;cursor:default;" data-key="58">
-							<img class="label-image" src="http://localhost:8888/media_u/06f1e47fbdb03e48203ebfba/8e7d76f8cbdca960ec12987a/thumb_f8c23cc82ee6c13fa3b23dad.png">
-							<div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;">Programming</div>
-						</div>
-
-						<div class="in_con_w_opt_it" style="padding:6px 10px;cursor:default;" data-key="67">
-							<img class="label-image" src="http://localhost:8888/media_u/06f1e47fbdb03e48203ebfba/15d2474cad6dd5764d810578/thumb_489903e32fe4ad83b5c6b5c5.jpg">
-							<div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;">Guitar</div>
-						</div>
-					</div> <!--ends max-height -->
-				</div> 
-			</div>
+<div id="evt-invitation-wrapper" class="vertical-center">
+		<div class="inner inline-blk">
+		<div  class="header">
+			<div class="title vertical-center inline-blk">Invite People</div>
 		</div>
-	</div>
+		<div class="body" style="font-size:0px;">
+			<div class="left-content inline-blk">
+				<div style="margin-left:6px;">
+				<div class="all-friend pointer" data-labelfor="-1"><span class="plain-lk">All Friends</span></div>
 	
-	<div class="inline-blk" style="height:100%;width:71%;">
-		<!-- <div class="header" style="width:100%;height:20%;background:#EAEAEA" ></div> -->
+				<div class="inner-w" style="position: relative; overflow: hidden; width: 100%;">
+					<!--starts int-group-->
+					<div class="sub" style="margin-top: 6px;">
+						<div class="in_con_w_opt_it" style="padding:8px 10px;cursor:default;" data-key="55">
+							<img class="label-image" src="http://localhost:8888/media_u/06f1e47fbdb03e48203ebfba/2f4e65379762238df898abfd/thumb_2cdfa3247cd0bfb27212a9e6.jpg">
+							<div class="inline-blk txt_ofl red-act" style="width:95px;margin-top:4px;font-size:13px;">Tennis</div>
+						</div>
+
+						<div class="in_con_w_opt_it" style="padding:8px 10px;cursor:default;" data-key="58">
+							<img class="label-image" src="http://localhost:8888/media_u/06f1e47fbdb03e48203ebfba/8e7d76f8cbdca960ec12987a/thumb_f8c23cc82ee6c13fa3b23dad.png">
+							<div class="inline-blk txt_ofl" style="width:95px;margin-top:4px;font-size:13px;">Programming</div>
+						</div>
+
+						<div class="in_con_w_opt_it" style="padding:8px 10px;cursor:default;" data-key="67">
+							<img class="label-image" src="http://localhost:8888/media_u/06f1e47fbdb03e48203ebfba/15d2474cad6dd5764d810578/thumb_489903e32fe4ad83b5c6b5c5.jpg">
+							<div class="inline-blk txt_ofl" style="width:95px;margin-top:4px;font-size:13px;">Guitar</div>
+						</div>
+					
+					</div> 
+				</div>
+			</div>
+			
+				<div id="invitation-search-wrapepr">
+					<div class="vertical-center inline-blk" style="margin-left:12px;">
+					<img src="<?php echo IMGDIR; ?>search_icon.png" title="search" style="z-index:1;height:14px; width:14px;cursor:pointer">
+				</div>
+				<div class="vertical-center inline-blk" style="margin:1px 0px 0px 6px;"><input type="text" style="border:0px;width: 121%;" placeholder="Search friends or email">
+				</div>
+			</div>
+			
+			</div>
+			<div class="right-content inline-blk">
+				<div class="contact">
+					<div style="margin:14px;">
+						<div class="list-item inline-blk" data-key="c4a8afa33c5h2249106dd107" style="height:60px;">
+							<a href="http://localhost:8888/user/kesong.xie"><img src="http://localhost:8888/media_u/06f1e47fbdb03e48203ebfba/d326325e0d36d498fe8e2e38/thumb_c6a09106ddd63245eafc86e9.jpg" style="float:left;margin-right:10px;width:60px;height:60px;border-radius:0px;"></a>
+							<div class="inline-blk vertical-center txt_ofl" style="font-size:13px;">Kesong Xie</div>
+						</div>
+				
+						<div class="list-item inline-blk" data-key="c4a8afa33c5h2249106dd107" style="height:60px;">
+							<a href="http://localhost:8888/user/kesong.xie"><img src="http://localhost:8888/media_u/597394f9fe626bbb1f13c37f/0d6f90406fc0cec43ad047ed/thumb_3409a8d2bf0f0a7a681d5071.jpg" style="float:left;margin-right:10px;width:60px;height:60px;border-radius:0px;"></a>
+							<div class="inline-blk vertical-center txt_ofl" style="font-size:13px;">Nicholas Tse</div>
+						</div>
+				
+						<div class="list-item inline-blk" data-key="c4a8afa33c5h2249106dd107" style="height:60px;">
+							<a href="http://localhost:8888/user/kesong.xie"><img src="http://localhost:8888/media_u/0b6b58a7d212e078ed4662cb/406867654e08b646857e431d/thumb_be08ebe9354ca99c168b0976.jpg" style="float:left;margin-right:10px;width:60px;height:60px;border-radius:0px;"></a>
+							<div class="inline-blk vertical-center txt_ofl" style="font-size:13px;">Meghan Maccann</div>
+						</div>
+					</div>
+				</div>
+			
+			<div class="option-wrapper">
+				<!-- 
+<div  class="inline-blk" style="float:left;margin-left:10px; margin-top: 10px;">
+				<div class="inline-blk" style="position:relative">
+					<img src="http://localhost:8888/media_u/0b6b58a7d212e078ed4662cb/406867654e08b646857e431d/thumb_be08ebe9354ca99c168b0976.jpg" style="width:22px;height:22px;border-radius:4px;margin-right:-13px;">
+					<img src="http://localhost:8888/media_u/597394f9fe626bbb1f13c37f/0d6f90406fc0cec43ad047ed/thumb_3409a8d2bf0f0a7a681d5071.jpg" style="width:26px;height:26px;border-radius:4px;margin-right:-16px;">
+					<img src="http://localhost:8888/media_u/06f1e47fbdb03e48203ebfba/d326325e0d36d498fe8e2e38/thumb_c6a09106ddd63245eafc86e9.jpg" style="width:30px;height:30px;border-radius:4px;">
+				</div>
+				<div class="inline-blk" style="margin-top: 10px;  margin-right: 2px;">3 Selected</div>
+				</div>
+			
+ -->
+
+				<div class="vertical-center" style="text-align:right;">
+					<div class="inline-blk silver-button cancel-button popup-button dismiss" style="margin-right:6px">Cancel</div>
+					<div class="inline-blk action-button popup-button" style="margin:0px 10px 0px 0px;">Invite</div>
+				<div>
+			</div>
 	</div>
 	</div>
-	
 </div>
+		</div>
+		</div>
+</div>
+
+
+

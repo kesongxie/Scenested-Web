@@ -1451,3 +1451,90 @@ img.gallery-navi{
 .post-wrapper .popover-dialog-wrapper .popover-overlay{
 	opacity:1.0 !important;
 }
+
+/*	starts evt-invitation-wrapper template*/
+
+#evt-invitation-wrapper{
+	z-index:9999;
+	position:fixed;
+	width:100%;
+	height:500px;
+	text-align:center;
+}
+
+#evt-invitation-wrapper .inner{
+	width:70%;
+	height:100%;
+	background:#fff;
+	text-align:left;
+	border-radius:6px;
+	overflow:hidden;
+	min-width:800px;
+}
+#evt-invitation-wrapper .inner .header{
+	width:100%;
+	background:#fff;
+	height:10%;
+	border-bottom:1px solid #f0f0f0;
+	box-shadow:1px 1px 10px #eaeaea;
+}
+
+#evt-invitation-wrapper .inner .header .title{
+	font-size:17px;
+	margin-left:15px;
+	color:#A01212;
+}
+
+#evt-invitation-wrapper .inner .body{
+	height:90%;
+	width:100%;
+}
+
+#evt-invitation-wrapper .inner .body .left-content{
+	height:100%;
+	width:24%;
+	background:#fff;
+	height:100%;
+	border-right:1px solid #f0f0f0;
+	position:relative;
+}
+
+#evt-invitation-wrapper .inner .body .left-content .all-friend{
+	color: #797979; 
+	font-weight: bold;
+	padding:20px 0PX 6px 10px;
+	font-size:14px;
+}
+
+
+#evt-invitation-wrapper .inner .body .left-content #invitation-search-wrapepr{
+	position:absolute;
+	bottom:0px;
+	background:#fff;
+	height:40px;
+	width:100%;
+	border-top:1px solid #f0f0f0;
+}
+
+#evt-invitation-wrapper .inner .body .right-content{
+	height:100%;
+	width:75.8%;
+}
+
+#evt-invitation-wrapper .inner .body .right-content .contact{
+	overflow:scroll;
+	height:88%;
+	width:100%;
+}
+
+#evt-invitation-wrapper .inner .body .right-content .option-wrapper{
+	height: 12%;
+    width: 100%;
+    border-top: 1px solid #f0f0f0;
+}
+
+#evt-invitation-wrapper .inner .body .right-content .option-wrapper .popup-button{
+	padding:6px 10px;
+}
+
+/*	ends evt-invitation-wrapper template */
