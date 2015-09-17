@@ -36,7 +36,6 @@
 				}
 			}
 			return false;
-			
 		}
 		
 		
@@ -101,8 +100,6 @@
 				$right_content .= $suggest_content['suggest_right_content'];
 			}
 
-			
-			
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'index_new_feed.phtml');
 			$content = ob_get_clean();
@@ -1096,6 +1093,10 @@
 		
 		public function getPostUserByActivityId($activity_id){
 			return $this->getColumnById('user_id', $activity_id);
+		}
+		
+		public function getPostUserByActivityKey($activity_key){
+			return $this->getColumnBySelector('user_id', 'hash', $activity_key);
 		}
 		
 		public function getEventPostUserByActivityId($activity_id){

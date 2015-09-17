@@ -1,12 +1,14 @@
 <?php
 	include_once 'core_table.php';
-
-
 	
 	class Event extends Core_Table{
 		private  $table_name = "event";
 		private  $activity_id = false;
 		private $preview_block_path = TEMPLATE_PATH_CHILD."evt_preview_block.phtml";
+		private $event_invitation_path = TEMPLATE_PATH_CHILD."event_invitation.phtml";
+		private $invitation_contact_path = TEMPLATE_PATH_CHILD."invitation_contact.phtml";
+		private $invitation_contact_group_path = TEMPLATE_PATH_CHILD."invitation_contact_group.phtml";
+
 		public $event_id;
 		public $event_photo = null;
 		
@@ -241,6 +243,96 @@
 		public function isEvtPhotoUploadableByUserForEvent($user_id, $event_id){
 			return  $this->hasUserJoinedEvent($user_id, $event_id) || ($this->getPostUserByEventId($event_id) == $user_id);
 		}
+		
+		public function loadEventInvitationDialog($key){
+			include_once 'Interest.php';
+			$interest = new Interest();
+			include_once 'Interest_Activity.php';
+			$activity = new Interest_Activity();
+			$user_id = $activity->getPostUserByActivityKey($key);
+			if($user_id !== false){
+				$labels = $interest->getUserInterestsLabel($user_id);
+				include_once 'User_In_Interest.php';
+				$in = new User_In_Interest();
+				$all_friend_plain_list = $in->getFriendPlainListForUser($user_id);
+				if($all_friend_plain_list !== false){
+					$all_friend_block = $this->getAllFriendContactByPlainList($all_friend_plain_list);
+				}
+				ob_start();
+				include($this->event_invitation_path);
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
+		}
+		
+		public function getAllFriendContactByPlainList($all_friend_plain_list){
+			$contact = '';
+			if($all_friend_plain_list !== false){
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				$list = explode(',',$all_friend_plain_list);
+				foreach($list as $u){
+					$user_id = trim($u,"'");
+					$fullname = $user->getUserFullnameByUserIden($user_id);
+					$profile_pic = $user->getLatestProfilePictureForuser($user_id);
+					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($user_id);
+					$unique_iden = $user->getUniqueIdenForUser($user_id);
+					ob_start();
+					include($this->invitation_contact_path);
+					$content = ob_get_clean();
+					$contact .= $content;
+				}
+			}
+			return $contact;
+			
+		}
+		
+		public function getUserFriendBlockByInterestId($interest_id,$limit_num = -1, $offset = 0 ){
+			include_once 'User_In_Interest.php';
+			$in = new User_In_Interest();
+			$user_found = $in->getUserInInterestByInterestId($interest_id, $limit_num, $offset);
+			return $this->renderInvitationContactBlockByResource($user_found);	
+		}
+		
+		
+		public function getAllUserFriendBlock(){
+			include_once 'User_In_Interest.php';
+			$in = new User_In_Interest();
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			$user_found = $in->getAllFriendsInUsersInterestByUserId($_SESSION['id']);
+			return $this->renderInvitationContactBlockByResource($user_found);	
+		}
+		
+		public function renderInvitationContactBlockByResource($user_found){
+			$contact = false;		
+			if($user_found !== false){
+				$contact = '';
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				foreach($user_found as $u){
+					$fullname = $u['fullname'];
+					$profile_pic = $user->getLatestProfilePictureForuser($u['id']);
+					$user_page_redirect =  $u['user_access_url'];
+					$unique_iden = $u['hash'];
+					ob_start();
+					include($this->invitation_contact_path);
+					$content = ob_get_clean();
+					$contact .= $content;
+				}
+			}
+			
+			ob_start();
+			include($this->invitation_contact_group_path);
+			$content = ob_get_clean();
+			return $content;
+			
+		}
+		
+		
+		
+		
 		
 		
 	}

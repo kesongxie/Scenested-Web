@@ -1,0 +1,56 @@
+<div class="inner inline-blk">
+	<div  class="header">
+		<div class="title vertical-center inline-blk">Invite People</div>
+		<div class="inline-blk vertical-center" style="float:right;margin-right:15px;">
+		<div class="inline-blk" style="font-size:13px;margin:8px 6px 0px 0px;">3 selected</div>
+			<img src="http://localhost:8888/media_u/299363e42aba1f6f3821b086/2a9d35115ad5c08ec9d5c8fd/thumb_02c48d8cb4df8d3bed75ea94.jpg" style="border-radius: 4px; width: 24px; height: 24px; margin-right:2px;">
+			<img src="http://localhost:8888/media_u/48115f24e89820aede4825d6/10059e85d3306094df94bb21/thumb_c403cf558ee807a776c20963.jpg" style="border-radius: 4px; width: 24px; height: 24px; ">
+		</div>
+	</div>
+	<div class="body" style="font-size:0px;">
+		<div class="left-content inline-blk">
+			<div style="margin-left:6px;">
+			<div class="all-friend pointer group-label active" data-key="-1"><span class="plain-lk">All Friends</span></div>
+			<div class="inner-w" style="position: relative; overflow: hidden; width: 100%;">
+				<!--starts int-group-->
+				<div class="sub" style="margin-top: 6px;">
+					<?php if($labels !== false && sizeof($labels) > 0): ?>
+						<?php foreach($labels as $label): ?>
+							<div class="interest-side-label in_con_w_opt_it pointer group-label" style="padding:8px 10px;" data-key="<?php echo $label['id'] ?>" title="<?php echo htmlentities($label['name']) ?>">
+								<img class="label-image" src="<?php echo $label['picture_url'] ?>">
+								<div class="inline-blk txt_ofl" style="width:95px;margin-top:4px;font-size:13px;"><?php echo htmlentities($label['name']) ?></div>
+							</div>
+						<?php endforeach; ?>
+					<?php endif; ?>
+				</div> 
+			</div>
+		</div>
+	
+		<div id="invitation-search-wrapepr">
+				<div class="vertical-center inline-blk" style="margin-left:12px;">
+				<img src="<?php echo IMGDIR; ?>search_icon.png" title="search" style="z-index:1;height:14px; width:14px;cursor:pointer">
+			</div>
+			<div class="vertical-center inline-blk" style="margin:1px 0px 0px 6px;">
+				<input type="text" style="border:0px;width: 121%;" placeholder="Search friends or email">
+			</div>
+		</div>
+	
+		</div>
+		<div class="right-content inline-blk">
+			<div class="contact">
+				<div class="contact-inner" style="margin:14px;">
+					<?php echo $all_friend_block; ?>
+				</div>
+				<div class="suggest-contact-inner hdn" style="margin:14px;"></div>				
+			</div>
+			
+			<div class="option-wrapper">
+				
+				<div class="vertical-center" style="text-align:right;">
+					<div class="inline-blk silver-button cancel-button popup-button dismiss" style="margin-right:6px">Cancel</div>
+					<div class="inline-blk action-button popup-button" style="margin:0px 10px 0px 0px;">Invite</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

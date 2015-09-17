@@ -109,6 +109,8 @@ $(document).ready(function(){
 		click:function(){
 			var url = $(this).attr('data-href');
 			var key = $(this).attr('data-labelfor');
+			$('.interest-sider-navi').removeClass('active');
+			$(this).addClass('active');
 			history.pushState({key: key}, null ,url);
 			loadFriend($(this));
 		}
@@ -118,6 +120,8 @@ $(document).ready(function(){
 		click:function(){
 			var url = $(this).attr('data-href');
 			var key = $(this).attr('data-labelfor');
+			$('.interest-sider-navi').removeClass('active');
+			$(this).addClass('active');
 			history.pushState({key: key}, null ,url);
 			loadAllFriendForRequestProfilePage($(this));
 		}

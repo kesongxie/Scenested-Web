@@ -349,10 +349,6 @@
 				return $friend_block;
 			}
 			
-			
-			
-			
-			
 			return false;
 		}
 		
@@ -387,24 +383,88 @@
 		}
 		
 			
-		public function getUserFriendBlockByFriendUrl($url){
-			$segments = explode('/', trim($url,'/'));
-			if(sizeof($segments) == 4 && $segments[0] == 'user' && $segments[2] == 'friends'){
-				include_once 'Interest.php';
-				$interest = new Interest();
-				include_once 'User_Table.php';
-				$user = new User_Table();
-				$user_id = $user->getUserIdByAccessUrl($segments[1]);
-				if($user_id !== false){
-					$interest_id = $interest->getInterestIdByNameForUser($segments[3], $user_id);
-					if($interest_id !== false){
-						return $this->getUserFriendBlockByInterestId($interest_id);
+	// 	public function getUserFriendBlockByFriendUrl($url){
+// 			$segments = explode('/', trim($url,'/'));
+// 			if(sizeof($segments) == 4 && $segments[0] == 'user' && $segments[2] == 'friends'){
+// 				include_once 'Interest.php';
+// 				$interest = new Interest();
+// 				include_once 'User_Table.php';
+// 				$user = new User_Table();
+// 				$user_id = $user->getUserIdByAccessUrl($segments[1]);
+// 				if($user_id !== false){
+// 					$interest_id = $interest->getInterestIdByNameForUser($segments[3], $user_id);
+// 					if($interest_id !== false){
+// 						return $this->getUserFriendBlockByInterestId($interest_id);
+// 					}
+// 				}
+// 			}
+// 			return false;
+// 		}
+// 		
+		public function returnInvitationSearchForAllFriends($key_word){
+			$stmt = $this->connection->prepare("
+			SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url 
+			FROM user_in_interest 
+			LEFT JOIN user
+			ON user_in_interest.user_in = user.id  WHERE user_in_interest.user_id = ?  && CONCAT(user.firstname,' ',user.lastname) LIKE ? 
+			
+			UNION 
+			
+			SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url 
+			FROM user_in_interest 
+			LEFT JOIN user
+			ON user_in_interest.user_id = user.id  WHERE user_in_interest.user_in = ?  && CONCAT(user.firstname,' ',user.lastname) LIKE ? 
+			
+			");
+			
+			if($stmt){
+				$key_word = '%'.$key_word.'%';
+				$stmt->bind_param('isis',$_SESSION['id'], $key_word, $_SESSION['id'], $key_word);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+		public function returnInvitationSearchByInterestId($key_word, $interest_id){
+			include_once 'Interest.php';
+			$interest = new Interest();
+			$user_id = $interest->getInterestUserIdByInterestId($interest_id);
+			
+			$stmt = $this->connection->prepare("
+			SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+			FROM user_in_interest 
+			LEFT JOIN user
+			ON user_in_interest.user_in = user.id WHERE user_in_interest.interest_id = ? AND user_in_interest.user_id = ? && CONCAT(user.firstname,' ',user.lastname) LIKE ? 
+			");			
+			if($stmt){
+				$key_word = '%'.$key_word.'%';
+				$stmt->bind_param('iis',$interest_id, $user_id, $key_word);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false){
+						$user_found = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $user_found;
 					}
 				}
 			}
 			return false;
+		}
+		
+		
+
+		
+		
 			
-		}	
 			
 		
 	}

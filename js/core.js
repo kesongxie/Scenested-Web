@@ -2214,7 +2214,7 @@ $(document).ready(function(){
  				search_body.html('').addClass('hdn');
  			}
  		}
-	},'#chat-outer-wrapper #search-contact')
+	},'#chat-outer-wrapper #search-contact');
 	
 	
 	$('body').on({
@@ -2541,17 +2541,102 @@ $(function($) {
 	},'.undo-favor-reply');
 	
 	
-	// $('body').on({
-// 		click:function(){
-// 			var key = $(this).parents('.evt-block').attr('data-key');
-// 			$.ajax({
-// 			
-// 			
-// 			
-// 			});
-// 		}
-// 	},'.invite-friend');
+	 $('body').on({
+		click:function(){
+			var key = $(this).parents('.evt-block').attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'load_event_invitation_block.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					$('#dialog-popup-overlay').removeClass('hdn');
+					$('#evt-invitation-wrapper').html(resp).removeClass('hdn');
+				}	
+			});
+		}
+	},'.invite-friend');
 	
+	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var key = thisE.attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'invitation_load_friend.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					if(resp != '1'){
+						$('#evt-invitation-wrapper .group-label').removeClass('active');
+						thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s").addClass('active');;
+						$('#evt-invitation-wrapper .interest-side-label .txt_ofl').removeClass('red-act');
+						thisE.find('.txt_ofl').addClass('red-act');
+						$('#evt-invitation-wrapper .right-content .contact .contact-inner').html(resp);
+						setTimeout(function(){
+							thisE.css('-webkit-animation',"").css('animation',"");
+						},200);	
+					}
+				}	
+			});
+		}
+	},'#evt-invitation-wrapper .interest-side-label');
+	
+	
+	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			$.ajax({
+				url:AJAX_DIR+'invitation_load_all_friend.php',
+				method:'post',
+				success:function(resp){
+					if(resp != '1'){
+						$('#evt-invitation-wrapper .group-label').removeClass('active');
+						thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s").addClass('active');
+						$('#evt-invitation-wrapper .interest-side-label .txt_ofl').removeClass('red-act');
+						$('#evt-invitation-wrapper .right-content .contact .contact-inner').html(resp);
+						setTimeout(function(){
+							thisE.css('-webkit-animation',"").css('animation',"");
+						},200);	
+					}
+				}	
+			});
+		}
+	},'#evt-invitation-wrapper .all-friend');
+	
+	
+	
+	
+	$('body').on({
+		click:function(){
+			$('#evt-invitation-wrapper').addClass('hdn');
+		}
+	},'#evt-invitation-wrapper .dismiss');
+	
+	
+	$('body').on({
+		keyup:function(){
+			var q = $(this).val();
+			var key = $('#evt-invitation-wrapper .group-label.active').attr('data-key');
+			var parentContact = $('#evt-invitation-wrapper .right-content .contact');
+			if(q.trim() != ''){
+				$.ajax({
+					url:AJAX_DIR+'invitation_friend_search.php',
+					method:'post',
+					data:{q:q, key:key},
+					success:function(resp){
+						if(resp != '1'){
+							parentContact.find('.contact-inner').addClass('hdn');
+							parentContact.find('.suggest-contact-inner').html(resp).removeClass('hdn');
+						}
+					}	
+				});
+			}else{
+				parentContact.find('.suggest-contact-inner').html('').addClass('hdn');
+				parentContact.find('.contact-inner').removeClass('hdn');
+			}
+		},
+	},'#evt-invitation-wrapper #invitation-search-wrapepr input');
 	
 	
 	
