@@ -314,7 +314,6 @@
 				foreach($user_found as $u){
 					$fullname = $u['fullname'];
 					$profile_pic = $user->getLatestProfilePictureForuser($u['id']);
-					$user_page_redirect =  $u['user_access_url'];
 					$unique_iden = $u['hash'];
 					ob_start();
 					include($this->invitation_contact_path);

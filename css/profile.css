@@ -31,9 +31,10 @@
 	min-width: 180px;
 	box-shadow: 1px 1px 10px #EAEAEA;
 	z-index: 1;
-	border-radius: 4px 4px 2px 2px;
+	border-radius: 5px;
 	background:#fff;
 	border:1px solid #f0f0f0;
+	overflow:hidden;
 }
 
 #profile-sider-bar-left #avator-wrapper .avator-inner-top{

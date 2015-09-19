@@ -1,17 +1,30 @@
 <div class="inner inline-blk">
 	<div  class="header">
 		<div class="title vertical-center inline-blk">Invite People</div>
-		<div class="inline-blk vertical-center" style="float:right;margin-right:15px;">
-		<div class="inline-blk" style="font-size:13px;margin:8px 6px 0px 0px;">3 selected</div>
-			<img src="http://localhost:8888/media_u/299363e42aba1f6f3821b086/2a9d35115ad5c08ec9d5c8fd/thumb_02c48d8cb4df8d3bed75ea94.jpg" style="border-radius: 4px; width: 24px; height: 24px; margin-right:2px;">
-			<img src="http://localhost:8888/media_u/48115f24e89820aede4825d6/10059e85d3306094df94bb21/thumb_c403cf558ee807a776c20963.jpg" style="border-radius: 4px; width: 24px; height: 24px; ">
+		
+		<div id="selected-bar" class="vertical-center">
+			<div id="selected-icon-wrapper" class="inline-blk"><span id="invitation-selected-num">0</span> selected</div>
 		</div>
+		<div id="selected-detail" class="in_con_opt_w popover hdn" style="top: 49px; right: 16px; display: block;width:200px;box-shadow:-1px -1px 17px #D4D4D4;border-radius:6px;"> 
+			<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
+				<div class="arrow-up" style="position:absolute;top:-15px;right:31px;border-bottom:10px solid #FFFFFF"></div>
+				<div class="inner-w" style="position: relative; overflow: hidden; width: 100%;">
+					<!--starts int-group-->
+					<div class="sub" style="margin-top: 6px;">
+						<div class="sub-inner" style="max-height:338px; overflow:scroll;font-size:14px;">
+							
+						</div> <!--ends max-height -->
+					</div> 
+				</div>
+			</div><!--ends inner-w-->
+		</div>
+		
 	</div>
-	<div class="body" style="font-size:0px;">
+	<div class="body" style="font-size:0px;clear:both">
 		<div class="left-content inline-blk">
 			<div style="margin-left:6px;">
 			<div class="all-friend pointer group-label active" data-key="-1"><span class="plain-lk">All Friends</span></div>
-			<div class="inner-w" style="position: relative; overflow: hidden; width: 100%;">
+			<div class="inner-w" style="position: relative; width: 100%;">
 				<!--starts int-group-->
 				<div class="sub" style="margin-top: 6px;">
 					<?php if($labels !== false && sizeof($labels) > 0): ?>
@@ -47,8 +60,8 @@
 			<div class="option-wrapper">
 				
 				<div class="vertical-center" style="text-align:right;">
-					<div class="inline-blk silver-button cancel-button popup-button dismiss" style="margin-right:6px">Cancel</div>
-					<div class="inline-blk action-button popup-button" style="margin:0px 10px 0px 0px;">Invite</div>
+					<div class="inline-blk silver-button cancel-button popup-button dismiss" style="margin-right:6px"><img src="<?php echo IMGDIR ?>plane_sent_icon.png" class="request-sent" style="margin-right:4px;" >Invitation Sent</div>
+					<div class="inline-blk action-button popup-button un-requestable invite-button" style="margin:0px 10px 0px 0px;">Invite</div>
 				</div>
 			</div>
 		</div>

@@ -73,7 +73,7 @@
 					 if($result !== false && $result->num_rows >= 1){
 						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						$count = 0;
+						$count = 1;
 						$feed_id_list = '';
 						foreach($rows as $row){
 							$content = '';
@@ -781,14 +781,27 @@
 		
 		public function returnMatchedEventBySearchkeyWord($key_word){
 			$stmt = $this->connection->prepare("
-			SELECT interest_activity.id AS activity_id
-			FROM event 
-			LEFT JOIN interest_activity
-			ON event.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'e'  AND  (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?) ORDER BY TIMESTAMP(event.date, event.time) DESC
+			SELECT *
+			FROM (
+				SELECT interest_activity.id AS activity_id
+				FROM event 
+				LEFT JOIN interest_activity
+				ON event.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'e'  AND  (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?) 
+			
+				UNION 
+			
+				SELECT interest_activity.id AS activity_id
+				FROM interest
+				LEFT JOIN interest_activity
+				ON interest.id = interest_activity.interest_id
+				LEFT JOIN event
+				ON interest_activity.id = event.interest_activity_id
+				WHERE (interest.name LIKE ? || interest.description LIKE ?) AND interest_activity.type = 'e' 
+			) dum ORDER BY activity_id DESC
 			");			
 			if($stmt){
 				$key_word = '%' .$key_word. '%';
-				$stmt->bind_param('sss',$key_word,$key_word,$key_word);
+				$stmt->bind_param('sssss',$key_word,$key_word,$key_word, $key_word, $key_word);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
@@ -924,7 +937,6 @@
 					$result_rows = $rowFromUpcoming;
 				}
 				
-				
 				$rowFromPassed = $this->returnPassedMatchedEventForMinInterest($interest_like);
 				if($rowFromPassed !== false){
 					if($result_rows !== false){
@@ -979,6 +991,7 @@
 						 }
 					}
 				}
+				return false;
 		}
 		
 		public function returnPassedMatchedEventForMinInterest($interest_like){

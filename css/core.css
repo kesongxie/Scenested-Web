@@ -1259,11 +1259,15 @@ div.ui-datepicker{
 	font-size:11px;
 }
 
-.sub .un-requestable{
+.un-requestable{
 	opacity:0.6;
 	cursor:default;
 }
-.sub .requestable{
+
+.un-requestable:hover{
+	opacity:0.6 !important;
+}
+.requestable{
 	opacity:1;
 	cursor:pointer;
 }
@@ -1536,5 +1540,28 @@ img.gallery-navi{
 #evt-invitation-wrapper .inner .body .right-content .option-wrapper .popup-button{
 	padding:6px 10px;
 }
+
+
+#evt-invitation-wrapper #selected-bar {
+ 	float:right;
+ 	margin-right:15px;
+ 	max-width: 156px;
+    overflow: hidden;
+    height: 27px;
+}
+
+#evt-invitation-wrapper #selected-bar .selected-icon-avator{
+	border-radius: 4px; 
+	width: 24px; 
+	height: 24px;
+	margin-left:6px;
+}
+
+#evt-invitation-wrapper #selected-bar #selected-icon-wrapper{
+	font-size:13px;
+	margin:8px 6px 0px 0px;
+}
+
+
 
 /*	ends evt-invitation-wrapper template */
