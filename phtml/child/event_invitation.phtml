@@ -3,7 +3,10 @@
 		<div class="title vertical-center inline-blk">Invite People</div>
 		
 		<div id="selected-bar" class="vertical-center">
-			<div id="selected-icon-wrapper" class="inline-blk"><span id="invitation-selected-num">0</span> selected</div>
+			<div id="bar-icon-wrapper" class="inline-blk">
+			<span id="invitation-invited-bar-wrapper" ><span id="invitation-invited-num" data-num = "<?php echo '0'; ?>">0</span> Invited - </span>
+			<span id="invitation-selected-bar-wrapper" class="red-act"><span id="invitation-selected-num" style="color:#A01212">0</span> Selected</span>
+			</div>
 		</div>
 		<div id="selected-detail" class="in_con_opt_w popover hdn" style="top: 49px; right: 16px; display: block;width:200px;box-shadow:-1px -1px 17px #D4D4D4;border-radius:6px;"> 
 			<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
@@ -58,9 +61,13 @@
 			</div>
 			
 			<div class="option-wrapper">
-				
-				<div class="vertical-center" style="text-align:right;">
-					<div class="inline-blk silver-button cancel-button popup-button dismiss" style="margin-right:6px"><img src="<?php echo IMGDIR ?>plane_sent_icon.png" class="request-sent" style="margin-right:4px;" >Invitation Sent</div>
+
+				<div class="vertical-center inner-option-wrapper" style="text-align:right;">
+<!-- 
+					<div class="inline-blk silver-button cancel-button popup-button dismiss" style="margin-right:6px"><img src="<?php echo IMGDIR ?>plane_sent_icon.png" class="request-sent" style="margin-right:4px;" >Invitation Sent, Okay</div>
+ -->
+
+					<div class="inline-blk silver-button cancel-button popup-button dismiss" style="margin-right:6px">Cancel</div>
 					<div class="inline-blk action-button popup-button un-requestable invite-button" style="margin:0px 10px 0px 0px;">Invite</div>
 				</div>
 			</div>

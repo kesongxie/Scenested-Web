@@ -965,7 +965,7 @@ $(document).ready(function(){
 					actualHeight = parentDiv.find('.body.previous').innerHeight();
 				}
 				if(actualHeight > 260){
-					$(this).text('Collapse').addClass('expanded');
+					$(this).text('Close').addClass('expanded');
 				}
 			}
 		}
@@ -2550,7 +2550,7 @@ $(function($) {
 				data:{key:key},
 				success:function(resp){
 					$('#dialog-popup-overlay').removeClass('hdn');
-					$('#evt-invitation-wrapper').html(resp).removeClass('hdn');
+					$('#evt-invitation-wrapper').html(resp).removeClass('hdn').attr('data-key',key);
 				}	
 			});
 		}
@@ -2571,7 +2571,10 @@ $(function($) {
 						thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s").addClass('active');;
 						$('#evt-invitation-wrapper .interest-side-label .txt_ofl').removeClass('red-act');
 						thisE.find('.txt_ofl').addClass('red-act');
-						$('#evt-invitation-wrapper .right-content .contact .contact-inner').html(resp);
+						var contact = $('#evt-invitation-wrapper .right-content .contact');
+						contact.find('.contact-inner').html(resp).removeClass('hdn');
+						contact.find('.suggest-contact-inner').addClass('hdn');
+						$('#evt-invitation-wrapper #invitation-search-wrapepr input').val('');
 						setTimeout(function(){
 							thisE.css('-webkit-animation',"").css('animation',"");
 						},200);	
@@ -2594,7 +2597,10 @@ $(function($) {
 						$('#evt-invitation-wrapper .group-label').removeClass('active');
 						thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s").addClass('active');
 						$('#evt-invitation-wrapper .interest-side-label .txt_ofl').removeClass('red-act');
-						$('#evt-invitation-wrapper .right-content .contact .contact-inner').html(resp);
+						var contact = $('#evt-invitation-wrapper .right-content .contact');
+						contact.find('.contact-inner').html(resp).removeClass('hdn');
+						contact.find('.suggest-contact-inner').addClass('hdn');
+						$('#evt-invitation-wrapper #invitation-search-wrapepr input').val('');
 						setTimeout(function(){
 							thisE.css('-webkit-animation',"").css('animation',"");
 						},200);	
@@ -2647,7 +2653,7 @@ $(function($) {
 			var name = $(this).find('.name').text().trim();
 			var icon_to_add = $('#evt-invitation-wrapper').find('.selected-icon-avator[data-key='+key+']');
 			if(icon_to_add.length < 1){
-				$('#evt-invitation-wrapper #selected-icon-wrapper').after('<img src="'+target_image_url+'" class="selected-icon-avator" data-key="'+key+'" data-name="'+name+'">');
+				$('#evt-invitation-wrapper #bar-icon-wrapper').after('<img src="'+target_image_url+'" class="selected-icon-avator" data-key="'+key+'" data-name="'+name+'">');
 			}else{
 				icon_to_add.remove();
 			}
@@ -2683,7 +2689,7 @@ $(function($) {
 				sub_inner.append('<div class="in_con_w_opt_it selected-list" style="padding: 10px 10px;cursor:default;" data-key="'+key+'">'+
 								'<img class="label-image" src="'+url+'">'+
 								'<div class="inline-blk txt_ofl name" style="width: 104px;margin-top:3px;font-size:13px;">'+name+'</div>'+
-								'<img class="remove-from-selected pointer animate-opacity hdn" src="'+IMGDIR+'minus_icon.png" title="Remove from invitation list" height="16" wdith="16" style="float:right;margin-top:4px;">'+
+								'<img class="remove-from-selected pointer animate-opacity hdn" src="'+IMGDIR+'minus_icon.png" title="Remove from selected list" height="16" wdith="16" style="float:right;margin-top:4px;">'+
 
 				'</div>');
 				});
@@ -2727,6 +2733,69 @@ $(function($) {
 		}
 	},'#evt-invitation-wrapper #selected-detail .remove-from-selected');
 	
+	
+	
+	$('body').on({
+		click:function(){
+			if($(this).hasClass('requestable')){
+				var key = $(this).parents('#evt-invitation-wrapper').attr('data-key');
+				if(key.trim() != ''){
+					var keys = '';
+					$('#selected-bar .selected-icon-avator').each(function(){
+						keys += $(this).attr('data-key')+',';
+					});
+					
+					
+					
+					var selected_avator = $('#evt-invitation-wrapper #selected-bar .selected-icon-avator');
+					var selected_num = selected_avator.length;
+					var invited = $('#evt-invitation-wrapper #selected-bar #invitation-invited-num');
+					var invited_num = parseInt(invited.attr('data-num'));
+					invited_num+=selected_num;
+					invited.text(invited_num).attr('data-num',invited_num);
+					$('#evt-invitation-wrapper #selected-bar #invitation-selected-num').text('0');
+					$('#evt-invitation-wrapper #selected-bar').animate({
+						'max-width':'130px'
+						},200,function(){
+						selected_avator.remove();
+					});
+					
+					$('#evt-invitation-wrapper .right-content .inner-option-wrapper').html('<div class="inline-blk silver-button cancel-button popup-button dismiss" style="margin-right:6px"><img src="'+IMGDIR+'plane_sent_icon.png" class="request-sent" style="margin-right:4px;" >Invitation Sent</div>');
+				
+		
+					
+					
+					return false;
+					
+					$.ajax({
+						url:AJAX_DIR+'event_invitation.php',
+						method:'post',
+						data:{key:key, keys:keys},
+						success:function(resp){
+							console.log(resp);
+							if(resp != '1'){
+								var selected_avator = $('#evt-invitation-wrapper #selected-bar .selected-icon-avator');
+								var selected_num = selected_avator.length;
+								var invited = $('#evt-invitation-wrapper #selected-bar #invitation-invited-num');
+								var invited_num = parseInt(invited.attr('data-num'));
+								invited_num+=selected_num;
+								invited.text(invited_num).attr('data-num',invited_num);
+								$('#evt-invitation-wrapper #selected-bar #invitation-selected-num').text('0');
+								$('#evt-invitation-wrapper #selected-bar').animate({
+									'max-width':'130px'
+									},500,function(){
+									selected_avator.remove();
+								});
+								
+								$('#evt-invitation-wrapper .right-content .inner-option-wrapper').html('<div class="inline-blk silver-button cancel-button popup-button dismiss" style="margin-right:6px"><img src="'+IMGDIR+'plane_sent_icon.png" class="request-sent" style="margin-right:4px;" >Invitation Sent</div>');
+							}
+						}	
+					});
+				}
+			}
+		}
+	
+	},'#evt-invitation-wrapper .option-wrapper .invite-button');
 	
 	
 });

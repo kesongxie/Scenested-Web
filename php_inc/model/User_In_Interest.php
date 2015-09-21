@@ -450,7 +450,7 @@
 				$stmt->bind_param('iis',$interest_id, $user_id, $key_word);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
-					 if($result !== false){
+					 if($result !== false && $result->num_rows >= 1 ){
 						$user_found = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
 						return $user_found;

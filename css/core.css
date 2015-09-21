@@ -299,7 +299,8 @@ div.ui-datepicker{
 }
 
 .red-act{
-	 color: rgb(180, 40, 40);
+	/*  color: rgb(180, 40, 40); */
+	 color:#A01212;
 }
 .previewable{
 	cursor:pointer;
@@ -1503,7 +1504,7 @@ img.gallery-navi{
 	position:relative;
 }
 
-#evt-invitation-wrapper .inner .body .left-content .all-friend{
+#evt-invitation-wrapper .inner .body .all-friend{
 	color: #797979; 
 	font-weight: bold;
 	padding:20px 0PX 6px 10px;
@@ -1545,7 +1546,7 @@ img.gallery-navi{
 #evt-invitation-wrapper #selected-bar {
  	float:right;
  	margin-right:15px;
- 	max-width: 156px;
+ 	max-width: 220px;
     overflow: hidden;
     height: 27px;
 }
@@ -1557,9 +1558,9 @@ img.gallery-navi{
 	margin-left:6px;
 }
 
-#evt-invitation-wrapper #selected-bar #selected-icon-wrapper{
+#evt-invitation-wrapper #selected-bar #bar-icon-wrapper{
 	font-size:13px;
-	margin:8px 6px 0px 0px;
+	margin:8px 6px 2px 0px;
 }
 
 

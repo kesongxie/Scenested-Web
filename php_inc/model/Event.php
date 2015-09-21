@@ -9,7 +9,7 @@
 		private $invitation_contact_path = TEMPLATE_PATH_CHILD."invitation_contact.phtml";
 		private $invitation_contact_group_path = TEMPLATE_PATH_CHILD."invitation_contact_group.phtml";
 
-		public $event_id;
+		public $event_id = null;
 		public $event_photo = null;
 		
 		public function __construct($interest_activity_id = null, $include_photo = true){
@@ -321,7 +321,6 @@
 					$contact .= $content;
 				}
 			}
-			
 			ob_start();
 			include($this->invitation_contact_group_path);
 			$content = ob_get_clean();
@@ -330,8 +329,15 @@
 		}
 		
 		
+		//for now the event is 
+		public function isEventEditableByUser($event_id, $user_id){
+			return $this->getPostUserByEventId($event_id) == $user_id;
+		}
 		
-		
+		//return the event id if found, otherwise return false;
+		public function isEventExistsForActivityId($activity_id){
+			return $this->getColumnBySelector('id', 'interest_activity_id', $activity_id);
+		}
 		
 		
 	}

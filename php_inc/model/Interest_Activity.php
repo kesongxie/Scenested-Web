@@ -1575,6 +1575,36 @@
 		}
 		
 		
+		public function isEventExistsForActivityId($activity_id){
+			include_once 'Event.php';
+			$event = new Event();
+			return $event->isEventExistsForActivityId($activity_id);
+		}
+		
+		
+		
+		public function sendEventInvitation($post_key, $list_string){
+			$invited_list = explode(',',  trim($list_string,','));
+			include_once MODEL_PATH.'Event_Invitation.php';
+			$invitation = new Event_Invitation();
+			$activity_id = $this->getActivityIdByKey($post_key);
+			if($activity_id !== false){
+				include_once 'Event.php';
+				$event = new Event();
+				$event_id = $this->isEventExistsForActivityId($activity_id);
+				if($event_id !== false){
+					var_dump($invited_list);
+					foreach($invited_list as $user_to_hash){
+						$invitation->sendInvitation($_SESSION['id'], $user_to_hash, $event_id);
+					}
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		
+		
 		
 		
 		
