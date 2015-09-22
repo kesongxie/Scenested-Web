@@ -2704,6 +2704,21 @@ $(function($) {
 		}
 	},'#evt-invitation-wrapper #selected-bar .toggle-selected-detail');
 	
+	
+	
+	$('body').on({
+		click:function(){
+			$(this).addClass('red-act');
+			$(this).find('#invitation-invited-num').addClass('red-act');
+			$('#invitation-selected-bar-wrapper').removeClass('red-act');
+			$('#invitation-selected-bar-wrapper').find('#invitation-selected-num').removeClass('red-act');
+		}
+	},'#evt-invitation-wrapper #selected-bar #invitation-invited-bar-wrapper');
+	
+	
+	
+	
+	
 	$('body').on({
 		mouseover:function(){
 			$(this).find('.remove-from-selected').removeClass('hdn');
@@ -2790,6 +2805,10 @@ $(function($) {
 		}
 	
 	},'#evt-invitation-wrapper .option-wrapper .invite-button');
+	
+	
+	
+	
 	
 	
 });

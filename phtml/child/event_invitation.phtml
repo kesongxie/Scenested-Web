@@ -4,9 +4,10 @@
 
  		<div id="selected-bar" class="vertical-center">
 			<div id="bar-icon-wrapper" class="inline-blk">
-			<span id="invitation-invited-bar-wrapper" ><span id="invitation-invited-num"data-num = "<?php echo $invitation_num ?>"><?php echo $invitation_num ?></span> Invited - </span>
+			<span id="invitation-invited-bar-wrapper" class="<?php echo ($invitation_num > 0)?'pointer':''; ?>" ><span id="invitation-invited-num"data-num = "<?php echo $invitation_num ?>"><?php echo $invitation_num ?></span> Invited</span>
+			<span> - </span>
 			<span class="toggle-selected-detail">
-				<span id="invitation-selected-bar-wrapper" class="red-act"><span id="invitation-selected-num" style="color:#A01212">0</span> Selected</span>
+				<span id="invitation-selected-bar-wrapper" class="red-act"><span id="invitation-selected-num" class="red-act">0</span> Selected</span>
 				<div id="selected-preview-wrapper" class="inline-blk"></div>
 			</span>
 			</div>
