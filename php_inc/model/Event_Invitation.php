@@ -14,7 +14,6 @@
 			parent::__construct($this->table_name);
 		}	
 		public function sendInvitation($user_id, $user_to_hash, $event_id){
-			echo 'here';
 			$user = new User_Table();
 			$user_to = $user->getUserIdByKey($user_to_hash);
 			include_once 'Event.php';
@@ -46,6 +45,20 @@
 			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `user_id`=? AND `user_to`=? AND (`process`='n' || `process` = 'i')AND `event_id`=? LIMIT 1");
 			if($stmt){
 				$stmt->bind_param('iii', $user_id, $user_to, $event_id);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result->num_rows == 1){
+						return true;
+					 }
+				}
+			}
+			return false;
+		}
+		
+		public function isUserInvitedInEvent($user_to, $event_id){
+			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `user_to`=? AND (`process`='n' || `process` = 'i')AND `event_id`=? LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('ii' ,$user_to, $event_id);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result->num_rows == 1){
@@ -182,6 +195,11 @@
 		public function deleteAllRequestByEventId($user_id, $event_id){
 			$this->deleteRowBySelectorForUser('event_id', $event_id, $user_id, true);
 		}
+		
+		public function getEventInvitedUserNum($event_id){
+			return $this->getRowsNumberForNumericColumn('event_id', $event_id);
+		}
+		
 		
 		
 		

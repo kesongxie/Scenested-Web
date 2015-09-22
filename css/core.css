@@ -1546,7 +1546,7 @@ img.gallery-navi{
 #evt-invitation-wrapper #selected-bar {
  	float:right;
  	margin-right:15px;
- 	max-width: 220px;
+	max-width: 224px;
     overflow: hidden;
     height: 27px;
 }
@@ -1556,11 +1556,13 @@ img.gallery-navi{
 	width: 24px; 
 	height: 24px;
 	margin-left:6px;
+	/* margin-top:-8px; */
 }
 
 #evt-invitation-wrapper #selected-bar #bar-icon-wrapper{
 	font-size:13px;
 	margin:8px 6px 2px 0px;
+	/* margin:0px 6px 2px 0px; */
 }
 
 

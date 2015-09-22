@@ -249,14 +249,17 @@
 			$interest = new Interest();
 			include_once 'Interest_Activity.php';
 			$activity = new Interest_Activity();
-			$user_id = $activity->getPostUserByActivityKey($key);
-			if($user_id !== false){
-				$labels = $interest->getUserInterestsLabel($user_id);
+			$event_id = $activity->isEventExistsForActivityKey($key);
+			if($event_id !== false){
+				$labels = $interest->getUserInterestsLabel($_SESSION['id']);
 				include_once 'User_In_Interest.php';
 				$in = new User_In_Interest();
-				$all_friend_plain_list = $in->getFriendPlainListForUser($user_id);
+				include_once MODEL_PATH.'Event_Invitation.php';
+				$invitation = new Event_Invitation();
+				$invitation_num = $invitation->getEventInvitedUserNum($event_id);
+				$all_friend_plain_list = $in->getFriendPlainListForUser($_SESSION['id']);
 				if($all_friend_plain_list !== false){
-					$all_friend_block = $this->getAllFriendContactByPlainList($all_friend_plain_list);
+					$all_friend_block = $this->getAllFriendContactByPlainList($all_friend_plain_list, $event_id);
 				}
 				ob_start();
 				include($this->event_invitation_path);
@@ -266,7 +269,7 @@
 			return false;
 		}
 		
-		public function getAllFriendContactByPlainList($all_friend_plain_list){
+		public function getAllFriendContactByPlainList($all_friend_plain_list, $event_id = -1){
 			$contact = '';
 			if($all_friend_plain_list !== false){
 				include_once 'User_Table.php';
@@ -276,8 +279,8 @@
 					$user_id = trim($u,"'");
 					$fullname = $user->getUserFullnameByUserIden($user_id);
 					$profile_pic = $user->getLatestProfilePictureForuser($user_id);
-					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($user_id);
 					$unique_iden = $user->getUniqueIdenForUser($user_id);
+					$request_sent = $this->isUserInvitedInEvent($user_id, $event_id);
 					ob_start();
 					include($this->invitation_contact_path);
 					$content = ob_get_clean();
@@ -285,27 +288,45 @@
 				}
 			}
 			return $contact;
-			
 		}
 		
-		public function getUserFriendBlockByInterestId($interest_id,$limit_num = -1, $offset = 0 ){
+		
+		public function isUserInvitedInEvent($user_id, $event_id){
+			include_once MODEL_PATH.'Event_Invitation.php';
+			$invitation = new Event_Invitation();
+			return $invitation->isUserInvitedInEvent($user_id, $event_id);
+		}
+		
+		
+		
+		public function getInvitationUserFriendBlockByInterestId($interest_id, $post_key, $limit_num = -1, $offset = 0 ){
 			include_once 'User_In_Interest.php';
 			$in = new User_In_Interest();
-			$user_found = $in->getUserInInterestByInterestId($interest_id, $limit_num, $offset);
-			return $this->renderInvitationContactBlockByResource($user_found);	
+			include_once 'Interest_Activity.php';
+			$activity = new Interest_Activity();
+			$event_id = $activity->isEventExistsForActivityKey($post_key);
+			if($event_id !== false){
+				$user_found = $in->getUserInInterestByInterestId($interest_id, $limit_num, $offset);
+				return $this->renderInvitationContactBlockByResource($user_found, $event_id);	
+			}
 		}
 		
 		
-		public function getAllUserFriendBlock(){
+		public function getInvitationAllUserFriendBlock($post_key){
 			include_once 'User_In_Interest.php';
 			$in = new User_In_Interest();
 			include_once 'User_Table.php';
 			$user = new User_Table();
-			$user_found = $in->getAllFriendsInUsersInterestByUserId($_SESSION['id']);
-			return $this->renderInvitationContactBlockByResource($user_found);	
+			include_once 'Interest_Activity.php';
+			$activity = new Interest_Activity();
+			$event_id = $activity->isEventExistsForActivityKey($post_key);
+			if($event_id !== false){
+				$user_found = $in->getAllFriendsInUsersInterestByUserId($_SESSION['id']);
+				return $this->renderInvitationContactBlockByResource($user_found, $event_id);	
+			}
 		}
 		
-		public function renderInvitationContactBlockByResource($user_found){
+		public function renderInvitationContactBlockByResource($user_found, $event_id){
 			$contact = false;		
 			if($user_found !== false){
 				$contact = '';
@@ -315,6 +336,7 @@
 					$fullname = $u['fullname'];
 					$profile_pic = $user->getLatestProfilePictureForuser($u['id']);
 					$unique_iden = $u['hash'];
+					$request_sent = $this->isUserInvitedInEvent($u['id'], $event_id);
 					ob_start();
 					include($this->invitation_contact_path);
 					$content = ob_get_clean();

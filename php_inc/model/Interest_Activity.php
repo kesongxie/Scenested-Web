@@ -1575,6 +1575,13 @@
 		}
 		
 		
+		public function isEventExistsForActivityKey($key){
+			$activity_id = $this->getActivityIdByKey($key);
+			if($activity_id !== false){
+				return $this->isEventExistsForActivityId($activity_id);
+			}
+		}
+		
 		public function isEventExistsForActivityId($activity_id){
 			include_once 'Event.php';
 			$event = new Event();
