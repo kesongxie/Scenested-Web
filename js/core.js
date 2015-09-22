@@ -2665,10 +2665,19 @@ $(function($) {
 			if(remaining_target_count > 0){
 				toggle_detail.addClass('pointer');
 				inviteButton.removeClass('un-requestable').addClass('requestable');
+				if(remaining_target_count > 2){
+					$('#bar-icon-wrapper').css('width','300px');
+				}else{
+					$('#bar-icon-wrapper').css('width','auto');
+				}
 			}else{
 				toggle_detail.removeClass('pointer');
 				inviteButton.addClass('un-requestable').removeClass('requestable');
 			}
+			
+			
+			
+			
 			inner_option_wrapper.find('.after-action').addClass('hdn');
 			inner_option_wrapper.find('.before-action').removeClass('hdn');
 		}
@@ -2787,16 +2796,16 @@ $(function($) {
 											'margin-right':'10px'
 										},100,function(){
 											selected_avator.remove();
-											selected_bar.css('max-width','224px');
+											selected_bar.css('max-width','220px');
 										});
 									});
-									
 								});
 								var inner_option_wrapper = $('#evt-invitation-wrapper .right-content .inner-option-wrapper');
 								parentDiv.find('#invitation-invited-bar-wrapper').addClass('pointer');
 								selected_bar.find('.toggle-selected-detail').removeClass('pointer');
 								inner_option_wrapper.find('.after-action').removeClass('hdn');
 								inner_option_wrapper.find('.before-action').addClass('hdn');
+								$('#bar-icon-wrapper').css('width','auto');
 							}
 						}	
 					});

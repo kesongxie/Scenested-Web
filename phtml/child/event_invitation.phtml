@@ -4,16 +4,17 @@
 
  		<div id="selected-bar" class="vertical-center">
 			<div id="bar-icon-wrapper" class="inline-blk">
-			<span id="invitation-invited-bar-wrapper" class="<?php echo ($invitation_num > 0)?'pointer':''; ?>" ><span id="invitation-invited-num"data-num = "<?php echo $invitation_num ?>"><?php echo $invitation_num ?></span> Invited</span>
+			<span id="invitation-invited-bar-wrapper" class="<?php echo ($invitation_num > 0)?'pointer':''; ?>" ><span id="invitation-invited-num" data-num = "<?php echo $invitation_num ?>"><?php echo $invitation_num ?></span> Invited</span>
 			<span> - </span>
-			<span class="toggle-selected-detail">
+			<div class="toggle-selected-detail inline-blk" >
 				<span id="invitation-selected-bar-wrapper" class="red-act"><span id="invitation-selected-num" class="red-act">0</span> Selected</span>
 				<div id="selected-preview-wrapper" class="inline-blk"></div>
-			</span>
+			</div>
 			</div>
 		</div>
  
  
+
 		
 		<div id="selected-detail" class="in_con_opt_w popover hdn" style="top: 49px; right: 16px; display: block;width:200px;box-shadow:-1px -1px 17px #D4D4D4;border-radius:6px;"> 
 			<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
