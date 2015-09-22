@@ -2651,22 +2651,22 @@ $(function($) {
 			var name = $(this).find('.name').text().trim();
 			var icon_to_add = $('#evt-invitation-wrapper').find('.selected-icon-avator[data-key='+key+']');
 			if(icon_to_add.length < 1){
-			// 	$('#evt-invitation-wrapper #selected-preview-wrapper').prepend('<img src="'+target_image_url+'" class="selected-icon-avator" data-key="'+key+'" data-name="'+name+'">');
-				$('#evt-invitation-wrapper #bar-icon-wrapper').after('<img src="'+target_image_url+'" class="selected-icon-avator" data-key="'+key+'" data-name="'+name+'">');
-			
+			 	$('#evt-invitation-wrapper #selected-preview-wrapper').prepend('<img src="'+target_image_url+'" class="selected-icon-avator" data-key="'+key+'" data-name="'+name+'">');
 			}else{
 				icon_to_add.remove();
 			}
 			var remaining_target_count = $('#selected-bar .selected-icon-avator').length;
 			$('#evt-invitation-wrapper #invitation-selected-num').text(remaining_target_count);
-			var seletced_bar = $('#evt-invitation-wrapper #selected-bar');
+			var selected_bar = $('#evt-invitation-wrapper #selected-bar');
+			selected_bar.find('#selected-preview-wrapper').removeClass('hdn');
 			var inner_option_wrapper = $('#evt-invitation-wrapper .right-content .inner-option-wrapper');
 			var inviteButton = inner_option_wrapper.find('.invite-button');
+			var toggle_detail = selected_bar.find('.toggle-selected-detail');
 			if(remaining_target_count > 0){
-				seletced_bar.addClass('pointer');
+				toggle_detail.addClass('pointer');
 				inviteButton.removeClass('un-requestable').addClass('requestable');
 			}else{
-				seletced_bar.removeClass('pointer');
+				toggle_detail.removeClass('pointer');
 				inviteButton.addClass('un-requestable').removeClass('requestable');
 			}
 			inner_option_wrapper.find('.after-action').addClass('hdn');
@@ -2739,7 +2739,8 @@ $(function($) {
 	$('body').on({
 		click:function(){
 			if($(this).hasClass('requestable')){
-				var key = $(this).parents('#evt-invitation-wrapper').attr('data-key');
+				var parentDiv = $(this).parents('#evt-invitation-wrapper');
+				var key = parentDiv.attr('data-key');
 				if(key.trim() != ''){
 					var keys = '';
 					$('#selected-bar .selected-icon-avator').each(function(){
@@ -2759,6 +2760,7 @@ $(function($) {
 								invited_num+=selected_num;
 								invited.text(invited_num).attr('data-num',invited_num);
 								selected_bar.find('#invitation-selected-num').text('0');
+								selected_bar.find('#selected-preview-wrapper').addClass('hdn');
 								selected_bar.animate({
 									'max-width':'130px'
 									},200,function(){
@@ -2776,7 +2778,8 @@ $(function($) {
 									
 								});
 								var inner_option_wrapper = $('#evt-invitation-wrapper .right-content .inner-option-wrapper');
-								
+								parentDiv.find('#invitation-invited-bar-wrapper').addClass('pointer');
+								selected_bar.find('.toggle-selected-detail').removeClass('pointer');
 								inner_option_wrapper.find('.after-action').removeClass('hdn');
 								inner_option_wrapper.find('.before-action').addClass('hdn');
 							}

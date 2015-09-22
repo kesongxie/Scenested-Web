@@ -1556,7 +1556,7 @@ img.gallery-navi{
 	width: 24px; 
 	height: 24px;
 	margin-left:6px;
-	/* margin-top:-8px; */
+	margin-top:-6px;
 }
 
 #evt-invitation-wrapper #selected-bar #bar-icon-wrapper{

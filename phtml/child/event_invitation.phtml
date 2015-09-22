@@ -1,26 +1,14 @@
 <div class="inner inline-blk">
 	<div  class="header">
 		<div class="title vertical-center inline-blk">Invite People</div>
-		
-		<!-- 
-<div id="selected-bar" class="vertical-center">
-			<div id="bar-icon-wrapper" >
-				<div class="inline-blk" style="margin-top:10px;">
-					<span id="invitation-invited-bar-wrapper" ><span id="invitation-invited-num" data-num = "<?php echo $invitation_num ?>"><?php echo $invitation_num ?></span> Invited - </span>
-				</div>	
-				<div class="inline-blk" style="margin-top:10px;">
-					<span id="invitation-selected-bar-wrapper" class="red-act toggle-selected-detail"><span id="invitation-selected-num" style="color:#A01212">0</span> Selected</span>
-					<span id="selected-preview-wrapper" class="inline-blk"></span>
-				</div>
-			</div>
-			
-		</div>
- -->
- 
+
  		<div id="selected-bar" class="vertical-center">
 			<div id="bar-icon-wrapper" class="inline-blk">
 			<span id="invitation-invited-bar-wrapper" ><span id="invitation-invited-num"data-num = "<?php echo $invitation_num ?>"><?php echo $invitation_num ?></span> Invited - </span>
-			<span id="invitation-selected-bar-wrapper" class="red-act toggle-selected-detail"><span id="invitation-selected-num" style="color:#A01212">0</span> Selected</span>
+			<span class="toggle-selected-detail">
+				<span id="invitation-selected-bar-wrapper" class="red-act"><span id="invitation-selected-num" style="color:#A01212">0</span> Selected</span>
+				<div id="selected-preview-wrapper" class="inline-blk"></div>
+			</span>
 			</div>
 		</div>
  
