@@ -7,7 +7,7 @@
 		private $table_name = "event_invitation";
 		private $request_block_template_path = TEMPLATE_PATH_CHILD.'popover_notification_interest_request_block.phtml';
 		private $accept_request_block_template_path = TEMPLATE_PATH_CHILD.'popover_notification_interest_request_accept_block.phtml';
-
+		private $invited_list_path = TEMPLATE_PATH_CHILD.'event_invited_friend_list.phtml';
 		private $accept_noti_send_from_code = "eia-";
 		
 		public function __construct(){
@@ -200,6 +200,28 @@
 			return $this->getRowsNumberForNumericColumn('event_id', $event_id);
 		}
 		
+		public function loadInvitedListForEvent($event_id){
+			$rows = $this->getAllRowsMultipleColumnsBySelector(array('user_to','hash'), 'event_id', $event_id);
+			$list = '';
+			if($rows !== false){
+				$user = new User_Table();
+				foreach($rows as $row){
+					$fullname = $user->getUserFullnameByUserIden($row['user_to']);
+					$key = $user->getUniqueIdenForUser($row['user_to']);
+					$profile_pic = $user->getLatestProfilePictureForuser($row['user_to']);
+					$hash = $row['hash'];
+					ob_start();
+					include($this->invited_list_path);
+					$list .= ob_get_clean();
+				}
+			}
+			return $list;
+		}
+		
+		
+		public function deleteEventInvitation($key){
+			return $this->deleteRowBySelectorForUser('hash', $key, $_SESSION['id'], true);
+		}
 		
 		
 		

@@ -1,22 +1,36 @@
 <div class="inner inline-blk">
 	<div  class="header">
 		<div class="title vertical-center inline-blk">Invite People</div>
-
- 		<div id="selected-bar" class="vertical-center">
-			<div id="bar-icon-wrapper" class="inline-blk">
-			<span id="invitation-invited-bar-wrapper" class="<?php echo ($invitation_num > 0)?'pointer':''; ?>" ><span id="invitation-invited-num" data-num = "<?php echo $invitation_num ?>"><?php echo $invitation_num ?></span> Invited</span>
-			<span> - </span>
-			<div class="toggle-selected-detail inline-blk" >
-				<span id="invitation-selected-bar-wrapper" class="red-act"><span id="invitation-selected-num" class="red-act">0</span> Selected</span>
-				<div id="selected-preview-wrapper" class="inline-blk"></div>
-			</div>
-			</div>
-		</div>
- 
- 
-
 		
-		<div id="selected-detail" class="in_con_opt_w popover hdn" style="top: 49px; right: 16px; display: block;width:200px;box-shadow:-1px -1px 17px #D4D4D4;border-radius:6px;"> 
+		<div class="vertical-center" style="float: right;position:relative">
+			<div id="selected-bar">
+				<div id="bar-icon-wrapper" class="inline-blk">
+				<span id="invitation-invited-bar-wrapper" class="pointer" ><span id="invitation-invited-num" data-num = "<?php echo $invitation_num ?>"><?php echo $invitation_num ?></span> Invited</span>
+				<span> - </span>
+				<div id="toggle-selected-detail" class="inline-blk pointer" >
+					<span id="invitation-selected-bar-wrapper" class="red-act"><span id="invitation-selected-num" class="red-act">0</span> Selected</span>
+					<div id="selected-preview-wrapper" class="inline-blk"></div>
+				</div>
+				</div>
+			</div>
+		
+		<div id="invited-detail" class="in_con_opt_w popover hdn" style="top: 37px; left: -72px; display: block;width:200px;box-shadow:-1px -1px 17px #D4D4D4;border-radius:6px;"> 
+			<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
+				<div class="arrow-up" style="position:absolute;top:-15px;left:88px;border-bottom:10px solid #FFFFFF"></div>
+				<div class="inner-w" style="position: relative; overflow: hidden; width: 100%;">
+					<!--starts int-group-->
+					<div class="sub" style="margin-top: 6px;">
+						<div class="sub-inner" style="max-height:338px; overflow:scroll;font-size:14px;">
+							
+						</div> <!--ends max-height -->
+					</div> 
+				</div>
+			</div><!--ends inner-w-->
+		</div>	
+			
+			
+		
+		<div id="selected-detail" class="in_con_opt_w popover hdn" style="top: 37px; right: 16px; display: block;width:200px;box-shadow:-1px -1px 17px #D4D4D4;border-radius:6px;"> 
 			<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
 				<div class="arrow-up" style="position:absolute;top:-15px;right:31px;border-bottom:10px solid #FFFFFF"></div>
 				<div class="inner-w" style="position: relative; overflow: hidden; width: 100%;">
@@ -29,6 +43,11 @@
 				</div>
 			</div><!--ends inner-w-->
 		</div>
+			
+		</div>
+ 
+ 
+
 		
 	</div>
 	<div class="body" style="font-size:0px;clear:both">

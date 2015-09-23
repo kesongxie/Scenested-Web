@@ -361,6 +361,14 @@
 			return $this->getColumnBySelector('id', 'interest_activity_id', $activity_id);
 		}
 		
+		public function loadEventInvitedList($event_id){
+			include_once MODEL_PATH.'Event_Invitation.php';
+			$invitation = new Event_Invitation();
+			return $invitation->loadInvitedListForEvent($event_id);
+		}
+		
+		
+		
 		
 	}
 ?>

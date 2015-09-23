@@ -2661,9 +2661,7 @@ $(function($) {
 			selected_bar.find('#selected-preview-wrapper').removeClass('hdn');
 			var inner_option_wrapper = $('#evt-invitation-wrapper .right-content .inner-option-wrapper');
 			var inviteButton = inner_option_wrapper.find('.invite-button');
-			var toggle_detail = selected_bar.find('.toggle-selected-detail');
 			if(remaining_target_count > 0){
-				toggle_detail.addClass('pointer');
 				inviteButton.removeClass('un-requestable').addClass('requestable');
 				if(remaining_target_count > 2){
 					$('#bar-icon-wrapper').css('width','300px');
@@ -2671,7 +2669,6 @@ $(function($) {
 					$('#bar-icon-wrapper').css('width','auto');
 				}
 			}else{
-				toggle_detail.removeClass('pointer');
 				inviteButton.addClass('un-requestable').removeClass('requestable');
 			}
 			
@@ -2685,42 +2682,73 @@ $(function($) {
 	
 	$('body').on({
 		click:function(){
+			$(this).find('#invitation-selected-bar-wrapper').addClass('red-act');
+			$(this).find('#invitation-selected-num').addClass('red-act');
+			$('#invitation-invited-bar-wrapper').removeClass('red-act');
+			$('#invitation-invited-bar-wrapper').find('#invitation-invited-num').removeClass('red-act');
+		
 			var selected_icon = $('#selected-bar .selected-icon-avator');
 			var selected_detail = $(this).parents('#evt-invitation-wrapper').find('#selected-detail');
 			var sub_inner = $('#evt-invitation-wrapper #selected-detail .sub-inner');
+			$('#evt-invitation-wrapper #invited-detail').addClass('hdn');
 			if(selected_icon.length < 1){
-				selected_detail.addClass('hdn');
-				
+				sub_inner.html('<div style="margin:10px;">The selected list is empty</div>');
+				selected_detail.toggleClass('hdn');
 			}else{
 				sub_inner.html('');
 				selected_icon.each(function(){
 				var name = $(this).attr('data-name');
 				var key = $(this).attr('data-key');
 				var url = $(this).attr('src');
-				sub_inner.append('<div class="in_con_w_opt_it selected-list" style="padding: 10px 10px;cursor:default;" data-key="'+key+'">'+
+				sub_inner.append('<div class="in_con_w_opt_it selected-list popover-list" style="padding: 10px 10px;cursor:default;" data-key="'+key+'">'+
 								'<img class="label-image" src="'+url+'">'+
 								'<div class="inline-blk txt_ofl name" style="width: 104px;margin-top:3px;font-size:13px;">'+name+'</div>'+
-								'<img class="remove-from-selected pointer animate-opacity hdn" src="'+IMGDIR+'minus_icon.png" title="Remove from selected list" height="16" wdith="16" style="float:right;margin-top:4px;">'+
+								'<img class="remove-from-selected pointer animate-opacity remove-from hdn" src="'+IMGDIR+'minus_icon.png" title="Remove from selected list" height="16" wdith="16" style="float:right;margin-top:4px;">'+
 
 				'</div>');
 				});
 				
 				selected_detail.toggleClass('hdn');
 			}
-			
-			
 			return false;
 		}
-	},'#evt-invitation-wrapper #selected-bar .toggle-selected-detail');
+	},'#evt-invitation-wrapper #selected-bar #toggle-selected-detail');
 	
 	
 	
 	$('body').on({
 		click:function(){
+			$('#evt-invitation-wrapper #selected-detail').addClass('hdn');
 			$(this).addClass('red-act');
 			$(this).find('#invitation-invited-num').addClass('red-act');
 			$('#invitation-selected-bar-wrapper').removeClass('red-act');
 			$('#invitation-selected-bar-wrapper').find('#invitation-selected-num').removeClass('red-act');
+			var parentDiv = $(this).parents('#evt-invitation-wrapper');
+			var key = parentDiv.attr('data-key');
+			var detail = $('#evt-invitation-wrapper #invited-detail');
+			
+			if(parseInt($('#invitation-invited-num').attr('data-num')) > 0 ){
+				if(detail.hasClass('hdn')){
+					$.ajax({
+						url:AJAX_DIR+'load_event_invited_list.php',
+						method:'post',
+						data:{key:key},
+						success:function(resp){
+							if(resp != '1'){
+								detail.removeClass('hdn');
+								detail.find('.sub-inner').html(resp);
+							}
+						}			
+					});
+				}else{
+					detail.addClass('hdn');
+				}
+			}else{
+				detail.find('.sub-inner').html('<div style="margin:10px;">The invited list is empty</div>');
+				detail.toggleClass('hdn');
+			}
+			return false;
+	
 		}
 	},'#evt-invitation-wrapper #selected-bar #invitation-invited-bar-wrapper');
 	
@@ -2730,12 +2758,12 @@ $(function($) {
 	
 	$('body').on({
 		mouseover:function(){
-			$(this).find('.remove-from-selected').removeClass('hdn');
+			$(this).find('.remove-from').removeClass('hdn');
 		},
 		mouseleave:function(){
-			$(this).find('.remove-from-selected').addClass('hdn');
+			$(this).find('.remove-from').addClass('hdn');
 		}
-	},'#evt-invitation-wrapper #selected-detail .selected-list');
+	},'#evt-invitation-wrapper .popover-list');
 	
 	
 	$('body').on({
@@ -2757,6 +2785,44 @@ $(function($) {
 			}
 		}
 	},'#evt-invitation-wrapper #selected-detail .remove-from-selected');
+	
+	$('body').on({
+		click:function(){
+			var invited_list = $(this).parents('.invited-list');
+			var key = invited_list.attr('data-key');
+			var key_for = invited_list.find('.name').attr('data-key');
+			var thisE = $(this);
+			var detail = $('#evt-invitation-wrapper #invited-detail');
+			$.ajax({
+				url:AJAX_DIR+'delete_event_invitation.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					invited_list.remove();
+					var remaining_target_count = detail.find('.invited-list').length;
+					$('#evt-invitation-wrapper #invitation-invited-num').text(remaining_target_count).attr('data-num',remaining_target_count);
+					if(remaining_target_count == 0){
+						detail.find('.sub-inner').html('<div style="margin:10px;">The invited list is empty</div>');
+					}
+					var contact = $('#evt-invitation-wrapper .contact-inner .list-item.invitation-contact[data-key='+key_for+']');
+					contact.find('.invitation-sent-wrapper').animate({
+						'margin-right':'-100px'
+					},100);
+					var inner_option_wrapper = $('#evt-invitation-wrapper .right-content .inner-option-wrapper');
+
+					inner_option_wrapper.find('.after-action').addClass('hdn');
+					inner_option_wrapper.find('.before-action').removeClass('hdn');
+					
+					contact.addClass('selectable pointer');
+									
+					
+				}
+			});			
+			
+		}
+	},'#evt-invitation-wrapper #invited-detail .remove-from-invitation');
+	
 	
 	
 	
@@ -2791,7 +2857,7 @@ $(function($) {
 									var contact_inner = $('#evt-invitation-wrapper .contact-inner');
 									selected_avator.each(function(){
 										var contact_selectable = contact_inner.find(' .list-item.invitation-contact.selectable[data-key='+$(this).attr('data-key')+']')
-										contact_selectable.removeClass('selectable');
+										contact_selectable.removeClass('selectable pointer');
 										contact_selectable.find('.invitation-sent-wrapper').animate({
 											'margin-right':'10px'
 										},100,function(){
@@ -2802,7 +2868,6 @@ $(function($) {
 								});
 								var inner_option_wrapper = $('#evt-invitation-wrapper .right-content .inner-option-wrapper');
 								parentDiv.find('#invitation-invited-bar-wrapper').addClass('pointer');
-								selected_bar.find('.toggle-selected-detail').removeClass('pointer');
 								inner_option_wrapper.find('.after-action').removeClass('hdn');
 								inner_option_wrapper.find('.before-action').addClass('hdn');
 								$('#bar-icon-wrapper').css('width','auto');

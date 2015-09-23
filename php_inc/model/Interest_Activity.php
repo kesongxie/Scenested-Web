@@ -1596,11 +1596,9 @@
 			$invitation = new Event_Invitation();
 			$activity_id = $this->getActivityIdByKey($post_key);
 			if($activity_id !== false){
-				include_once 'Event.php';
 				$event = new Event();
 				$event_id = $this->isEventExistsForActivityId($activity_id);
 				if($event_id !== false){
-					var_dump($invited_list);
 					foreach($invited_list as $user_to_hash){
 						$invitation->sendInvitation($_SESSION['id'], $user_to_hash, $event_id);
 					}
@@ -1610,6 +1608,14 @@
 			return false;
 		}
 		
+		
+		public function loadEventInvitedList($key){
+			$event_id = $this->isEventExistsForActivityKey($key);	
+			if($event_id !== false){
+				$event = new Event();
+				return $event->loadEventInvitedList($event_id);
+			}
+		}
 		
 		
 		

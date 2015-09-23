@@ -1482,6 +1482,7 @@ img.gallery-navi{
 	height:10%;
 	border-bottom:1px solid #f0f0f0;
 	box-shadow:1px 1px 10px #eaeaea;
+	z-index:1;
 }
 
 #evt-invitation-wrapper .inner .header .title{
