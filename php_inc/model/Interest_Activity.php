@@ -8,6 +8,9 @@
 	
 	class Interest_Activity extends Core_Table{
 		private  $table_name = "interest_activity";
+		private $invitation_contact_path = TEMPLATE_PATH_CHILD."invitation_contact.phtml";
+		private $invitation_contact_group_path = TEMPLATE_PATH_CHILD."invitation_contact_group.phtml";
+
 		private $moment = null;
 		private $event = null;
 		private $feed_id_list = '-1'; //activity_id in the user's feed
@@ -576,7 +579,7 @@
 							$right_content = "";
 							$count = 0;
 							foreach($rows as $row ){
-								$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id']);
+								$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id'], true);
 								if($count++ % 2 == 0){
 									$left_content.= $content;
 								}else{
@@ -624,7 +627,7 @@
 				$right_content = "";
 				$count = 0;
 				foreach($rows as $row ){
-					$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id']);
+					$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id'], true);
 					if($count++ % 2 == 0){
 						$left_content.= $content;
 					}else{
@@ -1083,8 +1086,10 @@
 		}
 		
 		
-		public function joinEventForUser($user_id, $activity_key){
-			$activity_id = $this->getRowIdByHashkey($activity_key);
+		public function joinEventForUser($user_id, $activity_key = false, $activity_id = false){
+			if($activity_id === false){
+				$activity_id = $this->getRowIdByHashkey($activity_key);
+			}
 			if($activity_id !== false){
 				$this->event = new Event($activity_id);
 				if(!$this->event->isEventPassedForActivityId($activity_id)){
@@ -1095,7 +1100,6 @@
 					
 				}
 			}	
-			return false;
 		}
 		
 		
@@ -1615,6 +1619,65 @@
 				$event = new Event();
 				return $event->loadEventInvitedList($event_id);
 			}
+		}
+		
+		/* need the post key to check whether the user has been invited or not*/
+		public function renderInvitationContactBlockByResource($user_found, $post_key){
+			$event = new Event();
+			$event_id = $this->isEventExistsForActivityKey($post_key);	
+			if($event_id !== false){
+				$contact = false;		
+				if($user_found !== false){
+					$contact = '';
+					include_once 'User_Table.php';
+					$user = new User_Table();
+					foreach($user_found as $u){
+						$fullname = $u['fullname'];
+						$profile_pic = $user->getLatestProfilePictureForuser($u['id']);
+						$unique_iden = $u['hash'];
+						$event_joined = $event->hasUserJoinedEvent($user_id, $event_id);
+						if($event_joined === false){
+							$request_sent = $event->isUserInvitedInEvent($u['id'], $event_id);	
+						}
+						ob_start();
+						include($this->invitation_contact_path);
+						$content = ob_get_clean();
+						$contact .= $content;
+					}
+				}
+				ob_start();
+				include($this->invitation_contact_group_path);
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
+			
+		}
+		
+		
+		public function getAllFriendContactByPlainList($all_friend_plain_list, $event_id = -1){
+			$contact = '';
+			if($all_friend_plain_list !== false){
+				include_once 'User_Table.php';
+				$user = new User_Table();
+				$list = explode(',',$all_friend_plain_list);
+				foreach($list as $u){
+					$user_id = trim($u,"'");
+					$fullname = $user->getUserFullnameByUserIden($user_id);
+					$profile_pic = $user->getLatestProfilePictureForuser($user_id);
+					$unique_iden = $user->getUniqueIdenForUser($user_id);
+					$event = new Event();
+					$event_joined = $event->hasUserJoinedEvent($user_id, $event_id);
+					if($event_joined === false){
+						$request_sent = $event->isUserInvitedInEvent($user_id, $event_id);	
+					}
+					ob_start();
+					include($this->invitation_contact_path);
+					$content = ob_get_clean();
+					$contact .= $content;
+				}
+			}
+			return $contact;
 		}
 		
 		

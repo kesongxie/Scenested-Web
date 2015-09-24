@@ -126,11 +126,14 @@
 			<?php //for those who have joined the event are able to upload the photos ?>
 				<!-- <div class="group-contact in_con_w_opt_it" data-key="<?php echo $group_key; ?>">Photo Collection</div> -->
 
+			
+			<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
+			<div class="in_con_w_opt_it invite-friend">Invite Friends</div>
+			<?php endif; ?>
 			<?php if($group_key !== false): ?>
 				<div class="group-contact in_con_w_opt_it" data-key="<?php echo $group_key; ?>">Group Message</div>
 			<?php endif; ?>
 			<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
-			<div class="in_con_w_opt_it invite-friend">Invite Friends</div>
 			<div class="in_con_w_opt_it remove_activity">Remove This Post</div>
 			<?php endif; ?>
 		</div>

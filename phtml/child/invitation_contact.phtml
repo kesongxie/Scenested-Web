@@ -1,10 +1,17 @@
-<div class="list-item inline-blk invitation-contact <?php echo ($request_sent)?'unselectable':'selectable pointer'; ?>" data-key="<?php echo $unique_iden; ?>" style="height:60px;">
+<div class="list-item inline-blk invitation-contact <?php echo ($request_sent || $event_joined)?'unselectable':'selectable pointer'; ?>" data-key="<?php echo $unique_iden; ?>" style="height:60px;">
 	<div class="user-profile" style="background:inherit">
 		<div style="float:left;margin-right:10px;width:60px;height:60px;overflow:hidden;position:relative">
-		<img src="<?php echo $profile_pic; ?>" class="<?php echo (!$request_sent)?'profile-pic':''; ?>" style="border-radius:0px;width:100%;height:100%;">
+		<img src="<?php echo $profile_pic; ?>" class="contact-pic profile-pic hover-user-profile" data-key="<?php echo $unique_iden; ?>" style="border-radius:0px;width:100%;height:100%;">
 		</div>
-		<div class="inline-blk vertical-center txt_ofl name" style="font-size:13px;max-width:60%;"><?php echo htmlentities($fullname); ?></div>
-		<div class="inline-blk  vertical-center invitation-sent-wrapper" style="float:right;margin-right:<?php echo ($request_sent)?'10px':'-100px'; ?>"><img src="<?php echo IMGDIR?>plane_sent_icon.png" class="request-sent"  title="Request Sent"></div>
+		<div class="inline-blk vertical-center txt_ofl name" style="font-size:13px;max-width:54%;">
+		<?php echo htmlentities($fullname); ?>
+		</div>
+		<?php  if($event_joined): ?>
+			<div class="inline-blk vertical-center red-act" style="margin-left: 4px;font-size:14px;"> - Joined</div>
+		<?php  endif; ?>
 		
+		<?php  if($event_joined === false): ?>
+			<div class="inline-blk  vertical-center invitation-sent-wrapper" style="float:right;margin-right:<?php echo ($request_sent)?'10px':'-100px'; ?>"><img src="<?php echo IMGDIR?>plane_sent_icon.png" class="request-sent"  title="Request Sent"></div>
+		<?php endif; ?>
 	</div>
 </div>

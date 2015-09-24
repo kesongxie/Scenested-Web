@@ -1030,6 +1030,28 @@ $(document).ready(function(){
 	},'.interest-request .ignore');
 	
 	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var key = thisE.parents('.event-invitation-request').attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'accept_event_invitation_request.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					if(resp != '1'){
+						thisE.parents('.option').find('.ignore').remove();
+ 						thisE.text('Accepted').removeClass('accept animate-opacity pointer plain-lk');
+ 						refreshMessage();
+ 					}
+				}
+			});
+		}
+	},'.event-invitation-request .accept');
+	
+	
+	
 	
 	
 	$('body').on({
@@ -2408,12 +2430,22 @@ $(function($) {
 	
 	
 	$(document).mousemove(function(event){
-    	mouseMove.x = event.pageX;
-    	mouseMove.y = event.pageY;
-    	if((initMouse.x-mouseMove.x)>30 || (initMouse.y-mouseMove.y)>30){	
-    		if(!($('.hover-avator-wrapper:hover').length != 0)){
-   				$('.hover-avator-wrapper').html('').addClass('hdn');
-   			}
+		var hoverAvator = $('.hover-avator-wrapper');
+		if(!hoverAvator.hasClass('hdn')){
+	    	mouseMove.x = event.pageX;
+	    	mouseMove.y = event.pageY;
+	    	var hoverDivOffSet = hoverAvator.offset();
+	    	var overRange = false;
+	    	if(mouseMove.y > hoverDivOffSet.top + hoverAvator.height() + 60){
+	    		overRange = true;
+	    	}else if(mouseMove.x > hoverDivOffSet.left + hoverAvator.width() + 60){
+	    		overRange = true;
+	    	}
+	    	if((initMouse.x-mouseMove.x)>30 || (initMouse.y-mouseMove.y)>30 || overRange  ){	
+				if(!($('.hover-avator-wrapper:hover').length != 0)){
+					$('.hover-avator-wrapper').html('').addClass('hdn');
+				}
+			}
      	}
     });
     
@@ -2549,6 +2581,7 @@ $(function($) {
 				method:'post',
 				data:{key:key},
 				success:function(resp){
+					console.log(resp);
 					$('#dialog-popup-overlay').removeClass('hdn');
 					$('#evt-invitation-wrapper').html(resp).removeClass('hdn').attr('data-key',key);
 				}	
@@ -2567,6 +2600,7 @@ $(function($) {
 				method:'post',
 				data:{key:key, post_key:post_key},
 				success:function(resp){
+					console.log(resp);
 					if(resp != '1'){
 						$('#evt-invitation-wrapper .group-label').removeClass('active');
 						thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s").addClass('active');;
@@ -2626,10 +2660,11 @@ $(function($) {
 			var key = $('#evt-invitation-wrapper .group-label.active').attr('data-key');
 			var parentContact = $('#evt-invitation-wrapper .right-content .contact');
 			if(q.trim() != ''){
+				var pkey = $(this).parents('#evt-invitation-wrapper').attr('data-key');
 				$.ajax({
 					url:AJAX_DIR+'invitation_friend_search.php',
 					method:'post',
-					data:{q:q, key:key},
+					data:{q:q, key:key, pkey:pkey},
 					success:function(resp){
 						if(resp != '1'){
 							parentContact.find('.contact-inner').addClass('hdn');
@@ -2646,7 +2681,7 @@ $(function($) {
 	
 	$('body').on({
 		click:function(){
-			var target_image_url = $(this).find('.profile-pic').attr('src');
+			var target_image_url = $(this).find('.contact-pic').attr('src');
 			var key =  $(this).attr('data-key');
 			var name = $(this).find('.name').text().trim();
 			var icon_to_add = $('#evt-invitation-wrapper').find('.selected-icon-avator[data-key='+key+']');
@@ -2666,14 +2701,11 @@ $(function($) {
 				if(remaining_target_count > 2){
 					$('#bar-icon-wrapper').css('width','300px');
 				}else{
-					$('#bar-icon-wrapper').css('width','auto');
+					 $('#bar-icon-wrapper').css('width','inherit');
 				}
 			}else{
 				inviteButton.addClass('un-requestable').removeClass('requestable');
 			}
-			
-			
-			
 			
 			inner_option_wrapper.find('.after-action').addClass('hdn');
 			inner_option_wrapper.find('.before-action').removeClass('hdn');
@@ -2790,7 +2822,7 @@ $(function($) {
 		click:function(){
 			var invited_list = $(this).parents('.invited-list');
 			var key = invited_list.attr('data-key');
-			var key_for = invited_list.find('.name').attr('data-key');
+			var key_for = invited_list.find('.label-image').attr('data-key');
 			var thisE = $(this);
 			var detail = $('#evt-invitation-wrapper #invited-detail');
 			$.ajax({
@@ -2798,7 +2830,6 @@ $(function($) {
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
 					invited_list.remove();
 					var remaining_target_count = detail.find('.invited-list').length;
 					$('#evt-invitation-wrapper #invitation-invited-num').text(remaining_target_count).attr('data-num',remaining_target_count);
@@ -2811,12 +2842,7 @@ $(function($) {
 					},100);
 					var inner_option_wrapper = $('#evt-invitation-wrapper .right-content .inner-option-wrapper');
 
-					inner_option_wrapper.find('.after-action').addClass('hdn');
-					inner_option_wrapper.find('.before-action').removeClass('hdn');
-					
-					contact.addClass('selectable pointer');
-									
-					
+					contact.addClass('selectable pointer').removeClass('unselectable');
 				}
 			});			
 			
@@ -2854,9 +2880,9 @@ $(function($) {
 								selected_bar.animate({
 									'max-width':'130px'
 									},200,function(){
-									var contact_inner = $('#evt-invitation-wrapper .contact-inner');
+									var content_inner = $('#evt-invitation-wrapper .content-inner');
 									selected_avator.each(function(){
-										var contact_selectable = contact_inner.find(' .list-item.invitation-contact.selectable[data-key='+$(this).attr('data-key')+']')
+										var contact_selectable = content_inner.find(' .list-item.invitation-contact.selectable[data-key='+$(this).attr('data-key')+']')
 										contact_selectable.removeClass('selectable pointer');
 										contact_selectable.find('.invitation-sent-wrapper').animate({
 											'margin-right':'10px'
@@ -2870,7 +2896,7 @@ $(function($) {
 								parentDiv.find('#invitation-invited-bar-wrapper').addClass('pointer');
 								inner_option_wrapper.find('.after-action').removeClass('hdn');
 								inner_option_wrapper.find('.before-action').addClass('hdn');
-								$('#bar-icon-wrapper').css('width','auto');
+								$('#bar-icon-wrapper').css('width','inherit');
 							}
 						}	
 					});

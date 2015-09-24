@@ -1,4 +1,4 @@
-<div class="popover-child interest-request" data-key="<?php echo $hash; ?>" >
+<div class="popover-child event-invitation-request" data-key="<?php echo $hash; ?>" >
 	<a href="<?php echo $user_page_redirect ?>"><img src="<?php  echo $sender_pic ?>" class="sender-avator hover-user-profile" data-key="<?php echo $unique_iden ?>" ></a>
 	<div class="inner">
 		<div class="inner-container">
@@ -14,8 +14,8 @@
 				</div>
 			<?php else: ?>
 				<div class="inline-blk option" style="float:right;font-size:13px;">
-					<span class="plain-lk pointer animate-opacity accept" style="margin-right:4px;">Accept</span>
-					<span class="plain-lk pointer animate-opacity ignore" style="margin:0px 4px 0px 6px;">Ignore</span>
+					<span class="plain-lk pointer accept" style="margin-right:4px;">Accept</span>
+					<span class="plain-lk pointer ignore" style="margin:0px 4px 0px 6px;">Ignore</span>
 				</div>	
 			<?php endif; ?>
 			
@@ -23,8 +23,8 @@
 			
 			
 			
-			<div style="font-size:12px;color:rgb(137, 137, 137)">Wanted to connect you to <?php echo $herorhis ?> 
-				<span class="plain-lk target" title="<?php echo htmlentities($interest_description) ?>">"<?php echo htmlentities($interest_name); ?>"</span> interest group
+			<div style="font-size:12px;color:rgb(137, 137, 137)">Invited you to an event
+				<span class="plain-lk target" title="<?php echo htmlentities($event_title) ?>">"<?php echo htmlentities($event_title) ?>"</span>
 			</div>
 			
 		</div>

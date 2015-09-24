@@ -186,6 +186,8 @@
 							ob_start();
 							
 							$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($row['user_id']);
+							$unique_iden = $user->getUniqueIdenForUser($row['user_id']);
+							
 							if($row['message_type'] == 'n'){
 								if($row['user_id'] != $_SESSION['id']){
 									$fullname = $user->getUserFullnameByUserIden($row['user_id']);

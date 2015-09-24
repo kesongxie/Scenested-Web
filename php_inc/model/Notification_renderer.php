@@ -17,37 +17,39 @@
 					case 'favor_activity':return $this->favorActivityRenderer($row_id);break;
 					case 'favor_comment':return $this->favorCommentRenderer($row_id);break;
 					case 'favor_reply':return $this->favorReplyRenderer($row_id);break;
+					case 'event_invitation':return $this->eventInvitationRenderer($row_id);break;
+					case 'event_invitation_accept':return $this->eventInvitationAcceptRenderer($row_id);break;
 					default:break;			
 				}
 			}
 		}
 		
 		public function commentRenderer($row_id){
-			include_once 'Comment.php';
+			include_once MODEL_PATH.'Comment.php';
 			$comment = new Comment();
 			return $comment->renderCommentForNotificationBlock($row_id);
 		}
 		
 		public function replyRenderer($row_id){
-			include_once 'Reply.php';
+			include_once MODEL_PATH.'Reply.php';
 			$reply = new Reply();
 			return $reply->renderReplyForNotificationBlock($row_id);
 		}
 		
 		public function replyNotifyPostUserRenderer($row_id){
-			include_once 'Reply_Notify_Post_User.php';
+			include_once MODEL_PATH.'Reply_Notify_Post_User.php';
 			$notify = new Reply_Notify_Post_User();
 			return $notify->renderNotifyPostUserReplyForNotificationBlock($row_id);
 		}
 		
 		public function interestRequestRenderer($row_id){
-			include_once 'Interest_Request.php';
+			include_once MODEL_PATH.'Interest_Request.php';
 			$request = new Interest_Request();
 			return $request->renderInterestRequestForNotificationBlock($row_id);
 		}
 		
 		public function interestRequestAcceptRenderer($row_id){
-			include_once 'Interest_Request.php';
+			include_once MODEL_PATH.'Interest_Request.php';
 			$request = new Interest_Request();
 			return $request->renderInterestRequestAcceptForNotificationBlock($row_id);
 		}
@@ -70,6 +72,17 @@
 			return $favor->renderFavorReplyForNotificationBlock($row_id);
 		}
 		
+		public function eventInvitationRenderer($row_id){
+			include_once MODEL_PATH.'Event_Invitation.php';
+			$invitation = new Event_Invitation();
+			return $invitation->renderEventInvitationRequestForNotificationBlock($row_id);
+		}
+		
+		public function eventInvitationAcceptRenderer($row_id){
+			include_once MODEL_PATH.'Event_Invitation.php';
+			$invitation = new Event_Invitation();
+			return $invitation->renderEventInvitationRequestAcceptForNotificationBlock($row_id);
+		}
 	
 	}
 

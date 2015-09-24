@@ -427,6 +427,7 @@ div.ui-datepicker{
 	right:-83px;
 	z-index: 99;
 	font-size:14px;
+	border-radius:4px;
 
 }
 
