@@ -5,7 +5,7 @@
 		private  $table_name = "event";
 		private  $activity_id = false;
 		private $preview_block_path = TEMPLATE_PATH_CHILD."evt_preview_block.phtml";
-		private $event_invitation_path = TEMPLATE_PATH_CHILD."event_invitation.phtml";
+		private $event_invitation_path = TEMPLATE_PATH_CHILD."invitation.phtml";
 		private $invitation_contact_path = TEMPLATE_PATH_CHILD."invitation_contact.phtml";
 		private $invitation_contact_group_path = TEMPLATE_PATH_CHILD."invitation_contact_group.phtml";
 
@@ -281,6 +281,9 @@
 				if($all_friend_plain_list !== false){
 					$all_friend_block = $activity->getAllFriendContactByPlainList($all_friend_plain_list, $event_id);
 				}
+				$header_title = 'Invite Friends';
+				$button_action = 'Invite';
+				$action = 'Invited';
 				ob_start();
 				include($this->event_invitation_path);
 				$content = ob_get_clean();
@@ -340,7 +343,11 @@
 			return $invitation->loadInvitedListForEvent($event_id);
 		}
 		
-		
+		public function loadEventIncludedList($event_id){
+			include_once MODEL_PATH.'Event_Include.php';
+			$include = new Event_Include();
+			return $include->loadInvitedListForEvent($event_id);
+		}
 		
 		
 	}

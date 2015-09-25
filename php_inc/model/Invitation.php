@@ -1,18 +1,13 @@
 <?php
 	include_once 'Noti_Sendable.php';
 	include_once 'User_Table.php';
-	
-	
-	class Event_Invitation extends Noti_Sendable{
-		private $table_name = "event_invitation";
-		private $request_block_template_path = TEMPLATE_PATH_CHILD.'popover_notification_event_invitation_block.phtml';
-		private $accept_request_block_template_path = TEMPLATE_PATH_CHILD.'popover_notification_event_invitation_accept_block.phtml';
-		private $invited_list_path = TEMPLATE_PATH_CHILD.'event_invited_friend_list.phtml';
-		private $accept_noti_send_from_code = "eia-";
+	class Invitation extends Noti_Sendable{
+		private $table_name = null;
+		public function __construct($table_name){
+			parent::__construct($table_name);
+			$this->table_name = $table_name;
+		}
 		
-		public function __construct(){
-			parent::__construct($this->table_name);
-		}	
 		public function sendInvitation($user_id, $user_id_get_hash, $event_id){
 			$user = new User_Table();
 			$user_id_get = $user->getUserIdByKey($user_id_get_hash);
@@ -106,6 +101,13 @@
 				$isRequestIgnored = false;
 				if($isRequestAccepted !== true){
 					$isRequestIgnored = $this->isRequestAlreadyIgnored($hash);
+				}
+				
+				if($event->isEventEditableByUser($request_row['event_id'], $request_row['user_id'])){
+					$gender_call = $user->getWhatShouldCallForUser($request_row['user_id']);
+					$pronoun = $gender_call[1];
+				}else{
+					$pronoun = 'the';
 				}
 				
 				ob_start();
@@ -227,7 +229,5 @@
 		
 		
 		
-		
 	}
-	
 ?>

@@ -1,11 +1,11 @@
 <div class="inner inline-blk">
 	<div  class="header">
-		<div class="title vertical-center inline-blk">Invite People</div>
+		<div class="title vertical-center inline-blk"><?php echo $header_title; ?></div>
 		
 		<div class="vertical-center" style="float: right;position:relative">
 			<div id="selected-bar">
 				<div id="bar-icon-wrapper" class="inline-blk">
-				<span id="invitation-invited-bar-wrapper" class="pointer" ><span id="invitation-invited-num" data-num = "<?php echo $invitation_num ?>"><?php echo $invitation_num ?></span> Invited</span>
+				<span id="invitation-invited-bar-wrapper" class="pointer" ><span id="invitation-invited-num" data-num = "<?php echo $invitation_num ?>"><?php echo $invitation_num ?></span> <?php echo $action ?></span>
 				<span> - </span>
 				<div id="toggle-selected-detail" class="inline-blk pointer" >
 					<span id="invitation-selected-bar-wrapper" class="red-act"><span id="invitation-selected-num" class="red-act">0</span> Selected</span>
@@ -95,7 +95,7 @@
 					</div>
 					<div class="before-action">
 						<div class="inline-blk silver-button cancel-button popup-button dismiss" style="margin-right:6px">Cancel</div>
-						<div class="inline-blk action-button popup-button un-requestable invite-button" style="margin:0px 10px 0px 0px;">Invite</div>
+						<div class="inline-blk action-button popup-button un-requestable" style="margin:0px 10px 0px 0px;"><?php echo $button_action; ?></div>
 					</div>
 				</div>
 			</div>

@@ -6,7 +6,7 @@
 	
 	$active_interest_id = -1;
 	if(isset($_GET['a'])){
-		$interest_id = $interest->getInterestIdByNameForUser($_GET['a'], $_SESSION['id']);
+		$interest_id = $interest->getInterestIdByNameForUser($_GET['a'],$request_user_page_id);
 		if($interest_id !== false){
 			$content = $interest->getUserInterestBlockByInterestId($interest_id);
 			$active_interest_id = $interest_id;

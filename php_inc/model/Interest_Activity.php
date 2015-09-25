@@ -1092,13 +1092,10 @@
 			}
 			if($activity_id !== false){
 				$this->event = new Event($activity_id);
-				if(!$this->event->isEventPassedForActivityId($activity_id)){
-					include_once 'Event_Group.php';
-					$post_user = $this->getEventPostUserByActivityId($activity_id);
-					$e_g = new Event_Group();
-					$e_g->joinEventForUser($user_id, $this->event->event_id, $post_user);
-					
-				}
+				include_once 'Event_Group.php';
+				$post_user = $this->getEventPostUserByActivityId($activity_id);
+				$e_g = new Event_Group();
+				$e_g->joinEventForUser($user_id, $this->event->event_id, $post_user);
 			}	
 		}
 		
@@ -1621,6 +1618,16 @@
 			}
 		}
 		
+		public function loadEventIncludedList($key){
+			$event_id = $this->isEventExistsForActivityKey($key);	
+			if($event_id !== false){
+				$event = new Event();
+				return $event->loadEventIncludedList($event_id);
+			}
+		}
+		
+		
+		
 		/* need the post key to check whether the user has been invited or not*/
 		public function renderInvitationContactBlockByResource($user_found, $post_key){
 			$event = new Event();
@@ -1655,7 +1662,11 @@
 		}
 		
 		
-		public function getAllFriendContactByPlainList($all_friend_plain_list, $event_id = -1){
+		/*  the purpose for including the sender is for different request, it may be sent from "include request"
+			after the event, or it may be sent from the "invitaiton request" before the event
+			$sender could be either an instance of Event_Include Class or Event_Invitation
+		*/
+		public function getAllFriendContactByPlainList($all_friend_plain_list, $event_id = -1, $sender = false){
 			$contact = '';
 			if($all_friend_plain_list !== false){
 				include_once 'User_Table.php';
@@ -1669,7 +1680,11 @@
 					$event = new Event();
 					$event_joined = $event->hasUserJoinedEvent($user_id, $event_id);
 					if($event_joined === false){
-						$request_sent = $event->isUserInvitedInEvent($user_id, $event_id);	
+						if(!$sender){
+							$request_sent = $event->isUserInvitedInEvent($user_id, $event_id);	
+						}else{
+							$request_sent = $sender->isUserInvitedInEvent($user_id, $event_id);
+						}
 					}
 					ob_start();
 					include($this->invitation_contact_path);
@@ -1678,6 +1693,26 @@
 				}
 			}
 			return $contact;
+		}
+		
+		
+		
+		public function sendEventInclude($post_key, $list_string){
+			$invited_list = explode(',',  trim($list_string,','));
+			include_once MODEL_PATH.'Event_Include.php';
+			$include = new Event_Include();
+			$activity_id = $this->getActivityIdByKey($post_key);
+			if($activity_id !== false){
+				$event = new Event();
+				$event_id = $this->isEventExistsForActivityId($activity_id);
+				if($event_id !== false){
+					foreach($invited_list as $user_to_hash){
+						$include->sendInvitation($_SESSION['id'], $user_to_hash, $event_id);
+					}
+					return true;
+				}
+			}
+			return false;
 		}
 		
 		

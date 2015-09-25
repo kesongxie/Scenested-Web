@@ -125,10 +125,12 @@
 			<div class="arrow-up" style="position:absolute;top:-12px;right:6px;border-bottom:10px solid #FFFFFF"></div>
 			<?php //for those who have joined the event are able to upload the photos ?>
 				<!-- <div class="group-contact in_con_w_opt_it" data-key="<?php echo $group_key; ?>">Photo Collection</div> -->
-
-			
-			<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
-			<div class="in_con_w_opt_it invite-friend">Invite Friends</div>
+				<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
+					<?php if($isEventPassed): ?>
+						<div class="in_con_w_opt_it include-friend" title="Who else was in the event">Include Friends</div>
+					<?php else: ?>
+						<div class="in_con_w_opt_it invite-friend">Invite Friends</div>
+					<?php endif; ?>
 			<?php endif; ?>
 			<?php if($group_key !== false): ?>
 				<div class="group-contact in_con_w_opt_it" data-key="<?php echo $group_key; ?>">Group Message</div>

@@ -19,6 +19,8 @@
 					case 'favor_reply':return $this->favorReplyRenderer($row_id);break;
 					case 'event_invitation':return $this->eventInvitationRenderer($row_id);break;
 					case 'event_invitation_accept':return $this->eventInvitationAcceptRenderer($row_id);break;
+					case 'event_include':return $this->eventIncludeRenderer($row_id);break;
+					case 'event_include_accept':return $this->eventIncludeAcceptRenderer($row_id);break;
 					default:break;			
 				}
 			}
@@ -83,6 +85,19 @@
 			$invitation = new Event_Invitation();
 			return $invitation->renderEventInvitationRequestAcceptForNotificationBlock($row_id);
 		}
+		public function eventIncludeRenderer($row_id){
+			include_once MODEL_PATH.'Event_Include.php';
+			$include = new Event_Include();
+			return $include->renderEventInvitationRequestForNotificationBlock($row_id);
+		}
+		
+		public function eventIncludeAcceptRenderer($row_id){
+			include_once MODEL_PATH.'Event_Include.php';
+			$include = new Event_Include();
+			return $include->renderEventInvitationRequestAcceptForNotificationBlock($row_id);
+		}
+		
+		
 	
 	}
 

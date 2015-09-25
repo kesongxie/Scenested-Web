@@ -53,7 +53,7 @@
 					$time = convertDateTimeToAgo($latest_message['sent_time'], false,true, true,true);
 					if($latest_message['message_type'] == 'n'){
 						$fullname = $user->getUserFullnameByUserIden($latest_message['user_sent']);
-						$text = $fullname.' now is in the event';
+						$text = $fullname.' joined the event';
 					}else{
 						$text = $latest_message['text'];
 						if($latest_message['user_sent'] == $_SESSION['id']){

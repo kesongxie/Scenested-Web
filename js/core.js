@@ -746,6 +746,8 @@ $(document).keyup(function(evt){
 	if(evt.keyCode==27)
 	{	
 		resetDialog();
+		$('.invitation-wrapper').addClass('hdn');
+		
 	}
 });
 
@@ -1049,6 +1051,32 @@ $(document).ready(function(){
 			});
 		}
 	},'.event-invitation-request .accept');
+	
+	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var key = thisE.parents('.event-invitation-request').attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'ignore_event_invitation_request.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					if(resp != '1'){
+						thisE.parents('.option').find('.accept').remove();
+ 						thisE.text('Ignored').removeClass('ignore animate-opacity pointer plain-lk');
+ 					}
+				}
+			});
+		}
+	},'.event-invitation-request .ignore');
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -1744,8 +1772,8 @@ $(document).ready(function(){
 	$('body').on({
 		click:function(){
 			var parentDiv = $(this).parents('.sub');
-			if($(this).css('padding-left')=='6px'){
-				parentDiv.find('.selectable').css('padding-left','6px').removeClass('asct');
+			if($(this).css('padding-left')=='10px'){
+				parentDiv.find('.selectable').css('padding-left','10px').removeClass('asct');
 				$(this).addClass('asct');
 				$(this).animate({"padding-left": '+=10'},100);
 				if(parentDiv.find('.asct').length == 1){
@@ -1756,7 +1784,7 @@ $(document).ready(function(){
 			}
 			else{
 				$(this).removeClass('asct');
-				$(this).animate({"padding-left": '6px'},100);	
+				$(this).animate({"padding-left": '10px'},100);	
 				if(parentDiv.find('.asct').length == 1){
 					parentDiv.find('.action-button.request').removeClass('un-requestable').addClass('requestable');
 				}else{
@@ -2206,7 +2234,7 @@ $(document).ready(function(){
 			var parentDiv = $(this).parents('#chat-bar');
 			var footer = parentDiv.find('.chat-footer')
 			footer.animate({
-			'bottom':'0'
+			'bottom':'-4'
 			},100);
 			footer.find('input').focus();
 		}
@@ -2234,6 +2262,16 @@ $(document).ready(function(){
  			}else{
  				main_body.removeClass('hdn');
  				search_body.html('').addClass('hdn');
+ 			}
+ 		},
+ 		blur:function(){
+ 			var q = $(this).val();
+ 			if(q.trim() == ''){
+ 				var parentDiv = $(this).parents('#chat-bar');
+				var footer = parentDiv.find('.chat-footer')
+				footer.animate({
+				'bottom':'-40'
+				},100);
  			}
  		}
 	},'#chat-outer-wrapper #search-contact');
@@ -2431,7 +2469,7 @@ $(function($) {
 	
 	$(document).mousemove(function(event){
 		var hoverAvator = $('.hover-avator-wrapper');
-		if(!hoverAvator.hasClass('hdn')){
+		if(hoverAvator.length > 0 && !hoverAvator.hasClass('hdn')){
 	    	mouseMove.x = event.pageX;
 	    	mouseMove.y = event.pageY;
 	    	var hoverDivOffSet = hoverAvator.offset();
@@ -2590,11 +2628,13 @@ $(function($) {
 	},'.invite-friend');
 	
 	
+	
 	$('body').on({
 		click:function(){
 			var thisE = $(this);
 			var key = thisE.attr('data-key');
-			var post_key = $(this).parents('#evt-invitation-wrapper').attr('data-key');
+			var parentDiv = $(this).parents('.invitation-wrapper');
+			var post_key = parentDiv.attr('data-key');
 			$.ajax({
 				url:AJAX_DIR+'invitation_load_friend.php',
 				method:'post',
@@ -2602,14 +2642,14 @@ $(function($) {
 				success:function(resp){
 					console.log(resp);
 					if(resp != '1'){
-						$('#evt-invitation-wrapper .group-label').removeClass('active');
+						parentDiv.find('.group-label').removeClass('active');
 						thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s").addClass('active');;
-						$('#evt-invitation-wrapper .interest-side-label .txt_ofl').removeClass('red-act');
+						parentDiv.find('.interest-side-label .txt_ofl').removeClass('red-act');
 						thisE.find('.txt_ofl').addClass('red-act');
-						var contact = $('#evt-invitation-wrapper .right-content .contact');
+						var contact = parentDiv.find('.right-content .contact');
 						contact.find('.contact-inner').html(resp).removeClass('hdn');
 						contact.find('.suggest-contact-inner').addClass('hdn');
-						$('#evt-invitation-wrapper #invitation-search-wrapepr input').val('');
+						parentDiv.find('#invitation-search-wrapepr input').val('');
 						setTimeout(function(){
 							thisE.css('-webkit-animation',"").css('animation',"");
 						},200);	
@@ -2617,27 +2657,28 @@ $(function($) {
 				}	
 			});
 		}
-	},'#evt-invitation-wrapper .interest-side-label');
+	},'.invitation-wrapper .interest-side-label');
 	
 	
 	
 	$('body').on({
 		click:function(){
 			var thisE = $(this);
-			var post_key = $(this).parents('#evt-invitation-wrapper').attr('data-key');
+			var parentDiv = $(this).parents('.invitation-wrapper');
+			var post_key = parentDiv.attr('data-key');
 			$.ajax({
 				url:AJAX_DIR+'invitation_load_all_friend.php',
 				method:'post',
 				data:{post_key:post_key},
 				success:function(resp){
 					if(resp != '1'){
-						$('#evt-invitation-wrapper .group-label').removeClass('active');
+						parentDiv.find('.group-label').removeClass('active');
 						thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s").addClass('active');
-						$('#evt-invitation-wrapper .interest-side-label .txt_ofl').removeClass('red-act');
-						var contact = $('#evt-invitation-wrapper .right-content .contact');
+						parentDiv.find('.interest-side-label .txt_ofl').removeClass('red-act');
+						var contact = parentDiv.find('.right-content .contact');
 						contact.find('.contact-inner').html(resp).removeClass('hdn');
 						contact.find('.suggest-contact-inner').addClass('hdn');
-						$('#evt-invitation-wrapper #invitation-search-wrapepr input').val('');
+						parentDiv.find('#invitation-search-wrapepr input').val('');
 						setTimeout(function(){
 							thisE.css('-webkit-animation',"").css('animation',"");
 						},200);	
@@ -2645,22 +2686,23 @@ $(function($) {
 				}	
 			});
 		}
-	},'#evt-invitation-wrapper .all-friend');
+	},'.invitation-wrapper .all-friend');
 	
 	$('body').on({
 		click:function(){
-			$('#evt-invitation-wrapper').addClass('hdn');
+			$('.invitation-wrapper').addClass('hdn');
 		}
-	},'#evt-invitation-wrapper .dismiss');
+	},'.invitation-wrapper .dismiss');
 	
 	
 	$('body').on({
 		keyup:function(){
 			var q = $(this).val();
-			var key = $('#evt-invitation-wrapper .group-label.active').attr('data-key');
-			var parentContact = $('#evt-invitation-wrapper .right-content .contact');
+			var parentDiv = $(this).parents('.invitation-wrapper');
+			var key = parentDiv.find('.group-label.active').attr('data-key');
+			var parentContact = parentDiv.find('.right-content .contact');
 			if(q.trim() != ''){
-				var pkey = $(this).parents('#evt-invitation-wrapper').attr('data-key');
+				var pkey = parentDiv.attr('data-key');
 				$.ajax({
 					url:AJAX_DIR+'invitation_friend_search.php',
 					method:'post',
@@ -2677,25 +2719,26 @@ $(function($) {
 				parentContact.find('.contact-inner').removeClass('hdn');
 			}
 		},
-	},'#evt-invitation-wrapper #invitation-search-wrapepr input');
+	},'.invitation-wrapper #invitation-search-wrapepr input');
 	
 	$('body').on({
 		click:function(){
 			var target_image_url = $(this).find('.contact-pic').attr('src');
 			var key =  $(this).attr('data-key');
 			var name = $(this).find('.name').text().trim();
-			var icon_to_add = $('#evt-invitation-wrapper').find('.selected-icon-avator[data-key='+key+']');
+			var parentDiv = $(this).parents('.invitation-wrapper');
+			var icon_to_add = parentDiv.find('.selected-icon-avator[data-key='+key+']');
 			if(icon_to_add.length < 1){
-			 	$('#evt-invitation-wrapper #selected-preview-wrapper').prepend('<img src="'+target_image_url+'" class="selected-icon-avator" data-key="'+key+'" data-name="'+name+'">');
+			 	parentDiv.find('#selected-preview-wrapper').prepend('<img src="'+target_image_url+'" class="selected-icon-avator" data-key="'+key+'" data-name="'+name+'">');
 			}else{
 				icon_to_add.remove();
 			}
 			var remaining_target_count = $('#selected-bar .selected-icon-avator').length;
-			$('#evt-invitation-wrapper #invitation-selected-num').text(remaining_target_count);
-			var selected_bar = $('#evt-invitation-wrapper #selected-bar');
+			parentDiv.find('#invitation-selected-num').text(remaining_target_count);
+			var selected_bar = parentDiv.find('#selected-bar');
 			selected_bar.find('#selected-preview-wrapper').removeClass('hdn');
-			var inner_option_wrapper = $('#evt-invitation-wrapper .right-content .inner-option-wrapper');
-			var inviteButton = inner_option_wrapper.find('.invite-button');
+			var inner_option_wrapper = parentDiv.find('.right-content .inner-option-wrapper');
+			var inviteButton = inner_option_wrapper.find('.action-button');
 			if(remaining_target_count > 0){
 				inviteButton.removeClass('un-requestable').addClass('requestable');
 				if(remaining_target_count > 2){
@@ -2710,19 +2753,20 @@ $(function($) {
 			inner_option_wrapper.find('.after-action').addClass('hdn');
 			inner_option_wrapper.find('.before-action').removeClass('hdn');
 		}
-	},'#evt-invitation-wrapper .invitation-contact.selectable');
+	},'.invitation-wrapper .invitation-contact.selectable');
 	
 	$('body').on({
 		click:function(){
+			var parentDiv = $(this).parents('.invitation-wrapper');
 			$(this).find('#invitation-selected-bar-wrapper').addClass('red-act');
 			$(this).find('#invitation-selected-num').addClass('red-act');
 			$('#invitation-invited-bar-wrapper').removeClass('red-act');
 			$('#invitation-invited-bar-wrapper').find('#invitation-invited-num').removeClass('red-act');
 		
 			var selected_icon = $('#selected-bar .selected-icon-avator');
-			var selected_detail = $(this).parents('#evt-invitation-wrapper').find('#selected-detail');
-			var sub_inner = $('#evt-invitation-wrapper #selected-detail .sub-inner');
-			$('#evt-invitation-wrapper #invited-detail').addClass('hdn');
+			var selected_detail = parentDiv.find('#selected-detail');
+			var sub_inner = parentDiv.find('#selected-detail .sub-inner');
+			parentDiv.find('#invited-detail').addClass('hdn');
 			if(selected_icon.length < 1){
 				sub_inner.html('<div style="margin:10px;">The selected list is empty</div>');
 				selected_detail.toggleClass('hdn');
@@ -2744,7 +2788,7 @@ $(function($) {
 			}
 			return false;
 		}
-	},'#evt-invitation-wrapper #selected-bar #toggle-selected-detail');
+	},'.invitation-wrapper #selected-bar #toggle-selected-detail');
 	
 	
 	
@@ -2795,28 +2839,29 @@ $(function($) {
 		mouseleave:function(){
 			$(this).find('.remove-from').addClass('hdn');
 		}
-	},'#evt-invitation-wrapper .popover-list');
+	},'.invitation-wrapper .popover-list');
 	
 	
 	$('body').on({
 		click:function(){
+			var parentDiv = $(this).parents('.invitation-wrapper');
 			var selected_list = $(this).parents('.selected-list');
 			var key = selected_list.attr('data-key');
-			$('#evt-invitation-wrapper #selected-bar .selected-icon-avator[data-key='+key+']').remove();
+			parentDiv.find('#selected-bar .selected-icon-avator[data-key='+key+']').remove();
 			selected_list.remove();
 			var remaining_target_count = $('#selected-bar .selected-icon-avator').length;
-			$('#evt-invitation-wrapper #invitation-selected-num').text(remaining_target_count);
-			var seletced_bar = $('#evt-invitation-wrapper #selected-bar');
+			parentDiv.find('#invitation-selected-num').text(remaining_target_count);
+			var seletced_bar = parentDiv.find('#selected-bar');
 			if(remaining_target_count > 0){
 				seletced_bar.addClass('pointer');
-				$('#evt-invitation-wrapper .invite-button').removeClass('un-requestable').addClass('requestable');
+				parentDiv.find('.action-button').removeClass('un-requestable').addClass('requestable');
 			}else{
 				seletced_bar.removeClass('pointer');
-				$('#evt-invitation-wrapper .invite-button').addClass('un-requestable').removeClass('requestable');
+				parentDiv.find('.action-button').addClass('un-requestable').removeClass('requestable');
 				$('#selected-detail').addClass('hdn');
 			}
 		}
-	},'#evt-invitation-wrapper #selected-detail .remove-from-selected');
+	},'.invitation-wrapper #selected-detail .remove-from-selected');
 	
 	$('body').on({
 		click:function(){
@@ -2868,7 +2913,7 @@ $(function($) {
 						data:{key:key, keys:keys},
 						success:function(resp){
 							if(resp != '1'){
-								var selected_bar = $('#evt-invitation-wrapper #selected-bar');
+								var selected_bar = parentDiv.find('#selected-bar');
 								var selected_avator = selected_bar.find('.selected-icon-avator');
 								var selected_num = selected_avator.length;
 								var invited = selected_bar.find('#invitation-invited-num');
@@ -2878,9 +2923,9 @@ $(function($) {
 								selected_bar.find('#invitation-selected-num').text('0');
 								selected_bar.find('#selected-preview-wrapper').addClass('hdn');
 								selected_bar.animate({
-									'max-width':'130px'
+									'max-width':'140px'
 									},200,function(){
-									var content_inner = $('#evt-invitation-wrapper .content-inner');
+									var content_inner = parentDiv.find('.content-inner');
 									selected_avator.each(function(){
 										var contact_selectable = content_inner.find(' .list-item.invitation-contact.selectable[data-key='+$(this).attr('data-key')+']')
 										contact_selectable.removeClass('selectable pointer');
@@ -2892,7 +2937,7 @@ $(function($) {
 										});
 									});
 								});
-								var inner_option_wrapper = $('#evt-invitation-wrapper .right-content .inner-option-wrapper');
+								var inner_option_wrapper = parentDiv.find('.right-content .inner-option-wrapper');
 								parentDiv.find('#invitation-invited-bar-wrapper').addClass('pointer');
 								inner_option_wrapper.find('.after-action').removeClass('hdn');
 								inner_option_wrapper.find('.before-action').addClass('hdn');
@@ -2904,11 +2949,183 @@ $(function($) {
 			}
 		}
 	
-	},'#evt-invitation-wrapper .option-wrapper .invite-button');
+	},'#evt-invitation-wrapper .option-wrapper .action-button');
+	
+	
+	/*starts with include friend popup dialog javascript*/
+	
+	 $('body').on({
+		click:function(){
+			var key = $(this).parents('.evt-block').attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'load_event_include_friend_block.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					$('#dialog-popup-overlay').removeClass('hdn');
+					$('#evt-include-friend-wrapper').html(resp).removeClass('hdn').attr('data-key',key);
+				}	
+			});
+		}
+	},'.include-friend');
 	
 	
 	
 	
+	$('body').on({
+		click:function(){
+			if($(this).hasClass('requestable')){
+				var parentDiv = $(this).parents('#evt-include-friend-wrapper');
+				var key = parentDiv.attr('data-key');
+				if(key.trim() != ''){
+					var keys = '';
+					$('#selected-bar .selected-icon-avator').each(function(){
+						keys += $(this).attr('data-key')+',';
+					});
+					
+					$.ajax({
+						url:AJAX_DIR+'event_include_friends.php',
+						method:'post',
+						data:{key:key, keys:keys},
+						success:function(resp){
+							console.log(resp);
+							if(resp != '1'){
+								var selected_bar = parentDiv.find('#selected-bar');
+								var selected_avator = selected_bar.find('.selected-icon-avator');
+								var selected_num = selected_avator.length;
+								var invited = selected_bar.find('#invitation-invited-num');
+								var invited_num = parseInt(invited.attr('data-num'));
+								invited_num+=selected_num;
+								invited.text(invited_num).attr('data-num',invited_num);
+								selected_bar.find('#invitation-selected-num').text('0');
+								selected_bar.find('#selected-preview-wrapper').addClass('hdn');
+								selected_bar.animate({
+									'max-width':'140px'
+									},200,function(){
+									var content_inner = parentDiv.find('.content-inner');
+									selected_avator.each(function(){
+										var contact_selectable = content_inner.find('.list-item.invitation-contact.selectable[data-key='+$(this).attr('data-key')+']')
+										contact_selectable.removeClass('selectable pointer');
+										contact_selectable.find('.invitation-sent-wrapper').animate({
+											'margin-right':'10px'
+										},100,function(){
+											selected_avator.remove();
+											selected_bar.css('max-width','220px');
+										});
+									});
+								});
+								var inner_option_wrapper = parentDiv.find('.right-content .inner-option-wrapper');
+								parentDiv.find('#invitation-invited-bar-wrapper').addClass('pointer');
+								inner_option_wrapper.find('.after-action').removeClass('hdn');
+								inner_option_wrapper.find('.before-action').addClass('hdn');
+								$('#bar-icon-wrapper').css('width','inherit');
+							}
+						}	
+					});
+				}
+			}
+		}
+	
+	},'#evt-include-friend-wrapper .option-wrapper .action-button');
+	
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('#evt-include-friend-wrapper');
+			parentDiv.find('#selected-detail').addClass('hdn');
+			$(this).addClass('red-act');
+			$(this).find('#invitation-invited-num').addClass('red-act');
+			$('#invitation-selected-bar-wrapper').removeClass('red-act');
+			$('#invitation-selected-bar-wrapper').find('#invitation-selected-num').removeClass('red-act');
+			var key = parentDiv.attr('data-key');
+			var detail = parentDiv.find('#invited-detail');
+			
+			if(parseInt($('#invitation-invited-num').attr('data-num')) > 0 ){
+				if(detail.hasClass('hdn')){
+					$.ajax({
+						url:AJAX_DIR+'load_event_included_list.php',
+						method:'post',
+						data:{key:key},
+						success:function(resp){
+							if(resp != '1'){
+								detail.removeClass('hdn');
+								detail.find('.sub-inner').html(resp);
+							}
+						}			
+					});
+				}else{
+					detail.addClass('hdn');
+				}
+			}else{
+				detail.find('.sub-inner').html('<div style="margin:10px;">The invited list is empty</div>');
+				detail.toggleClass('hdn');
+			}
+			return false;
+	
+		}
+	},'#evt-include-friend-wrapper #selected-bar #invitation-invited-bar-wrapper');
+	
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('#evt-include-friend-wrapper');
+			var invited_list = $(this).parents('.invited-list');
+			var key = invited_list.attr('data-key');
+			var key_for = invited_list.find('.label-image').attr('data-key');
+			var thisE = $(this);
+			var detail = parentDiv.find('#invited-detail');
+			$.ajax({
+				url:AJAX_DIR+'delete_event_include.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					invited_list.remove();
+					var remaining_target_count = detail.find('.invited-list').length;
+					parentDiv.find('#invitation-invited-num').text(remaining_target_count).attr('data-num',remaining_target_count);
+					if(remaining_target_count == 0){
+						detail.find('.sub-inner').html('<div style="margin:10px;">The included list is empty</div>');
+					}
+					var contact = parentDiv.find('.contact-inner .list-item.invitation-contact[data-key='+key_for+']');
+					contact.find('.invitation-sent-wrapper').animate({
+						'margin-right':'-100px'
+					},100);
+					var inner_option_wrapper = parentDiv.find('.right-content .inner-option-wrapper');
+
+					contact.addClass('selectable pointer').removeClass('unselectable');
+				}
+			});			
+			
+		}
+	},'#evt-include-friend-wrapper #invited-detail .remove-from-invitation');
+	
+	
+	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var key = thisE.parents('.event-include-request').attr('data-key');
+			$.ajax({
+				url:AJAX_DIR+'accept_event_include_request.php',
+				method:'post',
+				data:{key:key},
+				success:function(resp){
+					console.log(resp);
+					if(resp != '1'){
+						thisE.parents('.option').find('.ignore').remove();
+ 						thisE.text('Accepted').removeClass('accept animate-opacity pointer plain-lk');
+ 						refreshMessage();
+ 					}
+				}
+			});
+		}
+	},'#header-notification-delegate .event-include-request .accept');
+	
+	
+	
+	
+	
+	/*ends with include friend popup dialog javascript*/
 	
 	
 });

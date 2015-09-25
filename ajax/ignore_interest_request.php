@@ -6,7 +6,6 @@
 	if(isset($_POST['key']) && !empty(trim($_POST['key'])) ){
 		$interest_request =new Interest_Request();
 		$request = $interest_request->ignoreInterestRequestForUser(trim($_POST['key']), $_SESSION['id']);
-		var_dump($request);
 		if($request === false){
  			echo '1';
  		}
