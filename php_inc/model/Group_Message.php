@@ -6,6 +6,7 @@
 		private  $own_dialog_template_path = TEMPLATE_PATH_CHILD.'own_dialog.phtml';
 		private  $others_dialog_template_path = TEMPLATE_PATH_CHILD.'others_dialog.phtml';
 		private $new_member_template_path = TEMPLATE_PATH_CHILD.'new_member_template_path.phtml';
+		private $initial_group_message_path = TEMPLATE_PATH_CHILD.'initial_group_chat_message.phtml';
 		private  $sent_from  = 'g-';
 
 
@@ -174,8 +175,16 @@
 					 if($result !== false && $result->num_rows >= 1){
 					 	$this->updateMesasgeToSeenFromGivenUser($group_id);
  						$rows = $result->fetch_all(MYSQLI_ASSOC);
-						$stmt->close();
-						$content = "";
+ 						$stmt->close();
+ 						$content = "";
+ 						include_once MODEL_PATH.'Event_Group.php';
+ 						$e_group = new Event_Group();
+ 						$resource = $e_group->getEventTextInfoByGroupId($group_id);
+ 						if($resource !== false)
+ 							ob_start();
+							include($this->initial_group_message_path);
+							$content = ob_get_clean();
+						}
 						foreach($rows as $row){
 							include_once 'User_Profile_Picture.php';
 							$profile = new User_Profile_Picture();
@@ -184,10 +193,8 @@
 							$user = new User_Table();
 							$text = $row['text'];
 							ob_start();
-							
 							$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($row['user_id']);
 							$unique_iden = $user->getUniqueIdenForUser($row['user_id']);
-							
 							if($row['message_type'] == 'n'){
 								if($row['user_id'] != $_SESSION['id']){
 									$fullname = $user->getUserFullnameByUserIden($row['user_id']);
@@ -206,7 +213,6 @@
 							$content .= ob_get_clean();
 						}
 						return $content;
-					 }
 				}
 			}
 			return false;

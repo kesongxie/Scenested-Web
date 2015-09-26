@@ -14,7 +14,7 @@
 		}
 		
 		public function getEventPhotoResourceByMomentId($event_id){
-			return  $this->getMultipleColumnsBySelector(array('hash','picture_url'), 'event_id', $event_id);
+			return  $this->getMultipleColumnsBySelector(array('hash','picture_url', 'user_id'), 'event_id', $event_id);
 
 		}
 		

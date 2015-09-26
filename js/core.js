@@ -624,6 +624,7 @@ function loadGroupConversation(thisE){
 		method:'post',
 		data:{key:key},
 		success:function(resp){
+			console.log(resp);
 			refreshMessage();
 			thisE.find('.n_r_s').addClass('hdn').text('0');
 			$('#chat-side-content #chat-box').remove();
@@ -2635,8 +2636,14 @@ $(function($) {
 			var key = thisE.attr('data-key');
 			var parentDiv = $(this).parents('.invitation-wrapper');
 			var post_key = parentDiv.attr('data-key');
+			var url;
+			if(parentDiv.is('#evt-invitation-wrapper')){
+				url = 'invitation_load_friend.php';
+			}else if(parentDiv.is('#evt-include-friend-wrapper')){
+				url = 'include_load_friend.php';
+			}
 			$.ajax({
-				url:AJAX_DIR+'invitation_load_friend.php',
+				url:AJAX_DIR + url,
 				method:'post',
 				data:{key:key, post_key:post_key},
 				success:function(resp){
@@ -2666,8 +2673,14 @@ $(function($) {
 			var thisE = $(this);
 			var parentDiv = $(this).parents('.invitation-wrapper');
 			var post_key = parentDiv.attr('data-key');
+			var url;
+			if(parentDiv.is('#evt-invitation-wrapper')){
+				url = 'invitation_load_all_friend.php';
+			}else if(parentDiv.is('#evt-include-friend-wrapper')){
+				url = 'include_load_all_friend.php';
+			}
 			$.ajax({
-				url:AJAX_DIR+'invitation_load_all_friend.php',
+				url:AJAX_DIR+url,
 				method:'post',
 				data:{post_key:post_key},
 				success:function(resp){
@@ -3120,6 +3133,8 @@ $(function($) {
 			});
 		}
 	},'#header-notification-delegate .event-include-request .accept');
+	
+	
 	
 	
 	

@@ -233,6 +233,18 @@
 		}
 		
 		public function getEventInforByEventId($event_id, $group_id = false){
+			$resource = $this->getEventTextResource($event_id);
+			if($resource !== false){
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'group_chat_event_info.phtml');
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
+		}
+		
+		
+		public function getEventTextResource($event_id){
 			$evt_resource = $this->loadEventResourceByEventId($event_id);
 			if($evt_resource !== false){
 				$title = $evt_resource['title'];
@@ -250,14 +262,19 @@
 					$time .= convertTimeToAmPm($evt_resource['time']);
 				}
 				
-				
-				ob_start();
-				include(TEMPLATE_PATH_CHILD.'group_chat_event_info.phtml');
-				$content = ob_get_clean();
-				return $content;
+				include_once MODEL_PATH.'User_Media_Prefix.php';
+				$prefix = new User_Media_Prefix();
+				$event_photo = $this->event_photo->getEventPhotoResourceByMomentId($event_id);
+				$media_prefix = $prefix->getUserMediaPrefix($event_photo['user_id']).'/';
+				if($event_photo !== false && isMediaDisplayable($media_prefix.$event_photo['picture_url'])){
+					$event_photo_url = U_IMGDIR.$media_prefix.$event_photo['picture_url'];
+				}
+				return array("title"=>$title, "description"=>$description, "location"=>$location, "time"=>$time, "event_photo_url"=>$event_photo_url);
 			}
 			return false;
+					
 		}
+		
 		
 		
 		public function isEvtPhotoUploadableByUserForEvent($user_id, $event_id){
@@ -302,17 +319,19 @@
 		
 		
 		
+		/* this method is for loading friends for event invitation */
 		public function getInvitationUserFriendBlockByInterestId($interest_id, $post_key, $limit_num = -1, $offset = 0 ){
-			include_once 'User_In_Interest.php';
+			include_once MODEL_PATH.'User_In_Interest.php';
 			$in = new User_In_Interest();
-			include_once 'Interest_Activity.php';
+			include_once MODEL_PATH.'Interest_Activity.php';
 			$activity = new Interest_Activity();
 			$user_found = $in->getUserInInterestByInterestId($interest_id, $limit_num, $offset);
-			return $activity->renderInvitationContactBlockByResource($user_found, $post_key);	
+			include_once MODEL_PATH.'Event_Invitation.php';
+			return $activity->renderInvitationContactBlockByResource($user_found, $post_key, new Invitation());	
 			
 		}
 		
-		
+		/* this method is for loading friends for event invitation */
 		public function getInvitationAllUserFriendBlock($post_key){
 			include_once 'User_In_Interest.php';
 			$in = new User_In_Interest();
@@ -321,10 +340,35 @@
 			include_once 'Interest_Activity.php';
 			$activity = new Interest_Activity();
 			$user_found = $in->getAllFriendsInUsersInterestByUserId($_SESSION['id']);
-			return $activity->renderInvitationContactBlockByResource($user_found, $post_key);	
-		
+			include_once MODEL_PATH.'Event_Invitation.php';
+			return $activity->renderInvitationContactBlockByResource($user_found, $post_key, new Invitation());	
 		}
-
+		
+		/* this method is for loading friends for event include */
+		public function getIncludeUserFriendBlockByInterestId($interest_id, $post_key, $limit_num = -1, $offset = 0 ){
+			include_once 'User_In_Interest.php';
+			$in = new User_In_Interest();
+			include_once 'Interest_Activity.php';
+			$activity = new Interest_Activity();
+			$user_found = $in->getUserInInterestByInterestId($interest_id, $limit_num, $offset);
+			include_once MODEL_PATH.'Event_Include.php';
+			return $activity->renderInvitationContactBlockByResource($user_found, $post_key, new Event_Include());	
+			
+		}
+		
+		
+		/* this method is for loading friends for event include */
+		public function getIncludeAllUserFriendBlock($post_key){
+			include_once 'User_In_Interest.php';
+			$in = new User_In_Interest();
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			include_once 'Interest_Activity.php';
+			$activity = new Interest_Activity();
+			$user_found = $in->getAllFriendsInUsersInterestByUserId($_SESSION['id']);
+			include_once MODEL_PATH.'Event_Include.php';
+			return $activity->renderInvitationContactBlockByResource($user_found, $post_key, new Event_Include());	
+		}
 		
 		
 		//for now the event is 

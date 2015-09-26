@@ -1629,7 +1629,7 @@
 		
 		
 		/* need the post key to check whether the user has been invited or not*/
-		public function renderInvitationContactBlockByResource($user_found, $post_key){
+		public function renderInvitationContactBlockByResource($user_found, $post_key, $sender = false){
 			$event = new Event();
 			$event_id = $this->isEventExistsForActivityKey($post_key);	
 			if($event_id !== false){
@@ -1642,9 +1642,15 @@
 						$fullname = $u['fullname'];
 						$profile_pic = $user->getLatestProfilePictureForuser($u['id']);
 						$unique_iden = $u['hash'];
-						$event_joined = $event->hasUserJoinedEvent($user_id, $event_id);
+						$event_joined = $event->hasUserJoinedEvent($u['id'], $event_id);
+						
+						var_dump($sender);
 						if($event_joined === false){
-							$request_sent = $event->isUserInvitedInEvent($u['id'], $event_id);	
+							if(!$sender){
+								$request_sent = $event->isUserInvitedInEvent($u['id'], $event_id);	
+							}else{
+								$request_sent = $sender->isUserInvitedInEvent($u['id'], $event_id);
+							}
 						}
 						ob_start();
 						include($this->invitation_contact_path);

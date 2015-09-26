@@ -30,7 +30,9 @@
 			$group_id = $this->getGroupIdByGroupKey($group_key);
 			include_once 'Group_Message.php';
 			$g_m = new Group_Message();
-			return $g_m->getGroupMessagesForUser($group_id);
+			$conversation =  $g_m->getGroupMessagesForUser($group_id);
+			return $conversation;
+			
 		}
 		
 		
