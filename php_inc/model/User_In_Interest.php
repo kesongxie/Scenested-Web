@@ -382,25 +382,6 @@
 			return $list;
 		}
 		
-			
-	// 	public function getUserFriendBlockByFriendUrl($url){
-// 			$segments = explode('/', trim($url,'/'));
-// 			if(sizeof($segments) == 4 && $segments[0] == 'user' && $segments[2] == 'friends'){
-// 				include_once 'Interest.php';
-// 				$interest = new Interest();
-// 				include_once 'User_Table.php';
-// 				$user = new User_Table();
-// 				$user_id = $user->getUserIdByAccessUrl($segments[1]);
-// 				if($user_id !== false){
-// 					$interest_id = $interest->getInterestIdByNameForUser($segments[3], $user_id);
-// 					if($interest_id !== false){
-// 						return $this->getUserFriendBlockByInterestId($interest_id);
-// 					}
-// 				}
-// 			}
-// 			return false;
-// 		}
-// 		
 		public function returnInvitationSearchForAllFriends($key_word){
 			$stmt = $this->connection->prepare("
 			SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url 
@@ -460,8 +441,26 @@
 			return false;
 		}
 		
-		
-
+		/*
+			get which interest id the $user_in is in the $interest_owner
+		*/
+		public function getUserConnectionInterestIdForUser($user_id, $user_in){
+			$stmt = $this->connection->prepare("
+			SELECT `interest_id` FROM  `$this->table_name` WHERE `user_id` = ? AND `user_in` = ? LIMIT 1
+			");			
+			if($stmt){
+				$stmt->bind_param('ii', $user_id, $user_in);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1 ){
+						$result = $result->fetch_assoc();
+						$stmt->close();
+						return $result['interest_id'];
+					}
+				}
+			}
+			return false;
+		}
 		
 		
 			

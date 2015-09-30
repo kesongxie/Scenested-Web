@@ -61,6 +61,7 @@ $(document).ready(function(){
 			method: 'post',
 			data:{data:data},
 			success:function(resp){
+				console.log(resp);
 				loadingDiv.addClass('hdn');
 				$('#signup-data-form .sign-up-alert').remove();
 				if(resp == '0'){

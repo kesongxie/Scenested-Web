@@ -13,7 +13,7 @@
 			$user_id_get = $user->getUserIdByKey($user_id_get_hash);
 			include_once 'Event.php';
 			$event = new Event();
-			if($user_id_get !== false && $event->hasUserJoinedEvent($user_id_get, $event_id) && $user_id != $user_id_get &&  $event->isEventEditableByUser($event_id, $user_id)){
+			if($user_id_get !== false && !$event->hasUserJoinedEvent($user_id_get, $event_id) && $user_id != $user_id_get &&  $event->isEventEditableByUser($event_id, $user_id)){
 				if(!$this->isRequestAlreadySentForEventId($user_id, $user_id_get, $event_id)){
 					$hash = $this->generateUniqueHash();
 					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`user_id_get`,`event_id`,`sent_time`,`hash`) VALUES(?, ?, ?, ?, ?)");

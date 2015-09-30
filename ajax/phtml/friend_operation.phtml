@@ -9,8 +9,8 @@
 			</div>
 			
 			<!--starts int-group-->
-			<div class="sub int-group child-scrollable hdn"  style="position:absolute;right:-100%;width:100%;background:#fff;">
-				<div class="back-to-main" style="cursor:default;padding:10px;text-align:center;border-bottom:1px solid #f0f0f0;"><img src="<?php echo IMGDIR ?>left_nxt.png" style="float:left;margin-top:4px;margin-right:-12px;" height="12" width="12">Interest Group</div>
+			<div class="sub int-group child-scrollable hdn">
+				<div class="back-to-main"><img class="prev" src="<?php echo IMGDIR ?>left_nxt.png" height="12" width="12">Interest Group</div>
 				<div style="max-height:130px;overflow:scroll">
 					<?php if($rows !== false && sizeof($rows) > 0): ?>
 					<?php foreach($rows as $row): ?>
@@ -18,7 +18,7 @@
 							$hash = $in->isUserInInterest($_SESSION['id'],$user_to, $row['id']);
 							if($hash !== false): 
 						?>
-							<div  class="in_con_border_top" style="padding:6px 10px;cursor:default;" data-key="<?php echo $row['id'] ?>" data-hash="<?php echo $hash ?>" title="In your <?php echo htmlentities($row['name']); ?> interest group">
+							<div  class="in_con_border_top" data-key="<?php echo $row['id'] ?>" data-hash="<?php echo $hash ?>" title="In your <?php echo htmlentities($row['name']); ?> interest group">
 								<img class="label-image" src="<?php echo $row['picture_url']; ?>" />
 								<div class="inline-blk txt_ofl red-act" style="width:95px;margin-top:3px;font-size:13px;"><?php echo $row['name'] ?></div>
 								<img class="remove-from-interest pointer animate-opacity" src="<?php echo IMGDIR ?>minus_icon.png" title="Remove from interest group" height="16" wdith="16" style="float:right;margin-top:8px;" />
@@ -28,9 +28,9 @@
 								$sent =	$interest_request->isRequestAlreadySentForInterestId($_SESSION['id'],$user_to, $row['id']);
 								if($sent): 
 							?>
-								<div  class="in_con_border_top" style="padding:6px 10px;cursor:default;" data-key="<?php echo $row['id'] ?>">
+								<div  class="in_con_border_top" data-key="<?php echo $row['id'] ?>">
 							<?php else:?>
-								<div  class="in_con_w_opt_it in_con_border_top selectable" title="Connect to my <?php echo $row['name'] ?> interest group" style="padding:6px 10px;" data-key="<?php echo $row['id'] ?>">
+								<div  class="in_con_w_opt_it in_con_border_top selectable" title="Connect to my <?php echo $row['name'] ?> interest group" data-key="<?php echo $row['id'] ?>">
 							<?php endif; ?>	<!--ends first sent if-->
 								<img class="label-image" src="<?php echo $row['picture_url']; ?>" />
 								<div class="inline-blk txt_ofl" style="width:95px;margin-top:3px;font-size:13px;"><?php echo $row['name'] ?></div>
@@ -49,14 +49,14 @@
 			</div> <!-- ends int-group-->
 			
 			<!--starts collection group-->
-			<div class="sub connection-group child-scrollable hdn"  style="position:absolute;right:-100%;width:100%;background:#fff;">
-				<div class="back-to-main" style="cursor:default;padding:10px;text-align:center"><img src="<?php echo IMGDIR ?>left_nxt.png" style="float:left;margin-top:4px;margin-right:-12px;" height="12" width="12">Connections</div>
+			<div class="sub connection-group child-scrollable hdn">
+				<div class="back-to-main"><img class="prev" src="<?php echo IMGDIR ?>left_nxt.png" height="12" width="12">Connections</div>
 				<div style="max-height:130px;overflow:scroll">
 		
 			
  				<?php if($rows_in !== false && sizeof($rows_in) > 0): ?>
 					<?php foreach($rows_in as $row): ?>
-						<div class="in_con_border_top" style="padding:6px;cursor:default;" data-key="<?php echo $row['hash'] ?>" title="In <?php echo $row['firstname'] ?>'s <?php echo htmlentities($row['name']) ?> interest group">
+						<div class="in_con_border_top" data-key="<?php echo $row['hash'] ?>" title="In <?php echo $row['firstname'] ?>'s <?php echo htmlentities($row['name']) ?> interest group">
 							<img class="label-image" src="<?php echo $row['picture_url'] ?>">
 							<div class="inline-blk txt_ofl red-act" style="width:95px;margin-top:3px;font-size:13px;"><?php echo htmlentities($row['name']); ?></div>
 							<img class="leave-interest-group pointer animate-opacity" src="<?php echo IMGDIR ?>minus_icon.png" title="Leave this interest group" height="16" wdith="16" style="float:right;margin-top:8px;">

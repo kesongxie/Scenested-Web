@@ -258,7 +258,9 @@ textarea{
 }
 
 #logo{
+/* 
 	box-shadow: 1px 1px 10px gray;
+ */
 	border-radius: 5px;
 	text-align: center;
 	padding: 8px 14px;
@@ -321,7 +323,7 @@ div.ui-datepicker{
 .in_con_opt_w .arrow-up{
 	position: absolute;
     top: -11px;
-    right: 6px;
+    right: 9px;
     border-bottom: 10px solid #FFFFFF;
 }
 
@@ -805,7 +807,7 @@ div.ui-datepicker{
 	font-weight: 600;
 }
 .post-user-name{
-	color:#727272;
+	color:#323232;
 }
 
 .post-wrapper .content{
@@ -1571,6 +1573,28 @@ img.gallery-navi{
 	/* margin:0px 6px 2px 0px; */
 }
 
-
-
 /*	ends evt-invitation-wrapper template */
+
+.fri-oper .back-to-main{
+	cursor:default;
+	padding:10px;
+	text-align:center;
+	border-bottom:1px solid #f0f0f0;
+}
+.fri-oper .sub{
+	position:absolute;
+	right:-100%;
+	width:100%;
+	background:#fff;
+}
+
+.fri-oper .sub .prev{
+	float:left;
+	margin-top:4px;
+	margin-right:-12px;
+}
+
+.fri-oper .in_con_border_top{
+	padding:6px 10px;
+	cursor:default;
+}

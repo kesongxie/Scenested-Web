@@ -118,7 +118,7 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
-			var index_post_wrapper = $(this).parents('.feed-right').find('#index-post-wrapper');
+			var index_post_wrapper = $(this).parents('.feed-left').find('#index-post-wrapper');
 			var inner_wrapper = $(this).parents('.interest-content-inner-wrapper');
 			
 			var parentDiv = $(this).parents('.interest-profile-post');

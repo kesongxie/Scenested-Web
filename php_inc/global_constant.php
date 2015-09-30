@@ -23,6 +23,7 @@
 	define("TEMPLATE_PATH",SCRIPT_INCLUDE_BASE.'phtml/');
 	define("AJAX_TEMPLATE_PATH", SCRIPT_INCLUDE_BASE.'/ajax/phtml/');
 	define("TEMPLATE_PATH_CHILD",TEMPLATE_PATH.'child/');
+	define("TEMPLATE_PATH_EMAIL",TEMPLATE_PATH.'email/');
 	define("PHP_INC_PAHT",SCRIPT_INCLUDE_BASE.'php_inc/' );
 	define("MODEL_PATH",PHP_INC_PAHT.'model/');
 	

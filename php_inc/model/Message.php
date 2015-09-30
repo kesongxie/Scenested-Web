@@ -5,6 +5,8 @@
 		private  $contact_block_template_path = TEMPLATE_PATH_CHILD."contact_block.phtml";		
 		private  $own_dialog_template_path = TEMPLATE_PATH_CHILD.'own_dialog.phtml';
 		private  $others_dialog_template_path = TEMPLATE_PATH_CHILD.'others_dialog.phtml';
+		private $initial_message_path = TEMPLATE_PATH_CHILD.'initial_chat_message.phtml';
+
 		private  $sent_from  = 'm-';
 
 
@@ -67,6 +69,7 @@
  						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
 						$content = "";
+						
 						foreach($rows as $row){
 							include_once 'User_Profile_Picture.php';
 							$profile = new User_Profile_Picture();
@@ -102,17 +105,34 @@
 				$stmt->bind_param('iiii',$user_id, $user_with, $user_id, $user_with);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
+					
 					 if($result !== false && $result->num_rows >= 1){
 					 	$this->updateMesasgeToSeenFromGivenUser($user_id, $user_with);
  						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
 						$content = "";
+						include_once MODEL_PATH.'User_Table.php';
+						$user = new User_Table();
+						include_once MODEL_PATH.'User_In_Interest.php';
+						$in = new User_In_Interest();
+						$connect_interest_id = $in->getUserConnectionInterestIdForUser($user_id, $user_with);
+						include_once MODEL_PATH.'Interest.php';
+						$interest = new Interest();
+						if($connect_interest_id !== false){
+							$interest_name = $interest->getInterestNameByInterestId($connect_interest_id);
+							if( $interest_name !== false){
+								$fullname = $user->getUserFullnameByUserIden($user_with);
+								$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($user_with);
+								$unique_iden = $user->getUniqueIdenForUser($user_with);
+								$profile_pic = $user->getLatestProfilePictureForuser($user_with);
+								ob_start();
+								include($this->initial_message_path);
+								$content = ob_get_clean();
+							}
+						}
+						
 						foreach($rows as $row){
-							include_once 'User_Profile_Picture.php';
-							$profile = new User_Profile_Picture();
-							$profile_pic = $profile->getLatestProfileImageForUser($row['user_id']);
-							include_once 'User_Table.php';
-							$user = new User_Table();
+							$profile_pic = $user->getLatestProfilePictureForuser($row['user_id']);
 							$fullname = $user->getUserFullnameByUserIden($row['user_id']);
 							$text = $row['text'];
 							$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($row['user_id']);
@@ -129,6 +149,7 @@
 						}
 						return $content;
 					 }
+					 
 				}
 			}
 			return false;

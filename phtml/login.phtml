@@ -22,7 +22,7 @@
 				Hipout
 				</div>
 				<div class="inline-blk right-bar">
-					<span id="prompt-sign-up-header-top" class="pointer"><img class="right-bar-item" src="<?php echo IMGDIR ?>lock.png"  title="login" />Sign in</span>
+					<span id="prompt-sign-up-header-top" class="pointer"><img class="right-bar-item" src="<?php echo IMGDIR ?>lock.png"  title="login" />Log in</span>
 					<span id="prompt-log-in-header-top" class="pointer" ><img  id="signup-icon" class="right-bar-item" src="<?php echo IMGDIR ?>signup_icon.jpg"  title="signUp">Sign up</span>
 				</div>
 			</div>
@@ -80,11 +80,15 @@
 								<div id="signup-form-body" class="dialog-body">
 								<div id="signup-field-wrapper" style="margin-top:20px;" >
 									<div><input id="signup-iden" type="text" name="signup-iden" class="text" placeholder="enter your email address"></div>
+<!-- 
 									<div><input id="signup-re-iden" type="text"  name="signup-re-iden" class="text" placeholder="re-enter your email address"></div>
+ -->
 									<div><input id="signup-firstname" type="text" name="signup-firstname" class="text" placeholder="enter your first name"></div>
-									<div><input id="signup-lastname" type="text" name="signup-lastname" class="text" placeholder="enter your last name"></div>
-									<div><input id="signup-password" type="password" name="signup-password" class="text" placeholder="create your password"></div>
+									<div><input id="signup-lastname" type="text" name="signup-lastname" class="text" autocomplete = "false" placeholder="enter your last name"></div>
+									<div><input id="signup-password" type="password" name="signup-password" class="text" autocomplete = "false" placeholder="create your password"></div>
+<!-- 
 									<div><input id="signup-re-password" type="password" name="signup-re-password" class="text" placeholder="re-enter your password"></div>
+ -->
 								</div>
 							
 							</div>
@@ -94,7 +98,7 @@
 									<input type="radio" name="signup-gender" value="2" style="margin-left:4px;"><label for="sign-up-m">Male</label>	
 									<div id="signup-term-prompt">By clicking the sign up button, you agree with our <a href="terms.php" class="plain-lk" style="color:rgb(8, 39, 187)">term of use</a></div>
 								</div>
-								<div id="signup-button-wrapper" class="right-bar" style="width:30%;min-width:86.7px;max-width:90px;margin-right:4px;"  >
+								<div id="signup-button-wrapper" class="right-bar" style="width:30%;min-width:86.7px;max-width:90px;margin-right:4px;margin-top:6px;"  >
 									<input id="signup-button" class="light-gray-button login-action-button pointer hovering" type="submit" value="SignUp">
 								</div>
 							</div>

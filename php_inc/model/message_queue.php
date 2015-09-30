@@ -35,16 +35,21 @@
 				$queues = explode(',',trim($m_q,","));
 				if(sizeof($queues) > 0){
 					$content = "";
+					$count = 0;
 					foreach($queues as $queue){
-						$segment = explode('-',$queue); //can be either m or gm, stands for message and group message resptively
-						if(sizeof($segment) == 2){				
-							$sent_from = $segment[0];
-							$row_id = $segment[1]; //this can be user_id or a group id
-							switch($sent_from){
-								case 'm':$content.= $this->message->renderMessageContactOfGivenUser($row_id);break;
-								case 'g':$content.= $this->group_message->renderMessageContactOfGivenGroup($row_id);break;
-								default:break;
+						if(++$count <= 8){
+							$segment = explode('-',$queue); //can be either m or gm, stands for message and group message resptively
+							if(sizeof($segment) == 2){				
+								$sent_from = $segment[0];
+								$row_id = $segment[1]; //this can be user_id or a group id
+								switch($sent_from){
+									case 'm':$content.= $this->message->renderMessageContactOfGivenUser($row_id);break;
+									case 'g':$content.= $this->group_message->renderMessageContactOfGivenGroup($row_id);break;
+									default:break;
+								}
 							}
+						}else{
+							break;
 						}
 					}
 					return $content;

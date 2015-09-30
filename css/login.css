@@ -110,24 +110,21 @@
 
 
 #login-body #login-body-inner .right-bar #signup-form{
-	width:70%;
-	margin:80px 0px 0px 60px;
+	width:74%;
+	margin:80px 0px 0px 90px;
 	min-height:300px;
 	min-width:330px;
 }
 
 #login-body #login-body-inner .right-bar #signup-form-body{
-	height:230px;
+	/* height:230px; */
 }
 
 
 #login-body #login-body-inner .right-bar #signup-form .sign-up-alert{
-	background: white;
 	color: #c40000;
 	position: absolute;
 	width: 200px;
-	border: 1px solid #f0f0f0;
-	box-shadow: 1px 1px 10px #f0f0f0;
 	left: -220px;
 	padding: 4px;
 	text-align:left;
@@ -157,6 +154,8 @@
 
 
 
+
+
 #login-body #login-body-inner .right-bar #signup-form #signup-form-footer{
 	height:80px;
 }
@@ -164,6 +163,15 @@
 #login-body #login-body-inner .right-bar #signup-form #signup-form-footer .gender-alert{
 	left:-238px;
 	top:-6px;
+}
+
+#login-body #login-body-inner .dialog-header .dialog-header-inner .dialog-header-left-item{
+ 	width: 48.6% !important;
+
+}
+
+#login-body #login-body-inner .dialog-header .dialog-header-inner{
+	margin:0px 0px 0px 18px !important;
 }
 
 #login-body #login-body-inner .right-bar #signup-form #signup-form-footer #signup-term-prompt{
@@ -181,3 +189,4 @@
 	position:absolute;
 	bottom:0px;
 }
+

@@ -7,7 +7,6 @@
 		private $reply_template_path = "phtml/child/reply_block.phtml";
 		private $popover_notification_template_path = "phtml/child/popover_notification_reply_block.phtml";
 		private $noti_user_popover_notification_template_path = "phtml/child/popover_notification_noti_user_reply_block.phtml";
-
 		private $sub_reply_template_path = "phtml/child/sub_reply_block.phtml";
 		public function __construct(){
 			parent::__construct($this->table_name);
@@ -156,7 +155,10 @@
 			$at_fullname = $user->getUserFullnameByUserIden($sub_reply['user_id_get']);
 			$post_time = convertDateTimeToAgo($sub_reply['sent_time'], false);	
 			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($sub_reply['user_id']);
+			$sub_user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($sub_reply['user_id_get']);
+
 			$unique_iden = $user->getUniqueIdenForUser($sub_reply['user_id']);
+			$unique_iden_sub = $user->getUniqueIdenForUser($sub_reply['user_id_get']);
 			$text = $sub_reply['text'];
 			$user_id = $sub_reply['user_id'];
 			$hash = $sub_reply['hash'];

@@ -5,7 +5,7 @@
 	$m_q = new Message_Queue();
 	$contact_block = $m_q->getMessageQueueBlockForUserId($_SESSION['id']);
 	$educ = new Education();
-	$school_name = $educ->getSchoolName();
+	// $school_name = $educ->getSchoolName();
 	include_once TEMPLATE_PATH_CHILD.'chat.phtml';
 	
 	

@@ -48,18 +48,17 @@
 			$in = new User_In_Interest();
 			$friends = $in->getAllFriendsInUsersInterest();
 			$left_content = "";
-			$left_content = $this->getIndexAvator();						
 			$right_content = "";
-			
+			$right_content = $this->getIndexAvator();					
 			include_once 'Interest.php';
 			$interest  = new Interest();
 			if($interest->isUserHasInterest($_SESSION['id'])){
-				$right_content = $this->getRecentPostPreview();			
+				$left_content = $this->getRecentPostPreview();			
 			}else{
 				$content = $interest->getAddNewInterestBlock();
 				ob_start();
 				include(TEMPLATE_PATH_CHILD.'index_post_wrapper.phtml');
-				$right_content = ob_get_clean();			
+				$left_content = ob_get_clean();			
 			}
 			
 			$user_in = '';
@@ -87,9 +86,9 @@
 								$content = $this->getEventInterestActivityBlockByActivityId($row['id'], true);
 							}
 							if($count++ % 2 == 0){
-								$left_content.= $content;
-							}else{
 								$right_content.= $content;
+							}else{
+								$left_content.= $content;
 							}
 						}
 						$this->feed_id_list = trim($feed_id_list,',');

@@ -517,7 +517,7 @@ function setPageTitleWithNewMessageNum(message_num){
 					page_title.text(page_title.attr('data-from'));
 				}
 				else{
-					page_title.text('Lsere');
+					page_title.text('Hipout');
 				}
 			}
 		}
@@ -2234,10 +2234,12 @@ $(document).ready(function(){
 		click:function(){
 			var parentDiv = $(this).parents('#chat-bar');
 			var footer = parentDiv.find('.chat-footer')
-			footer.animate({
-			'bottom':'-4'
-			},100);
-			footer.find('input').focus();
+			if(footer.css('bottom') != '-4px'){
+				footer.animate({
+				'bottom':'-4'
+				},100);
+				footer.find('input').focus();
+			}
 		}
 	
 	},'#chat-side-content #chat-search');
