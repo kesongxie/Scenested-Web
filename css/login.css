@@ -110,8 +110,8 @@
 
 
 #login-body #login-body-inner .right-bar #signup-form{
-	width:74%;
-	margin:80px 0px 0px 90px;
+	width:78%;
+	margin:80px 0px 0px 100px;
 	min-height:300px;
 	min-width:330px;
 }
@@ -149,7 +149,7 @@
 
 #login-body #login-body-inner .right-bar #signup-form #signup-form-body #signup-field-wrapper .text{
 	margin-bottom:10px;
-	width:86%;
+	width:88%;
 }
 
 

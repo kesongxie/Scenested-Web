@@ -22,6 +22,6 @@
 	}else if($notification_number > 0){
 		$title = 'Notification('.$notification_number.')';
 	}else{
-		$title = 'Hipout';
+		$title = 'Higout';
 	}
 ?>

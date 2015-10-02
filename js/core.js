@@ -517,7 +517,7 @@ function setPageTitleWithNewMessageNum(message_num){
 					page_title.text(page_title.attr('data-from'));
 				}
 				else{
-					page_title.text('Hipout');
+					page_title.text('Higout');
 				}
 			}
 		}

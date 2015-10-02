@@ -6,6 +6,8 @@
 		private  $table_name = "interest";
 		private $interest_activity = null;
 		private $suggest_friend_block = TEMPLATE_PATH_CHILD."suggest_friend_block.phtml";
+		private $initial_friend_block =  TEMPLATE_PATH_CHILD."initial_profile_friend_block.phtml";
+
 		public function __construct(){
 			parent::__construct($this->table_name);
 			include_once 'Interest_Activity.php';
@@ -636,60 +638,69 @@
 		}
 		public function initContentForFriend($user_id, $all = true){
 			include_once 'User_In_Interest.php';
-			include_once 'User_Table.php';
-			$user = new User_Table();
 			$in = new User_In_Interest();
 			$user_found = $in->getAllFriendsInUsersInterestByUserId($user_id);
 			$friend_block = null;
 			$content = '';
 			if($user_found !== false){
-				include_once 'User_Profile_Picture.php';
-				$profile = new User_Profile_Picture();
 				$friend_block = "";
 				foreach($user_found as $u){
-						$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
-						$cover_pic =  $user->getLatestCoverForuser($u['id']);
-						$fullname = $u['fullname'];
-						$hash = $u['hash'];
-						$rows = $this->getInterestNameForUser($u['id'], 2);
-						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
-						$user_id = $u['id'];
-						$result_array = array();
-						include_once 'Education.php';
-						$educ = new Education();
-						$education = $educ->getEducationByUserId($u['id']);
-						
-						$interest_list = '';
- 						if($rows !== false){
- 							$count = 1;
- 							foreach($rows as $row){
- 								if($count == sizeof($rows) -1 ){
- 									$interest_list .= $row['name'].' and ';
-								}else if($count < sizeof($rows)){
- 									$interest_list .= $row['name'].', ';
- 								}else{
- 									$interest_list .= $row['name'];
- 								}
- 								$count++;
-  							}
- 						}
- 						$interest_list = trim($interest_list,', ');
- 						
- 						
-						ob_start();
- 						include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
- 						$user_profile= ob_get_clean();
- 						ob_start();
- 						include(TEMPLATE_PATH_CHILD.'friend_profile_wrapper.phtml');
- 						$content .= ob_get_clean();
-				}
+					$content .= $this->renderUserAvatorByUserResource($u);
+ 				}
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'friend-initial-content-inner-wrapper-block.phtml');
+				$friend_block= ob_get_clean();
+				return $friend_block;
 			}
 			
-			ob_start();
-			include(TEMPLATE_PATH_CHILD.'friend-initial-content-inner-wrapper-block.phtml');
-			$friend_block= ob_get_clean();
-			return $friend_block;
+			return false;
 		}
+		
+		
+		/*
+			the resource is an associative array that contains, id, fullname, hash for the user
+		*/
+		public function renderUserAvatorByUserResource($u){
+			include_once 'User_Profile_Picture.php';
+			$profile = new User_Profile_Picture();
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
+			$cover_pic =  $user->getLatestCoverForuser($u['id']);
+			$fullname = $u['fullname'];
+			$hash = $u['hash'];
+			$rows = $this->getInterestNameForUser($u['id'], 2);
+			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
+			$user_id = $u['id'];
+			$result_array = array();
+			include_once 'Education.php';
+			$educ = new Education();
+			$education = $educ->getEducationByUserId($u['id']);
+			$interest_list = '';
+			if($rows !== false){
+				$count = 1;
+				foreach($rows as $row){
+					if($count == sizeof($rows) -1 ){
+						$interest_list .= $row['name'].' and ';
+					}else if($count < sizeof($rows)){
+						$interest_list .= $row['name'].', ';
+					}else{
+						$interest_list .= $row['name'];
+					}
+					$count++;
+				}
+			}
+			$interest_list = trim($interest_list,', ');
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
+			$user_profile= ob_get_clean();
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'friend_profile_wrapper.phtml');
+			$content = ob_get_clean();
+			return $content;
+		}
+		
+		
 		
 		
 		public function getSimilarInterestBlock(){
@@ -697,22 +708,7 @@
 			$interest  = new Interest();
 			$profile = new User_Profile_Picture();
 			$user = new User_Table();
-			$user_found = $this->returnMatchedUserForMineInterest(4, true);
-			 if($user_found === false){
-				//get suggest user 
-				$user_found = $this->getSuggestFriends();
-			}else if(sizeof($user_found) < 4){
-				//load 4-sizeof suggest friends, and make sure the friends doesn't repeat
-				$exclusive_users = '';
-				foreach($user_found as $u){
-					$exclusive_users.="'".$u['id']."',";
-				}
-				$addition_suggest = $this->getSuggestFriends(4-sizeof($user_found), trim($exclusive_users,','));
-				if($addition_suggest !== false){
-					$user_found = array_merge($user_found, $addition_suggest);
-				}
-			}
-			
+			$user_found = $this->returnSuggestUser(4);
 			$content = null;
 			if($user_found !== false){
 				ob_start();
@@ -720,6 +716,38 @@
 				$content = ob_get_clean();
 			}
 			return $content;
+		}
+		
+		
+		public function returnSuggestUser($maximum_user_count){
+			$user_found = $this->returnMatchedUserForMineInterest($maximum_user_count, true);
+			 if($user_found === false){
+				//get suggest user 
+				$user_found = $this->getSuggestFriends();
+			}else if(sizeof($user_found) < $maximum_user_count){
+				//load 4-sizeof suggest friends, and make sure the friends doesn't repeat
+				$exclusive_users = '';
+				foreach($user_found as $u){
+					$exclusive_users.="'".$u['id']."',";
+				}
+				$addition_suggest = $this->getSuggestFriends($maximum_user_count-sizeof($user_found), trim($exclusive_users,','));
+				if($addition_suggest !== false){
+					$user_found = array_merge($user_found, $addition_suggest);
+				}
+			}
+			return $user_found;
+		}
+		
+		
+		public function getInitialFriendsBlock(){
+			$user_found = $this->returnSuggestUser(4);
+			if($user_found !== false){
+				ob_start();
+				include($this->initial_friend_block);
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
 		}
 		
 		
@@ -735,14 +763,14 @@
 					SELECT DISTINCT interest.user_id AS user_id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 					FROM interest 
 					LEFT JOIN user
-					ON interest.user_id = user.id WHERE  user.id NOT IN($list) AND interest.user_id != ?  AND interest.user_id NOT IN($exclusive_users) LIMIT ? 
+					ON interest.user_id = user.id WHERE  user.id NOT IN($list) AND interest.user_id != ?  AND interest.user_id NOT IN($exclusive_users) ORDER BY RAND() LIMIT ?  
 				");
 			}else{
 				$stmt = $this->connection->prepare("
 					SELECT DISTINCT interest.user_id AS user_id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 					FROM interest 
 					LEFT JOIN user
-					ON interest.user_id = user.id  WHERE  user.id NOT IN($list) AND  interest.user_id != ? AND interest.user_id LIMIT ?
+					ON interest.user_id = user.id  WHERE  user.id NOT IN($list) AND  interest.user_id != ? AND interest.user_id ORDER BY RAND() LIMIT ? 
 				");
 			}
 			if($stmt){
