@@ -1,9 +1,9 @@
 <?php
-	include_once 'core_table.php';
-	include_once 'User_Table.php';
-	include_once 'User_Media_Prefix.php';
-	include_once 'Moment.php';
-	include_once 'Event.php';
+	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'User_Table.php';
+	include_once MODEL_PATH.'User_Media_Prefix.php';
+	include_once MODEL_PATH.'Moment.php';
+	include_once MODEL_PATH.'Event.php';
 	include_once  MODEL_PATH.'Favor_Activity.php';
 	
 	class Interest_Activity extends Core_Table{

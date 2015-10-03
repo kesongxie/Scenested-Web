@@ -1,5 +1,5 @@
 <?php
-	include_once 'core_table.php';
+	include_once MODEL_PATH.'core_table.php';
 	class Group_Message extends Core_Table{
 		private  $table_name = "group_message";
 		private  $group_contact_block_template_path = TEMPLATE_PATH_CHILD."group_contact_block.phtml";		

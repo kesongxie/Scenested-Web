@@ -1,5 +1,5 @@
 <?php
-	include_once 'core_table.php';
+	include_once MODEL_PATH.'core_table.php';
 	class User_In_Interest extends Core_Table{
 		private $table_name = "User_In_Interest";
 		public function __construct(){

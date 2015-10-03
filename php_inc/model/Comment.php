@@ -1,5 +1,5 @@
 <?php
-	include_once 'Comment_Base.php';
+	include_once MODEL_PATH.'Comment_Base.php';
 	class Comment extends Comment_Base{
 		private $table_name = "comment";
 		private $template_path = "phtml/child/comment_block.phtml";

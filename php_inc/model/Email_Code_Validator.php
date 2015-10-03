@@ -1,5 +1,5 @@
 <?php
-	include_once 'core_table.php';
+	include_once MODEL_PATH.'core_table.php';
 	class Email_Code_Validator extends Core_Table{
 		private $table_name;
 		public function __construct($table_name){

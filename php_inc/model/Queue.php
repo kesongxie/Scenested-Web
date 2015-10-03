@@ -1,6 +1,6 @@
 <?php
-	include_once 'core_table.php';
-	include_once 'Code_For_Notification_Sendable_Table.php';
+	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Code_For_Notification_Sendable_Table.php';
 	
 	class Queue extends Core_Table{
 		private $table_name = null;

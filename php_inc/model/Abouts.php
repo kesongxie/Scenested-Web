@@ -1,5 +1,5 @@
 <?php
-	include_once 'Education.php';
+	include_once MODEL_PATH.'Education.php';
 	class Abouts{
 		private $education = null;
 		private $abouts_side_block_tempate_path = TEMPLATE_PATH_CHILD."abouts_side_block.phtml";

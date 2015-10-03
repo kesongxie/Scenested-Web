@@ -1,7 +1,7 @@
 <?php
-	include_once 'Noti_Sendable.php';
-	include_once 'User_Table.php';
-	include_once 'Interest.php';
+	include_once MODEL_PATH.'Noti_Sendable.php';
+	include_once MODEL_PATH.'User_Table.php';
+	include_once MODEL_PATH.'Interest.php';
 	
 	class Interest_Request extends Noti_Sendable{
 		private $table_name = "interest_request";

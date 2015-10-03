@@ -1,7 +1,4 @@
 <?php
-	
-	echo 'hello,wolrd';
-	exit();
 	session_start();
 	include_once 'php_inc/global_constant.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'Auth_Tokens.php';

@@ -1,5 +1,5 @@
 <?php
-	include_once 'Noti_Sendable.php';
+	include_once MODEL_PATH.'Noti_Sendable.php';
 	class Comment_Base extends Noti_Sendable{
 		public function __construct($table_name){
 			parent::__construct($table_name);

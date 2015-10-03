@@ -1,5 +1,5 @@
 <?php
-	include_once 'Noti_Sendable.php';
+	include_once MODEL_PATH.'Noti_Sendable.php';
 	class Favor extends Noti_Sendable{
 		private $table_name = null;
 		public function __construct($table_name){

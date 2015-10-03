@@ -1,5 +1,5 @@
 <?php
-	require_once 'Database_Connection.php';
+	require_once MODEL_PATH.'Database_Connection.php';
 	class Major{
 		public static function getMajorNameByMajorId($Major_id){
 			$database_connection = new Database_Connection();

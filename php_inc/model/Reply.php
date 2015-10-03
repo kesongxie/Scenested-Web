@@ -1,6 +1,6 @@
 <?php
-	include_once 'Comment_Base.php';
-	include_once 'Reply_Notify_Post_User.php';
+	include_once MODEL_PATH.'Comment_Base.php';
+	include_once MODEL_PATH.'Reply_Notify_Post_User.php';
 	class Reply extends Comment_Base{
 		private $table_name = "reply";
 		private $noti_post_user = null;

@@ -1,6 +1,6 @@
 <?php
-	include_once 'core_table.php';
-	include_once 'Noti_Sendable.php';
+	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Noti_Sendable.php';
 	
 	class Reply_Notify_Post_User extends Noti_Sendable{
 		private  $table_name = "reply_notify_post_user";

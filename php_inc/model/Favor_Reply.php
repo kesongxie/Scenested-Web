@@ -1,5 +1,5 @@
 <?php
-	include_once 'Favor.php';
+	include_once MODEL_PATH.'Favor.php';
 	class Favor_Reply extends Favor{
 		private $table_name = "favor_reply";
 		private $popover_notification_template_path = TEMPLATE_PATH_CHILD."popover_notification_favor_comment.phtml";

@@ -1,6 +1,6 @@
 <?php
-	include_once 'Noti_Sendable.php';
-	include_once 'User_Table.php';
+	include_once MODEL_PATH.'Noti_Sendable.php';
+	include_once MODEL_PATH.'User_Table.php';
 	
 	
 	class Event_Invitation extends Noti_Sendable{

@@ -1,5 +1,5 @@
 <?php
-	include_once 'Code_For_Notification_Sendable_Table.php';
+	include_once MODEL_PATH.'Code_For_Notification_Sendable_Table.php';
 	class Notification_Renderer{
 		 public function getNotificationBlockByQueue($queue){
 		 	

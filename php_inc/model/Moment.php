@@ -1,6 +1,6 @@
 <?php
-	include_once 'core_table.php';
-	include_once 'Moment_Photo.php';
+	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Moment_Photo.php';
 	
 	class Moment extends Core_Table{
 		private  $table_name = "moment";

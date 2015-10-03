@@ -1,7 +1,7 @@
 <?php
-	include_once 'core_table.php';
-	include_once 'School.php';
-	include_once 'Major.php';
+	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'School.php';
+	include_once MODEL_PATH.'Major.php';
 	class Education extends Core_Table{ 
 		private  $table_name = "education";
 		public function __construct(){

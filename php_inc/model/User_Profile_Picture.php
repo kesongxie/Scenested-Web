@@ -1,6 +1,6 @@
 <?php
-	include_once 'core_table.php';
-	include_once 'User_Media_Base.php';
+	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'User_Media_Base.php';
 
 	class User_Profile_Picture extends User_Media_Base{
 		private $table_name = "user_profile_picture";

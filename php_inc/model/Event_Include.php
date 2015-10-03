@@ -1,5 +1,5 @@
 <?php
-	include_once 'Invitation.php';
+	include_once MODEL_PATH.'Invitation.php';
 	
 	
 	class Event_Include extends Invitation{

@@ -1,5 +1,5 @@
 <?php
-	include_once 'core_table.php';
+	include_once MODEL_PATH.'core_table.php';
 	class User_Notification_Queue extends Core_Table{
 		private $table_name = "user_notification_queue";
 		private $send_from = null;
