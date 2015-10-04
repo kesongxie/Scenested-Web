@@ -1,12 +1,5 @@
 /* global javascript file, contains core functions */
 var SIGNUP_ALERT_MESSAGE = new Array();
-var DOCUMENT_ROOT = "http://www.lsere.com/";
-var INDEX_PAGE = DOCUMENT_ROOT + "index.php";
-var AJAX_DIR = DOCUMENT_ROOT+"ajax/";
-var AJAX_PHTML_DIR = AJAX_DIR+"phtml/";
-var IMGDIR = DOCUMENT_ROOT+'media/';
-var DEFAULT_SEARCH_PATH = DOCUMENT_ROOT+'search.php?q='
-
 var BAD_IMAGE_MESSAGE = "A valid image is of type PNG or JPG and it's less than 5M";
 
 
