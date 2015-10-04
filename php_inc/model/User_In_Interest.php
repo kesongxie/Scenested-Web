@@ -2,6 +2,7 @@
 	include_once MODEL_PATH.'Core_Table.php';
 	class User_In_Interest extends Core_Table{
 		private $table_name = "user_in_interest";
+		private $initial_interest_friend = TEMPLATE_PATH_CHILD."initial_profile_interest_friend_block.phtml";
 		public function __construct(){
 			parent::__construct($this->table_name);
 		}
@@ -300,9 +301,9 @@
 		public function getUserFriendBlockByInterestId($interest_id, $limit_num = -1, $offset = 0){
 			$user_found = $this->getUserInInterestByInterestId($interest_id, $limit_num, $offset);
 			$content = false;
+			include_once 'Interest.php';
+			$interest = new Interest();
 			if($user_found !== false && sizeof($user_found) >=1 ){
-				include_once 'Interest.php';
-				$interest = new Interest();
 				include_once 'User_Profile_Picture.php';
 				$profile = new User_Profile_Picture();
 				include_once 'User_Table.php';
@@ -348,8 +349,14 @@
 				$friend_block= ob_get_clean();
 				return $friend_block;
 			}
-			
-			return false;
+			else{
+				$interest_name = $interest->getInterestNameByInterestId($interest_id);
+				$user_found = $interest->returnMatchedUserBySearchkeyWord($interest_name, 5);
+				ob_start();
+				include($this->initial_interest_friend);
+				$content = ob_get_clean();
+				return $content;
+			}
 		}
 		
 		public function leaveInterest($user_in, $hash){

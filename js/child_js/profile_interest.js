@@ -166,10 +166,80 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
-			presentPopupDialog("Delete Interest",'Are you sure to delete this interest?<div style="color:#c4140e;font-size:13px;">*Note, all the interest posts and friends and other relavant data in this interest will lost</div>', "Cancel", "Delete", deleteInterest, $(this) );
+			presentPopupDialog("Delete Interest",'Are you sure to delete this interest?<div style="font-size:13px;">*Note, all the interest posts and friends and other relavant data in this interest will lost</div>', "Cancel", "Delete", deleteInterest, $(this) );
 		}
 	
 	},'.interest-profile .remove_interest');
+	
+	$('body').on({
+		click:function(){
+			var parentDiv = $(this).parents('.interest-profile-edit');
+			var image_label =parentDiv.find('.target-image');
+			var updated_image_src = image_label.attr('src');
+			
+			//elements
+			var image_file = parentDiv.find('input[type=file]');
+			var name_input =parentDiv.find('input[type=text]');
+			var description_txtarea = parentDiv.find('textarea');
+			var select = parentDiv.find('select'); //experience select
+			
+			//values
+			var imageSet = image_file.attr('data-set');
+			var key = image_file.attr('data-key');
+			var description = description_txtarea.val().trim();
+			var exp = parentDiv.find('select').val();
+			var experience = $('option:selected', select).attr('data-option');
+			var data=new FormData();
+			data.append('image-label',$(image_file)[0].files[0]);
+			data.append('key', key);
+			data.append('imageSet', imageSet);
+			data.append('description',description);
+			data.append('experience',experience);
+			
+			parentDiv.find('.loading-icon-wrapper').show();
+			var actionButton = parentDiv.find('.edit-dialog-footer .action-button');
+			actionButton.text("Updating...");
+			$.ajax({
+				url:AJAX_DIR+'update_interest.php',
+				type:'POST',
+				processData: false,
+				contentType: false,
+				data:data,
+				success:function(resp){
+					console.log(resp);
+					if(resp == '1'){
+						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
+					}else{	
+						parentDiv.find('.loading-icon-wrapper').hide();
+						actionButton.text("Update");
+						var sideBarParent = $('#i-interest-navi').find('.interest-side-label[data-labelfor='+key+']');
+						//modify the side bar
+						if(imageSet != 'false'){
+							sideBarParent.find('img').attr('src',updated_image_src);
+						}
+						// sideBarParent.find('.txt_ofl').text(name).attr('title',name);
+						sideBarParent.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
+						var intro = doneWithInterestEditing(parentDiv).find('.interest-profile-intro');
+						setTimeout(function(){
+							sideBarParent.css('-webkit-animation',"").css('animation',"");
+						},200);
+						//modify the intro
+						//intro.find('.main-title').text(name);
+						if(experience != '-1'){
+							intro.find('.exp').text(exp);
+						}else{
+							intro.find('.exp').text('');
+						}
+						intro.find('.visible-content').html(renderVisibleScope(description,updated_image_src ));
+						setVisibleContent();
+						
+					}
+				}
+			});
+		
+		}
+	
+	},'.interest-profile .interest-profile-edit .update_interest');
 	
 
 });

@@ -5,5 +5,9 @@
 			</div>
 		<?php  endif;?>
 		<div style="color: #525252;font-weight: bold;"><?php echo $experience; ?></div>
-	<div class="txt_ofl"><?php echo $description; ?></div>
+	<?php if(!empty($description)): ?>
+		<div class="txt_ofl"><?php echo $description; ?></div>
+	<?php else: ?>
+		<div style="margin-top:3px;">There is no description available for this interest yet</div>
+	<?php endif; ?>
 </div>

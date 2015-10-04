@@ -119,7 +119,8 @@
 			$user = new User_Table();
 			include_once 'Education.php';
 			$educ = new Education();
-			
+			$activated = $user->isUserActivated($_SESSION['id']);
+			$email = $user->getUserIden($_SESSION['id']);
 			$profile_pic = $profile->getLatestProfileImageForUser($_SESSION['id']);
 			$cover_pic =  $user->getLatestCoverForuser($_SESSION['id']);
 			$fullname = $user->getUserFullnameByUserIden($_SESSION['id']);

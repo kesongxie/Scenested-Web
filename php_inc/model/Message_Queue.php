@@ -5,7 +5,7 @@
 		private  $table_name = "message_queue";
 		private $chat_box_template_path = TEMPLATE_PATH_CHILD."chat_box.phtml";
 		private $group_chat_box_template_path = TEMPLATE_PATH_CHILD."group_chat_box.phtml";
-
+		private $message_contacts_whole = TEMPLATE_PATH_CHILD."message_contacts_whole.phtml";
 		private  $message = null;
 		private $group_message = null;
 		private $group = null;
@@ -31,7 +31,8 @@
 		
 		
 		public function getMessageContactByMessageQueue($m_q){
-			if($m_q !== false){
+			$content = false;
+			if($m_q !== false && !empty($m_q)){
 				$queues = explode(',',trim($m_q,","));
 				if(sizeof($queues) > 0){
 					$content = "";
@@ -52,10 +53,14 @@
 							break;
 						}
 					}
-					return $content;
 				}
 			}
-			return false; //no message contact
+			
+			ob_start();
+			include($this->message_contacts_whole);
+			$content = ob_get_clean();
+			return $content;
+			
 		}
 		
 		
@@ -204,12 +209,7 @@
 		public function makeIndividualTopAtContactListById($user_id){
 			if($user_id !== false){
 				$user_queue = 'm-'.$user_id.',';
-				$queue= $this->getQueueForUser($_SESSION['id']);
-				if(stripos($queue,$user_queue ) !== false){
-					$queue = str_replace($user_queue, '', $queue);
-				}
-				$queue = $user_queue.$queue;
-				$this->updateQueueForUser($_SESSION['id'], $queue);
+				$this->priorityQueue($_SESSION['id'], $user_queue);
 				return true;
 			}
 			return false;

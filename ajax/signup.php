@@ -1,6 +1,7 @@
 <?php
 	include_once '../php_inc/core.inc.php';
-	include_once PHP_INC_MODEL.'User_Table.php';
+	include_once MODEL_PATH.'User_Table.php';
+	include_once MODEL_PATH.'Auth_Tokens.php';
 	include_once MODEL_PATH.'Email.php';
 	include_once PHP_INC_MODEL.'Email_Account_Activation.php';
 	
@@ -74,21 +75,30 @@
 			$to  = $data['signup-iden']; 
 			$subject = 'Account Activation';
 			$rootDir = substr(ROOTDIR,0, strlen(ROOTDIR)-1);
-				$message = EMAIL::getSignUpEmailMessage($email, $firstname, $lastname, $code, $register_id);
-
-				// To send HTML mail, the Content-type header must be set
-				$headers  = 'MIME-Version: 1.0' . "\r\n";
-				$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
-				// Additional headers
-				$headers .= 'From: Higout <no-reply@lsere.com>'."\r\n";
-				
-				if($email_account_activation->insertEntry($register_id, $code) && mail($to, $subject, $message, $headers)){
+			$message = EMAIL::getSignUpEmailMessage($email, $firstname, $lastname, $code, $register_id);
+			$headers  = 'MIME-Version: 1.0' . "\r\n";
+			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+			$headers .= 'From: Higout <no-reply@lsere.com>'."\r\n";
+			if($email_account_activation->insertEntry($register_id, $code) && mail($to, $subject, $message, $headers)){
+				$user_table = new User_Table();
+				$auth_tokens = new Auth_Tokens();
+				if($user_table->availableToLogin($email, $password)){
+					//login the user
+					$_SESSION['id'] = $register_id;
+						//delete previous identifier and token
+					if(isset($_COOKIE['identifier'])){
+						//delete row with this selector
+						$auth_tokens->deleteRowBySelector('selector',$_COOKIE['identifier']);
+						clearLoginCredential();
+					}
+					//update cookie
+					$auth_tokens->tokenGenerator();
 					echo '0';
-				}else{
-					echo '11'; //email failed
 				}
-			
+			}else{
+				echo '11'; //email failed
+			}
+		
 		}
 		
 		
