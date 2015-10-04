@@ -1,7 +1,7 @@
 <?php
 	include_once '../php_inc/core.inc.php';
-	include_once PHP_INC_MODEL.'User_Table.php';
-	include_once PHP_INC_MODEL.'Auth_Tokens.php';
+	include_once MODEL_PATH.'User_Table.php';
+	include_once MODEL_PATH.'Auth_Tokens.php';
 
 	if(isset($_POST['data']) && !empty($_POST['data'])){
 		$user_table = new User_Table();

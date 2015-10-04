@@ -1,5 +1,5 @@
 <?php
-	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Core_Table.php';
 	include_once MODEL_PATH.'User_Table.php';
 	include_once MODEL_PATH.'User_Media_Prefix.php';
 	include_once MODEL_PATH.'Moment.php';
@@ -1642,8 +1642,6 @@
 						$profile_pic = $user->getLatestProfilePictureForuser($u['id']);
 						$unique_iden = $u['hash'];
 						$event_joined = $event->hasUserJoinedEvent($u['id'], $event_id);
-						
-						var_dump($sender);
 						if($event_joined === false){
 							if(!$sender){
 								$request_sent = $event->isUserInvitedInEvent($u['id'], $event_id);	
@@ -1676,25 +1674,27 @@
 			if($all_friend_plain_list !== false){
 				include_once 'User_Table.php';
 				$user = new User_Table();
-				$list = explode(',',$all_friend_plain_list);
-				foreach($list as $u){
-					$user_id = trim($u,"'");
-					$fullname = $user->getUserFullnameByUserIden($user_id);
-					$profile_pic = $user->getLatestProfilePictureForuser($user_id);
-					$unique_iden = $user->getUniqueIdenForUser($user_id);
-					$event = new Event();
-					$event_joined = $event->hasUserJoinedEvent($user_id, $event_id);
-					if($event_joined === false){
-						if(!$sender){
-							$request_sent = $event->isUserInvitedInEvent($user_id, $event_id);	
-						}else{
-							$request_sent = $sender->isUserInvitedInEvent($user_id, $event_id);
+				if(!empty($all_friend_plain_list)){
+					$list = explode(',',$all_friend_plain_list);
+					foreach($list as $u){
+						$user_id = trim($u,"'");
+						$fullname = $user->getUserFullnameByUserIden($user_id);
+						$profile_pic = $user->getLatestProfilePictureForuser($user_id);
+						$unique_iden = $user->getUniqueIdenForUser($user_id);
+						$event = new Event();
+						$event_joined = $event->hasUserJoinedEvent($user_id, $event_id);
+						if($event_joined === false){
+							if(!$sender){
+								$request_sent = $event->isUserInvitedInEvent($user_id, $event_id);	
+							}else{
+								$request_sent = $sender->isUserInvitedInEvent($user_id, $event_id);
+							}
 						}
+						ob_start();
+						include($this->invitation_contact_path);
+						$content = ob_get_clean();
+						$contact .= $content;
 					}
-					ob_start();
-					include($this->invitation_contact_path);
-					$content = ob_get_clean();
-					$contact .= $content;
 				}
 			}
 			return $contact;

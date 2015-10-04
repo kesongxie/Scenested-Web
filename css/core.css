@@ -170,9 +170,10 @@ textarea{
 	margin-left:20px;
 }
 .evt-block .evt-cover{
-	max-height:200px;
-	overflow:hidden;
-	background:#f0f0f0;
+	max-height: 200px;
+    overflow: hidden;
+    background: #681414;
+    min-height: 160px;
 }
 
 #side-event-info .evt-block .visible-control{

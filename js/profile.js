@@ -204,6 +204,7 @@ $(document).ready(function(){
 			contentType: false,
 			data:data,
 			success:function(resp){
+				console.log(resp);
 				if(resp == '1'){
 					presentPopupDialog("Bad Image", BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 					imgTarget.attr('src',old_src);

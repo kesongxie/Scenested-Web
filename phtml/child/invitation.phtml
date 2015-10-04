@@ -82,7 +82,11 @@
 		<div class="right-content inline-blk">
 			<div class="contact">
 				<div class="contact-inner content-inner" style="margin:14px;">
+					<?php  if(!empty($all_friend_block)): ?>
 					<?php echo $all_friend_block; ?>
+					<?php else: ?>
+						<div style="font-size:15px;">No friends were found</div>
+					<?php endif; ?>
 				</div>
 				<div class="suggest-contact-inner hdn content-inner" style="margin:14px;"></div>				
 			</div>

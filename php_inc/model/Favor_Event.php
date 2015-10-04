@@ -1,5 +1,5 @@
 <?php
-	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Core_Table.php';
 	class Favor_Event extends Core_Table{
 		public $table_name = "favor_event";
 		private $favor_evt__block_template_path = TEMPLATE_PATH_CHILD."favor_evt_block.phtml";

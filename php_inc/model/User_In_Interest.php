@@ -1,7 +1,7 @@
 <?php
-	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Core_Table.php';
 	class User_In_Interest extends Core_Table{
-		private $table_name = "User_In_Interest";
+		private $table_name = "user_in_interest";
 		public function __construct(){
 			parent::__construct($this->table_name);
 		}
