@@ -1,1 +1,3 @@
 media_u/
+php_inc/global_constant.php
+php_inc/model/Database_Connection.php
