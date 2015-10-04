@@ -1,5 +1,5 @@
 <?php
-	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Core_Table.php';
 	include_once MODEL_PATH.'Moment_Photo.php';
 	
 	class Moment extends Core_Table{

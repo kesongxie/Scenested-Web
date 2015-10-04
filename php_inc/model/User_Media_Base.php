@@ -1,7 +1,7 @@
 <?php
-	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Core_Table.php';
 	include_once MODEL_PATH. 'User_Media_Prefix.php';
-	include_once SCRIPT_INCLUDE_BASE.'/php_inc/File_Manager.php';
+	include_once PHP_INC_PAHT.'File_Manager.php';
 
 
 
@@ -103,15 +103,15 @@
 			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
 			$post_key = false;
 			if($source_from == 'e'){
-				include_once 'Event_Photo.php';
+				include_once MODEL_PATH.'Event_Photo.php';
 				$evt_pht = new Event_Photo();
 				$event_id = $evt_pht->getColumnBySelector('event_id','hash',$hash);
 				if($event_id !== false){
-					include_once 'Event.php';
+					include_once MODEL_PATH.'Event.php';
 					$evt = new Event(null, false);
 					$activity_id = $evt->getColumnById('interest_activity_id',$event_id);
 					if($activity_id !== false){
-						include_once 'Interest_Activity.php';
+						include_once MODEL_PATH.'Interest_Activity.php';
 						$activity = new Interest_Activity();
 						$post_key  = $activity->getColumnById('hash',$activity_id);
 					}
@@ -192,32 +192,32 @@
 		
 		
 		public function loadMomentPreviewImage($hash){
-			include_once 'moment_photo.php';
+			include_once MODEL_PATH.'Moment_Photo.php';
 			$m_p = new Moment_Photo();
 			return $m_p->loadMomentPhotoPreviewBlock($hash);
 		}
 		
 		
 		public function loadEventPreviewImage($hash){
-			include_once 'event_photo.php';
+			include_once MODEL_PATH.'Event_Photo.php';
 			$e_p = new Event_Photo();
 			return $e_p->loadEventPhotoPreviewBlock($hash);
 		}
 		
 		public function loadProfilePreviewImage($hash){
-			include_once 'User_Profile_Picture.php';
+			include_once MODEL_PATH.'User_Profile_Picture.php';
 			$p = new User_Profile_Picture();
 			return $p->loadProfilePhotoPreviewBlock($hash);
 		}
 		
 		public function loadPorfileCoverPreviewImage($hash){
-			include_once 'User_Profile_Cover.php';
+			include_once MODEL_PATH.'User_Profile_Cover.php';
 			$c = new User_Profile_Cover();
 			return $c->loadProfileCoverPhotoPreviewBlock($hash);
 		}
 		
 		public function returnPhotoBySchoolKeyWord($school_key_word){
-			include_once 'School.php';
+			include_once MODEL_PATH.'School.php';
 			$search_school_array = School::getSchooIdsLikeSchoolName($school_key_word);
 			$search_school_id = '';
 			if($search_school_array !== false){

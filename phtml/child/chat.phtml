@@ -8,7 +8,7 @@
 				</span>
 			</div>
 			<div class="chat-body child-scrollable" style="padding:0px 10px;position:relative;overflow:scoll;height:90%;">
-				<?php if($contact_block !== false): ?>
+				<?php if($contact_block !== false && !empty($contact_block)): ?>
 					<?php echo $contact_block; ?>
 				<?php else: ?>
 					<div style="margin-top:10px;font-size:13px;">

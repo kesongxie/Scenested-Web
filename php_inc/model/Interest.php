@@ -1,5 +1,5 @@
 <?php
-	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Core_Table.php';
 	include_once MODEL_PATH.'User_Interest_Label_Image.php';
 	
 	class Interest extends Core_Table{

@@ -1,5 +1,5 @@
 <?php
-	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Core_Table.php';
 	include_once MODEL_PATH.'School.php';
 	include_once MODEL_PATH.'Major.php';
 	class Education extends Core_Table{ 
@@ -19,7 +19,7 @@
 			if($school_id !== false){
 				$school_name = School::getSchoolNameBySchoolId($school_id);
 			}
-			return ($school_name !== false )?$school_name:'Borough of Manhattan Community College';
+			return ($school_name !== false )?$school_name:'';
 		}
 		
 		

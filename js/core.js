@@ -1,6 +1,6 @@
 /* global javascript file, contains core functions */
 var SIGNUP_ALERT_MESSAGE = new Array();
-var DOCUMENT_ROOT = "http://localhost:8888/";
+var DOCUMENT_ROOT = "http://www.lsere.com/";
 var INDEX_PAGE = DOCUMENT_ROOT + "index.php";
 var AJAX_DIR = DOCUMENT_ROOT+"ajax/";
 var AJAX_PHTML_DIR = AJAX_DIR+"phtml/";
@@ -479,10 +479,12 @@ function resizePreviewImage(preview_image){
 	preview_image.load(function(){
 	  var height = this.naturalHeight;
 	  var width = this.naturalWidth;
-	  if(width >= height && width/height > 1.3){
+	  if(width > height && width/height > 1.3){
 			if($(this).height() < 400){
 				$(this).addClass('vertical-center');
 			}
+	  }else if(width == height){
+	  		$(this).css({'width':'auto', 'height':'100%','max-width':'100%', 'max-height':'100%'});
 	  }else{
 			$(this).css({'width':'auto','max-width':'100%', 'max-height':'100%'});
 	  }
@@ -541,7 +543,7 @@ function setPageTitleWithNewNotificationNum(notification_num){
 					page_title.text(page_title.attr('data-from'));
 				}
 				else{
-					page_title.text('Lsere');
+					page_title.text('Higout');
 				}
 			}
 		}
@@ -710,35 +712,35 @@ function loadReplyFavorPlainList(thisE,key){
 }
 
 $(function(){
-	setInterval(function(){
-		//fetch new notification
-		$.post(AJAX_DIR+'fetchNewQueueNumber.php',function(resp){
-			var page_title = $('#page-title');
-			if(page_title.attr('data-n') != resp){
-				if(parseInt(resp) > 0){
-					$('#index-noti-red-spot').text(resp).removeClass('hdn');
-				}else{
-					$('#index-noti-red-spot').text('0').addClass('hdn');
+	if($('#login-header').length < 1){
+		setInterval(function(){
+			//fetch new notification
+			$.post(AJAX_DIR+'fetchNewQueueNumber.php',function(resp){
+				var page_title = $('#page-title');
+				if(page_title.attr('data-n') != resp){
+					if(parseInt(resp) > 0){
+						$('#index-noti-red-spot').text(resp).removeClass('hdn');
+					}else{
+						$('#index-noti-red-spot').text('0').addClass('hdn');
+					}
 				}
-			}
-				
-			setPageTitleWithNewNotificationNum(resp);
-		});
-		
-		//fetch new message
-		$.post(AJAX_DIR+'fetchNewMessageQueueNumber.php',function(resp){
-			var page_title = $('#page-title');
-			if(page_title.attr('data-m') != resp){
-				refreshMessage();
-			}
-			setPageTitleWithNewMessageNum(resp);
 			
-		});
+				setPageTitleWithNewNotificationNum(resp);
+			});
+	
+			//fetch new message
+			$.post(AJAX_DIR+'fetchNewMessageQueueNumber.php',function(resp){
+				var page_title = $('#page-title');
+				if(page_title.attr('data-m') != resp){
+					refreshMessage();
+				}
+				setPageTitleWithNewMessageNum(resp);
 		
-		loadMessageWithActiveUser();
-		
-		
-	},5000);
+			});
+	
+			loadMessageWithActiveUser();
+		},5000);
+	}
 });
 
 
@@ -2079,7 +2081,7 @@ $(document).ready(function(){
  					data:{key:key, text:text},
  					success:function(resp){
  						if(resp != '1'){
- 							txtarea.val('').blur();
+ 							txtarea.val('');
  							body.append(resp);
  							body.scrollTop(1000000000);
  							refreshMessage();
@@ -2649,7 +2651,6 @@ $(function($) {
 				method:'post',
 				data:{key:key, post_key:post_key},
 				success:function(resp){
-					console.log(resp);
 					if(resp != '1'){
 						parentDiv.find('.group-label').removeClass('active');
 						thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s").addClass('active');;
@@ -2977,6 +2978,7 @@ $(function($) {
 				method:'post',
 				data:{key:key},
 				success:function(resp){
+					console.log(resp);
 					$('#dialog-popup-overlay').removeClass('hdn');
 					$('#evt-include-friend-wrapper').html(resp).removeClass('hdn').attr('data-key',key);
 				}	

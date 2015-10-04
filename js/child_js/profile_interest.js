@@ -127,6 +127,7 @@ $(document).ready(function(){
 				contentType: false,
 				data:data,
 				success:function(resp){
+					console.log(resp);
 					loading_wrapper.hide();
 					actionButton.text("Add Interest");
 					if(resp == '1'){

@@ -1,6 +1,6 @@
 <?php
 	include_once '../php_inc/core.inc.php';
-	include_once '../php_inc/Media_Validation.php';
+	include_once PHP_INC_PAHT.'Media_Validation.php';
 	include_once PHP_INC_MODEL.'Interest.php';
 	include_once PHP_INC_MODEL.'User_Media_Prefix.php';
 	

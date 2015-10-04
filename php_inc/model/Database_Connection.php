@@ -1,13 +1,13 @@
 <?php
 	class Database_Connection{
-		private $hostname = "localhost";
-		private $username = "root";
-		private $password = "root";
-		private $database_name = "lsere_db";
+		const HOSTNAME = "localhost";
+		const USERNAME  = "higout_root";
+		const PASSWORD = "woaini1314";
+		const DATABASE_NAME = "higout_db";
 		private $connection = null;
 		
 		public function __construct(){
-			$mysqli = new mysqli("localhost","root","root","lsere_db");
+			$mysqli = new mysqli(self::HOSTNAME,self::USERNAME,self::PASSWORD,self::DATABASE_NAME);
 			if(!$mysqli->connect_errno){
 				 $this->connection = $mysqli; 
 			}

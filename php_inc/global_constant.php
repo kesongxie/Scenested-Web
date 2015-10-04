@@ -3,7 +3,7 @@
 	
 	
 	//for page rendering 
-	define("ROOTDIR","http://localhost:8888/");
+	define("ROOTDIR","http://www.lsere.com/");
 	define("IMGDIR",ROOTDIR."media/");
 	define("E_IMGDIR",IMGDIR.'e/');
 	define("DEFAULT_IMAGE",IMGDIR.'default_image/');
@@ -34,7 +34,7 @@
 	define("LOADING_GIF",IMGDIR."loading.gif");
 	
 	define("LOGIN_PAGE",ROOTDIR."login.php");
-	define("HOME_PAGE","index.php");
+	define("HOME_PAGE",ROOTDIR."index.php");
 	define("ERROR_PAGE",ROOTDIR."404.php");
 	define("COOKIE_EXPIRE_TIME",time()+ 90 * 86400);
 	define("MAXIMUM_UPLOAD_IMAGE_SIZE",5000000);

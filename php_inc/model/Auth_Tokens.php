@@ -1,5 +1,5 @@
 <?php
-	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Core_Table.php';
 	class Auth_Tokens extends Core_Table{
 		private $table_name = "auth_tokens";
 		public function __construct(){

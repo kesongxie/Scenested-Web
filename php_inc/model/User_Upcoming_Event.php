@@ -1,5 +1,5 @@
 <?php
-	include_once MODEL_PATH.'core_table.php';
+	include_once MODEL_PATH.'Core_Table.php';
 
 	class User_Upcoming_Event extends Core_Table{
 		private $table_name = "user_upcoming_event";

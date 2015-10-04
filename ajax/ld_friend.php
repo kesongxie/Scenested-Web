@@ -1,6 +1,6 @@
 <?php
 	include_once '../php_inc/core.inc.php';
-	include_once PHP_INC_MODEL.'User_In_interest.php';
+	include_once MODEL_PATH.'User_In_Interest.php';
 	
 	if(isset($_POST['label_key']) && !empty($_POST['label_key'])){
 		$in = new User_In_interest();
