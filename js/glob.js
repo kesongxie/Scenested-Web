@@ -1,4 +1,4 @@
-var DOCUMENT_ROOT = "http://localhost:8888/";
+var DOCUMENT_ROOT = "http://www.lsere.com/";
 var INDEX_PAGE = DOCUMENT_ROOT + "index.php";
 var AJAX_DIR = DOCUMENT_ROOT+"ajax/";
 var AJAX_PHTML_DIR = AJAX_DIR+"phtml/";
