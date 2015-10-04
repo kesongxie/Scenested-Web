@@ -63,12 +63,9 @@ $(document).ready(function(){
 			success:function(resp){
 				console.log(resp);
 				loadingDiv.addClass('hdn');
-				$('#signup-data-form .sign-up-alert').remove();
 				if(resp == '0'){
-					//animate successfully sign up
-					$('#signup_succeed').removeClass('hdn');
-					$('#signup_succeed #signup-success-on').html($('#signup-iden').val().trim().toLowerCase()).removeClass('hdn');
-					$('#signup-body-footer-wrapper').remove();
+					//signed up successfully, redirect to account set up
+					window.location.href = INDEX_PAGE;
 				}else{
 					switch (resp){
 						case '1': $('#signup-iden').parent('div').prepend('<span class="sign-up-alert">Please enter your email address</span>');break;

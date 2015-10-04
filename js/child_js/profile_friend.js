@@ -16,11 +16,13 @@ function loadAllFriend(){
 }
 
 function loadInterestFriendByKey(thisE, label_key){
+	
 	$.ajax({
 		url: AJAX_DIR+'ld_friend.php',
 		method:'post',
 		data:{label_key:label_key},
 		success:function(resp){
+			console.log(resp);
 			if(resp != '1'){
 				$(window).scrollTop(0);
 				thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");

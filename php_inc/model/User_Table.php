@@ -66,10 +66,6 @@
 		}
 		
 		
-		
-		
-		
-		
 		public function getUserInfoByUserIden($column,$user_iden){
 			$column = $this->connection->escape_string($column);
 			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE ( `id` = ? || `user_iden`=? || `unique_iden` = ?) LIMIT 1 ");
@@ -135,9 +131,8 @@
 		
 		public function availableToLogin($user_iden, $password){
 			$hash = $this->getUserInfoByUserIden('password',$user_iden);
-			$activated = $this->getUserInfoByUserIden('activated',$user_iden);
 			if($hash !== false){
-				if(password_verify($password, $hash) && $activated == '1'){
+				if(password_verify($password, $hash)){
 					return true;
 				}
 			}
@@ -156,7 +151,7 @@
 			$request_info = explode('/',trim($request_page,'/'));
 			$access_url = $request_info[1]; 
 			$user_id = $this->getUserIdByAccessUrl($access_url);
-			if($user_id !== false && $this->getUserInfoByUserIden('activated',$user_id) == 1){
+			if($user_id !== false){
 				return array("id"=>$user_id, "access_url"=>$access_url);
 			}
 			return false;
@@ -192,11 +187,11 @@
 					FROM user
 					LEFT JOIN education
 					ON user.id = education.user_id 
-					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND user.activated = '1' AND education.school_id = ?
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ?  AND education.school_id = ?
 					UNION 
 					SELECT  DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url
 					FROM user
-					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND user.activated = '1' 
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ?  
 					LIMIT ?
 					");
 				}else{
@@ -205,18 +200,18 @@
 					FROM user
 					LEFT JOIN education
 					ON user.id = education.user_id 
-					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND user.activated = '1' AND education.school_id = ?
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND education.school_id = ?
 					UNION 
 					SELECT  DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url
 					FROM user
-					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND user.activated = '1' 
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ?  
 					");
 				}
 			}else{
 				if($limit > 0){
-					$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `activated` = '1' LIMIT ? ");
+					$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ?  LIMIT ? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `activated` = '1'");
+					$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ?");
 				}
 			}
 			if($stmt){
@@ -250,9 +245,9 @@
 		
 		public function returnContactMatchedUserBySearchkeyWord($key_word, $limit){
 			if($limit > 0){
-				$stmt = $this->connection->prepare("SELECT  CONCAT('m-',id) AS queue FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `id` != ? AND `activated` = '1' LIMIT ? ");
+				$stmt = $this->connection->prepare("SELECT  CONCAT('m-',id) AS queue FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `id` != ?  LIMIT ? ");
 			}else{
-				$stmt = $this->connection->prepare("SELECT  CONCAT('m-',id) AS queue FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `id` != ? AND `activated` = '1' ");
+				$stmt = $this->connection->prepare("SELECT  CONCAT('m-',id) AS queue FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ? AND `id` != ?  ");
 			}
 			if($stmt){
 				$key_word = '%' .$key_word. '%';
@@ -344,7 +339,13 @@
 		}
 		
 		
+		public function isUserActivated($iden){
+			return $this->getUserInfoByUserIden('activated',$iden) == '1';
+		}
 		
+		public function getUserIden($iden){
+			return $this->getUserInfoByUserIden('user_iden',$iden);
+		}
 		
 	}
 		

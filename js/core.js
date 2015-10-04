@@ -2109,7 +2109,7 @@ $(document).ready(function(){
  					success:function(resp){
  						console.log(resp);
  						if(resp != '1'){
- 							txtarea.val('').blur();
+ 							txtarea.val('');
  							body.append(resp);
  							body.scrollTop(1000000000);
  							refreshMessage();
@@ -2152,6 +2152,7 @@ $(document).ready(function(){
 					if(resp != '1'){
 						chat_box.remove();
 						side_target.remove();
+						refreshMessage();
 					}
 				}
  			});

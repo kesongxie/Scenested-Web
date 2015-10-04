@@ -8,16 +8,7 @@
 				</span>
 			</div>
 			<div class="chat-body child-scrollable" style="padding:0px 10px;position:relative;overflow:scoll;height:90%;">
-				<?php if($contact_block !== false && !empty($contact_block)): ?>
 					<?php echo $contact_block; ?>
-				<?php else: ?>
-					<div style="margin-top:10px;font-size:13px;">
-						<div style="font-size:14px;">No contact available.</div>
-<!-- 
-						<a href="<?php echo SEARCH_PEOPLE_PATH.$school_name ?>" class="plain-lk" style="color:rgb(180, 40, 40)">Search friends with similar interests in campus</a>
- -->
-					</div>
-				<?php endif; ?>
 				<div id="broken-connect-overlay" class="broken-connect<?php echo (isset($_SESSION['id']))?' hdn':'' ?>">
 				</div>	
 			</div>
