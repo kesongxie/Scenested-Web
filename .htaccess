@@ -42,6 +42,31 @@ ExpiresDefault "access 2 days"
 
 
 
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^$ index.php [NC,L]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^login$ login.php [NC,L]
+</IfModule>
+
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^logout$ logout.php [NC,L]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^password/reset$ password.php [NC,L]
+</IfModule>
+
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On

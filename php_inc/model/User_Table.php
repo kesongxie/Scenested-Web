@@ -88,7 +88,7 @@
 		}
 		
 		public function getUserEmailByUserIden($user_iden){
-			return $this->getUserInfoByUserIden('email',$user_iden);
+			return $this->getUserInfoByUserIden('user_iden',$user_iden);
 		}
 		
 		

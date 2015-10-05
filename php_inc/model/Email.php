@@ -14,13 +14,13 @@
 			return $content;
 		}
 		
-		public function getResetPasswordEmailMessage($email, $user_id, $key, $hash){
+		public static function getResetPasswordEmailMessage($email, $user_id, $key, $hash){
 			include_once MODEL_PATH.'User_Table.php';
 			$user = new User_Table();
 			$fullname = $user->getUserFullnameByUserIden($user_id);
 			$reset_dir = ROOTDIR."password.php?reset=".$key."&code=".$hash;
 			ob_start();
-			include($this->RESET_PASSWORD_EMAIL_PATH);
+			include(self::RESET_PASSWORD_EMAIL_PATH);
 			$content = ob_get_clean();
 			return $content;
 		}
