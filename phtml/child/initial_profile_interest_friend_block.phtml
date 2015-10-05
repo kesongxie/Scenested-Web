@@ -1,5 +1,5 @@
 <div class="friend-content-inner-wrapper blk" data-key="<?php echo $interest_id; ?>">
-	<div style="background:#fff; padding:0px 0px 16px 20px;">No friends in your <span class="red-act">"<?php echo htmlentities($interest_name); ?>"</span> interest group yet.	<a href="<?php echo ROOTDIR.'search.php?q='.$interest_name.'&t=interest'; ?>" class="plain-lk pointer suggest-message" >view suggest</a>	</div>
+	<div style="background:#fff; padding:0px 0px 16px 20px;">No friends in your <span class="red-act">"<?php echo htmlentities($interest_name); ?>"</span> interest group yet.	<a href="<?php echo ROOTDIR.'search.php?q='.strtolower($interest_name).'&t=interest'; ?>" class="plain-lk pointer suggest-message" >view suggest</a>	</div>
 	<div class="inline-blk " style="width: 100%;margin-top: 10px;">
 		<?php
 			$count = 0;
