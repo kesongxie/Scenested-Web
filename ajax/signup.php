@@ -74,7 +74,6 @@
 			//send email
 			$to  = $data['signup-iden']; 
 			$subject = 'Account Activation';
-			$rootDir = substr(ROOTDIR,0, strlen(ROOTDIR)-1);
 			$message = EMAIL::getSignUpEmailMessage($email, $firstname, $lastname, $code, $register_id);
 			$headers  = 'MIME-Version: 1.0' . "\r\n";
 			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
