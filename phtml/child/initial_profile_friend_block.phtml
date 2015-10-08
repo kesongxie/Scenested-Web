@@ -1,11 +1,15 @@
 <div class="inline-blk" style="width:100%">
-			<div style="background:#fff; padding:10px 0px 16px 20px;">You haven't added any friends yet.	<span class="plain-lk pointer suggest-message" style="">view suggest</span>	</div>
+		<?php if($_SESSION['id'] == $request_user_page_id): ?>
+			<div style="background:#fff; padding:10px 0px 16px 20px;">You haven't added any friends yet. <a href="<?php echo SEARCH_SIMILAR_PEOPLE_PATH ?>" class="plain-lk pointer suggest-message" >view suggest</a>	</div>
+		<?php else: ?>
+			<div style="background:#fff; padding:10px 0px 16px 20px;"><?php echo $request_user_page_firstname ?> hasn't added any friends yet.</div>
+		<?php endif; ?>
 <div id="friend-content-wrapper" class="inline-blk " style="width: 90%;margin-top: 10px;">
-	<?php
+	<?php if($_SESSION['id'] == $request_user_page_id)
 		foreach($user_found as $u){
 			echo $this->renderUserAvatorByUserResource($u);
  		}
-	?>
+	 ?>
 </div>
 		
 </div>

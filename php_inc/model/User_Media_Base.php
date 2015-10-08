@@ -149,10 +149,10 @@
 					$stmt->bind_param('iiii',$user_id, $user_id,$user_id,$user_id);
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
+						 $content = false;
 						 if($result !== false && $result->num_rows >= 1){
 							$rows = $result->fetch_all(MYSQLI_ASSOC);
 							$stmt->close();
-							$content = null;
 							if($rows !== false){
 								$left_content = "";
 								$right_content = "";
@@ -168,11 +168,16 @@
 									}
 								}
 							}
-							ob_start();
-							include(TEMPLATE_PATH_CHILD.'photo.phtml');
-							$content= ob_get_clean();
-							return $content;
 						 }
+						 if($_SESSION['id'] != $user_id){
+						 	include_once MODEL_PATH.'User_Table.php';
+						 	$user = new User_Table();
+						 	$firstname = $user->getUserFirstNameByUserIden($user_id);
+						 }
+						ob_start();
+						include(TEMPLATE_PATH_CHILD.'photo.phtml');
+						$content= ob_get_clean();
+						return $content;
 					}
 			}
 			echo $this->connection->error;

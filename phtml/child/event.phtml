@@ -11,7 +11,7 @@
 		<div style="background:#fff; padding:10px 0px 16px 20px;">
 		<?php	
 			if($user_id != $_SESSION['id']){ 
-				echo $firstname." has no event available";
+				echo $firstname." has no event available.";
 			}else{
 				echo 'You haven\'t added or joined any event yet. <a href="'.SEARCH_MINE_EVENT_PATH.'" class="plain-lk pointer suggest-message">view suggest</a>';
 			}

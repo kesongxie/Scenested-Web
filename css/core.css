@@ -42,7 +42,7 @@ div img{
 
 input,textarea, select{
 	outline:none;
-	font-family: Times New Roman, Times, serif;
+	font-family:Gill, Helvetica, sans-serif;
   	font-size: 13px;
 }
 textarea{
@@ -151,6 +151,8 @@ textarea{
 .light-hover:hover{
 	background:#f3f3f3 !important;
 }
+
+
 
 .arrow-up {
 	width: 0; 
@@ -308,6 +310,7 @@ div.ui-datepicker{
 .previewable{
 	cursor:pointer;
 }
+
 .in_con_opt_w {
 	position: absolute;
     text-align: left;
@@ -1561,7 +1564,7 @@ img.gallery-navi{
 }
 
 .invitation-wrapper #selected-bar .selected-icon-avator{
-	border-radius: 4px; 
+	border-radius: 4px;
 	width: 24px; 
 	height: 24px;
 	margin-left:6px;
@@ -1599,3 +1602,4 @@ img.gallery-navi{
 	padding:6px 10px;
 	cursor:default;
 }
+

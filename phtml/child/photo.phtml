@@ -1,7 +1,26 @@
-<div class="interest-content-right inline-blk" style="width: 43%;margin-left:6px;">
-	<?php echo $left_content; ?>
-</div>
+<!-- 
+<?php if($content !== false): ?>
+	<div class="interest-content-right inline-blk" style="width: 43%;margin-left:6px;">
+		<?php echo $left_content; ?>
+	</div>
+	<div class="interest-content-right inline-blk" style="width: 43%;margin-left:2px;">
+		<?php echo $right_content; ?>
+	</div>
 
-<div class="interest-content-right inline-blk" style="width: 43%;margin-left:2px;">
-	<?php echo $right_content; ?>
-</div>
+
+
+<?php else: ?>
+	<?php if($user_id == $_SESSION['id']): ?>
+		<div style="background:#fff; padding:10px 0px 16px 20px;">You haven't added any photos yet. <a href="<?php echo SEARCH_MINE_PHOTO_PATH; ?>" class="plain-lk pointer suggest-message">view suggest</a>	</div>
+	<?php else: ?>
+		<div style="background:#fff; padding:10px 0px 16px 20px;"><?php echo  htmlentities($firstname) ?> hasn't added any photos yet. </div>
+	<?php endif;?>
+<?php endif; ?>
+ -->
+ 
+ <div class="interest-content-right inline-blk" style="width: 43%;margin-left:6px;">
+		<?php echo $left_content; ?>
+	</div>
+	<div class="interest-content-right inline-blk" style="width: 43%;margin-left:2px;">
+		<?php echo $right_content; ?>
+	</div>

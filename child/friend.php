@@ -19,7 +19,7 @@
 	
 	if($content === false){
 		$user_has_friend = false;
-		$content = $interest->getInitialFriendsBlock();
+		$content = $interest->getInitialFriendsBlock($request_user_page_id);
 	}
 
 	$request_user_page_has_interest = ($content !== false)?true:false;

@@ -390,7 +390,7 @@
 			$user = new User_Table();
 			$interest  = new Interest();
 			$result_found = $interest->returnMatchedUserForMineInterest();
-			$content = null;
+			$content = false;
 			if($result_found !== false){
 				include_once 'User_Profile_Picture.php';
 				$profile = new User_Profile_Picture();
@@ -432,7 +432,13 @@
  						$content .= ob_get_clean();
 					}
 			}
-			return $content;
+			
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'search_mine_interest_people.phtml');
+			$content= ob_get_clean();
+			return $content;	
+			
+			
 		}
 		
 		public function getContentMomentForMineInterestType(){
@@ -466,7 +472,6 @@
 			$media_base = new User_Media_Base();
 			$interest  = new Interest();
 			$rows = $interest->returnMatchedPhotoForMineInterest();
-			$content = null;
 			if($rows !== false){
 				$left_content = "";
 				$right_content = "";
@@ -483,7 +488,7 @@
 				}
 			}
 			ob_start();
-			include(TEMPLATE_PATH_CHILD.'double_column_photo_stream_block.phtml');
+			include(TEMPLATE_PATH_CHILD.'search_mine_photo.phtml');
 			$content= ob_get_clean();
 			return $content;
 		}
@@ -509,7 +514,7 @@
 			$interest_found = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, 5-$count);
 			if($interest_found !== false){
 				foreach($interest_found as $i){
-					if($count <= 8){
+					if($count <= 5){
 						if(!in_array($i['id'], $serach_result_user_id_array)){
 							array_push($result_found,$i);
 							$count++;

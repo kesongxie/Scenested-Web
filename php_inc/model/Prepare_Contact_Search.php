@@ -4,7 +4,6 @@
 	include_once MODEL_PATH.'Message_Queue.php';
 	
 	class Prepare_Contact_Search{
-	
 		public function searchContactInSearchBarByKeyWord($key_word){
 			$queue_array = array();
 			$in = new User_In_Interest();

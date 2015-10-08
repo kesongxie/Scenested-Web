@@ -351,7 +351,16 @@
 			}
 			else{
 				$interest_name = $interest->getInterestNameByInterestId($interest_id);
-				$user_found = $interest->returnMatchedUserBySearchkeyWord($interest_name, 5);
+				
+			
+				$request_user_page_id = $interest->getInterestUserIdByInterestId($interest_id);
+				if($request_user_page_id != $_SESSION['id']){
+					include_once 'User_Table.php';
+					$user = new User_Table();
+					$request_user_page_firstname = $user->getUserFirstNameByUserIden($request_user_page_id);
+				}else{
+					$user_found = $interest->returnMatchedUserBySearchkeyWord($interest_name, 5);
+				}
 				ob_start();
 				include($this->initial_interest_friend);
 				$content = ob_get_clean();

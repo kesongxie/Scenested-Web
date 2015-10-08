@@ -1714,7 +1714,7 @@ $(document).ready(function(){
 				duration: 200,
 				complete: function() {
 					parentDiv.animate({
-					'height':int_group.height()
+					'height':int_group.height() - 6
 					},100);
 					w.css('height',int_group.height());
 				}
@@ -1807,7 +1807,7 @@ $(document).ready(function(){
  					success:function(resp){
  					console.log(resp);
  						if(resp != '1'){	
- 							selected_interest.removeClass('in_con_w_opt_it asct selectable').animate({"padding-left": '6px'},100).css('cursor','default').attr('title','Request Sent');
+ 							selected_interest.removeClass('in_con_w_opt_it asct selectable').animate({"padding-left": '10px'},100).css('cursor','default').attr('title','Request Sent');
 							selected_interest.find('.txt_ofl').after('<img src="'+IMGDIR+'plane_sent_icon.png" class="request-sent" title="Request Sent" >');
 						}
  					}
@@ -3131,10 +3131,6 @@ $(function($) {
 			});
 		}
 	},'#header-notification-delegate .event-include-request .accept');
-	
-	
-	
-	
 	
 	
 	

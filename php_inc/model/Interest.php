@@ -739,15 +739,18 @@
 		}
 		
 		
-		public function getInitialFriendsBlock(){
-			$user_found = $this->returnSuggestUser(4);
-			if($user_found !== false){
-				ob_start();
-				include($this->initial_friend_block);
-				$content = ob_get_clean();
-				return $content;
+		public function getInitialFriendsBlock($request_user_page_id){
+			include_once 'User_Table.php';
+			$user = new User_Table();
+			$request_user_page_firstname = $user->getUserFirstNameByUserIden($request_user_page_id);
+			if($_SESSION['id'] == $request_user_page_id){
+				$user_found = $this->returnSuggestUser(4);
 			}
-			return false;
+			ob_start();
+			include($this->initial_friend_block);
+			$content = ob_get_clean();
+			return $content;
+		
 		}
 		
 		
