@@ -242,13 +242,25 @@
 		public function getRowsColumnBySelector($column, $selector_column, $selector_value, $limit_num = 1, $offset = 0, $asc = false){
 			$column = $this->connection->escape_string($column);
 				$selector_column = $this->connection->escape_string($selector_column);
-				if($asc){
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT ?,? ");
+				if($offset != 0){
+					if($asc){
+						$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? AND `id` < ? LIMIT ? ");
+					}else{
+						$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? AND `id` < ? ORDER BY `id` DESC LIMIT ? ");
+					}
 				}else{
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC LIMIT ?,? ");
+					if($asc){
+						$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ?  LIMIT ? ");
+					}else{
+						$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC LIMIT ? ");
+					}
 				}
 				if($stmt){
-					$stmt->bind_param('sii', $selector_value, $offset,$limit_num);
+					if($offset != 0){
+						$stmt->bind_param('sii', $selector_value, $offset,$limit_num);
+					}else{
+						$stmt->bind_param('si', $selector_value,$limit_num);
+					}
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
 						 if($result !== false && $result->num_rows >= 1){

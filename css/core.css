@@ -689,7 +689,7 @@ div.ui-datepicker{
 }
 .interest-profile .dialog-header{
 	height:44px;
-	border-radius:3px 3px 0px 0px;
+	border-radius:4px 4px 0px 0px;
 }
 
 .interest-profile .dialog-body{
@@ -804,6 +804,7 @@ div.ui-datepicker{
 	position:relative;
 	border:1px solid #f0f0f0;
 	border-radius:4px;
+	overflow:hidden;
 }
 
 .profile-name{

@@ -189,7 +189,7 @@
 				//end getting interest profile
 				
 				$count = 1;
-				$idCollection = $this->interest_activity->getActivityIdCollectionByInterestId($interest['id']);
+				$idCollection = $this->interest_activity->getActivityIdCollectionByInterestId($interest['id'], 10, 0);
 				if($idCollection !== false && sizeof($idCollection) > 0){
 					foreach($idCollection as $row ){
 						if(++$count % 2 == 0){
@@ -206,6 +206,9 @@
 			}
 			return false;
 		}
+		
+		
+		
 		
 		
 		
@@ -821,7 +824,28 @@
 		}
 		
 		
-		
+		public function loadMoreInterestFeed($last_key, $interest_id){
+			$count = 1;
+			$left_content = "";
+			$right_content = "";
+			$activity_id = $this->interest_activity->getActivityIdByKey($last_key);
+			$idCollection = $this->interest_activity->getActivityIdCollectionByInterestId($interest_id, 10, $activity_id);
+			if($idCollection !== false && sizeof($idCollection) > 0){
+				foreach($idCollection as $row ){
+					if(++$count % 2 == 0){
+						$right_content.=$this->interest_activity->getInterestActivityBlockByActivityId($row['id']);
+					}else{
+						$left_content.=$this->interest_activity->getInterestActivityBlockByActivityId($row['id']);
+					}
+				}
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
+			
+		}
 	
 			
 		

@@ -68,7 +68,7 @@
 				}
 			}
 			$user_in = $user_in.$_SESSION['id'];
-			$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) ORDER BY `id` DESC");			
+			$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) ORDER BY `id` DESC LIMIT 10");			
 			if($stmt){
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
@@ -76,6 +76,7 @@
 						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
 						$count = 1;
+						
 						$feed_id_list = '';
 						foreach($rows as $row){
 							$content = '';
@@ -96,17 +97,70 @@
 				}
 			}
 			
-			$suggest_content = $this->getSuggestPost();
-			if($suggest_content !== false){
-				$left_content .= $suggest_content['suggest_left_content'];
-				$right_content .= $suggest_content['suggest_right_content'];
-			}
+			// $suggest_content = $this->getSuggestPost();
+// 			if($suggest_content !== false){
+// 				$left_content .= $suggest_content['suggest_left_content'];
+// 				$right_content .= $suggest_content['suggest_right_content'];
+// 			}
 
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'index_new_feed.phtml');
 			$content = ob_get_clean();
 			return $content;
 		}
+		
+		public function loadMoreFeed($last_key){
+			include_once 'User_In_Interest.php';
+			$in = new User_In_Interest();
+			$friends = $in->getAllFriendsInUsersInterest();
+			$left_content = "";
+			$right_content = "";
+			$user_in = '';
+			if($friends !== false && sizeof($friends >= 1 )){
+				foreach($friends as $friend){
+					$user_in.="'".$friend['user_id']."',";
+				}
+			}
+			$user_in = $user_in.$_SESSION['id'];
+			$activity_id = $this->getActivityIdByKey($last_key);
+			if($activity_id !== false){
+				$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) AND `id` < ? ORDER BY `id` DESC LIMIT 10");			
+				if($stmt){
+					$stmt->bind_param('i',$activity_id);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$rows = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							$count = 1;
+							$feed_id_list = '';
+							foreach($rows as $row){
+								$content = '';
+								$feed_id_list .= $row['id'].',';
+								if($row['type'] == 'm'){
+									$content = $this->getMomentInterestActivityBlockByActivityId($row['id'], true);
+								}else if($row['type'] == 'e'){
+									$content = $this->getEventInterestActivityBlockByActivityId($row['id'], true);
+								}
+								if($count++ % 2 == 0){
+									$right_content.= $content;
+								}else{
+									$left_content.= $content;
+								}
+							}
+							$this->feed_id_list = $this->feed_id_list.','.trim($feed_id_list,',');
+						 	ob_start();
+							include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
+							$content = ob_get_clean();
+							return $content;	
+						 }
+					}
+				}			
+			}
+			return false;
+		}
+		
+		
 		
 		
 		
@@ -517,8 +571,8 @@
 		
 		
 		
-		public function getActivityIdCollectionByInterestId($interest_id){
-			return $this->getAllRowsColumnBySelector('id', 'interest_id', $interest_id);
+		public function getActivityIdCollectionByInterestId($interest_id, $limit = 10, $offset = 0){
+			return $this->getRowsColumnBySelector('id', 'interest_id', $interest_id, $limit, $offset);
 		}
 		
 		
@@ -543,7 +597,7 @@
 					LEFT JOIN interest_activity
 					ON event.interest_activity_id = interest_activity.id WHERE groups.user_in LIKE ? AND  TIMESTAMP(event.date, event.time) < NOW()
 		 
-				) dum ORDER BY TIMESTAMP(date,time) DESC
+				) dum ORDER BY TIMESTAMP(date,time) DESC LIMIT 4
 				");
 			}else{
 				$stmt = $this->connection->prepare("
@@ -562,7 +616,7 @@
 					ON event_group.event_id = event.id
 					LEFT JOIN interest_activity
 					ON event.interest_activity_id = interest_activity.id WHERE groups.user_in LIKE ?
-				) dum ORDER BY TIMESTAMP(date,time) DESC
+				) dum ORDER BY TIMESTAMP(date,time) DESC  LIMIT 4
 				");
 			}
 			
@@ -1722,6 +1776,67 @@
 			return false;
 		}
 		
+		
+		public function loadMoreEventFeed($last_key, $user_key){
+			include_once MODEL_PATH.'User_Table.php';
+			$user = new User_Table();
+			$user_id = $user->getUserIdByKey($user_key);
+			if($user_id !== false){
+				$stmt = $this->connection->prepare("
+				SELECT * 
+				FROM(
+					SELECT DISTINCT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id, event.id AS event_id, event.title, event.description,event.date AS date, event.time AS time
+					FROM  event 
+					LEFT JOIN interest_activity
+					ON interest_activity.id = event.interest_activity_id  WHERE interest_activity.user_id = ? AND interest_activity.type = 'e'  AND TIMESTAMP(event.date,event.time) <  ?
+					UNION 
+					SELECT DISTINCT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id, event.id AS event_id, event.title, event.description,event.date AS date, event.time AS time
+					FROM groups
+					LEFT JOIN event_group
+					ON groups.id = event_group.group_id 
+					LEFT JOIN event
+					ON event_group.event_id = event.id
+					LEFT JOIN interest_activity
+					ON event.interest_activity_id = interest_activity.id WHERE groups.user_in LIKE ? AND TIMESTAMP(event.date,event.time) <  ?
+				) dum ORDER BY TIMESTAMP(date,time) DESC  LIMIT 4
+				");
+				if($stmt){
+					$user_in = '%'.$user_id.',%';
+					$activity_id = $this->getActivityIdByKey($last_key);
+					$this->event = new event();
+					
+					$timeStamp = date('Y-m-d H:i:s',$this->event->getEventTimeStamp($activity_id));
+					if($activity_id !== false){
+						$stmt->bind_param('issi',$user_id, $timeStamp,$user_in, $timeStamp);
+						if($stmt->execute()){
+							 $result = $stmt->get_result();
+							 if($result !== false){
+								$rows = $result->fetch_all(MYSQLI_ASSOC);
+								$stmt->close();
+								if($rows !== false){
+									$left_content = "";
+									$right_content = "";
+									$count = 0;
+									foreach($rows as $row ){
+										$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id'], true);
+										if($count++ % 2 == 0){
+											$left_content.= $content;
+										}else{
+											$right_content.= $content;
+										}
+									}
+									ob_start();
+									include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
+									$content = ob_get_clean();
+									return $content;
+								}
+							}
+						}
+					}
+				}
+			}
+			return false;
+		}
 		
 		
 		

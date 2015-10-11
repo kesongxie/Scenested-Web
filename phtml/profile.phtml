@@ -20,6 +20,10 @@
 
     <?php if(isset($_GET['s']) && $_GET['s']=='friends'): ?>	
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/child_js/profile_friend.js"></script>
+	<?php elseif(isset($_GET['s']) && $_GET['s']=='photos'): ?>
+		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/child_js/profile_photo.js"></script>
+	<?php elseif(isset($_GET['s']) && $_GET['s']=='events'): ?>
+		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/child_js/profile_event.js"></script>
 	<?php else: ?>	
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/child_js/profile_interest.js"></script>
 	<?php endif;?>
@@ -73,40 +77,9 @@
 							<div class="avator-name"><?php echo htmlentities($request_user_page_fullname); ?></div>
 						</div>
 					</div>
-					
-				
-				
-				
-				<!-- 
-					<div style="padding:10px;margin-top:20px;">
-						<div style="color:#1E1E1E;font-weight:bold;font-size:16px;">Occupying</div>
-						<div style="background:#fff;" > 
-							Kesong hasn't updated what he is recently occupied with
-							<div href="" class="plain-lk pointer" style="color:#062AA3">Add what you are occupying recently</div>
-						</div>
-						
-					</div>
-		<div style="background:#fff;" class="hdn"> 
-							Kesong has no upcoming events <span href="" class="plain-lk pointer" style="color:#062AA3">Know what he is willing to join?</span>
-						</div>
-						<div style="background:#fff;">
-							You have no upcoming events <span href="" class="plain-lk pointer" style="color:#062AA3">Add what you are willing to join</span>
-						</div>
-	<div><span style="font-size:30px;color:#1E1E1E;font-weight:bold">06</span>Jul<span></span> </div>
- 							<div class="plain-lk pointer" style="font-weight:600;margin-top:8px;">US Open Champion Match</div>
- 						
- -->
-
 				<?php include_once 'child/abouts_side_block.php'; ?>
 
 				<?php //include_once 'child/favor_evt_block.php'; ?>	
-				
-				<!-- 
-<div style="margin-top:100px;">
-						<?php require_once 'phtml/footer.phtml'; ?>
-				</div>
- -->
-				
 			</div>
 			
 			<div id="profile-sider-bar-right" class="inline-blk">
@@ -114,19 +87,10 @@
 						<a href="<?php echo $user_profile_url.'/interests'; ?>"><div  class="navi-item<?php if(!isset($_GET['s'])||($_GET['s']!='events' && $_GET['s']!='groups'&& $_GET['s']!='moments' && $_GET['s']!='friends' && $_GET['s']!='photos' && $_GET['s']!='about')){echo ' active-navi';}else{echo ' deactive-navi';}?>"   >Interests<div  class="sub-text" style="left:15px;">events & moments</div></div></a>
 						<a href="<?php echo $user_profile_url.'/events'; ?>" ><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='events'){echo ' active-navi';}else{echo ' deactive-navi';}?>">Events<div class="sub-text" style="left:15px;" >upcomings & joined</div></div></a>
 						<a href="<?php echo $user_profile_url.'/friends'; ?>"><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='friends'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Friends<div  class="sub-text" style="left:15px;">connections</div></div></a>
-					<!-- 
-	<a href="<?php echo $user_profile_url.'/Favored'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='groups'){echo ' active-navi';}else{echo ' deactive-navi';}?>"  >Favored<div  class="sub-text" style="left:21px;" >moment liked</div></div></a>
-					
- -->
 						<a href="<?php echo $user_profile_url.'/photos';?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='photos'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Photos<div  class="sub-text" style="left:11px;">want to share</div></div></a>
-					<!-- 
-	<a href="<?php echo $user_profile_url.'/about'; ?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='about'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >About<div  class="sub-text" style="left:11px;"><?php echo htmlentities(((strlen($request_user_page_fullname) < 16)?$request_user_page_fullname:substr($request_user_page_fullname,0,27).'...')) ?></div></div></a>
-				
- -->
-
-	</div>
+			</div>
 					
-					<div id="profile-mid-content">
+					<div id="profile-mid-content" data-fetchable = "true">
 						<?php 
 							if(isset($_GET['s']) && $_GET['s'] == 'events'){
 								require_once 'child/event.php';

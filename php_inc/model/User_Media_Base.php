@@ -133,7 +133,6 @@
 		
 		
 		public function getUserMediaBlockByUserId($user_id){
-			
 			$stmt = $this->connection->prepare("
 				SELECT  'm' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM moment_photo WHERE `user_id` = ?
 				UNION  
@@ -142,7 +141,7 @@
 				SELECT  'p' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_picture WHERE `user_id` = ?
 				UNION  
 				SELECT  'c' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_cover WHERE `user_id` = ?
-				ORDER BY upload_time DESC
+				ORDER BY upload_time DESC LIMIT 10
 			");	
 		
 			if($stmt){
@@ -167,6 +166,7 @@
 										}
 									}
 								}
+								$content = true;
 							}
 						 }
 						 if($_SESSION['id'] != $user_id){
@@ -282,8 +282,108 @@
 			return false;
 		}
 		
+		public function getLastLoadedStreamId($l, $r, $type){
+			//l is the last key for left column 
+			//r is the last key for right column 
+			//type can be either m, e, c, p stands for photos of moment, event, cover, profile repsecitvely
+			$obj = false;
+			switch($type){
+				case 'm':
+					include_once MODEL_PATH.'Moment_Photo.php';
+					$obj = new Moment_Photo();break;
+				case 'e';
+					include_once MODEL_PATH.'Event_Photo.php';
+					$obj = new Event_Photo();break;
+				case 'c':
+					include_once MODEL_PATH.'User_Profile_Cover.php';
+					$obj = new User_Profile_Cover();break;
+				case 'p':
+					include_once MODEL_PATH.'User_Profile_Picture.php';
+					$obj = new User_Profile_Picture();break;
+				default:break;	
+			}
+			if($obj !== false){
+				if($l !== false || $r !== false){
+					$temp_1 = MAX_PHOTO_BOUND;
+					$temp_2 = MAX_PHOTO_BOUND;
+					if($l !== false){
+						$temp_1 = $obj->getRowIdByHashkey($l);
+						if($temp_1 === false){
+							$temp_1 = MAX_PHOTO_BOUND;
+						}
+					}
+					if($r !== false){
+						$temp_2 = $obj->getRowIdByHashkey($r);
+						if($temp_2 === false){
+							$temp_2 = MAX_PHOTO_BOUND;
+						}
+					}
+					return min($temp_1, $temp_2);
+				}
+			}
+			return MAX_PHOTO_BOUND;	
+		}
 		
 		
+		public function loadProfilePhotoStream($l_m, $r_m, $l_e, $r_e,$l_p, $r_p,$l_c, $r_c, $user_key){
+			include_once MODEL_PATH.'User_Table.php';
+			$user = new User_Table();
+			$user_id = $user->getUserIdByKey($user_key);
+			if($user_id !== false){
+				 $stmt = $this->connection->prepare("
+					SELECT  'm' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM moment_photo WHERE `user_id` = ? AND `id` < ?
+					UNION  
+					SELECT  'e' AS `source_from`, `id`, `picture_url`, `upload_time`, `hash`  FROM event_photo WHERE `user_id` = ? AND `id` < ?
+					UNION  
+					SELECT  'p' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_picture WHERE `user_id` = ? AND `id` < ?
+					UNION  
+					SELECT  'c' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_cover WHERE `user_id` = ? AND `id` < ?
+					ORDER BY upload_time DESC LIMIT 10
+				");	
+
+				if($stmt){
+					$last_m = $this->getLastLoadedStreamId($l_m, $r_m, 'm');
+					$last_e = $this->getLastLoadedStreamId($l_e, $r_e, 'e');
+					$last_p = $this->getLastLoadedStreamId($l_p, $r_p, 'p');
+					$last_c = $this->getLastLoadedStreamId($l_c, $r_c, 'c');
+				
+					$stmt->bind_param('iiiiiiii',$user_id,$last_m, $user_id, $last_e, $user_id, $last_p,$user_id, $last_c);
+				
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$rows = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							if($rows !== false){
+								$left_content = "";
+								$right_content = "";
+								$count = 0;
+								foreach($rows as $row){
+									$content= $this->renderPhotoStreamByPictureUrl($row['picture_url'], $user_id, $row['source_from'], $row['hash']);
+									if($content !== false){
+										if($count++ % 2 == 0){
+											$left_content.= $content;
+										}else{
+											$right_content.= $content;
+										}
+									}
+								}
+								ob_start();
+								include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
+								$content = ob_get_clean();
+								return $content;
+							}
+						
+						 }
+					}
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		
+			
+		}
+
 		
 	}		
 ?>

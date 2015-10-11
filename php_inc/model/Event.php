@@ -127,6 +127,14 @@
 			return (time() > strtotime($event['date'].$event['time']));				
 		}
 		
+		public function getEventTimeStamp($activity_id){
+			$column_array = array('date','time');
+			$event = $this->getMultipleColumnsBySelector($column_array, 'interest_activity_id', $activity_id);
+			return strtotime($event['date'].$event['time']);	
+			
+		}
+		
+		
 	
 		public function getEventTitleByEventId($event_id){
 			return $this->getColumnById('title',$event_id);

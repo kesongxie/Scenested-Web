@@ -1,3 +1,46 @@
+
+function loadInterest(thisE){
+	var  label_key = thisE.attr('data-labelfor');
+	var sideLabel = thisE.parents('#i-interest-navi').find('.interest-side-label');
+	sideLabel.removeClass('active');
+	sideLabel.find('.txt_ofl').removeClass('red-act');
+	thisE.addClass('active');
+	var inner_wrapper = $('#interest-content-wrapper').find('.interest-content-inner-wrapper[data-key='+label_key+']'); //block for selected interest
+	$('#add-new-interest-wrapper').addClass('hdn'); //hide the interest edit div
+	$('#interest-content-wrapper').removeClass('hdn'); //show the interest content div
+	if(inner_wrapper.length > 0){
+		//show
+		$(window).scrollTop(0);
+		thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
+		$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
+		inner_wrapper.removeClass('hdn').addClass('blk');
+		setVisibleContent();
+	}else{
+		//load
+		$.ajax({
+			url: AJAX_DIR+'ld_interest.php',
+			method:'post',
+			data:{label_key:label_key},
+			success:function(resp){
+				if(resp != '1'){
+					$(window).scrollTop(0);
+					thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
+					$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
+					$('#interest-content-wrapper .feed-loading-wrapper').before(resp);
+					setVisibleContentWithParent($('.interest-content-inner-wrapper[data-key='+label_key+']'), "Read more");
+				}
+			}
+		});
+	}
+	
+	
+
+	thisE.find('.txt_ofl').addClass('red-act');
+	setTimeout(function(){
+		thisE.css('-webkit-animation',"").css('animation',"");
+	},200);
+}
+
 window.onpopstate=function(event){
 	var request_interests_container = $('.interest-content-inner-wrapper[data-key='+event.state['key']+']');
 	var activate_label = $('.interest-sider-navi[data-labelfor='+event.state['key']+']');
@@ -241,5 +284,59 @@ $(document).ready(function(){
 	
 	},'.interest-profile .interest-profile-edit .update_interest');
 	
+
+	$(window).scroll(function() {
+			var thisE = $(this);
+			if ($('body').height() <= ($(window).height() + $(window).scrollTop() + 400) ) {
+				var feed = $('.interest-content-inner-wrapper.blk');
+				var loading_wrapper = $('#interest-content-wrapper .feed-loading-wrapper');
+					if(feed.attr('data-fetchable') == 'true' && feed.attr('data-set') != 'false'){
+					feed.attr('data-fetchable', 'false');
+					loading_wrapper.removeClass('hdn');
+					var total_feed = feed.find('.post-wrapper').length;
+					var left_content = feed.find('.interest-content-left');
+					var right_content = feed.find('.interest-content-right');
+					if(total_feed % 2 == 0){
+						//even, the last post is at the right hand side
+						var last_key =left_content.find('.post-wrapper').last().attr('data-key');
+					}else{
+						//odd, the last post is at the left hand side
+						var last_key = right_content.find('.post-wrapper').last().attr('data-key');
+					}
+					var key = $('#i-interest-navi .interest-side-label.active').attr('data-labelfor');
+					$.ajax({
+						url:AJAX_DIR+'loadInterestFeed.php',
+						method:'post',
+						data: {last_key:last_key, key:key},
+						success:function(resp){
+							console.log(resp);
+							if(resp != '1'){
+								var left = $($.parseHTML(resp)).filter('#loading-feed-left').html();								
+								var right = $($.parseHTML(resp)).filter('#loading-feed-right').html();	
+								left_content.append(left);
+								right_content.append(right);
+								feed.attr('data-fetchable', 'true');
+								loading_wrapper.addClass('hdn');
+							}else{
+								feed.attr('data-set','false');
+								loading_wrapper.addClass('hdn');
+							}
+						}
+					});
+				}
+				
+			}
+    });
+    
+    $('#i-interest-navi').on({
+		click:function(){
+			var url = $(this).attr('data-href');
+			var key = $(this).attr('data-labelfor');
+			history.pushState({request_url:url, key: key}, null ,url);
+			loadInterest($(this));
+		}
+	},'.interest-side-label');
+    
+
 
 });

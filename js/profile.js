@@ -36,42 +36,6 @@ function renderVisibleScope(desc,src){
 
 
 
-function loadInterest(thisE){
-	var  label_key = thisE.attr('data-labelfor');
-	var inner_wrapper = $('#interest-content-wrapper').find('.interest-content-inner-wrapper[data-key='+label_key+']'); //block for selected interest
-	$('#add-new-interest-wrapper').addClass('hdn'); //hide the interest edit div
-	$('#interest-content-wrapper').removeClass('hdn'); //show the interest content div
-	if(inner_wrapper.length > 0){
-		//show
-		$(window).scrollTop(0);
-		thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
-		$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
-		inner_wrapper.removeClass('hdn').addClass('blk');
-		setVisibleContent();
-	}else{
-		//load
-		$.ajax({
-			url: AJAX_DIR+'ld_interest.php',
-			method:'post',
-			data:{label_key:label_key},
-			success:function(resp){
-				if(resp != '1'){
-					$(window).scrollTop(0);
-					thisE.css('-webkit-animation',"rubberBand 0.4s").css('animation',"rubberBand 0.4s");
-					$('#interest-content-wrapper .interest-content-inner-wrapper').removeClass('blk').addClass('hdn');
-					$('#interest-content-wrapper').append(resp);
-					setVisibleContentWithParent($('.interest-content-inner-wrapper[data-key='+label_key+']'), "Read more");
-				}
-			}
-		});
-	}
-	thisE.parents('#i-interest-navi').find('.interest-side-label .txt_ofl').removeClass('red-act');
-	thisE.find('.txt_ofl').addClass('red-act');
-	setTimeout(function(){
-		thisE.css('-webkit-animation',"").css('animation',"");
-	},200);
-}
-
 
 	
 
@@ -468,14 +432,7 @@ $(document).ready(function(){
 		
 	},'.cancel-button');
 	
-	$('#i-interest-navi').on({
-		click:function(){
-			var url = $(this).attr('data-href');
-			var key = $(this).attr('data-labelfor');
-			history.pushState({request_url:url, key: key}, null ,url);
-			loadInterest($(this));
-		}
-	},'.interest-side-label');
+	
 	
 	
 	$('body').on({
