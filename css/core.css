@@ -686,10 +686,12 @@ div.ui-datepicker{
 	margin-bottom:16px;
 	box-shadow:1px 1px 10px #E8E8E8;
 	border:1px solid #EAEAEA;
+	border-radius:4px;
 }
 .interest-profile .dialog-header{
 	height:44px;
 	border-radius:4px 4px 0px 0px;
+	overflow:hidden;
 }
 
 .interest-profile .dialog-body{
@@ -1245,6 +1247,9 @@ div.ui-datepicker{
 	background:#63595B;
 }
 
+.hover-avator-wrapper .user-profile-wrapper{
+	width:280px !important;
+}
 
 .user-profile{
 	width:100%;

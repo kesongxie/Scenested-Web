@@ -301,48 +301,11 @@
 		public function getUserFriendBlockByInterestId($interest_id, $limit_num = -1, $offset = 0){
 			$user_found = $this->getUserInInterestByInterestId($interest_id, $limit_num, $offset);
 			$content = false;
-			include_once 'Interest.php';
-			$interest = new Interest();
+			include_once 'User_Table.php';
+			$user = new User_Table();
 			if($user_found !== false && sizeof($user_found) >=1 ){
-				include_once 'User_Profile_Picture.php';
-				$profile = new User_Profile_Picture();
-				include_once 'User_Table.php';
-				$user = new User_Table();
 				foreach($user_found as $u){
-					$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
-					$cover_pic =  $user->getLatestCoverForuser($u['id']);
-					$fullname = $u['fullname'];
-					$hash = $u['hash'];
-					$rows = $interest->getInterestNameForUser($u['id'], 2);
-					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
-					$user_id = $u['id'];
-					$result_array = array();
-		
-					$interest_list = '';
-					if($rows !== false){
-						$count = 1;
-						foreach($rows as $row){
-							if($count == sizeof($rows) -1 ){
-								$interest_list .= $row['name'].' and ';
-							}else if($count < sizeof($rows)){
-								$interest_list .= $row['name'].', ';
-							}else{
-								$interest_list .= $row['name'];
-							}
-							$count++;
-						}
-					}
-					$interest_list = trim($interest_list,', ');
-			
-					include_once 'Education.php';
-					$educ = new Education();
-					$education = $educ->getEducationByUserId($u['id']);
-					ob_start();
-					include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
-					$user_profile= ob_get_clean();
-					ob_start();
-					include(TEMPLATE_PATH_CHILD.'friend_profile_wrapper.phtml');
-					$content .= ob_get_clean();
+					$content .= $user->returnUserAvatorByResource($u);
 				}
 				ob_start();
 				include(TEMPLATE_PATH_CHILD.'friend-content-inner-wrapper-block.phtml');
@@ -350,9 +313,9 @@
 				return $friend_block;
 			}
 			else{
+				include_once 'Interest.php';
+				$interest = new Interest();
 				$interest_name = $interest->getInterestNameByInterestId($interest_id);
-				
-			
 				$request_user_page_id = $interest->getInterestUserIdByInterestId($interest_id);
 				if($request_user_page_id != $_SESSION['id']){
 					include_once 'User_Table.php';

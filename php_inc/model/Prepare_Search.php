@@ -65,56 +65,26 @@
 			include_once 'Education.php';
 			$educ = new Education();
 			$user = new User_Table();
-			$result_found = $user->returnMatchedUserBySearchkeyWord($this->search_keyword,-1);
+			$result_found = $user->returnMatchedUserBySearchkeyWord($this->search_keyword,4);
 			$interest  = new Interest();
 			$content = null;
 			$search_for_interest_block = null;
 			$search_for_school_block = null;
 			if($result_found !== false){
-				include_once 'User_Profile_Picture.php';
-				$profile = new User_Profile_Picture();
 				$search_for_name_block = "";
+				$_SESSION['loaded_keyword_people_list'] = '';
 				foreach($result_found as $u){
-						$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
-						$cover_pic =  $user->getLatestCoverForuser($u['id']);
-						$fullname = $u['fullname'];
-						$hash = $u['hash'];
-						$rows = $interest->getInterestNameForUser($u['id'], 2);
-						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
-						$user_id = $u['id'];
-						$result_array = array();
-						
-						$interest_list = '';
- 						if($rows !== false){
- 							$count = 1;
- 							foreach($rows as $row){
- 								if($count == sizeof($rows) -1 ){
- 									$interest_list .= $row['name'].' and ';
-								}else if($count < sizeof($rows)){
- 									$interest_list .= $row['name'].', ';
- 								}else{
- 									$interest_list .= $row['name'];
- 								}
- 								$count++;
-  							}
- 						}
- 						$interest_list = trim($interest_list,', ');
- 						$education = $educ->getEducationByUserId($u['id']);
-						
- 						
-						ob_start();
- 						include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
- 						$user_profile= ob_get_clean();
- 						ob_start();
- 						include(TEMPLATE_PATH_CHILD.'search_people_profile_wrapper.phtml');
- 						$search_for_name_block .= ob_get_clean();
+					$_SESSION['loaded_keyword_people_list'].="'".$u['id']."',";
+					$search_for_name_block .= $user->returnUserAvatorByResource($u);
 				}
+				$_SESSION['loaded_keyword_people_list'] = trim($_SESSION['loaded_keyword_people_list'], ',');
 				return $search_for_name_block;
-				
 			}else{
 				$search_for = $this->search_keyword;
-				$search_for_interest_block = $this->getContentForInterestType();
+				$this->search_type = 'interest';
+				$search_for_interest_block = $this->getContentForInterestType(4);
 				if($search_for_interest_block === null){
+					$this->search_type = 'interest';
 					$search_for_school_block = $this->getContentForSchoolType();
  				}
  				ob_start();
@@ -181,7 +151,7 @@
  						include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
  						$user_profile= ob_get_clean();
  						ob_start();
- 						include(TEMPLATE_PATH_CHILD.'search_people_profile_wrapper.phtml');
+ 						include(TEMPLATE_PATH_CHILD.'friend_profile_wrapper.phtml');
  						$content .= ob_get_clean();
 					}
 			}
@@ -193,13 +163,15 @@
 		public function getContentForInterestType(){
 			$user = new User_Table();
 			$interest  = new Interest();
-			$result_found = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, -1);
+			$result_found = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, 4);
 			$content = null;
 			if($result_found !== false){
 				include_once 'User_Profile_Picture.php';
 				$profile = new User_Profile_Picture();
 				$content = "";
+				$_SESSION['loaded_keyword_people_list'] = '';
 				foreach($result_found as $u){
+						$_SESSION['loaded_keyword_people_list'].="'".$u['id']."',";
 						$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
 						$cover_pic =  $user->getLatestCoverForuser($u['id']);
 						$fullname = $u['fullname'];
@@ -241,9 +213,11 @@
  						include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
  						$user_profile= ob_get_clean();
  						ob_start();
- 						include(TEMPLATE_PATH_CHILD.'search_people_profile_wrapper.phtml');
+ 						include(TEMPLATE_PATH_CHILD.'friend_profile_wrapper.phtml');
  						$content .= ob_get_clean();
 					}
+				$_SESSION['loaded_keyword_people_list'] = trim($_SESSION['loaded_keyword_people_list'], ',');
+
 			}
 			return $content;
 		}
@@ -389,50 +363,16 @@
 		public function getContentPeopleForMineInterestType(){
 			$user = new User_Table();
 			$interest  = new Interest();
-			$result_found = $interest->returnMatchedUserForMineInterest();
+			$result_found = $interest->returnMatchedUserForMineInterest(4);
 			$content = false;
 			if($result_found !== false){
 				include_once 'User_Profile_Picture.php';
 				$profile = new User_Profile_Picture();
 				$content = "";
 				foreach($result_found as $u){
-						$profile_pic = $profile->getLatestProfileImageForUser($u['id']);
-						$cover_pic =  $user->getLatestCoverForuser($u['id']);
-						$fullname = $u['fullname'];
-						$hash = $u['hash'];
-						$rows = $interest->getInterestNameForUser($u['id'], 2);
-						$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u['id']);
-						$user_id = $u['id'];
-						$result_array = array();
-						
-						$interest_list = '';
- 						if($rows !== false){
- 							$count = 1;
- 							foreach($rows as $row){
- 								if($count == sizeof($rows) -1 ){
- 									$interest_list .= $row['name'].' and ';
-								}else if($count < sizeof($rows)){
- 									$interest_list .= $row['name'].', ';
- 								}else{
- 									$interest_list .= $row['name'];
- 								}
- 								$count++;
-  							}
- 						}
- 						$interest_list = trim($interest_list,', ');
- 						include_once 'Education.php';
-						$educ = new Education();
-						$education = $educ->getEducationByUserId($u['id']);
- 						
-						ob_start();
- 						include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
- 						$user_profile= ob_get_clean();
- 						ob_start();
- 						include(TEMPLATE_PATH_CHILD.'search_people_profile_wrapper.phtml');
- 						$content .= ob_get_clean();
-					}
+					$content .= $user->returnUserAvatorByResource($u);
+				}
 			}
-			
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'search_mine_interest_people.phtml');
 			$content= ob_get_clean();
@@ -532,6 +472,45 @@
 		}
 		
 		
+		
+		public function loadMoreContentPeople(){
+			$user = new User_Table();
+			$interest  = new Interest();
+			$result_found = false;
+			if($this->search_mine){
+				$result_found = $interest->loadMoreMatchedUserForMineInterest(4);
+			}else{
+				if($this->search_type == 'name'){
+					//search poeple whose name match the keyword
+					$result_found = $user->loadMoreMatchedUserForKeyWord($this->search_keyword, 4);
+				}else if($this->search_type == 'interest'){
+					$result_found = $interest->loadMoreMatchedUserForKeyWord($this->search_keyword, 4);
+				}
+			}
+			$content = false;
+			if($result_found !== false){
+				$content = "";
+				foreach($result_found as $u){
+					ob_start();
+					$content.= $user->returnUserAvatorByResource($u);
+				}
+				return $content;
+			}
+			return false;
+		}
+		
+		public function loadMoreContentEvent(){
+			$user = new User_Table();
+			$interest  = new Interest();
+			$result_found = false;
+			if($this->search_mine){
+				$result_found = $interest->loadMoreMatchedUserForMineInterest(4);
+			}else{
+				$result_found = $interest->loadMoreMatchedUserForKeyWord($this->search_keyword, 4);
+			}
+			
+			return false;
+		}
 		
 		
 		

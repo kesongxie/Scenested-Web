@@ -1618,13 +1618,7 @@ $(document).ready(function(){
 	
 	
 	
-	// $('body').on({
-// 		click:function(){
-// 			$(this).find('.popover').addClass('hdn');
-// 			return false;
-// 		}
-// 	
-// 	},'.hover-user-profile');
+
 	
 	$('body').on({
 		click:function(){
@@ -1666,6 +1660,7 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
+			$(this).parents('.user-profile').addClass('hdn');
 			var target_name = $(this).parents('.user-profile').find('.fullname').text();
 			presentPopupDialog("Remove from Interest Group", "Do you want to remove \""+target_name+"\" from this interest group", "Cancel", "Remove", removeFromInterestGroup, $(this) );
 			return false;
@@ -2465,6 +2460,12 @@ $(function($) {
 	});
 	
 	
+ 	$('body').on({
+    	mouseleave:function(){
+			 $(this).html('').addClass('hdn').css({'top':'', 'left':''});
+		}
+	},'.hover-avator-wrapper');
+	
 	
 	$(document).mousemove(function(event){
 		var hoverAvator = $('.hover-avator-wrapper');
@@ -2480,7 +2481,7 @@ $(function($) {
 	    	}
 	    	if((initMouse.x-mouseMove.x)>30 || (initMouse.y-mouseMove.y)>30 || overRange  ){	
 				if(!($('.hover-avator-wrapper:hover').length != 0)){
-					$('.hover-avator-wrapper').html('').addClass('hdn');
+					$('.hover-avator-wrapper').html('').addClass('hdn').css({'top':'', 'left':''});;
 				}
 			}
      	}
@@ -2488,11 +2489,7 @@ $(function($) {
     
     
     
-    $('body').on({
-    	mouseleave:function(){
-			 $(this).html('').addClass('hdn');
-		}
-	},'.hover-avator-wrapper');
+   
 	
 	
 	

@@ -31,8 +31,9 @@
 	min-width: 180px;
 	box-shadow: 1px 1px 10px #EAEAEA;
 	z-index: 1;
-	border-radius: 5px;
+	border-radius: 4px;
 	background:#fff;
+	overflow:hidden;
 	border:1px solid #f0f0f0;
 }
 

@@ -28,11 +28,12 @@
 		$prepare_search = new Prepare_Search($_GET['q'],$_GET['t']);
 		$search_result_main_block =  $prepare_search->getSearchResultMainBlock();
 	}else if(isset($_GET['r']) && $_GET['r'] == 'mine'){
-		$prepare_search = new Prepare_Search(null,$_GET['t'] , true);
+		$prepare_search = new Prepare_Search(null, $_GET['t'] , true);
 		$search_result_main_block =  $prepare_search->getSearchResultMainBlock();
 	}else{
 		header('location:'.ERROR_PAGE);
 	}
+	$_SESSION['search_obj'] =  serialize($prepare_search);
 	
 	$interest = new Interest();
 	$similar_interest_block = $interest->getSimilarInterestBlock();

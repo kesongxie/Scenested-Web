@@ -13,6 +13,16 @@
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/glob.js"></script>
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/core.js"></script>
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/search.js"></script>
+		
+		<?php if(isset($_GET['t']) && $_GET['t']=='photo'): ?>	
+			<script type="text/javascript" src="<?php echo CHILD_JS_PATH; ?>search_photo.js"></script>
+		<?php elseif(isset($_GET['t']) && $_GET['t']=='event'): ?>	
+			<script type="text/javascript" src="<?php echo CHILD_JS_PATH; ?>search_event.js"></script>
+		<?php else: ?>	
+			<script type="text/javascript" src="<?php echo CHILD_JS_PATH; ?>search_friend.js"></script>
+		<?php endif;?>
+
+		
 		<!--[if lt IE 9]>
 		<script src="dist/html5shiv.js"></script>
 		<![endif]-->
@@ -46,9 +56,8 @@
 						<a href="<?php echo $title_url ?>&t=photo"><div class="navi-item<?php echo (isset($_GET['t']) && $_GET['t'] == 'photo')?' active-navi':' deactive-navi' ?>" >Photos<div class="sub-text" style="left:15px;">shared</div></div></a>
 					
 					</div>
-					<div>
+					<div id="search-content-wrapper" data-fetchable="true">
 						<?php echo $search_result_main_block; ?>
-					
 					</div>
 			</div>
 			</div>

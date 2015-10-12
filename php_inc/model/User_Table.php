@@ -173,13 +173,12 @@
 			return $profile->getLatestProfileImageForUser($user_id);
 		}
 		
+			
 		
-		public function returnMatchedUserBySearchkeyWord($key_word, $limit){
-			//Get the user education
+		public function getResultForUserByKeyWord($key_word, $limit = 2, $exculsive_list = "'-1'"){
 			include_once 'Education.php';
 			$edu = new Education();
 			$school_id = $edu->getSchoolIdByUserId($_SESSION['id']);
-			
 			if($school_id !== false){
 				if($limit > 0){
 					$stmt = $this->connection->prepare("
@@ -187,11 +186,11 @@
 					FROM user
 					LEFT JOIN education
 					ON user.id = education.user_id 
-					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ?  AND education.school_id = ?
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ?  AND education.school_id = ? AND user.id NOT IN($exculsive_list)
 					UNION 
 					SELECT  DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url
 					FROM user
-					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ?  
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND user.id NOT IN($exculsive_list) 
 					LIMIT ?
 					");
 				}else{
@@ -200,18 +199,18 @@
 					FROM user
 					LEFT JOIN education
 					ON user.id = education.user_id 
-					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND education.school_id = ?
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND education.school_id = ? AND user.id NOT IN($exculsive_list)
 					UNION 
 					SELECT  DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url
 					FROM user
-					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ?  
+					WHERE CONCAT(user.firstname,' ',user.lastname) LIKE ? AND user.id NOT IN($exculsive_list) 
 					");
 				}
 			}else{
 				if($limit > 0){
-					$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ?  LIMIT ? ");
+					$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ?  AND user.id NOT IN($exculsive_list) LIMIT ? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) LIKE ?");
+					$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname, `id`, `unique_iden` AS hash, `user_access_url` FROM `$this->table_name` WHERE CONCAT(firstname,' ',lastname) AND user.id NOT IN($exculsive_list) LIKE ?");
 				}
 			}
 			if($stmt){
@@ -232,11 +231,24 @@
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
-						$row = $result->fetch_all(MYSQLI_ASSOC);
-						$stmt->close();
-					 	return $row;
+					 	$stmt->close();
+						return $result;
 					 }
+					
 				}
+			}
+		
+			return false;
+		}
+		
+		
+		
+		public function returnMatchedUserBySearchkeyWord($key_word, $limit = 2){
+			//Get the user education
+			$result = $this->getResultForUserByKeyWord($key_word, $limit);
+			if($result !== false){
+				$rows = $result->fetch_all(MYSQLI_ASSOC);
+				return $rows;
 			}
 			echo $this->connection->error;
 			return false;
@@ -273,7 +285,7 @@
 		public function loadUserHoverProfilenByUiqueIden($iden){
 			$resource = $this->getUserAvatorResourceUniqueIden($iden);
 			if($resource !== false){
-				return $this->returnUserAvatorByResource($resource);
+				return $this->returnUserAvatorByResource($resource, true);
 			}
 			return false;
 		}
@@ -295,7 +307,7 @@
 		/*
 			the $u is an asscotive array contains the user's information, including id, fullname, hash, 
 		*/
-		public function returnUserAvatorByResource($u){
+		public function returnUserAvatorByResource($u, $hover = false){
 			include_once 'Interest.php';
 			$interest = new Interest();
 			include_once 'User_Profile_Picture.php';
@@ -333,10 +345,18 @@
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'user_profile.phtml');
 			$user_profile= ob_get_clean();
-			include(TEMPLATE_PATH_CHILD.'hover_profile_wrapper.phtml');
+			ob_start();
+			if($hover){
+				include(TEMPLATE_PATH_CHILD.'hover_profile_wrapper.phtml');
+			}else{
+				include(TEMPLATE_PATH_CHILD.'friend_profile_wrapper.phtml');
+			}
 			$content = ob_get_clean();
 			return $content;
 		}
+		
+		
+		
 		
 		
 		public function isUserActivated($iden){
@@ -346,6 +366,34 @@
 		public function getUserIden($iden){
 			return $this->getUserInfoByUserIden('user_iden',$iden);
 		}
+		
+		
+		
+		
+		public function loadMoreMatchedUserForKeyWord($key_word, $limit = 4){
+			$list = "'-1'";
+			if(isset($_SESSION['loaded_keyword_people_list'])){
+				$list = $_SESSION['loaded_keyword_people_list'];
+			}
+			$result = $this->getResultForUserByKeyWord($key_word, $limit, $list);
+			if($result !== false){
+				$rows = $result->fetch_all(MYSQLI_ASSOC);
+				foreach($rows as $row){
+					if(isset($_SESSION['loaded_keyword_people_list'])){
+						$_SESSION['loaded_keyword_people_list'].=",'".$row['id']."'";
+					}else{
+						$_SESSION['loaded_keyword_people_list'] ="'".$row['id']."'";
+					}
+				}
+				$_SESSION['loaded_keyword_people_list'] = trim($_SESSION['loaded_keyword_people_list'], ',');
+				return $rows;
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+	
 		
 	}
 		

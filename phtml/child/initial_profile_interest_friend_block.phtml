@@ -12,7 +12,7 @@
 				foreach($user_found as $u){
 					if($u['id'] !== $_SESSION['id']){
 						if(++$count <=4){
-							echo $interest->renderUserAvatorByUserResource($u);
+							echo $user->returnUserAvatorByResource($u);
 						}
 					}
 				}
