@@ -1,5 +1,5 @@
 <div class="inline-blk" style="width:90%">
-	<?php if($passed_event_num > 0): ?>
+	<?php if($total_event_num > 0): ?>
 		<div class="event-content-left inline-blk" style="width: 48%;margin-left:6px;">
 			<?php echo $left_content; ?>
 		</div>
@@ -7,6 +7,8 @@
 		<div class="event-content-right inline-blk" style="width: 48%;margin-left:8px;">
 			<?php echo $right_content; ?>
 		</div>
+		<div class="feed-loading-wrapper hdn" style="text-align:center;margin-top:20px;"><img src="<?php echo SPINNER_ICON; ?>" height="72" width="96"></div>
+
 	<?php else: ?>
 		<div style="background:#fff; padding:10px 0px 16px 20px;">
 		<?php	

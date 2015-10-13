@@ -1,8 +1,6 @@
-<?php if($result_found !== false): ?>
+<?php if($content !== false): ?>
 	<?php
-	 	foreach($result_found as $u){
-			echo $user->returnUserAvatorByResource($u);
-		}	
+	 	echo $content;
 	?>	
 	<div class="feed-loading-wrapper hdn" style="text-align:center;margin-top:20px;"><img src="<?php echo SPINNER_ICON; ?>" height="72" width="96"></div>
 

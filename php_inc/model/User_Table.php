@@ -243,9 +243,8 @@
 		
 		
 		
-		public function returnMatchedUserBySearchkeyWord($key_word, $limit = 2){
-			//Get the user education
-			$result = $this->getResultForUserByKeyWord($key_word, $limit);
+		public function returnMatchedUserBySearchkeyWord($key_word, $limit = 2, $exclusive_list = "'-1'"){
+			$result = $this->getResultForUserByKeyWord($key_word, $limit, $exclusive_list);
 			if($result !== false){
 				$rows = $result->fetch_all(MYSQLI_ASSOC);
 				return $rows;

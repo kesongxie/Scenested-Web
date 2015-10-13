@@ -13,13 +13,14 @@
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/glob.js"></script>
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/core.js"></script>
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/search.js"></script>
-		
 		<?php if(isset($_GET['t']) && $_GET['t']=='photo'): ?>	
-			<script type="text/javascript" src="<?php echo CHILD_JS_PATH; ?>search_photo.js"></script>
+		<script type="text/javascript" src="<?php echo CHILD_JS_PATH; ?>search_photo.js"></script>
 		<?php elseif(isset($_GET['t']) && $_GET['t']=='event'): ?>	
-			<script type="text/javascript" src="<?php echo CHILD_JS_PATH; ?>search_event.js"></script>
+		<script type="text/javascript" src="<?php echo CHILD_JS_PATH; ?>search_event.js"></script>
+		<?php elseif(isset($_GET['t']) && $_GET['t']=='moment'): ?>	
+		<script type="text/javascript" src="<?php echo CHILD_JS_PATH; ?>search_moment.js"></script>
 		<?php else: ?>	
-			<script type="text/javascript" src="<?php echo CHILD_JS_PATH; ?>search_friend.js"></script>
+		<script type="text/javascript" src="<?php echo CHILD_JS_PATH; ?>search_friend.js"></script>
 		<?php endif;?>
 
 		
@@ -50,9 +51,9 @@
 								$title_url = $BASE_PATH.'?r='.$_GET['r'];
 							}
 						 ?>
-						<a href="<?php echo $title_url ?>"><div class="navi-item<?php echo ( (!isset($_GET['t']) || ($_GET['t']!='event' && $_GET['t']!='photo' && $_GET['t']!='post' ))?' active-navi':' deactive-navi'   ) ?>">People<div class="sub-text" style="left:15px;">interests</div></div></a>
+						<a href="<?php echo $title_url ?>"><div class="navi-item<?php echo ( (!isset($_GET['t']) || ($_GET['t']!='event' && $_GET['t']!='photo' && $_GET['t']!='moment' ))?' active-navi':' deactive-navi'   ) ?>">People<div class="sub-text" style="left:15px;">interests</div></div></a>
 						<a href="<?php echo $title_url ?>&t=event"><div class="navi-item<?php echo (isset($_GET['t']) && $_GET['t'] == 'event')?' active-navi':' deactive-navi' ?>" >Events<div class="sub-text" style="left:15px;">upcomings &amp; collected</div></div></a>
-						<a href="<?php echo $title_url ?>&t=post"><div class="navi-item<?php echo (isset($_GET['t']) && $_GET['t'] == 'post')?' active-navi':' deactive-navi' ?>" >Moments<div class="sub-text" style="left:15px;">post</div></div></a>
+						<a href="<?php echo $title_url ?>&t=moment"><div class="navi-item<?php echo (isset($_GET['t']) && $_GET['t'] == 'moment')?' active-navi':' deactive-navi' ?>" >Moments<div class="sub-text" style="left:15px;">post</div></div></a>
 						<a href="<?php echo $title_url ?>&t=photo"><div class="navi-item<?php echo (isset($_GET['t']) && $_GET['t'] == 'photo')?' active-navi':' deactive-navi' ?>" >Photos<div class="sub-text" style="left:15px;">shared</div></div></a>
 					
 					</div>

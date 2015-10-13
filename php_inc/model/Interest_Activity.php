@@ -7,7 +7,7 @@
 	include_once  MODEL_PATH.'Favor_Activity.php';
 	
 	class Interest_Activity extends Core_Table{
-		private  $table_name = "interest_activity";
+		private $table_name = "interest_activity";
 		private $invitation_contact_path = TEMPLATE_PATH_CHILD."invitation_contact.phtml";
 		private $invitation_contact_group_path = TEMPLATE_PATH_CHILD."invitation_contact_group.phtml";
 
@@ -641,17 +641,13 @@
 								}
 							}
 							
-							$passed_event_num = sizeof($rows);
-							// include_once 'User_Upcoming_Event.php';
-// 							$upcoming_evt = new User_Upcoming_Event();
-// 							$upcoming_event_num = $upcoming_evt->getUpComingEventNumForUser($user_id);
-// 							
 							$user = new User_Table();
 							$firstname = $user->getUserFirstNameByUserIden($user_id);
 							$gender_call = $user->getWhatShouldCallForUser($user_id);
 							$heOrShe = $gender_call[0];
 							$hisOrHer = $gender_call[1];
 							$hash = $user->getUniqueIdenForUser($user_id);
+							$total_event_num = $count;
 							ob_start();
 							include(TEMPLATE_PATH_CHILD.'event.phtml');
 							$content = ob_get_clean();
@@ -836,75 +832,135 @@
 		}
 		
 		
-		public function returnMatchedEventBySearchkeyWord($key_word){
-			$stmt = $this->connection->prepare("
-			SELECT *
-			FROM (
-				SELECT interest_activity.id AS activity_id
-				FROM event 
-				LEFT JOIN interest_activity
-				ON event.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'e'  AND  (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?) 
-			
-				UNION 
-			
-				SELECT interest_activity.id AS activity_id
-				FROM interest
-				LEFT JOIN interest_activity
-				ON interest.id = interest_activity.interest_id
-				LEFT JOIN event
-				ON interest_activity.id = event.interest_activity_id
-				WHERE (interest.name LIKE ? || interest.description LIKE ?) AND interest_activity.type = 'e' 
-			) dum ORDER BY activity_id DESC
-			");			
-			if($stmt){
-				$key_word = '%' .$key_word. '%';
-				$stmt->bind_param('sssss',$key_word,$key_word,$key_word, $key_word, $key_word);
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows >= 1){
-						$row = $result->fetch_all(MYSQLI_ASSOC);
-						$stmt->close();
-						return $row;
-					 }
+		public function returnMatchedEventBySearchkeyWord($key_word, $limit = -1, $exclusive_list = "'-1'"){
+				$result_rows = false;
+				$rowFromUpcoming = $this->returnUpcomingMatchedEventForSearchKeyWord($key_word, $limit, $exclusive_list);
+				if($rowFromUpcoming !== false){
+					$result_rows = $rowFromUpcoming;
 				}
-			}
-			echo $this->connection->error;
-			return false;
+				$number_of_upcoming = ($rowFromUpcoming !== false)?sizeof($rowFromUpcoming):0;
+				if($number_of_upcoming < $limit ){
+					//need to load more from the events that are passed
+					$rowFromPassed = $this->returnPassedMatchedEventForSearchKeyWord($key_word, $limit-$number_of_upcoming, $exclusive_list);
+					if($rowFromPassed !== false){
+						if($result_rows !== false){
+							$result_rows = array_merge($result_rows, $rowFromPassed);
+						}else{
+							$result_rows = $rowFromPassed;
+						}
+					}
+				}
+				
+				if($exclusive_list == "'-1'"){
+					$_SESSION['loaded_activity_list'] = '';
+				}else{
+					$_SESSION['loaded_activity_list'] = $exclusive_list.',';
+				}
+				if($result_rows !== false){
+					foreach($result_rows as $row){
+						$_SESSION['loaded_activity_list'].="'".$row['activity_id']."',";
+					}
+				}
+				$_SESSION['loaded_activity_list'] = trim($_SESSION['loaded_activity_list'], ',');
+				return $result_rows;
 		}
 	
 		
 		
 		
-		public function returnMatchedPostBySearchkeyWord($key_word){
+		public function returnMatchedMomentBySearchkeyWord($key_word, $limit, $exclusive_list = "'-1'"){
 			//select based on interest name
-			$stmt = $this->connection->prepare("
-			SELECT * 
-			FROM(
-				SELECT interest_activity.id AS activity_id
-				FROM interest 
-				LEFT JOIN interest_activity
-				ON interest.id = interest_activity.interest_id 
-				LEFT JOIN moment
-				ON moment.interest_activity_id = interest_activity.id 
-				WHERE interest.name Like ? AND interest_activity.type = 'm' 
+			if($limit > 0){
+				$stmt = $this->connection->prepare("
+				SELECT * 
+				FROM(
+					SELECT interest_activity.id AS activity_id
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN moment
+					ON moment.interest_activity_id = interest_activity.id 
+					WHERE interest_activity.id NOT IN($exclusive_list) AND interest.name Like ? AND interest_activity.type = 'm' 
 				
-				UNION
+					UNION
 				
-				SELECT  interest_activity.id AS activity_id
-				FROM moment 
-				LEFT JOIN interest_activity
-				ON moment.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'm' And   ( moment.description LIKE ? ) 
-			) dum ORDER BY activity_id DESC
-			");	
+					SELECT  interest_activity.id AS activity_id
+					FROM moment 
+					LEFT JOIN interest_activity
+					ON moment.interest_activity_id = interest_activity.id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND interest_activity.type = 'm' And   ( moment.description LIKE ? ) 
+			
+					UNION 
+				
+					SELECT interest_activity.id AS activity_id
+					FROM school
+					LEFT JOIN education
+					ON school.id = education.school_id
+					LEFT JOIN interest_activity
+					ON education.user_id = interest_activity.user_id
+					LEFT JOIN moment
+					ON interest_activity.id = moment.interest_activity_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND  (school.school_name LIKE ? || school.picture_url LIKE ?) AND interest_activity.type = 'm' 
+				) dum ORDER BY activity_id DESC LIMIT ?
+				");	
+			}else{
+				$stmt = $this->connection->prepare("
+				SELECT * 
+				FROM(
+					SELECT interest_activity.id AS activity_id
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN moment
+					ON moment.interest_activity_id = interest_activity.id 
+					WHERE interest_activity.id NOT IN($exclusive_list) AND interest.name Like ? AND interest_activity.type = 'm' 
+				
+					UNION
+				
+					SELECT  interest_activity.id AS activity_id
+					FROM moment 
+					LEFT JOIN interest_activity
+					ON moment.interest_activity_id = interest_activity.id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND interest_activity.type = 'm' And   ( moment.description LIKE ? ) 
+			
+					UNION 
+				
+					SELECT interest_activity.id AS activity_id
+					FROM school
+					LEFT JOIN education
+					ON school.id = education.school_id
+					LEFT JOIN interest_activity
+					ON education.user_id = interest_activity.user_id
+					LEFT JOIN moment
+					ON interest_activity.id = moment.interest_activity_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND  (school.school_name LIKE ? || school.picture_url LIKE ?) AND interest_activity.type = 'm' 
+				) dum ORDER BY activity_id DESC
+				");	
+			}
 			if($stmt){
-				$key_word = '%' .$key_word. '%';
-				$stmt->bind_param('ss',$key_word, $key_word);
+				$key_word = '%'.$key_word.'%';
+				if($limit > 0){
+					$stmt->bind_param('ssssi',$key_word, $key_word,$key_word, $key_word, $limit);
+				}else{
+					$stmt->bind_param('ssss',$key_word, $key_word,$key_word, $key_word);
+				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
-						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						return $row;
+						if($exclusive_list == "'-1'"){
+							$_SESSION['loaded_activity_list'] = '';
+						}else{
+							$_SESSION['loaded_activity_list'] = $exclusive_list.',';
+						}
+						if($rows !== false){
+							foreach($rows as $row){
+								$_SESSION['loaded_activity_list'].="'".$row['activity_id']."',";
+							}
+						}
+						$_SESSION['loaded_activity_list'] = trim($_SESSION['loaded_activity_list'], ',');
+						return $rows;
 					 }
 				}
 			}
@@ -913,57 +969,111 @@
 		}
 		
 		
-		public function returnMatchedPhotoBySearchkeyWord($key_word){
-			$stmt = $this->connection->prepare("
-			SELECT *
-			FROM
-			(
-				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
-				FROM interest 
-				LEFT JOIN interest_activity
-				ON interest.id = interest_activity.interest_id 
-				LEFT JOIN moment
-				ON interest_activity.id = moment.interest_activity_id 
-				LEFT JOIN moment_photo
-				ON moment.id = moment_photo.moment_id 
-				WHERE interest.name Like ?
+		public function returnMatchedPhotoBySearchkeyWord($key_word, $limit = -1){
+			if($limit > 0){
+				$stmt = $this->connection->prepare("
+				SELECT *
+				FROM
+				(
+					
+					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+					FROM moment 
+					LEFT JOIN interest_activity
+					ON moment.interest_activity_id = interest_activity.id
+					LEFT JOIN moment_photo
+					ON moment.id = moment_photo.moment_id  WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?)
 			
-				UNION 
-			
-				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
-				FROM interest 
-				LEFT JOIN interest_activity
-				ON interest.id = interest_activity.interest_id 
-				LEFT JOIN event
-				ON interest_activity.id = event.interest_activity_id 
-				LEFT JOIN event_photo
-				ON event.id = event_photo.event_id
-				WHERE interest.name Like ?
-				
-				UNION 
-				
-				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
-				FROM moment 
-				LEFT JOIN interest_activity
-				ON moment.interest_activity_id = interest_activity.id
-				LEFT JOIN moment_photo
-				ON moment.id = moment_photo.moment_id  WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?)
-			
-				UNION 
-				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
- 				FROM event 
- 				LEFT JOIN interest_activity
-				ON event.interest_activity_id = interest_activity.id
- 				LEFT JOIN event_photo
- 				ON event.id = event_photo.event_id  WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?)
+					
+					UNION 
+					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+					FROM event 
+					LEFT JOIN interest_activity
+					ON event.interest_activity_id = interest_activity.id
+					LEFT JOIN event_photo
+					ON event.id = event_photo.event_id  WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?)
 
-				)dum ORDER BY interest_activity_id DESC
+					
+					UNION 
+					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN moment
+					ON interest_activity.id = moment.interest_activity_id 
+					LEFT JOIN moment_photo
+					ON moment.id = moment_photo.moment_id 
+					WHERE interest.name Like ?
+				
+					
+					UNION 
+					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN event
+					ON interest_activity.id = event.interest_activity_id 
+					LEFT JOIN event_photo
+					ON event.id = event_photo.event_id
+					WHERE interest.name Like ?
+					
+					)dum ORDER BY interest_activity_id DESC LIMIT ?
+				");
+			}else{
+				$stmt = $this->connection->prepare("
+				SELECT *
+				FROM
+				(
+					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN moment
+					ON interest_activity.id = moment.interest_activity_id 
+					LEFT JOIN moment_photo
+					ON moment.id = moment_photo.moment_id 
+					WHERE interest.name Like ?
 			
-			");	
+					UNION 
+			
+					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN event
+					ON interest_activity.id = event.interest_activity_id 
+					LEFT JOIN event_photo
+					ON event.id = event_photo.event_id
+					WHERE interest.name Like ?
+				
+					UNION 
+				
+					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+					FROM moment 
+					LEFT JOIN interest_activity
+					ON moment.interest_activity_id = interest_activity.id
+					LEFT JOIN moment_photo
+					ON moment.id = moment_photo.moment_id  WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?)
+			
+					UNION 
+					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+					FROM event 
+					LEFT JOIN interest_activity
+					ON event.interest_activity_id = interest_activity.id
+					LEFT JOIN event_photo
+					ON event.id = event_photo.event_id  WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?)
+
+					)dum ORDER BY interest_activity_id DESC 
+				");
+			}
 
 			if($stmt){
 				$key_word = '%' .$key_word. '%';
-				$stmt->bind_param('sssssss',$key_word,$key_word, $key_word, $key_word,$key_word, $key_word, $key_word);
+				if($limit > 0){
+					$stmt->bind_param('sssssssi',$key_word,$key_word, $key_word, $key_word,$key_word, $key_word, $key_word, $limit);
+				}else{
+					$stmt->bind_param('sssssss',$key_word,$key_word, $key_word, $key_word,$key_word, $key_word, $key_word);
+
+				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
@@ -978,7 +1088,7 @@
 		}
 		
 		
-		public function returnMatchedEventForMineInterest(){
+		public function returnMatchedEventForMineInterest($limit = 4, $exclusive_list = "'-1'"){
 			include_once MODEL_PATH.'Interest.php';
 			$interest = new Interest();
 			$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
@@ -989,108 +1099,361 @@
 				}
 				$interest_like = trim($interest_like,'|');
 				$result_rows = false;
-				$rowFromUpcoming = $this->returnUpcomingMatchedEventForMinInterest($interest_like);
+				$rowFromUpcoming = $this->returnUpcomingMatchedEventForMineInterest($interest_like, $limit, $exclusive_list);
 				if($rowFromUpcoming !== false){
 					$result_rows = $rowFromUpcoming;
 				}
 				
-				$rowFromPassed = $this->returnPassedMatchedEventForMinInterest($interest_like);
-				if($rowFromPassed !== false){
-					if($result_rows !== false){
-						$result_rows = array_merge($result_rows, $rowFromPassed);
-					}else{
-						$result_rows = $rowFromPassed;
+				$number_of_upcoming = ($rowFromUpcoming !== false)?sizeof($rowFromUpcoming):0;
+				if($number_of_upcoming < $limit ){
+					//need to load more from the events that are passed
+					$rowFromPassed = $this->returnPassedMatchedEventForMinInterest($interest_like, $limit-$number_of_upcoming, $exclusive_list);
+					if($rowFromPassed !== false){
+						if($result_rows !== false){
+							$result_rows = array_merge($result_rows, $rowFromPassed);
+						}else{
+							$result_rows = $rowFromPassed;
+						}
 					}
 				}
-				return $result_rows;
-				//use random offset to get random user
 				
+				if($exclusive_list == "'-1'"){
+					$_SESSION['loaded_activity_list'] = '';
+				}else{
+					$_SESSION['loaded_activity_list'] = $exclusive_list.',';
+				}
+				if($result_rows !== false){
+					foreach($result_rows as $row){
+						$_SESSION['loaded_activity_list'].="'".$row['activity_id']."',";
+					}
+				}
+				$_SESSION['loaded_activity_list'] = trim($_SESSION['loaded_activity_list'], ',');
+				return $result_rows;
 			}
 			echo $this->connection->error;
 			return false;
 		}
 		
 		
-		public function returnUpcomingMatchedEventForMinInterest($interest_like){
+		public function returnUpcomingMatchedEventForMineInterest($interest_like, $limit = -1, $exclusive_list = "'-1'"){
+				if($limit > 0){
+					$stmt = $this->connection->prepare("
+					SELECT * 
+					FROM
+					(
+						SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+						FROM interest 
+						LEFT JOIN interest_activity
+						ON interest.id = interest_activity.interest_id 
+						LEFT JOIN event
+						ON event.interest_activity_id = interest_activity.id 
+						WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) > NOW() AND interest.name REGEXP ? AND interest_activity.type = 'e'
+			
+						UNION
+			
+						SELECT interest_activity.id AS activity_id,  event.date AS date, event.time AS time
+						FROM event 
+						LEFT JOIN interest_activity
+						ON   event.interest_activity_id = interest_activity.id  WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) > NOW() AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?)
+				
+					) dum ORDER BY TIMESTAMP(date, time) ASC LIMIT ?
+					");	
+				}else{
+					$stmt = $this->connection->prepare("
+					SELECT * 
+					FROM
+					(
+						SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+						FROM interest 
+						LEFT JOIN interest_activity
+						ON interest.id = interest_activity.interest_id 
+						LEFT JOIN event
+						ON event.interest_activity_id = interest_activity.id 
+						WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) > NOW() AND interest.name REGEXP ? AND interest_activity.type = 'e' 
+			
+						UNION
+			
+						SELECT interest_activity.id AS activity_id,  event.date AS date, event.time AS time
+						FROM event 
+						LEFT JOIN interest_activity
+						ON   event.interest_activity_id = interest_activity.id  WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) > NOW() AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?)
+				
+					) dum ORDER BY TIMESTAMP(date, time) ASC
+					");	
+				}
+				if($stmt){
+					if($limit > 0){
+						$stmt->bind_param('ssssi',$interest_like,$interest_like,$interest_like, $interest_like, $limit);
+					}else{
+						$stmt->bind_param('ssss',$interest_like,$interest_like,$interest_like, $interest_like);
+					}
+					
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							return $row;
+						 }
+					}
+				}
+				echo $this->connection->error;
+				return false;
+		}
+		
+		public function returnPassedMatchedEventForMinInterest($interest_like, $limit, $exclusive_list = "'-1'"){
+				if($limit > 0){
+					$stmt = $this->connection->prepare("
+					SELECT * 
+					FROM
+					(
+						SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+						FROM interest 
+						LEFT JOIN interest_activity
+						ON interest.id = interest_activity.interest_id 
+						LEFT JOIN event
+						ON event.interest_activity_id = interest_activity.id 
+						WHERE interest_activity.id NOT IN($exclusive_list) AND  interest.name REGEXP ? AND interest_activity.type = 'e' AND TIMESTAMP(date, time) <= NOW()
+			
+						UNION
+			
+						SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+						FROM event 
+						LEFT JOIN interest_activity
+						ON   event.interest_activity_id = interest_activity.id  WHERE  interest_activity.id NOT IN($exclusive_list) AND  interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?) AND TIMESTAMP(date, time) <= NOW() 
+		
+					
+					) dum ORDER BY TIMESTAMP(date, time) DESC  LIMIT ?
+					");	
+				}else{
+					$stmt = $this->connection->prepare("
+					SELECT * 
+					FROM
+					(
+						SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+						FROM interest 
+						LEFT JOIN interest_activity
+						ON interest.id = interest_activity.interest_id 
+						LEFT JOIN event
+						ON event.interest_activity_id = interest_activity.id 
+						WHERE interest_activity.id NOT IN($exclusive_list) AND  interest.name REGEXP ? AND interest_activity.type = 'e' AND TIMESTAMP(date, time) <= NOW()
+			
+						UNION
+			
+						SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+						FROM event 
+						LEFT JOIN interest_activity
+						ON   event.interest_activity_id = interest_activity.id  WHERE  interest_activity.id NOT IN($exclusive_list) AND  interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?) AND TIMESTAMP(date, time) <= NOW() 
+		
+					
+					) dum ORDER BY TIMESTAMP(date, time)
+					");	
+				
+				}
+				if($stmt){
+					if($limit > 0){
+						$stmt->bind_param('ssssi',$interest_like,$interest_like,$interest_like, $interest_like, $limit);
+					}else{
+						$stmt->bind_param('ssss',$interest_like,$interest_like,$interest_like, $interest_like);
+					}
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							return $row;
+						 }
+					}
+				}
+				return false;
+		}
+		
+		
+		
+		public function returnUpcomingMatchedEventForSearchKeyWord($key_word,  $limit = -1, $exclusive_list = "'-1'" ){
+			if($limit > 0){
 				$stmt = $this->connection->prepare("
-				SELECT * 
-				FROM
-				(
+				SELECT *
+				FROM (
 					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
-					FROM interest 
-					LEFT JOIN interest_activity
-					ON interest.id = interest_activity.interest_id 
-					LEFT JOIN event
-					ON event.interest_activity_id = interest_activity.id 
-					WHERE TIMESTAMP(date, time) > NOW() AND interest.name REGEXP ? AND interest_activity.type = 'e' 
-			
-					UNION
-			
-					SELECT interest_activity.id AS activity_id,  event.date AS date, event.time AS time
 					FROM event 
 					LEFT JOIN interest_activity
-					ON   event.interest_activity_id = interest_activity.id  WHERE TIMESTAMP(date, time) > NOW() AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?)
+					ON event.interest_activity_id = interest_activity.id 
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) > NOW()  AND interest_activity.type = 'e'  AND  (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?) 
+			
+					UNION 
+			
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+					FROM interest
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id
+					LEFT JOIN event
+					ON interest_activity.id = event.interest_activity_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) > NOW() AND  (interest.name LIKE ? || interest.description LIKE ?) AND interest_activity.type = 'e' 
+				
+					UNION 
+					
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+					FROM school
+					LEFT JOIN education
+					ON school.id = education.school_id
+					LEFT JOIN interest_activity
+					ON education.user_id = interest_activity.user_id
+					LEFT JOIN event
+					ON interest_activity.id = event.interest_activity_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) > NOW() AND  (school.school_name LIKE ? || school.picture_url LIKE ?) AND interest_activity.type = 'e' 
+				
+				) dum ORDER BY TIMESTAMP(date, time) ASC LIMIT ?
+				");	
+			}else{
+				$stmt = $this->connection->prepare("
+				SELECT *
+				FROM (
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+					FROM event 
+					LEFT JOIN interest_activity
+					ON event.interest_activity_id = interest_activity.id 
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) > NOW()  AND interest_activity.type = 'e'  AND  (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?) 
+			
+					UNION 
+			
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+					FROM interest
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id
+					LEFT JOIN event
+					ON interest_activity.id = event.interest_activity_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) > NOW() AND  (interest.name LIKE ? || interest.description LIKE ?) AND interest_activity.type = 'e' 
+				
+					UNION 
+					
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+					FROM school
+					LEFT JOIN education
+					ON school.id = education.school_id
+					LEFT JOIN interest_activity
+					ON education.user_id = interest_activity.user_id
+					LEFT JOIN event
+					ON interest_activity.id = event.interest_activity_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) > NOW() AND  (school.school_name LIKE ? || school.picture_url LIKE ?) AND interest_activity.type = 'e' 
 				
 				) dum ORDER BY TIMESTAMP(date, time) ASC
 				");	
-				
-				if($stmt){
-					//$stmt->bind_param('ssss',$interest_like,$interest_like,$interest_like, $interest_like);
-					$stmt->bind_param('ssss',$interest_like,$interest_like,$interest_like, $interest_like);
-					
-					
-					if($stmt->execute()){
-						 $result = $stmt->get_result();
-						 if($result !== false && $result->num_rows >= 1){
-							$row = $result->fetch_all(MYSQLI_ASSOC);
-							$stmt->close();
-							return $row;
-						 }
-					}
+			}		
+			if($stmt){
+				$key_word = '%' .$key_word. '%';
+				if($limit > 0){
+					$stmt->bind_param('sssssssi',$key_word,$key_word,$key_word, $key_word, $key_word, $key_word, $key_word, $limit);
+				}else{
+					$stmt->bind_param('sssssss',$key_word,$key_word,$key_word, $key_word, $key_word, $key_word, $key_word);
 				}
-				return false;
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $rows;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
 		}
 		
-		public function returnPassedMatchedEventForMinInterest($interest_like){
+		
+		public function returnPassedMatchedEventForSearchKeyWord($key_word,  $limit = -1, $exclusive_list = "'-1'" ){
+			if($limit > 0){
 				$stmt = $this->connection->prepare("
-				SELECT * 
-				FROM
-				(
-					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
-					FROM interest 
-					LEFT JOIN interest_activity
-					ON interest.id = interest_activity.interest_id 
-					LEFT JOIN event
-					ON event.interest_activity_id = interest_activity.id 
-					WHERE interest.name REGEXP ? AND interest_activity.type = 'e' AND TIMESTAMP(date, time) <= NOW()
-			
-					UNION
-			
+				SELECT *
+				FROM (
 					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
 					FROM event 
 					LEFT JOIN interest_activity
-					ON   event.interest_activity_id = interest_activity.id  WHERE  interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?) AND TIMESTAMP(date, time) <= NOW() 
-		
+					ON event.interest_activity_id = interest_activity.id 
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) < NOW()  AND interest_activity.type = 'e'  AND  (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?) 
+			
+					UNION 
+			
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+					FROM interest
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id
+					LEFT JOIN event
+					ON interest_activity.id = event.interest_activity_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) < NOW() AND  (interest.name LIKE ? || interest.description LIKE ?) AND interest_activity.type = 'e' 
+				
+					UNION 
 					
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+					FROM school
+					LEFT JOIN education
+					ON school.id = education.school_id
+					LEFT JOIN interest_activity
+					ON education.user_id = interest_activity.user_id
+					LEFT JOIN event
+					ON interest_activity.id = event.interest_activity_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) < NOW() AND  (school.school_name LIKE ? || school.picture_url LIKE ?) AND interest_activity.type = 'e' 
+				
+				) dum ORDER BY TIMESTAMP(date, time) DESC LIMIT ?
+				");	
+			}else{
+				$stmt = $this->connection->prepare("
+				SELECT *
+				FROM (
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+					FROM event 
+					LEFT JOIN interest_activity
+					ON event.interest_activity_id = interest_activity.id 
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) < NOW()  AND interest_activity.type = 'e'  AND  (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?) 
+			
+					UNION 
+			
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+					FROM interest
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id
+					LEFT JOIN event
+					ON interest_activity.id = event.interest_activity_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) < NOW() AND  (interest.name LIKE ? || interest.description LIKE ?) AND interest_activity.type = 'e' 
+				
+					UNION 
+					
+					SELECT interest_activity.id AS activity_id, event.date AS date, event.time AS time
+					FROM school
+					LEFT JOIN education
+					ON school.id = education.school_id
+					LEFT JOIN interest_activity
+					ON education.user_id = interest_activity.user_id
+					LEFT JOIN event
+					ON interest_activity.id = event.interest_activity_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND TIMESTAMP(date, time) < NOW() AND  (school.school_name LIKE ? || school.picture_url LIKE ?) AND interest_activity.type = 'e' 
 				) dum ORDER BY TIMESTAMP(date, time) DESC
 				");	
-				
-				if($stmt){
-					$stmt->bind_param('ssss',$interest_like,$interest_like,$interest_like, $interest_like);
-					if($stmt->execute()){
-						 $result = $stmt->get_result();
-						 if($result !== false && $result->num_rows >= 1){
-							$row = $result->fetch_all(MYSQLI_ASSOC);
-							$stmt->close();
-							return $row;
-						 }
-					}
+			}		
+			if($stmt){
+				$key_word = '%' .$key_word. '%';
+				if($limit > 0){
+					$stmt->bind_param('sssssssi',$key_word,$key_word,$key_word, $key_word, $key_word, $key_word, $key_word, $limit);
+				}else{
+					$stmt->bind_param('sssssss',$key_word,$key_word,$key_word, $key_word, $key_word, $key_word, $key_word);
 				}
-				return false;
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $rows;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
 		}
 		
 		
-		public function returnMatchedMomentForMineInterest(){
+		
+		
+		public function returnMatchedMomentForMineInterest($limit = -1, $exclusive_list = "'-1'"){
 			include_once MODEL_PATH.'Interest.php';
 			$interest = new Interest();
 			$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
@@ -1102,36 +1465,73 @@
 				$interest_like = trim($interest_like,'|');
 				
 				//use random offset to get random user
-				$stmt = $this->connection->prepare("
-			SELECT * 	
-			FROM
-			(
-				SELECT interest_activity.id AS activity_id
-				FROM interest 
-				LEFT JOIN interest_activity
-				ON interest.id = interest_activity.interest_id 
-				LEFT JOIN moment
-				ON moment.interest_activity_id = interest_activity.id 
-				WHERE interest.name REGEXP ? AND interest_activity.type = 'm' 
-			
-				UNION
-			
-				SELECT interest_activity.id AS activity_id
-				FROM moment 
-				LEFT JOIN interest_activity
-				ON moment.interest_activity_id = interest_activity.id  WHERE interest_activity.type = 'm' And   ( moment.description REGEXP ? ) 
-			) dum ORDER BY activity_id DESC
-				");	
-				
+				if($limit > 0){
+					$stmt = $this->connection->prepare("
+						SELECT * 	
+						FROM
+						(
+							SELECT interest_activity.id AS activity_id
+							FROM moment 
+							LEFT JOIN interest_activity
+							ON moment.interest_activity_id = interest_activity.id
+							WHERE interest_activity.id NOT IN($exclusive_list) AND interest_activity.type = 'm' And   ( moment.description REGEXP ? ) 
+		
+							UNION
+							SELECT interest_activity.id AS activity_id
+							FROM interest 
+							LEFT JOIN interest_activity
+							ON interest.id = interest_activity.interest_id 
+							LEFT JOIN moment
+							ON moment.interest_activity_id = interest_activity.id 
+							WHERE interest_activity.id NOT IN($exclusive_list) AND (interest.name REGEXP ? || interest.description REGEXP ?) AND interest_activity.type = 'm' 
+						) dum ORDER BY activity_id DESC LIMIT ?
+					");	
+				}else{
+					$stmt = $this->connection->prepare("
+						SELECT * 	
+						FROM
+						(
+							SELECT interest_activity.id AS activity_id
+							FROM moment 
+							LEFT JOIN interest_activity
+							ON moment.interest_activity_id = interest_activity.id
+							WHERE interest_activity.id NOT IN($exclusive_list) AND  interest_activity.type = 'm' And   ( moment.description REGEXP ? ) 
+		
+							UNION
+							SELECT interest_activity.id AS activity_id
+							FROM interest 
+							LEFT JOIN interest_activity
+							ON interest.id = interest_activity.interest_id 
+							LEFT JOIN moment
+							ON moment.interest_activity_id = interest_activity.id 
+							WHERE interest_activity.id NOT IN($exclusive_list) AND  (interest.name REGEXP ? || interest.description REGEXP ?) AND interest_activity.type = 'm' 
+						) dum ORDER BY activity_id DESC
+					");	
+				}
 				
 				if($stmt){
-					$stmt->bind_param('ss',$interest_like, $interest_like);
+					if($limit > 0){
+						$stmt->bind_param('sssi',$interest_like, $interest_like,  $interest_like, $limit);
+					}else{
+						$stmt->bind_param('sss',$interest_like, $interest_like,  $interest_like);
+					}
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
 						 if($result !== false && $result->num_rows >= 1){
-							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$rows = $result->fetch_all(MYSQLI_ASSOC);
 							$stmt->close();
-							return $row;
+							if($exclusive_list == "'-1'"){
+								$_SESSION['loaded_activity_list'] = '';
+							}else{
+								$_SESSION['loaded_activity_list'] = $exclusive_list.',';
+							}
+							if($rows !== false){
+								foreach($rows as $row){
+									$_SESSION['loaded_activity_list'].="'".$row['activity_id']."',";
+								}
+							}
+							$_SESSION['loaded_activity_list'] = trim($_SESSION['loaded_activity_list'], ',');
+							return $rows;
 						 }
 					}
 				}
@@ -1581,8 +1981,8 @@
 		}
 		
 		
-		public function returnEventFromSchoolKeyWord($school_key_word, $exclusive_list = "'-1'"){
-			include_once 'School.php';
+		public function returnEventFromSchoolKeyWord($school_key_word, $limit = -1, $exclusive_list = "'-1'"){
+			include_once MODEL_PATH.'School.php';
 			$search_school_array = School::getSchooIdsLikeSchoolName($school_key_word);
 			$search_school_id = '';
 			if($search_school_array !== false){
@@ -1593,18 +1993,30 @@
 			}else{
 				return false;
 			}
-			
-			
-			
-			$stmt = $this->connection->prepare("
-			SELECT interest_activity.id AS activity_id, interest_activity.type
-			FROM  education
-			LEFT JOIN interest_activity
-			ON education.user_id = interest_activity.user_id
-			WHERE interest_activity.id NOT IN($exclusive_list) AND education.school_id IN($search_school_id) AND interest_activity.type = 'e' ORDER BY interest_activity.id DESC");			
+			if($limit > 0){
+				$stmt = $this->connection->prepare("
+				SELECT interest_activity.id AS activity_id, interest_activity.type
+				FROM  education
+				LEFT JOIN interest_activity
+				ON education.user_id = interest_activity.user_id
+				WHERE interest_activity.id NOT IN($exclusive_list) AND education.school_id IN($search_school_id) AND interest_activity.type = 'e'
+				ORDER BY interest_activity.id DESC LIMIT ?");			
+			}else{
+				$stmt = $this->connection->prepare("
+				SELECT interest_activity.id AS activity_id, interest_activity.type
+				FROM  education
+				LEFT JOIN interest_activity
+				ON education.user_id = interest_activity.user_id
+				WHERE interest_activity.id NOT IN($exclusive_list) AND education.school_id IN($search_school_id) AND interest_activity.type = 'e'
+				ORDER BY interest_activity.id DESC");
+			}
 			if($stmt){
+				if($limit > 0){
+					$stmt->bind_param('i',$limit);
+				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
+					 
 					 if($result !== false && $result->num_rows >= 1){
 						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
@@ -1810,7 +2222,7 @@
 						$stmt->bind_param('issi',$user_id, $timeStamp,$user_in, $timeStamp);
 						if($stmt->execute()){
 							 $result = $stmt->get_result();
-							 if($result !== false){
+							 if($result !== false && $result->num_rows >=1){
 								$rows = $result->fetch_all(MYSQLI_ASSOC);
 								$stmt->close();
 								if($rows !== false){
@@ -1838,6 +2250,13 @@
 			return false;
 		}
 		
+		public function loadMoreMatchedEventForMineInterest(){
+			$list = false;
+			if(isset($_SESSION['loaded_activity_list'])){
+				$list = $_SESSION['loaded_activity_list'];
+			}
+			return $this->returnMatchedEventForMineInterest(4,$list);
+		}
 		
 		
 		

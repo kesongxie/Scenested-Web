@@ -5,7 +5,7 @@
 	class Prepare_Search{
 		private $search_keyword = null;
 		private $search_type = null; //how the user specified the search, interest, name,etc
-		private $search_default_type = ['name','interest','event','photo','post'];
+		private $search_default_type = ['name','interest','event','photo','moment'];
 		private $seach_render_template = ['name'=>TEMPLATE_PATH_CHILD.'search_people.phtml'];
 		private $search_mine = false;
 		
@@ -34,7 +34,7 @@
 					$content = $this->getContentPeopleForMineInterestType();
 				}else if($this->search_type == 'event'){
 					$content =  $this->getContentEventForMineInterestType();
-				}else if($this->search_type == 'post'){
+				}else if($this->search_type == 'moment'){
 					$content =  $this->getContentMomentForMineInterestType();
 				}else if($this->search_type == 'photo'){
 					$content =  $this->getContentPhotoForMineInterestType();
@@ -42,15 +42,15 @@
 			}else{
 				if($this->search_type == 'name'){
 					//search poeple whose name match the keyword
-					$content = $this->getContentForNameType();
+					$content = $this->getContentForNameType(4);
 				}else if($this->search_type == 'interest'){
-					$content = $this->getContentForInterestType();
+					$content = $this->getContentForInterestType(4);
 				}else if($this->search_type == 'event'){
-					$content = $this->getContentForEventType();
-				}else if($this->search_type == 'post'){
-					$content = $this->getContentForPostType();
+					$content = $this->getContentForEventType(4);
+				}else if($this->search_type == 'moment'){
+					$content = $this->getContentForMomentType(4);
 				}else if($this->search_type == 'photo'){
-					$content = $this->getContentForPhotoType();
+					$content = $this->getContentForPhotoType(4);
 				}
 			}
 			
@@ -61,39 +61,82 @@
 		
 		
 		
-		public function getContentForNameType(){
-			include_once 'Education.php';
+		public function getContentForNameType($rows_need_to_fetch = 4){
+			include_once MODEL_PATH.'User_Table.php';
+			$user =  new User_Table();
+			$result_found = $this->getresultFoundResultForPeople($rows_need_to_fetch);
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'search_people_result_wrapper.phtml');
+			$content = ob_get_clean();
+			return $content;
+		}
+		
+		public function getresultFoundResultForPeople($rows_need_to_fetch = 4, $exclusive_list = "'-1'"){
+			include_once MODEL_PATH.'Interest.php';
+			include_once MODEL_PATH.'Education.php';
 			$educ = new Education();
 			$user = new User_Table();
-			$result_found = $user->returnMatchedUserBySearchkeyWord($this->search_keyword,4);
+			$result_found = array();
+			$result_from_name = $user->returnMatchedUserBySearchkeyWord($this->search_keyword,$rows_need_to_fetch, $exclusive_list);
 			$interest  = new Interest();
-			$content = null;
-			$search_for_interest_block = null;
-			$search_for_school_block = null;
-			if($result_found !== false){
-				$search_for_name_block = "";
-				$_SESSION['loaded_keyword_people_list'] = '';
-				foreach($result_found as $u){
-					$_SESSION['loaded_keyword_people_list'].="'".$u['id']."',";
-					$search_for_name_block .= $user->returnUserAvatorByResource($u);
-				}
-				$_SESSION['loaded_keyword_people_list'] = trim($_SESSION['loaded_keyword_people_list'], ',');
-				return $search_for_name_block;
+			
+			
+			if($exclusive_list != "'-1'"){
+				$_SESSION['loaded_keyword_people_list'] = $exclusive_list.',';
 			}else{
-				$search_for = $this->search_keyword;
-				$this->search_type = 'interest';
-				$search_for_interest_block = $this->getContentForInterestType(4);
-				if($search_for_interest_block === null){
-					$this->search_type = 'interest';
-					$search_for_school_block = $this->getContentForSchoolType();
- 				}
- 				ob_start();
-				include(TEMPLATE_PATH_CHILD.'search_people_result_wrapper.phtml');
-				$content = ob_get_clean();
-				return $content;
+				$_SESSION['loaded_keyword_people_list'] = "'-1'";
 			}
 			
+			if($result_from_name !== false){
+				$result_found = array_merge($result_found, $result_from_name);
+				$rows_need_to_fetch -= sizeof($result_found);
+				//make sure not to load repeated user
+				if($_SESSION['loaded_keyword_people_list'] == "'-1'"){
+					$_SESSION['loaded_keyword_people_list'] = '';
+				}
+				foreach($result_from_name as $u){
+					$_SESSION['loaded_keyword_people_list'].="'".$u['id']."',";
+				}
+			}
+			
+			//if it's still needed to load content from interest
+			if($rows_need_to_fetch > 0){
+				//once this is ture, that means 
+				$result_from_interest = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, $rows_need_to_fetch, trim($_SESSION['loaded_keyword_people_list'],','));
+				if($result_from_interest !== false){
+					$result_found = array_merge($result_found, $result_from_interest );
+					$rows_need_to_fetch -= sizeof($result_from_interest);
+					if($_SESSION['loaded_keyword_people_list'] == "'-1'"){
+						$_SESSION['loaded_keyword_people_list'] = '';
+					}
+					foreach($result_from_interest as $u){
+						$_SESSION['loaded_keyword_people_list'].="'".$u['id']."',";
+					}
+				}
+			}
+		
+			
+			
+			
+			//if it's still needed to load content from school
+			if($rows_need_to_fetch > 0){
+				$result_from_school = $educ->returnMatchedUserForSchool($this->search_keyword,$rows_need_to_fetch, trim($_SESSION['loaded_keyword_people_list'],',') );
+				if($result_from_school !== false){
+					$result_found = array_merge($result_found, $result_from_school);
+					$rows_need_to_fetch -= sizeof($result_from_school);
+					if($_SESSION['loaded_keyword_people_list'] == "'-1'"){
+						$_SESSION['loaded_keyword_people_list'] = '';
+					}
+					foreach($result_from_school as $u){
+						$_SESSION['loaded_keyword_people_list'].="'".$u['id']."',";
+					}
+				}
+			}
+			$_SESSION['loaded_keyword_people_list'] = trim($_SESSION['loaded_keyword_people_list'],',');
+			
+			return (!empty($result_found))?$result_found:false;
 		}
+		
 		
 		
 		
@@ -160,11 +203,11 @@
 		
 		
 	
-		public function getContentForInterestType(){
+		public function getContentForInterestType($limit = 4){
 			$user = new User_Table();
 			$interest  = new Interest();
-			$result_found = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, 4);
-			$content = null;
+			$result_found = $interest->returnMatchedUserBySearchkeyWord($this->search_keyword, $limit);
+			$content = false;
 			if($result_found !== false){
 				include_once 'User_Profile_Picture.php';
 				$profile = new User_Profile_Picture();
@@ -217,23 +260,24 @@
  						$content .= ob_get_clean();
 					}
 				$_SESSION['loaded_keyword_people_list'] = trim($_SESSION['loaded_keyword_people_list'], ',');
-
 			}
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'search_interest_people_result_wrapper.phtml');
+			$content = ob_get_clean();
 			return $content;
+			
 		}
 		
-		public function getContentForEventType(){
-			include_once PHP_INC_MODEL_ROOT_REF.'Interest_Activity.php';
+		public function getContentForEventType($rows_need_to_fetch = 4){
+			include_once MODEL_PATH.'Interest_Activity.php';
 			$interest_activity = new Interest_Activity();
-			$rows = $interest_activity->returnMatchedEventBySearchkeyWord($this->search_keyword);
+			$rows = $interest_activity->returnMatchedEventBySearchkeyWord($this->search_keyword, $rows_need_to_fetch);
 			$content = null;
-			$feed_id_list = "";
 			$left_content = "";
 			$right_content = "";
 			if($rows !== false){
 				$count = 0;
 				foreach($rows as $row){
-					$feed_id_list .= $row['activity_id'].',';
 					$content = $interest_activity->getEventInterestActivityBlockByActivityId($row['activity_id'], true);
 					if($count++ % 2 == 0){
 						$left_content.= $content;
@@ -242,27 +286,22 @@
 					}
 				}
 			}
-			$feed_id_list = empty($feed_id_list)?'-1':$feed_id_list;
-			$content_from_campus = $interest_activity->returnEventFromSchoolKeyWord($this->search_keyword, $feed_id_list);
-			if($content_from_campus !== false){
-				$left_content.= $content_from_campus['left_content'];
-				$right_content.= $content_from_campus['right_content'];
-				$rows = true;
-			}
-				
+
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'search_event.phtml');
 			$content= ob_get_clean();
-			
-			
 			return $content;	
 		}
 		
 		
-		public function getContentForPostType(){
+		
+		
+		
+				
+		public function getContentForMomentType($rows_need_to_fetch = 4){
 			include_once PHP_INC_MODEL_ROOT_REF.'Interest_Activity.php';
 			$interest_activity = new Interest_Activity();
-			$rows = $interest_activity->returnMatchedPostBySearchkeyWord($this->search_keyword);
+			$rows = $interest_activity->returnMatchedMomentBySearchkeyWord($this->search_keyword, $rows_need_to_fetch);
 			$content = null;
 			$feed_id_list = "";
 			$left_content = "";
@@ -280,13 +319,13 @@
 					}
 				}
 			}	
-			$feed_id_list = empty($feed_id_list)?'-1':$feed_id_list;
-			$content_from_campus = $interest_activity->returnMomentFromSchoolKeyWord($this->search_keyword, $feed_id_list);
-			if($content_from_campus !== false){
-				$left_content.= $content_from_campus['left_content'];
-				$right_content.= $content_from_campus['right_content'];
-				$rows = true;
-			}
+			// $feed_id_list = empty($feed_id_list)?'-1':$feed_id_list;
+// 			$content_from_campus = $interest_activity->returnMomentFromSchoolKeyWord($this->search_keyword, $feed_id_list);
+// 			if($content_from_campus !== false){
+// 				$left_content.= $content_from_campus['left_content'];
+// 				$right_content.= $content_from_campus['right_content'];
+// 				$rows = true;
+// 			}
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'search_post.phtml');
 			$content= ob_get_clean();
@@ -294,12 +333,12 @@
 		}
 		
 	
-		public function getContentForPhotoType(){
+		public function getContentForPhotoType($limit = -1 ){
 			include_once PHP_INC_MODEL_ROOT_REF.'Interest_Activity.php';
 			include_once PHP_INC_MODEL_ROOT_REF.'User_Media_Base.php';
 			$interest_activity = new Interest_Activity();
 			$media_base = new User_Media_Base();
-			$rows = $interest_activity->returnMatchedPhotoBySearchkeyWord($this->search_keyword);
+			$rows = $interest_activity->returnMatchedPhotoBySearchkeyWord($this->search_keyword, 4);
 			$content = null;
 			$left_content = "";
 			$right_content = "";
@@ -332,12 +371,53 @@
 		}
 			
 	
+	
+		
 		
 		public function getContentEventForMineInterestType(){
 			include_once MODEL_PATH.'Interest_Activity.php';
 			$interest_activity  = new Interest_Activity();
-			$rows = $interest_activity->returnMatchedEventForMineInterest();
-			$content = null;
+			$rows = $interest_activity->returnMatchedEventForMineInterest(4);
+			return $this->renderEventsByResource($rows);
+		}
+		
+		
+		
+		
+		public function renderMomentsByResource($rows, $scroll_load = false){
+			include_once MODEL_PATH.'Interest_Activity.php';
+			$interest_activity  = new Interest_Activity();
+			if($rows !== false){
+				$count = 0;
+				$left_content = "";
+				$right_content = "";
+				foreach($rows as $row){
+					$content = $interest_activity->getMomentInterestActivityBlockByActivityId($row['activity_id'], true);
+					if($count++ % 2 == 0){
+						$left_content.= $content;
+					}else{
+						$right_content.= $content;
+					}
+				}
+				ob_start();
+				if($scroll_load){
+					include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
+				}else{
+					include(TEMPLATE_PATH_CHILD.'search_post.phtml');
+				}
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
+		}
+		
+		
+		
+		
+		
+		public function renderEventsByResource($rows, $scroll_load = false){
+			include_once MODEL_PATH.'Interest_Activity.php';
+			$interest_activity  = new Interest_Activity();
 			if($rows !== false){
 				$left_content = "";
 				$right_content = "";
@@ -350,11 +430,16 @@
 						$right_content.= $content;
 					}
 				}
-			}	
-			ob_start();
-			include(TEMPLATE_PATH_CHILD.'search_mine_event.phtml');
-			$content= ob_get_clean();
-			return $content;	
+				ob_start();
+				if($scroll_load){
+					include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
+				}else{
+					include(TEMPLATE_PATH_CHILD.'search_mine_event.phtml');
+				}
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
 		}
 		
 		
@@ -384,7 +469,7 @@
 		public function getContentMomentForMineInterestType(){
 			include_once MODEL_PATH.'Interest_Activity.php';
 			$interest_activity  = new Interest_Activity();
-			$rows = $interest_activity->returnMatchedMomentForMineInterest();
+			$rows = $interest_activity->returnMatchedMomentForMineInterest(2);
 			$content = null;
 			if($rows !== false){
 				$left_content = "";
@@ -399,6 +484,8 @@
 					}
 				}
 			}	
+			
+			
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'search_mine_post.phtml');
 			$content= ob_get_clean();
@@ -471,8 +558,6 @@
 			return $content;
 		}
 		
-		
-		
 		public function loadMoreContentPeople(){
 			$user = new User_Table();
 			$interest  = new Interest();
@@ -480,12 +565,14 @@
 			if($this->search_mine){
 				$result_found = $interest->loadMoreMatchedUserForMineInterest(4);
 			}else{
+				//search poeple whose name match the keyword
 				if($this->search_type == 'name'){
 					//search poeple whose name match the keyword
-					$result_found = $user->loadMoreMatchedUserForKeyWord($this->search_keyword, 4);
+					$result_found = $this->getresultFoundResultForPeople(4, $_SESSION['loaded_keyword_people_list']);
 				}else if($this->search_type == 'interest'){
 					$result_found = $interest->loadMoreMatchedUserForKeyWord($this->search_keyword, 4);
 				}
+			
 			}
 			$content = false;
 			if($result_found !== false){
@@ -500,21 +587,56 @@
 		}
 		
 		public function loadMoreContentEvent(){
-			$user = new User_Table();
-			$interest  = new Interest();
+			include_once MODEL_PATH.'Interest_Activity.php';
+			$interest_activity = new Interest_Activity();
 			$result_found = false;
 			if($this->search_mine){
-				$result_found = $interest->loadMoreMatchedUserForMineInterest(4);
+				$result_found = $interest_activity->loadMoreMatchedEventForMineInterest();
 			}else{
-				$result_found = $interest->loadMoreMatchedUserForKeyWord($this->search_keyword, 4);
+				//search poeple whose name match the keyword
+				$result_found = $interest_activity->returnMatchedEventBySearchkeyWord($this->search_keyword, 4, $_SESSION['loaded_activity_list']);
 			}
-			
-			return false;
+			return $this->renderEventsByResource($result_found, true);
 		}
 		
 		
+		public function loadMoreContentMoment(){
+			include_once MODEL_PATH.'Interest_Activity.php';
+			$interest_activity = new Interest_Activity();
+			$result_found = false;
+			if($this->search_mine){
+				$result_found = $interest_activity->returnMatchedMomentForMineInterest(4, $_SESSION['loaded_activity_list']);
+			}else{
+				//search poeple whose name match the keyword
+				$result_found = $interest_activity->returnMatchedMomentBySearchkeyWord($this->search_keyword, 4, $_SESSION['loaded_activity_list']);
+			}
+			return $this->renderMomentsByResource($result_found, true);
+		}
+		
+		
+		// public function loadMoreContentPhoto(){
+// 			include_once MODEL_PATH.'Interest_Activity.php';
+// 			$interest_activity = new Interest_Activity();
+// 			$result_found = false;
+// 			if($this->search_mine){
+// 				$result_found = $interest_activity->returnMatchedMomentForMineInterest(4, $_SESSION['loaded_activity_list']);
+// 			}else{
+// 				//search poeple whose name match the keyword
+// 				$result_found = $interest_activity->returnMatchedMomentBySearchkeyWord($this->search_keyword, 4, $_SESSION['loaded_activity_list']);
+// 			}
+// 			var_dump($result_found);
+// 		}
+		
+		public function loadMoreContentPhoto($l_m, $r_m, $l_e, $r_e){
+			include_once MODEL_PATH.'User_Media_Base.php';
+			$base = new User_Media_Base();
+			$last_m = $base->getLastLoadedStreamId($l_m, $r_m, 'm');
+			$last_e = $base->getLastLoadedStreamId($l_e, $r_e, 'e');
+			
+		}
 		
 	}		
+	
 
 
 

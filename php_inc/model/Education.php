@@ -78,7 +78,7 @@
 			return false;
 		}
 		
-		public function returnMatchedUserForSchool($school_name){
+		public function returnMatchedUserForSchool($school_name, $limit = -1, $exclusive_list = "'-1'"){
 			include_once 'Interest.php';
 			$interest = new Interest();
 			$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
@@ -99,41 +99,77 @@
 				$search_school_id = trim($search_school_id,',');
 			}
 			
-			
-			
 			if($search_school_array !== false){
 				//use random offset to get random user
-				if($interest_like != ''){
-					$stmt = $this->connection->prepare("
-					SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-					FROM education 
-					LEFT JOIN user
-					ON education.user_id=user.id
-					LEFT JOIN interest
-					ON user.id = interest.user_id
-					WHERE education.school_id IN ($search_school_id) AND (interest.name REGEXP ?  || interest.description REGEXP ?) 
+				if($limit > 0){
+					if($interest_like != ''){
+						$stmt = $this->connection->prepare("
+						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM education 
+						LEFT JOIN user
+						ON education.user_id=user.id
+						LEFT JOIN interest
+						ON user.id = interest.user_id
+						WHERE user.id NOT IN($exclusive_list) AND education.school_id IN ($search_school_id) AND (interest.name REGEXP ?  || interest.description REGEXP ?) 
 				
-					UNION 
+						UNION 
 				
-					SELECT DISTINCT user.id,  CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-					FROM education 
-					LEFT JOIN user
-					ON education.user_id=user.id
-					WHERE  education.school_id IN ($search_school_id) 
-					");
+						SELECT DISTINCT user.id,  CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM education 
+						LEFT JOIN user
+						ON education.user_id=user.id
+						WHERE  user.id NOT IN($exclusive_list) AND education.school_id IN ($search_school_id) LIMIT ?
+						");
+					}else{
+						$stmt = $this->connection->prepare("
+						SELECT DISTINCT user.id,  CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM education 
+						LEFT JOIN user
+						ON education.user_id=user.id
+						WHERE  user.id NOT IN($exclusive_list) AND education.school_id IN ($search_school_id) LIMIT ?
+						");
+					}
 				}else{
-					$stmt = $this->connection->prepare("
-					SELECT DISTINCT user.id,  CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-					FROM education 
-					LEFT JOIN user
-					ON education.user_id=user.id
-					WHERE  education.school_id IN ($search_school_id) 
-					");
+					if($interest_like != ''){
+						$stmt = $this->connection->prepare("
+						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM education 
+						LEFT JOIN user
+						ON education.user_id=user.id
+						LEFT JOIN interest
+						ON user.id = interest.user_id
+						WHERE user.id NOT IN($exclusive_list) AND education.school_id IN ($search_school_id) AND (interest.name REGEXP ?  || interest.description REGEXP ?) 
+				
+						UNION 
+				
+						SELECT DISTINCT user.id,  CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM education 
+						LEFT JOIN user
+						ON education.user_id=user.id
+						WHERE  user.id NOT IN($exclusive_list) AND education.school_id IN ($search_school_id) 
+						");
+					}else{
+						$stmt = $this->connection->prepare("
+						SELECT DISTINCT user.id,  CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
+						FROM education 
+						LEFT JOIN user
+						ON education.user_id=user.id
+						WHERE  user.id NOT IN($exclusive_list) AND education.school_id IN ($search_school_id) 
+						");
+					}
 				}
 				
 				if($stmt){
-					if($interest_like != ''){
-						$stmt->bind_param('ss', $interest_like,$interest_like);
+					if($limit > 0){
+						if($interest_like != ''){
+							$stmt->bind_param('ssi', $interest_like,$interest_like, $limit);
+						}else{
+							$stmt->bind_param('i',  $limit);
+						}
+					}else{
+						if($interest_like != ''){
+							$stmt->bind_param('ss', $interest_like,$interest_like);
+						}
 					}
 					if($stmt->execute()){
 						 $result = $stmt->get_result();

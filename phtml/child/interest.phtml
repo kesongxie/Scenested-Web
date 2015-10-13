@@ -6,7 +6,7 @@
 
 <div id="interest-content-wrapper" class="inline-blk <?php echo (($request_user_page_has_interest)?"":" hdn") ?>"  style="width:80%;">
 	<?php echo $content; ?>
-	<div class="feed-loading-wrapper hdn" style="text-align:center;margin-top:20px;"><img src="<?php echo IMGDIR.'/spinner.gif'?>" height="72" width="96"></div>
+	<div class="feed-loading-wrapper hdn" style="text-align:center;margin-top:20px;"><img src="<?php echo SPINNER_ICON; ?>" height="72" width="96"></div>
 </div>
 
 <?php if(!$page_own && !$request_user_page_has_interest): ?>

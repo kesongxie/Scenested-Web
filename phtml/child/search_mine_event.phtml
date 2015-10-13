@@ -1,11 +1,13 @@
 <?php if($rows !== false): ?>
-	<div class="inline-blk" style="width: 46%;margin-left:6px;">
+	<div class="search-event-content-left inline-blk" style="width: 46%;margin-left:6px;">
 			<?php echo $left_content; ?>
 		</div>
 
-	<div class="inline-blk" style="width: 46%;margin-left:8px;">
+	<div class="search-event-content-right inline-blk" style="width: 46%;margin-left:8px;">
 		<?php echo $right_content; ?>
 	</div>
+	<div class="feed-loading-wrapper hdn" style="text-align:center;margin-top:20px;"><img src="<?php echo SPINNER_ICON; ?>" height="72" width="96"></div>
+
 <?php else: ?>
 		<div style="margin-left:14px;">No match result found</div>
 <?php  endif;?>
