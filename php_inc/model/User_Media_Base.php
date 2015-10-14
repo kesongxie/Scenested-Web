@@ -221,7 +221,7 @@
 			return $c->loadProfileCoverPhotoPreviewBlock($hash);
 		}
 		
-		public function returnPhotoBySchoolKeyWord($school_key_word){
+		public function returnPhotoBySchoolKeyWord($school_key_word, $limit = -1, $last_m = MAX_PHOTO_BOUND, $last_e = MAX_PHOTO_BOUND ){
 			include_once MODEL_PATH.'School.php';
 			$search_school_array = School::getSchooIdsLikeSchoolName($school_key_word);
 			$search_school_id = '';
@@ -233,48 +233,74 @@
 			}else{
 				return false;
 			}
+			if($limit > 0){
+				$stmt = $this->connection->prepare("
+				SELECT * 	
+				FROM
+				(
+				SELECT 'm' AS `source_from`, moment_photo.user_id, moment_photo.picture_url, moment_photo.upload_time AS time, moment_photo.hash
+				FROM  education
+				LEFT JOIN moment_photo
+				ON education.user_id = moment_photo.user_id
+				WHERE  moment_photo.id < ? AND education.school_id IN($search_school_id)
 			
-			$stmt = $this->connection->prepare("
-			SELECT * 	
-			FROM
-			(
-			SELECT 'm' AS `source_from`, moment_photo.user_id, moment_photo.picture_url, moment_photo.upload_time AS time, moment_photo.hash
-			FROM  education
-			LEFT JOIN moment_photo
-			ON education.user_id = moment_photo.user_id
-			WHERE  education.school_id IN($search_school_id)
+				UNION 
 			
-			UNION 
+				SELECT 'e' AS `source_from`, event_photo.user_id, event_photo.picture_url, event_photo.upload_time AS time, event_photo.hash
+				FROM  education
+				LEFT JOIN event_photo
+				ON education.user_id = event_photo.user_id
+				WHERE   event_photo.id < ? AND education.school_id IN($search_school_id)
+				) dum ORDER BY time DESC LIMIT ?
+				");		
+			}else{
+				$stmt = $this->connection->prepare("
+				SELECT * 	
+				FROM
+				(
+				SELECT 'm' AS `source_from`, moment_photo.user_id, moment_photo.picture_url, moment_photo.upload_time AS time, moment_photo.hash
+				FROM  education
+				LEFT JOIN moment_photo
+				ON education.user_id = moment_photo.user_id
+				WHERE  moment_photo.id < ? AND education.school_id IN($search_school_id)
 			
-			SELECT 'e' AS `source_from`, event_photo.user_id, event_photo.picture_url, event_photo.upload_time AS time, event_photo.hash
-			FROM  education
-			LEFT JOIN event_photo
-			ON education.user_id = event_photo.user_id
-			WHERE  education.school_id IN($search_school_id)
-			) dum ORDER BY time DESC
-			");			
+				UNION 
+			
+				SELECT 'e' AS `source_from`, event_photo.user_id, event_photo.picture_url, event_photo.upload_time AS time, event_photo.hash
+				FROM  education
+				LEFT JOIN event_photo
+				ON education.user_id = event_photo.user_id
+				WHERE   event_photo.id < ? AND education.school_id IN($search_school_id)
+				) dum ORDER BY time DESC
+				");		
+			}
 			
 			if($stmt){
+				if($limit > 0){
+					$stmt->bind_param('iii',$last_m, $last_e, $limit);
+				}else{
+					$stmt->bind_param('ii',$last_m, $last_e);
+				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
 						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						$left_content = "";
-						$right_content = "";
-						$count = 0;
-						foreach($rows as $row){
-							$content= $this->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id'],$row['source_from'], $row['hash']);
-							if($content !== false){
-								if($count++ % 2 == 0){
-									$left_content.= $content;
-								}else{
-									$right_content.= $content;
-								}
-							}
-						}
+						// $left_content = "";
+// 						$right_content = "";
+// 						$count = 0;
+						// foreach($rows as $row){
+// 							$content= $this->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id'],$row['source_from'], $row['hash']);
+// 							if($content !== false){
+// 								if($count++ % 2 == 0){
+// 									$left_content.= $content;
+// 								}else{
+// 									$right_content.= $content;
+// 								}
+// 							}
+// 						}
 						
-						return array('left_content'=>$left_content, 'right_content'=>$right_content);
+						return $rows;
 					}
 				}
 			}

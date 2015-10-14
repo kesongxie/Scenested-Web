@@ -37,7 +37,7 @@
 				}else if($this->search_type == 'moment'){
 					$content =  $this->getContentMomentForMineInterestType();
 				}else if($this->search_type == 'photo'){
-					$content =  $this->getContentPhotoForMineInterestType();
+					$content =  $this->getContentPhotoForMineInterestType(10);
 				}
 			}else{
 				if($this->search_type == 'name'){
@@ -50,7 +50,7 @@
 				}else if($this->search_type == 'moment'){
 					$content = $this->getContentForMomentType(4);
 				}else if($this->search_type == 'photo'){
-					$content = $this->getContentForPhotoType(4);
+					$content = $this->getContentForPhotoType(10);
 				}
 			}
 			
@@ -293,10 +293,6 @@
 			return $content;	
 		}
 		
-		
-		
-		
-		
 				
 		public function getContentForMomentType($rows_need_to_fetch = 4){
 			include_once PHP_INC_MODEL_ROOT_REF.'Interest_Activity.php';
@@ -319,13 +315,6 @@
 					}
 				}
 			}	
-			// $feed_id_list = empty($feed_id_list)?'-1':$feed_id_list;
-// 			$content_from_campus = $interest_activity->returnMomentFromSchoolKeyWord($this->search_keyword, $feed_id_list);
-// 			if($content_from_campus !== false){
-// 				$left_content.= $content_from_campus['left_content'];
-// 				$right_content.= $content_from_campus['right_content'];
-// 				$rows = true;
-// 			}
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'search_post.phtml');
 			$content= ob_get_clean();
@@ -333,15 +322,51 @@
 		}
 		
 	
-		public function getContentForPhotoType($limit = -1 ){
-			include_once PHP_INC_MODEL_ROOT_REF.'Interest_Activity.php';
-			include_once PHP_INC_MODEL_ROOT_REF.'User_Media_Base.php';
+		public function getContentForPhotoType($rows_need_to_fetch = -1 ){
+			$rows = $this->getResultForPhoto($rows_need_to_fetch);
+			return $this->renderPhotosByResource($rows);
+		}
+			
+		public function getResultForPhoto($rows_need_to_fetch = 4, $last_m = MAX_PHOTO_BOUND , $last_e = MAX_PHOTO_BOUND){
+			include_once MODEL_PATH.'Interest_Activity.php';
 			$interest_activity = new Interest_Activity();
+			include_once MODEL_PATH.'User_Media_Base.php';
 			$media_base = new User_Media_Base();
-			$rows = $interest_activity->returnMatchedPhotoBySearchkeyWord($this->search_keyword, 4);
-			$content = null;
+			$rows = array();
+			
+			$rows_from_keyword = $interest_activity->returnMatchedPhotoBySearchkeyWord($this->search_keyword, $rows_need_to_fetch, $last_m, $last_e);
+			if($rows_from_keyword !== false){
+				$rows_need_to_fetch -= sizeof($rows_from_keyword);
+				$rows = $rows_from_keyword;
+			}
+			if($rows_need_to_fetch > 0){
+				$rows_from_school = $media_base->returnPhotoBySchoolKeyWord($this->search_keyword, $rows_need_to_fetch, $last_m, $last_e );
+				if($rows_from_school !== false){
+					$rows = array_merge($rows, $rows_from_school);
+				}
+			}
+			return !empty($rows)?$rows:false;
+		}	
+			
+	
+	
+		
+		
+		public function getContentEventForMineInterestType(){
+			include_once MODEL_PATH.'Interest_Activity.php';
+			$interest_activity  = new Interest_Activity();
+			$rows = $interest_activity->returnMatchedEventForMineInterest(4);
+			return $this->renderEventsByResource($rows);
+		}
+		
+		
+		
+		public function renderPhotosByResource($rows, $scroll_load = false){
+			include_once MODEL_PATH.'User_Media_Base.php';
+			$media_base = new User_Media_Base();
+
 			$left_content = "";
-			$right_content = "";
+			$right_content = "";	
 			if($rows !== false){
 				$count = 0;
 				foreach($rows as $row){
@@ -355,32 +380,15 @@
 					}
 				}
 			}
-			
-			$school_content = $media_base->returnPhotoBySchoolKeyWord($this->search_keyword);
-			if($school_content !== false){
-				$left_content.= $school_content['left_content'];
-				$right_content.= $school_content['right_content'];
-				$rows = true;
-			}
-			
 			ob_start();
-			include(TEMPLATE_PATH_CHILD.'double_column_photo_stream_block.phtml');
-			$content= ob_get_clean();
+			if($scroll_load){
+				include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
+			}else{
+				include(TEMPLATE_PATH_CHILD.'double_column_photo_stream_block.phtml');
+			}
+			$content = ob_get_clean();
 			return $content;
-			
 		}
-			
-	
-	
-		
-		
-		public function getContentEventForMineInterestType(){
-			include_once MODEL_PATH.'Interest_Activity.php';
-			$interest_activity  = new Interest_Activity();
-			$rows = $interest_activity->returnMatchedEventForMineInterest(4);
-			return $this->renderEventsByResource($rows);
-		}
-		
 		
 		
 		
@@ -411,10 +419,6 @@
 			return false;
 		}
 		
-		
-		
-		
-		
 		public function renderEventsByResource($rows, $scroll_load = false){
 			include_once MODEL_PATH.'Interest_Activity.php';
 			$interest_activity  = new Interest_Activity();
@@ -442,9 +446,6 @@
 			return false;
 		}
 		
-		
-		
-			
 		public function getContentPeopleForMineInterestType(){
 			$user = new User_Table();
 			$interest  = new Interest();
@@ -493,12 +494,12 @@
 		}
 		
 		
-		public function getContentPhotoForMineInterestType(){
+		public function getContentPhotoForMineInterestType($limit = -1){
 			include_once MODEL_PATH.'Interest.php';
-			include_once PHP_INC_MODEL_ROOT_REF.'User_Media_Base.php';
+			include_once MODEL_PATH.'User_Media_Base.php';
 			$media_base = new User_Media_Base();
 			$interest  = new Interest();
-			$rows = $interest->returnMatchedPhotoForMineInterest();
+			$rows = $interest->returnMatchedPhotoForMineInterest($limit);
 			if($rows !== false){
 				$left_content = "";
 				$right_content = "";
@@ -612,27 +613,25 @@
 			}
 			return $this->renderMomentsByResource($result_found, true);
 		}
-		
-		
-		// public function loadMoreContentPhoto(){
-// 			include_once MODEL_PATH.'Interest_Activity.php';
-// 			$interest_activity = new Interest_Activity();
-// 			$result_found = false;
-// 			if($this->search_mine){
-// 				$result_found = $interest_activity->returnMatchedMomentForMineInterest(4, $_SESSION['loaded_activity_list']);
-// 			}else{
-// 				//search poeple whose name match the keyword
-// 				$result_found = $interest_activity->returnMatchedMomentBySearchkeyWord($this->search_keyword, 4, $_SESSION['loaded_activity_list']);
-// 			}
-// 			var_dump($result_found);
-// 		}
+
 		
 		public function loadMoreContentPhoto($l_m, $r_m, $l_e, $r_e){
 			include_once MODEL_PATH.'User_Media_Base.php';
 			$base = new User_Media_Base();
 			$last_m = $base->getLastLoadedStreamId($l_m, $r_m, 'm');
 			$last_e = $base->getLastLoadedStreamId($l_e, $r_e, 'e');
-			
+			if($this->search_mine){
+				include_once MODEL_PATH.'Interest.php';
+				$interest  = new Interest();
+				$rows = $interest->returnMatchedPhotoForMineInterest(6, $last_m, $last_e);
+			}else{
+				$rows = $this->getResultForPhoto(6, $last_m, $last_e);
+			}
+			if($rows !== false){
+				return $this->renderPhotosByResource($rows, true);
+			}else{
+				return false;
+			}
 		}
 		
 	}		

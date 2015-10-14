@@ -968,33 +968,14 @@
 			return false;
 		}
 		
-		
-		public function returnMatchedPhotoBySearchkeyWord($key_word, $limit = -1){
+	
+		public function returnMatchedPhotoBySearchkeyWord($key_word, $limit = -1, $last_m = MAX_PHOTO_BOUND , $last_e = MAX_PHOTO_BOUND){
 			if($limit > 0){
 				$stmt = $this->connection->prepare("
 				SELECT *
 				FROM
 				(
-					
-					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
-					FROM moment 
-					LEFT JOIN interest_activity
-					ON moment.interest_activity_id = interest_activity.id
-					LEFT JOIN moment_photo
-					ON moment.id = moment_photo.moment_id  WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?)
-			
-					
-					UNION 
-					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
-					FROM event 
-					LEFT JOIN interest_activity
-					ON event.interest_activity_id = interest_activity.id
-					LEFT JOIN event_photo
-					ON event.id = event_photo.event_id  WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?)
-
-					
-					UNION 
-					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url, moment_photo.upload_time as time, moment_photo.user_id,  moment_photo.hash 
 					FROM interest 
 					LEFT JOIN interest_activity
 					ON interest.id = interest_activity.interest_id 
@@ -1002,11 +983,11 @@
 					ON interest_activity.id = moment.interest_activity_id 
 					LEFT JOIN moment_photo
 					ON moment.id = moment_photo.moment_id 
-					WHERE interest.name Like ?
-				
-					
+					WHERE interest.name Like ? AND moment_photo.picture_url IS NOT NULL AND moment_photo.id < ?
+			
 					UNION 
-					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+			
+					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url, event_photo.upload_time as time,event_photo.user_id, event_photo.hash
 					FROM interest 
 					LEFT JOIN interest_activity
 					ON interest.id = interest_activity.interest_id 
@@ -1014,16 +995,36 @@
 					ON interest_activity.id = event.interest_activity_id 
 					LEFT JOIN event_photo
 					ON event.id = event_photo.event_id
-					WHERE interest.name Like ?
-					
-					)dum ORDER BY interest_activity_id DESC LIMIT ?
-				");
+					WHERE interest.name Like ? AND event_photo.picture_url IS NOT NULL  AND event_photo.id < ?
+				
+					UNION 
+				
+					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url, moment_photo.upload_time as time, moment_photo.user_id,  moment_photo.hash 
+					FROM moment 
+					LEFT JOIN interest_activity
+					ON moment.interest_activity_id = interest_activity.id
+					LEFT JOIN moment_photo
+					ON moment.id = moment_photo.moment_id
+					WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?) AND moment_photo.picture_url IS NOT NULL AND moment_photo.id < ?
+			
+					UNION 
+					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url, event_photo.upload_time as time, event_photo.user_id, event_photo.hash
+					FROM event 
+					LEFT JOIN interest_activity
+					ON event.interest_activity_id = interest_activity.id
+					LEFT JOIN event_photo
+					ON event.id = event_photo.event_id
+					WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?) AND event_photo.picture_url IS NOT NULL AND event_photo.id < ?
+
+					)dum ORDER BY time DESC LIMIT ?
+			
+				");	
 			}else{
-				$stmt = $this->connection->prepare("
+					$stmt = $this->connection->prepare("
 				SELECT *
 				FROM
 				(
-					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url, moment_photo.upload_time as time, moment_photo.user_id,  moment_photo.hash 
 					FROM interest 
 					LEFT JOIN interest_activity
 					ON interest.id = interest_activity.interest_id 
@@ -1031,11 +1032,11 @@
 					ON interest_activity.id = moment.interest_activity_id 
 					LEFT JOIN moment_photo
 					ON moment.id = moment_photo.moment_id 
-					WHERE interest.name Like ?
+					WHERE interest.name Like ? AND moment_photo.picture_url IS NOT NULL AND moment_photo.id < ?
 			
 					UNION 
 			
-					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url, event_photo.upload_time as time,event_photo.user_id, event_photo.hash
 					FROM interest 
 					LEFT JOIN interest_activity
 					ON interest.id = interest_activity.interest_id 
@@ -1043,43 +1044,45 @@
 					ON interest_activity.id = event.interest_activity_id 
 					LEFT JOIN event_photo
 					ON event.id = event_photo.event_id
-					WHERE interest.name Like ?
+					WHERE interest.name Like ? AND event_photo.picture_url IS NOT NULL  AND event_photo.id < ?
 				
 					UNION 
 				
-					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
+					SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url, moment_photo.upload_time as time, moment_photo.user_id,  moment_photo.hash 
 					FROM moment 
 					LEFT JOIN interest_activity
 					ON moment.interest_activity_id = interest_activity.id
 					LEFT JOIN moment_photo
-					ON moment.id = moment_photo.moment_id  WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?)
+					ON moment.id = moment_photo.moment_id
+					WHERE  (moment.description LIKE ? || moment_photo.caption LIKE ?) AND moment_photo.picture_url IS NOT NULL AND moment_photo.id < ?
 			
 					UNION 
-					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
+					SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url, event_photo.upload_time as time, event_photo.user_id, event_photo.hash
 					FROM event 
 					LEFT JOIN interest_activity
 					ON event.interest_activity_id = interest_activity.id
 					LEFT JOIN event_photo
-					ON event.id = event_photo.event_id  WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?)
+					ON event.id = event_photo.event_id
+					WHERE  (event.title LIKE  ?|| event.description LIKE ? || event_photo.caption LIKE ?) AND event_photo.picture_url IS NOT NULL AND event_photo.id < ?
 
-					)dum ORDER BY interest_activity_id DESC 
-				");
+					)dum ORDER BY time DESC 
+			
+				");	
 			}
-
+			
 			if($stmt){
-				$key_word = '%' .$key_word. '%';
+				$key_word = '%'.$key_word.'%';
 				if($limit > 0){
-					$stmt->bind_param('sssssssi',$key_word,$key_word, $key_word, $key_word,$key_word, $key_word, $key_word, $limit);
+					$stmt->bind_param('sisississsii',$key_word,$last_m, $key_word,$last_e, $key_word, $key_word, $last_m, $key_word, $key_word, $key_word,$last_e,  $limit);
 				}else{
-					$stmt->bind_param('sssssss',$key_word,$key_word, $key_word, $key_word,$key_word, $key_word, $key_word);
-
+					$stmt->bind_param('sisississsi',$key_word,$last_m, $key_word,$last_e, $key_word, $key_word, $last_m, $key_word, $key_word, $key_word,$last_e);
 				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows >= 1){
-						$row = $result->fetch_all(MYSQLI_ASSOC);
+					if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						return $row;
+						return $rows;
 					 }
 				}
 			}

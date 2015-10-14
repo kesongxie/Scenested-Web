@@ -378,7 +378,7 @@ div.ui-datepicker{
 .header #global-search-bar  #global-search-bar-inner input{
 	position:absolute;
 	border-radius: 4px;
-	padding: 4px;
+	padding: 5px;
 	border: 1px solid #EAEAEA;
 	width:100%;
 }

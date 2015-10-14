@@ -447,9 +447,7 @@
 			return false;
 		}
 		
-		
-		
-		
+		/*
 		public function returnMatchedPhotoForMineInterest(){
 			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
 			$interest_like = '';
@@ -506,6 +504,137 @@
 			");	
 				if($stmt){
 					$stmt->bind_param('sssssss',$interest_like, $interest_like,$interest_like, $interest_like,$interest_like,$interest_like,$interest_like);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							return $row;
+						 }
+					}
+				}
+			}
+			echo $this->connection->error;
+			return false;		
+		
+		}
+		
+		*/
+		
+		
+		public function returnMatchedPhotoForMineInterest($limit, $last_m = MAX_PHOTO_BOUND, $last_e = MAX_PHOTO_BOUND ){
+			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
+			$interest_like = '';
+			if($mine_interests !== false){
+				foreach($mine_interests as $interest){
+ 					$interest_like .= strtolower($interest['name']).'|';	
+				}
+				$interest_like = trim($interest_like,'|');
+				if($limit > 0){
+					$stmt = $this->connection->prepare("
+					SELECT *
+					FROM
+					(
+						SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,  moment_photo.upload_time as time, moment_photo.user_id,  moment_photo.hash 
+						FROM interest 
+						LEFT JOIN interest_activity
+						ON interest.id = interest_activity.interest_id 
+						LEFT JOIN moment
+						ON interest_activity.id = moment.interest_activity_id 
+						LEFT JOIN moment_photo
+						ON moment.id = moment_photo.moment_id 
+						WHERE interest.name REGEXP ? AND moment_photo.picture_url IS NOT NULL AND moment_photo.id < ?
+			
+						UNION 
+			
+						SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,  event_photo.upload_time as time, event_photo.user_id, event_photo.hash
+						FROM interest 
+						LEFT JOIN interest_activity
+						ON interest.id = interest_activity.interest_id 
+						LEFT JOIN event
+						ON interest_activity.id = event.interest_activity_id 
+						LEFT JOIN event_photo
+						ON event.id = event_photo.event_id
+						WHERE interest.name REGEXP ? AND event_photo.picture_url IS NOT NULL  AND event_photo.id < ?
+				
+						UNION 
+				
+						SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,  moment_photo.upload_time as time, moment_photo.user_id,  moment_photo.hash 
+						FROM moment 
+						LEFT JOIN interest_activity
+						ON moment.interest_activity_id = interest_activity.id
+						LEFT JOIN moment_photo
+						ON moment.id = moment_photo.moment_id
+					  	WHERE  (moment.description REGEXP  ? || moment_photo.caption REGEXP ?) AND moment_photo.picture_url IS NOT NULL AND moment_photo.id < ?
+			
+						UNION 
+						SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url, event_photo.upload_time as time, event_photo.user_id, event_photo.hash
+						FROM event 
+						LEFT JOIN interest_activity
+						ON event.interest_activity_id = interest_activity.id
+						LEFT JOIN event_photo
+						ON event.id = event_photo.event_id
+						WHERE  (event.title REGEXP ? || event.description REGEXP ?  || event_photo.caption REGEXP ?)  AND event_photo.picture_url IS NOT NULL AND event_photo.id < ?
+
+						)dum ORDER BY time DESC LIMIT ?
+			
+					");	
+				}else{
+					$stmt = $this->connection->prepare("
+					SELECT *
+					FROM
+					(
+						SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,  moment_photo.upload_time as time, moment_photo.user_id,  moment_photo.hash 
+						FROM interest 
+						LEFT JOIN interest_activity
+						ON interest.id = interest_activity.interest_id 
+						LEFT JOIN moment
+						ON interest_activity.id = moment.interest_activity_id 
+						LEFT JOIN moment_photo
+						ON moment.id = moment_photo.moment_id 
+						WHERE interest.name REGEXP ? AND moment_photo.picture_url IS NOT NULL AND moment_photo.id < ?
+			
+						UNION 
+			
+						SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,  event_photo.upload_time as time, event_photo.user_id, event_photo.hash
+						FROM interest 
+						LEFT JOIN interest_activity
+						ON interest.id = interest_activity.interest_id 
+						LEFT JOIN event
+						ON interest_activity.id = event.interest_activity_id 
+						LEFT JOIN event_photo
+						ON event.id = event_photo.event_id
+						WHERE interest.name REGEXP ? AND event_photo.picture_url IS NOT NULL  AND event_photo.id < ?
+				
+						UNION 
+				
+						SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,  moment_photo.upload_time as time, moment_photo.user_id,  moment_photo.hash 
+						FROM moment 
+						LEFT JOIN interest_activity
+						ON moment.interest_activity_id = interest_activity.id
+						LEFT JOIN moment_photo
+						ON moment.id = moment_photo.moment_id
+					  	WHERE  (moment.description REGEXP  ? || moment_photo.caption REGEXP ?) AND moment_photo.picture_url IS NOT NULL AND moment_photo.id < ?
+			
+						UNION 
+						SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url, event_photo.upload_time as time, event_photo.user_id, event_photo.hash
+						FROM event 
+						LEFT JOIN interest_activity
+						ON event.interest_activity_id = interest_activity.id
+						LEFT JOIN event_photo
+						ON event.id = event_photo.event_id
+						WHERE  (event.title REGEXP ? || event.description REGEXP ?  || event_photo.caption REGEXP ?)  AND event_photo.picture_url IS NOT NULL AND event_photo.id < ?
+
+						)dum ORDER BY time DESC
+			
+					");	
+				}
+				if($stmt){
+					if($limit > 0){
+						$stmt->bind_param('sisississsii',$interest_like, $last_m, $interest_like,$last_e, $interest_like, $interest_like,  $last_m, $interest_like, $interest_like,$interest_like,$last_e, $limit);
+					}else{
+						$stmt->bind_param('sisississsi',$interest_like, $last_m, $interest_like,$last_e, $interest_like, $interest_like,  $last_m, $interest_like, $interest_like,$interest_like,$last_e);
+					}
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
 						 if($result !== false && $result->num_rows >= 1){
