@@ -132,7 +132,7 @@
 		public function loadGroupMessageChatBoxByKey($group_key){
 			include_once 'User_Table.php';
 			$user = new User_Table();
-			$group_name =  $this->group->getGroupTitleByGroupKey($group_key);
+			$title =  $this->group->getGroupTitleByGroupKey($group_key);
 			$conversations = $this->group->getGroupMessagesByKey($group_key);
 			ob_start();
 			include($this->group_chat_box_template_path);

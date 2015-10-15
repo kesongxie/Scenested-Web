@@ -158,34 +158,49 @@
 			return false;
 		}
 		
-		public function getAllFriendsInUsersInterestByUserId($user_id, $limit_num = -1, $offset = 0){
+		public function getAllFriendsInUsersInterestByUserId($user_id, $limit_num = -1, $exclusive_list = "'-1'"){
 			if($limit_num > 0){
 				$stmt = $this->connection->prepare("
 				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url 
 				FROM user_in_interest 
 				LEFT JOIN user
-				ON user_in_interest.user_in = user.id || user_in_interest.user_id = user.id WHERE (user.id != ? && (user_in_interest.user_id = ? || user_in_interest.user_in = ?)) LIMIT ?,?
+				ON user_in_interest.user_in = user.id || user_in_interest.user_id = user.id
+				WHERE (user.id != ? && (user_in_interest.user_id = ? || user_in_interest.user_in = ?)) AND user.id NOT IN($exclusive_list) LIMIT ?
 				");
 			}else{
 				$stmt = $this->connection->prepare("
 				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url 
 				FROM user_in_interest 
 				LEFT JOIN user
-				ON user_in_interest.user_in = user.id || user_in_interest.user_id = user.id WHERE (user.id != ? && (user_in_interest.user_id = ? || user_in_interest.user_in = ?)) 
+				ON user_in_interest.user_in = user.id || user_in_interest.user_id = user.id
+				WHERE (user.id != ? && (user_in_interest.user_id = ? || user_in_interest.user_in = ?)) AND user.id NOT IN($exclusive_list) 
 				");			
 			}
 			if($stmt){
 				if($limit_num > 0){
-					$stmt->bind_param('iiiii',$user_id,$user_id, $user_id,$offset, $limit_num);
+					$stmt->bind_param('iiii',$user_id,$user_id, $user_id, $limit_num);
 				}else{
 					$stmt->bind_param('iii',$user_id, $user_id,$user_id);
 				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
-						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						return $row;
+						
+						
+						if($exclusive_list == "'-1'"){
+							$_SESSION['loaded_all_friend_list'] = "";	
+						}else{
+							$_SESSION['loaded_all_friend_list'] = $exclusive_list.',';	
+						}
+						
+						foreach($rows as $row){
+							$_SESSION['loaded_all_friend_list'].="'".$row['id']."',";
+						}
+						
+						$_SESSION['loaded_all_friend_list'] = trim($_SESSION['loaded_all_friend_list'], ',');
+						return $rows;
 					 }
 				}
 			}
@@ -193,7 +208,7 @@
 		}
 		
 		
-		public function getUserInInterestByInterestId($interest_id, $limit_num = -1, $offset = 0){
+		public function getUserInInterestByInterestId($interest_id, $limit_num = -1, $exclusive_list = "'-1'"){
 			include_once 'Interest.php';
 			$interest = new Interest();
 			$user_id = $interest->getInterestUserIdByInterestId($interest_id);
@@ -202,28 +217,41 @@
 				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 				FROM user_in_interest 
 				LEFT JOIN user
-				ON user_in_interest.user_in = user.id WHERE user_in_interest.interest_id = ? AND user_in_interest.user_id = ? LIMIT ?,?
+				ON user_in_interest.user_in = user.id
+				WHERE user_in_interest.interest_id = ? AND user_in_interest.user_id = ? AND user.id NOT IN($exclusive_list) LIMIT ?
 				");
 			}else{
 				$stmt = $this->connection->prepare("
 				SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 				FROM user_in_interest 
 				LEFT JOIN user
-				ON user_in_interest.user_in = user.id WHERE user_in_interest.interest_id = ? AND user_in_interest.user_id = ?
+				ON user_in_interest.user_in = user.id
+				WHERE user_in_interest.interest_id = ? AND user_in_interest.user_id = ?  AND user.id NOT IN($exclusive_list)
 				");			
 			}
 			if($stmt){
 				if($limit_num > 0){
-					$stmt->bind_param('iiii',$interest_id,$user_id,$offset, $limit_num);
+					$stmt->bind_param('iii',$interest_id,$user_id, $limit_num);
 				}else{
 					$stmt->bind_param('ii',$interest_id, $user_id);
 				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
-					 if($result !== false){
-						$user_found = $result->fetch_all(MYSQLI_ASSOC);
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
-						return $user_found;
+						
+						if($exclusive_list == "'-1'"){
+							$_SESSION['loaded_friend_list_'.$interest_id] = "";	
+						}else{
+							$_SESSION['loaded_friend_list_'.$interest_id] = $exclusive_list.',';	
+						}
+						
+						foreach($rows as $row){
+							$_SESSION['loaded_friend_list_'.$interest_id].="'".$row['id']."',";
+						}
+						$_SESSION['loaded_friend_list_'.$interest_id] = trim($_SESSION['loaded_friend_list_'.$interest_id], ',');
+						return $rows;
 					}
 				}
 			}
@@ -298,8 +326,8 @@
 		
 		
 		
-		public function getUserFriendBlockByInterestId($interest_id, $limit_num = -1, $offset = 0){
-			$user_found = $this->getUserInInterestByInterestId($interest_id, $limit_num, $offset);
+		public function getUserFriendBlockByInterestId($interest_id, $limit_num = -1, $exclusive_list = "'-1'"){
+			$user_found = $this->getUserInInterestByInterestId($interest_id, $limit_num, $exclusive_list);
 			$content = false;
 			include_once 'User_Table.php';
 			$user = new User_Table();
@@ -441,6 +469,30 @@
 			return false;
 		}
 		
+		//$key is the id for the interest and -1 stands for all friends 
+		//$user_key the key for the user page
+		public function loadMoreFriendFeedForInterestId($user_key, $key){
+			include_once MODEL_PATH.'User_Table.php';
+			$user = new User_Table();
+			$page_user_id = $user->getUserIdByKey($user_key);
+			if($page_user_id !== false){
+				if($key == '-1'){
+					//load more from all friends 
+					$user_found = $this->getAllFriendsInUsersInterestByUserId($page_user_id, 4, $_SESSION['loaded_all_friend_list']);
+				}else{
+					//load more from a specific interest
+					$user_found = $this->getUserInInterestByInterestId($key, 4, $_SESSION['loaded_friend_list_'.$key]);
+				}
+				if($user_found !== false){
+					$content ="";	
+					foreach($user_found as $u){
+						$content .= $user->returnUserAvatorByResource($u);
+					}
+					return $content;
+				}
+			}
+			return false;
+		}
 		
 			
 			

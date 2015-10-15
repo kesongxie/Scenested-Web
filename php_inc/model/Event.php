@@ -127,6 +127,13 @@
 			return (time() > strtotime($event['date'].$event['time']));				
 		}
 		
+		public function isEventPassedForEventId($event_id){
+			$column_array = array('date','time');
+			$event = $this->getMultipleColumnsById($column_array, $event_id);
+			return (time() > strtotime($event['date'].$event['time']));	
+		}
+		
+		
 		public function getEventTimeStamp($activity_id){
 			$column_array = array('date','time');
 			$event = $this->getMultipleColumnsBySelector($column_array, 'interest_activity_id', $activity_id);
@@ -155,21 +162,13 @@
 		}
 		
 		public function getJoinedUserByEventId($event_id){
-			include_once 'Groups.php';
-			include_once 'Event_Group.php';
+			include_once MODEL_PATH.'Groups.php';
+			include_once MODEL_PATH.'Event_Group.php';
 			$group = new Groups();
 			$e_group = new Event_Group();
 			$group_id = $e_group->getGroupIdByEventId($event_id);
 			if($group_id !== false){
-				return $group->getGroupMemberTitleByGroupId($group_id);
-			}else{
-				include_once 'User_Table.php';
-				$post_user = $this->getPostUserByEventId($event_id);
-				$user = new User_Table();
-				if($post_user !== false){
-					$firstname = $user->getUserFirstNameByUserIden($post_user);
-					return array('title'=>$firstname, 'members'=>$firstname);
-				}
+				return $group->getGroupMemberIdsPlainListByGroupId($group_id);
 			}
 			return false;
 		}
@@ -323,6 +322,14 @@
 			include_once MODEL_PATH.'Event_Invitation.php';
 			$invitation = new Event_Invitation();
 			return $invitation->isUserInvitedInEvent($user_id, $event_id);
+		}
+		
+		
+		//true if the reuqest for including the user has been sent
+		public function isUserIncludeInEvent($user_id, $event_id){
+			include_once MODEL_PATH.'Event_Include.php';
+			$include = new Event_Include();
+			return $include->isUserInvitedInEvent($user_id, $event_id);
 		}
 		
 		

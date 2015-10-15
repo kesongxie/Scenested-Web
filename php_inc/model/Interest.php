@@ -666,8 +666,7 @@
 			$in = new User_In_Interest();
 			include_once MODEL_PATH.'User_Table.php';
 			$user = new User_Table();
-
-			$user_found = $in->getAllFriendsInUsersInterestByUserId($user_id);
+			$user_found = $in->getAllFriendsInUsersInterestByUserId($user_id, 4);
 			$friend_block = null;
 			$content = '';
 			if($user_found !== false){

@@ -16,9 +16,4 @@ $(document).ready(function(){
 		$(this).css({'color':'rgb(135, 135, 135)','border-bottom':'0px'});
 	}
 	},'.deactive-navi');
-	
-	
-	
-	
-
 });

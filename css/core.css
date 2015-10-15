@@ -176,6 +176,7 @@ textarea{
     overflow: hidden;
     background: #681414;
     min-height: 160px;
+    border-radius:4px;
 }
 
 #side-event-info .evt-block .visible-control{

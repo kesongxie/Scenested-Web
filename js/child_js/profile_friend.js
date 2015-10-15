@@ -109,6 +109,7 @@ $(window).load(function(){
 $(document).ready(function(){
 	$('#friend-interest-navi').on({
 		click:function(){
+			$('#profile-mid-content').attr('data-fetchable', 'true').removeAttr('data-set');
 			var url = $(this).attr('data-href');
 			var key = $(this).attr('data-labelfor');
 			$('.interest-sider-navi').removeClass('active');
@@ -120,6 +121,7 @@ $(document).ready(function(){
 
 	$('#friend-interest-navi').on({
 		click:function(){
+			$('#profile-mid-content').attr('data-fetchable', 'true').removeAttr('data-set');
 			var url = $(this).attr('data-href');
 			var key = $(this).attr('data-labelfor');
 			$('.interest-sider-navi').removeClass('active');
@@ -128,4 +130,39 @@ $(document).ready(function(){
 			loadAllFriendForRequestProfilePage($(this));
 		}
 	},'#all-friend-label');
+	
+		
+	$(window).scroll(function() {
+		var thisE = $(this);
+		if ($('body').height() <= ($(window).height() + $(window).scrollTop() + 200) ) {
+			var feed = $('#profile-mid-content');
+			if(feed.attr('data-fetchable') == 'true' && feed.attr('data-set') != 'false'){
+				feed.attr('data-fetchable', 'false');
+				var u_key = $('#profile-sider-bar-left #avator-wrapper').attr('data-key');
+				var key = $('#friend-interest-navi .interest-sider-navi.active').attr('data-labelfor');		
+				var loading_wrapper = feed.find('.friend-content-inner-wrapper.blk[data-key='+key+']').find('.feed-loading-wrapper');
+				loading_wrapper.removeClass('hdn');
+				$.ajax({
+					url:AJAX_DIR+'loadProfileFriendFeed.php',
+					method:'post',
+					data:{u_key:u_key, key:key},
+					success:function(resp){
+						console.log(resp);
+						if(resp != '1'){
+							loading_wrapper.addClass('hdn');
+							loading_wrapper.before(resp);
+							feed.attr('data-fetchable', 'true');
+						}else{
+							loading_wrapper.addClass('hdn');
+							feed.attr('data-fetchable', 'false');
+							feed.attr('data-set','false');
+						}
+					}
+				});
+			}
+		}
+	});
+
+	
+	
 });

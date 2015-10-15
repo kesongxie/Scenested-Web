@@ -2715,6 +2715,7 @@ $(function($) {
 					method:'post',
 					data:{q:q, key:key, pkey:pkey},
 					success:function(resp){
+						console.log(resp);
 						if(resp != '1'){
 							parentContact.find('.contact-inner').addClass('hdn');
 							parentContact.find('.suggest-contact-inner').html(resp).removeClass('hdn');
@@ -2726,7 +2727,7 @@ $(function($) {
 				parentContact.find('.contact-inner').removeClass('hdn');
 			}
 		},
-	},'.invitation-wrapper #invitation-search-wrapepr input');
+	},'.invitation-wrapper #invitation-search-wrapepr .invite-search-input');
 	
 	$('body').on({
 		click:function(){

@@ -6,7 +6,7 @@
 			}else{
 				$user_found = $this->returnInvitationSearchByInterestId($key_word, $active_interest_key);
 			}
-			include_once 'Interest_Activity.php';
+			include_once MODEL_PATH.'Interest_Activity.php';
 			$activity = new Interest_Activity();
 			
 			return $activity->renderInvitationContactBlockByResource($user_found,$post_key);
@@ -14,15 +14,19 @@
 		}
 		
 		
+		
+		
+		
+		
 		public function returnInvitationSearchForAllFriends($key_word){
-			include_once 'User_In_Interest.php';
+			include_once MODEL_PATH.'User_In_Interest.php';
 			$in = new User_In_Interest();
 			return $in->returnInvitationSearchForAllFriends($key_word);
 		}
 		
 		
 		public function returnInvitationSearchByInterestId($key_word, $active_interest_key){
-			include_once 'User_In_Interest.php';
+			include_once MODEL_PATH.'User_In_Interest.php';
 			$in = new User_In_Interest();
 			return $in->returnInvitationSearchByInterestId($key_word,$active_interest_key );
 		}

@@ -1,6 +1,6 @@
 <?php
 	include_once '../php_inc/core.inc.php';
-	include_once PHP_INC_MODEL.'Prepare_Invitation_Search.php';
+	include_once MODEL_PATH.'Prepare_Invitation_Search.php';
 	
 	if(isset($_POST['q']) && !empty(trim($_POST['q'])) && isset($_POST['key']) && !empty(trim($_POST['key'])) && isset($_POST['pkey']) && !empty(trim($_POST['pkey']))   ){
 		$search = new Prepare_Invitation_Search();

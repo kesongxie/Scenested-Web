@@ -82,16 +82,14 @@
 				$count = 0;
 				$names = "";
 				foreach($user_array as $u){
-					$name = $user->getUserFirstNameByUserIden($u).', ';
-					if($count != 2){
+					if(++$count < 3){
+						$name = $user->getUserFirstNameByUserIden($u).', ';
 						$title .= $name;
+					}else{
+						break;
 					}
-					$names.=$name;
-					$count++;
 				}
 				$title =  trim($title,', ');
-				$names =  trim($names,', ');
-				$name_array['members'] = $names;
 				if( sizeof($user_array) > 2 ){
 					$remaining_people = sizeof($user_array) - 2;
 					$title .= ' and '.$remaining_people;
@@ -102,8 +100,8 @@
 					}
 				}
 				
-				$name_array['title'] = $title;
-				return $name_array;
+				
+				return $title;
 				
 			}
 			return false;
@@ -130,6 +128,12 @@
 		public function getGroupKeyByGroupId($group_id){
 			return $this->getColumnById('hash',$group_id);
 		}
+		
+		
+		public function getGroupMemberIdsPlainListByGroupId($group_id){
+			return $this->getColumnById('user_in', $group_id );
+		}
+		
 		
 		
 		

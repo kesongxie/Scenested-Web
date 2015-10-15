@@ -320,7 +320,7 @@
 					$location = $event['location'];
 				}
 				$joined_user = $this->event->getJoinedUserByEventId($event['id']);
-				$joined_user_num = ($joined_user !== false)?sizeof(explode(',',$joined_user['members'])):1;
+				$joined_user_num = ($joined_user !== false)?sizeof(explode(',',trim($joined_user,','))):1;
 				$isEventPassed = (time() > strtotime($event['date'].$event['time']));				
 				$description = $event['description'];
 				$event_joined = $this->event->hasUserJoinedEvent($_SESSION['id'], $event['id']);
@@ -2099,7 +2099,7 @@
 		
 		
 		/* need the post key to check whether the user has been invited or not*/
-		public function renderInvitationContactBlockByResource($user_found, $post_key, $sender = false){
+		public function renderInvitationContactBlockByResource($user_found, $post_key){
 			$event = new Event();
 			$event_id = $this->isEventExistsForActivityKey($post_key);	
 			if($event_id !== false){
@@ -2114,10 +2114,12 @@
 						$unique_iden = $u['hash'];
 						$event_joined = $event->hasUserJoinedEvent($u['id'], $event_id);
 						if($event_joined === false){
-							if(!$sender){
-								$request_sent = $event->isUserInvitedInEvent($u['id'], $event_id);	
+							include_once MODEL_PATH.'Event.php';
+							$event = new Event();
+							if($event->isEventPassedForEventId($event_id)){
+								$request_sent = $event->isUserIncludeInEvent($u['id'], $event_id);	
 							}else{
-								$request_sent = $sender->isUserInvitedInEvent($u['id'], $event_id);
+								$request_sent = $event->isUserInvitedInEvent($u['id'], $event_id);
 							}
 						}
 						ob_start();
