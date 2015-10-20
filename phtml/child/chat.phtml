@@ -2,10 +2,12 @@
 	<div id="chat-side-content" style="position:relative;height:100%;width:100%;">
 		<div id="chat-bar" style="height:100%;position:relative;">
 			<div class="chat-header">
-				<span class="title vertical-center">Messages<span>
-				<span id="chat-search" class="vertical-center" title="Search Contact">
-				<img src="<?php echo IMGDIR ?>search_icon.png" height="15px" width="15px">
-				</span>
+				<div class="title">
+				<div class="inline-blk" style=" color: inherit;">Messages</div>
+				<div id="chat-search" class="inline-blk" title="Search Contact">
+					<img src="<?php echo IMGDIR; ?>search_icon.png" height="15px" width="15px">
+				</div>
+			</div>
 			</div>
 			<div class="chat-body" style="padding:0px 10px;position:relative;overflow:hidden;height:90%;">
 					<?php echo $contact_block; ?>

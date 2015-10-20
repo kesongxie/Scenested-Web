@@ -1430,7 +1430,7 @@ img.gallery-navi{
 #chat-box #chat-box-body{
 	height:65%;
 	width:100%;
-	overflow:hidden;	
+	overflow:auto;	
 }
 
 #chat-box .in_con_opt_w{
