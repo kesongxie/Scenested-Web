@@ -1,6 +1,6 @@
 <?php
 	include_once '../php_inc/core.inc.php';
-	include_once PHP_INC_MODEL.'Interest_Activity.php';
+	include_once MODEL_PATH.'Interest_Activity.php';
 
 	if( isset($_POST['last_key']) && !empty(trim($_POST['last_key'])) ){
 		$activity = new Interest_Activity();
@@ -10,5 +10,7 @@
 		}else{
 			echo '1';
 		}
+	}else{
+		echo '1';
 	}		
 ?>

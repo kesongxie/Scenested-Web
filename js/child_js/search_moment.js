@@ -14,7 +14,6 @@ $(document).ready(function(){
 					url:AJAX_DIR+'loadSearchMoreMomentFeed.php',
 					method:'post',
 					success:function(resp){
-						console.log(resp);
 						if(resp != '1'){
 							var left = $($.parseHTML(resp)).filter('#loading-feed-left').html();								
 							var right = $($.parseHTML(resp)).filter('#loading-feed-right').html();	

@@ -8,13 +8,20 @@
 			<div id="global-search-bar-inner">
 				<form  id="search-submit-form" class="hdn-input">
 					<label for="search-submit"><img src="<?php echo IMGDIR ?>search_icon.png"  title="search" style="z-index:1;height:18px; width:18px;margin-top:1px;cursor:pointer"></label>
-					<input autocomplete="off" type="text" name="search_box" placeholder="Search friends, interests, moment, etc..." value="<?php echo (isset($_GET['q'])&&!empty(trim($_GET['q'])))?htmlentities($_GET['q']):'' ?>">
+					<input id="glb-search-input" autocomplete="off" type="text" name="search_box" placeholder="Search friends, interests, moment, etc..." data-init = "<?php echo (!isset($_GET['q']) || empty(trim($_GET['q']))?"true":"false"  ) ?>" value="<?php echo (isset($_GET['q'])&&!empty(trim($_GET['q'])))?htmlentities($_GET['q']):'' ?>">
 					<input type="submit" id="search-submit" class="hdn-input hdn">
 				</form>
-				<div id="search-result-container" class="hdn"></div>
-			</div>
-			
-			
+				<div id="search-result-container" class="hdn">
+					<div id="search-content" class="hdn">
+					</div>
+					<div id="initial-search" class="in_con_opt_w hdn" style="box-shadow:1px 1px 12px #DBDBDB;display:block;width:100%;top:36px;padding:0px;">
+						<div class="in_con_opt_w_inner" style="position:relative;width:100%;margin-top:5px;">
+							<div class="arrow-up" style="position:absolute;top:-14px;left:12px;border-bottom:10px solid #FFFFFF"></div>
+								<a class="dummy-lk" href="<?php echo SEARCH_SIMILAR_PEOPLE_PATH; ?>" ><div class="in_con_w_opt_it light-hover txt_ofl" style="margin-bottom:5px;">Search People Match <span class="red-act">"My Interests"</span></div></a>
+							</div>
+						</div>
+					</div>
+				</div>
 		</div>
 		<div id="loggedin-menu">
 				<ul>

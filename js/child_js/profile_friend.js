@@ -16,7 +16,6 @@ function loadAllFriend(){
 }
 
 function loadInterestFriendByKey(thisE, label_key){
-	
 	$.ajax({
 		url: AJAX_DIR+'ld_friend.php',
 		method:'post',
@@ -147,7 +146,6 @@ $(document).ready(function(){
 					method:'post',
 					data:{u_key:u_key, key:key},
 					success:function(resp){
-						console.log(resp);
 						if(resp != '1'){
 							loading_wrapper.addClass('hdn');
 							loading_wrapper.before(resp);

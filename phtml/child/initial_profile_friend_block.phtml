@@ -7,7 +7,7 @@
 <div id="friend-content-wrapper" class="inline-blk " style="width: 90%;margin-top: 10px;">
 	<?php if($_SESSION['id'] == $request_user_page_id)
 		foreach($user_found as $u){
-			echo $user->renderUserAvatorByUserResource($u);
+			echo $user->returnUserAvatorByResource($u);
  		}
 	 ?>
 </div>

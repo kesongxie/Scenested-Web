@@ -1,58 +1,32 @@
 <div class="post-wrapper post evt-block evt" data-key="<?php echo $hash; ?>">
-	<?php $displayable = is_url_exist($event_photo_url); ?>
-
-	<?php if($displayable): ?>
+	<?php $displayable = $event_photo && is_url_exist($event_photo_url); ?>
 		<?php if($operation_dispable): ?>
-		<img src="<?php echo IMGDIR ?>white-down-arrow.png" style="float:none;position: absolute; right: 14px; top: 14px;"class="trigger-pop toggle-operation pointer hdn">
+			<img src="<?php echo IMGDIR ?>white-down-arrow.png" style="float:none;position: absolute; right: 14px; top: 14px;"class="trigger-pop toggle-operation pointer hdn">
 		<?php endif; ?>
 		
 		<div class="pointer evt-cover">
-			<img class="previewable" style="width:100%;display:block;" src="<?php echo $event_photo_url ?>" data-key="<?php echo $event_photo_hash ?>" data-sourceFrom = "e">
-		</div>
-	<?php else: ?>
-		<?php if($operation_dispable): ?>
-			<img src="<?php echo IMGDIR ?>down_arrow_icon.png" style="float:none;position: absolute; right: 10px; top: 10px;"class="trigger-pop toggle-operation pointer hdn">
-		<?php endif; ?>
-	<?php endif; ?>
-	
-	<?php if($displayable): ?>
-		<div style="padding:0px 14px 0px 14px; margin-top:-22px;">
-	<?php else: ?>
-		<div style="padding:20px 14px 0px 14px" ?>
-	<?php endif ?>
-			
-			<div class="inline-blk"><a href="<?php echo $user_page_redirect; ?>" ><img class="post-owner-picture hover-user-profile"  data-key="<?php echo $unique_iden; ?>" style="float:none;width:50px;height:50px"src="<?php echo $post_owner_pic; ?>"></a></div>
 			<?php if($displayable): ?>
+				<img class="previewable" style="width:100%;display:block;" src="<?php echo $event_photo_url ?>" data-key="<?php echo $event_photo_hash ?>" data-sourceFrom = "e">
+			<?php endif; ?>
+		</div>
+	
+		<div style="padding:0px 14px 0px 14px; margin-top:-22px;">
+			<div class="inline-blk"><a href="<?php echo $user_page_redirect; ?>" ><img class="post-owner-picture hover-user-profile"  data-key="<?php echo $unique_iden; ?>" style="float:none;width:50px;height:50px"src="<?php echo $post_owner_pic; ?>"></a></div>
 			<div class="inline-blk" style="vertical-align:bottom;padding-bottom:4px;">
-			<?php  else:?>
-			<div class="inline-blk" style="vertical-align:top;padding-bottom:4px;">
-			<?php endif ?>
 			
 			<a href="<?php echo $user_page_redirect; ?>" class="hover-user-profile plain-lk"  data-key="<?php echo $unique_iden; ?>">
 				<span class="profile-name pointer post-user-name"><?php echo htmlentities($fullname) ?></span>
 			</a>
 			
-			<?php if($displayable): ?>
 			<span style="margin-left: 10px; color: #969696;">
 			<?php if($with_interest_name): ?>
 				<a class="plain-lk" style="color:inherit" href="<?php echo $interest_access_url; ?>"><?php echo htmlentities($interest_name); ?></a>
 				-
 			<?php endif; ?>
 			<?php echo $post_time ?></span>
-			<?php  else:?>
-			<div style="color: #969696;">
-			<?php if($with_interest_name): ?>
-				<a class="plain-lk" style="color:inherit" href="<?php echo $interest_access_url; ?>"><?php echo htmlentities($interest_name); ?></a>
-				-
-			<?php endif;?>
-			<?php echo $post_time ?></div>
-			<?php endif ?>
 		</div>
-
 	</div>	
 	
-	
-
 	<div class="content">
 		<div class="post-text" style="margin-top:30px">
 			<div class="visible-post-scope">
@@ -105,7 +79,6 @@
 		
 <div class="joined-list list hdn">
 	<div class="joined-list-inner list-inner" >
-			
 	</div>
 </div>	
 
@@ -116,8 +89,6 @@
 			</div>
 		</div>
 	</div>
-	
-	
 	
 	<?php if($operation_dispable): ?>
 	<div class="in_con_opt_w popover hdn" style="top:37px;right:4px;">
@@ -141,6 +112,5 @@
 		</div>
 	</div>
 	<?php endif;?>
-
 </div>
 

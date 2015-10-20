@@ -2,8 +2,7 @@ $(document).ready(function(){
 	$(window).scroll(function() {
 		var thisE = $(this);
 		if ($('body').height() <= ($(window).height() + $(window).scrollTop() + 200) ) {
-	
-			var feed = $('#search-content-wrapper');
+				var feed = $('#search-content-wrapper');
 			if(feed.attr('data-fetchable') == 'true' && feed.attr('data-set') != 'false'){
 				feed.attr('data-fetchable', 'false');
 				var total_feed = feed.find('.post-wrapper').length;
@@ -15,7 +14,6 @@ $(document).ready(function(){
 					url:AJAX_DIR+'loadSearchMoreEventFeed.php',
 					method:'post',
 					success:function(resp){
-						console.log(resp);
 						if(resp != '1'){
 							var left = $($.parseHTML(resp)).filter('#loading-feed-left').html();								
 							var right = $($.parseHTML(resp)).filter('#loading-feed-right').html();	
@@ -34,4 +32,4 @@ $(document).ready(function(){
 			}
 		}
 	});
-}):
+});

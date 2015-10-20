@@ -135,10 +135,13 @@
 		
 		public function deleteAllCommentsByActivityId($activity_id){
 			$rows = $this->getAllRowsMultipleColumnsBySelector(array('id','hash'), 'activity_id',$activity_id);
-			include_once 'Reply.php';
+			include_once MODEL_PATH.'Reply.php';
 			$reply = new Reply();
+			include_once MODEL_PATH.'Favor_Comment.php';
+			$favor_comment = new Favor_Comment();
 			if($rows !== false && sizeof($rows) > 0){
 				foreach($rows as $row){
+					$favor_comment->deleteAllFavorForTarget($row['id']); //delete the rows in favor_comment table for a specific comment
 					$this->deleteNotiQueueForKey($row['hash']);
 					$reply->deleteAllReplysForCommentId($row['id']);
 				}

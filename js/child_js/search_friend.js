@@ -11,7 +11,6 @@ $(document).ready(function(){
 					url:AJAX_DIR+'loadSearchMorePeopleFeed.php',
 					method:'post',
 					success:function(resp){
-						console.log(resp);
 						if(resp != '1'){
 							loading_wrapper.addClass('hdn');
 							loading_wrapper.before(resp);

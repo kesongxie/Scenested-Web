@@ -755,7 +755,7 @@
 					SELECT DISTINCT interest.user_id AS user_id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 					FROM interest 
 					LEFT JOIN user
-					ON interest.user_id = user.id  WHERE  user.id NOT IN($list) AND  interest.user_id != ? AND interest.user_id ORDER BY RAND() LIMIT ? 
+					ON interest.user_id = user.id  WHERE  user.id NOT IN($list) AND  interest.user_id != ?  ORDER BY RAND() LIMIT ? 
 				");
 			}
 			if($stmt){
@@ -895,13 +895,13 @@
 						ON interest.user_id=user.id
 						LEFT JOIN education
 						ON user.id = education.user_id  AND  user.id !=? 
-						WHERE user.id  NOT IN($exculsive_list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
+						WHERE user.id  NOT IN($exculsive_list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ?   ORDER BY RAND()
 					
 						UNION
 						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 						FROM user 
 						LEFT JOIN interest
-						ON interest.user_id=user.id   AND  user.id !=? WHERE  user.id  NOT IN($exculsive_list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?) 
+						ON interest.user_id=user.id   AND  user.id !=? WHERE  user.id  NOT IN($exculsive_list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?)   ORDER BY RAND()
 						");
 					}
 					else{
@@ -909,13 +909,12 @@
 						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 						FROM user 
 						LEFT JOIN interest
-						ON interest.user_id=user.id  AND  user.id !=?   WHERE user.id  NOT IN($exculsive_list) AND  ( interest.name REGEXP ?  || interest.description REGEXP ?)
+						ON interest.user_id=user.id  AND  user.id !=?   WHERE user.id  NOT IN($exculsive_list) AND  ( interest.name REGEXP ?  || interest.description REGEXP ?)   ORDER BY RAND()
 						");
 					}
 				}
 				else{
 					if($school_id !== false){
-						//use random offset to get random user
 						$stmt = $this->connection->prepare("
 						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 						FROM user 
@@ -929,8 +928,8 @@
 						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 						FROM user 
 						LEFT JOIN interest
-						ON interest.user_id=user.id   AND  user.id !=?   WHERE user.id  NOT IN($exculsive_list) AND   (interest.name REGEXP ?  || interest.description REGEXP ? )
-						LIMIT ?
+						ON interest.user_id=user.id   AND  user.id !=?   WHERE user.id  NOT IN($exculsive_list) AND   (interest.name REGEXP ?  || interest.description REGEXP ? )   ORDER BY RAND()
+						LIMIT ? 
 					
 						");
 					}
@@ -939,7 +938,7 @@
 						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 						FROM user 
 						LEFT JOIN interest
-						ON interest.user_id=user.id  AND  user.id !=?   WHERE  user.id  NOT IN($exculsive_list) AND (interest.name REGEXP ?  || interest.description REGEXP ?)
+						ON interest.user_id=user.id  AND  user.id !=?   WHERE  user.id  NOT IN($exculsive_list) AND (interest.name REGEXP ?  || interest.description REGEXP ?)   ORDER BY RAND()
 						LIMIT ?
 						");
 					}
@@ -951,14 +950,14 @@
 							SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 							FROM user 
 							LEFT JOIN education
-							ON user.id = education.user_id  AND  user.id !=?  WHERE user.id  NOT IN($exculsive_list) AND  education.school_id = ? 
+							ON user.id = education.user_id  AND  user.id !=?  WHERE user.id  NOT IN($exculsive_list) AND  education.school_id = ?  ORDER BY RAND()
 						");
 					}else{
 						$stmt = $this->connection->prepare("
 							SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
 							FROM user 
 							LEFT JOIN education
-							ON user.id = education.user_id  AND  user.id !=? WHERE user.id  NOT IN($exculsive_list) AND  education.school_id = ? LIMIT ?
+							ON user.id = education.user_id  AND  user.id !=? WHERE user.id  NOT IN($exculsive_list) AND  education.school_id = ?   ORDER BY RAND() LIMIT ?
 						");
 					}
 				}else{

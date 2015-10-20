@@ -23,6 +23,9 @@ body{
 	padding-bottom:80px;
 }
 
+
+
+
 button:focus {
 	outline:none;
 }
@@ -1414,7 +1417,9 @@ img.gallery-navi{
 	background:#f0f0f0;
 	padding:12px;
 	max-width:70%;
+/* 
 	position:relative;
+ */
 	margin-right:10px;
 } 
 

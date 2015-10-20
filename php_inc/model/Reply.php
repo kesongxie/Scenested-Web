@@ -163,6 +163,9 @@
 			$user_id = $sub_reply['user_id'];
 			$hash = $sub_reply['hash'];
 			$post_owner_id = $this->getPostUserIdByActivityId($sub_reply['activity_id']);
+			
+			$favor_number = $this->getReplyLikeNumber($sub_reply_id);
+			$favored = $this->isSessionUserFavorReply($sub_reply_id);
 			ob_start();
 			include(SCRIPT_INCLUDE_BASE.$this->sub_reply_template_path);
 			$reply_block = ob_get_clean();
@@ -194,9 +197,12 @@
 		
 		public function deleteAllReplysForCommentId($comment_id){
 			//select id and user_id_get
-			$reply_rows = $this->getAllRowsColumnBySelector('hash', 'comment_id', $comment_id, $asc = true);
+			$reply_rows = $this->getAllRowsMultipleColumnsBySelector(array('id','hash'), 'comment_id', $comment_id, $asc = true);
 			if($reply_rows !== false && sizeof($reply_rows) > 0 ){
+				include_once MODEL_PATH.'Favor_Reply.php';
+				$favor_reply = new Favor_Reply();
 				foreach($reply_rows as $row){
+					$favor_reply->deleteAllFavorForTarget($row['id']); //delete the rows in favor_comment table for a specific comment
 					$this->deleteNotiQueueForKey($row['hash']);
 					$this->noti_post_user->deleteNotiQueue($row['hash']);
 				}

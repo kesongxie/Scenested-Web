@@ -309,7 +309,6 @@ $(document).ready(function(){
 						method:'post',
 						data: {last_key:last_key, key:key},
 						success:function(resp){
-							console.log(resp);
 							if(resp != '1'){
 								var left = $($.parseHTML(resp)).filter('#loading-feed-left').html();								
 								var right = $($.parseHTML(resp)).filter('#loading-feed-right').html();	

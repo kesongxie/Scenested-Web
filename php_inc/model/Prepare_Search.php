@@ -355,7 +355,7 @@
 		public function getContentEventForMineInterestType(){
 			include_once MODEL_PATH.'Interest_Activity.php';
 			$interest_activity  = new Interest_Activity();
-			$rows = $interest_activity->returnMatchedEventForMineInterest(4);
+			$rows = $interest_activity->returnMatchedEventForMineInterest(2);
 			return $this->renderEventsByResource($rows);
 		}
 		
@@ -434,16 +434,23 @@
 						$right_content.= $content;
 					}
 				}
-				ob_start();
-				if($scroll_load){
-					include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
-				}else{
-					include(TEMPLATE_PATH_CHILD.'search_mine_event.phtml');
-				}
-				$content = ob_get_clean();
-				return $content;
 			}
-			return false;
+			if($scroll_load ){
+				if($rows !== false){
+					ob_start();
+					include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
+					$content = ob_get_clean();
+					return $content;
+				}else{
+					return false;
+				}
+			}else{
+				
+			}
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'search_mine_event.phtml');
+			$content = ob_get_clean();
+			return $content;
 		}
 		
 		public function getContentPeopleForMineInterestType(){
@@ -471,7 +478,6 @@
 			include_once MODEL_PATH.'Interest_Activity.php';
 			$interest_activity  = new Interest_Activity();
 			$rows = $interest_activity->returnMatchedMomentForMineInterest(2);
-			$content = null;
 			if($rows !== false){
 				$left_content = "";
 				$right_content = "";

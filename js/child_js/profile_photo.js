@@ -25,7 +25,6 @@ $(document).ready(function(){
 						method:'post',
 						data: {l_c:l_c, r_c:r_c, l_e:l_e, r_e:r_e, l_p:l_p,r_p:r_p, l_m:l_m, r_m:r_m, key:key },
 						success:function(resp){
-							console.log(resp);
 							if(resp != '1'){
 								var left = $($.parseHTML(resp)).filter('#loading-feed-left').html();								
 								var right = $($.parseHTML(resp)).filter('#loading-feed-right').html();	
