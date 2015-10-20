@@ -47,6 +47,7 @@ input,textarea, select{
 	outline:none;
 	font-family:Gill, Helvetica, sans-serif;
   	font-size: 13px;
+  	border:1px solid #EAEAEA;
 }
 textarea{
 	resize:none;
