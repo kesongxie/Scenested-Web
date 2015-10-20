@@ -452,7 +452,7 @@ div.ui-datepicker{
 #notification-center .body{
 	padding:4px 18px 14px 18px;
 	max-height:260px;
-	overflow:scroll;
+	overflow:auto;
 	border-top:1px solid #EAEAEA;
 }
 

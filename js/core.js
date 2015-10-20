@@ -760,6 +760,8 @@ $(function(){
 				$(this).css('overflow','hidden');
 			}
 		},'.child-scrollable');
+	}else{
+		$('#chat-box #chat-box-body').css('overflow','auto');
 	}
 	
 	
