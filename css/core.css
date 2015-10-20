@@ -47,8 +47,11 @@ input,textarea, select{
 	outline:none;
 	font-family:Gill, Helvetica, sans-serif;
   	font-size: 13px;
+}
+input,textarea{
   	border:1px solid #EAEAEA;
 }
+
 textarea{
 	resize:none;
 }
@@ -805,6 +808,7 @@ div.ui-datepicker{
 }
 .post-wrapper{
 	box-shadow: 1px 1px 10px #E8E8E8;
+	-webkit-box-shadow: 1px 1px 10px #E8E8E8;
 	padding: 12px;
 	margin-bottom: 14px;
 	background:#fff;

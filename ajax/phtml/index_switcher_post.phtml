@@ -4,7 +4,7 @@
 		<div class="inner-w" style="position: relative; overflow: hidden; width: 100%;">
 			<!--starts int-group-->
 			<div class="sub" style="margin-top: 6px;">
-				<div style="max-height:130px;overflow:scroll">
+				<div class="child-scrollable" style="max-height:130px;overflow:auto">
 					<?php if($rows !== false && sizeof($rows) > 0): ?>
 						<?php foreach($rows as $row): ?>
 							<div class="in_con_w_opt_it" style="padding:6px 10px;cursor:default;" data-key="<?php echo $row['id'] ?>">

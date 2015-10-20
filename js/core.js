@@ -3012,7 +3012,6 @@ $(function($) {
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
 					$('#dialog-popup-overlay').removeClass('hdn');
 					$('#evt-include-friend-wrapper').html(resp).removeClass('hdn').attr('data-key',key);
 				}	

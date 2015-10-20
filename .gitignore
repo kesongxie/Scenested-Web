@@ -1,4 +1,4 @@
 media_u/
 js/glob.js
-php_inc/global_constant.php
+php_inc/server_cred.php
 php_inc/model/Database_Connection.php
