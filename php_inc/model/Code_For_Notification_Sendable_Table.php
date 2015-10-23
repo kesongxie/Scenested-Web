@@ -10,13 +10,14 @@
 			"interest_request_accept"=>"ira-", "message_queue"=>"mq-", "favor_activity"=>"fa-", "favor_comment"=>"fc-",
 			"favor_reply"=>"fr-", "event_invitation"=>"ei-", "event_invitation_accept"=>"eia-",
 			"event_include"=>"eji-","event_include_accept"=>"eja-");
+		
 		public static function getCodeForTable($table_name){
 			return self::CODE[$table_name];
 		}
 		
 		public static function getTableNameByCode($code){
 			$code .='-';
-			return array_search($code, self::CODE); 
+			return  array_search($code, self::CODE); 
 		}
 	}	
 

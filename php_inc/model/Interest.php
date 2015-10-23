@@ -447,81 +447,6 @@
 			return false;
 		}
 		
-		/*
-		public function returnMatchedPhotoForMineInterest(){
-			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
-			$interest_like = '';
-			if($mine_interests !== false){
-				foreach($mine_interests as $interest){
- 					$interest_like .= $interest['name'].'|';	
-				}
-				$interest_like = trim($interest_like,'|');
-					$stmt = $this->connection->prepare("
-			SELECT *
-			FROM
-			(
-				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
-				FROM interest 
-				LEFT JOIN interest_activity
-				ON interest.id = interest_activity.interest_id 
-				LEFT JOIN moment
-				ON interest_activity.id = moment.interest_activity_id 
-				LEFT JOIN moment_photo
-				ON moment.id = moment_photo.moment_id 
-				WHERE interest.name REGEXP ? 
-			
-				UNION 
-			
-				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
-				FROM interest 
-				LEFT JOIN interest_activity
-				ON interest.id = interest_activity.interest_id 
-				LEFT JOIN event
-				ON interest_activity.id = event.interest_activity_id 
-				LEFT JOIN event_photo
-				ON event.id = event_photo.event_id
-				WHERE interest.name REGEXP ? 
-				
-				UNION 
-				
-				SELECT 'm' AS `source_from`,  interest_activity.id as interest_activity_id, moment_photo.picture_url,moment_photo.user_id,  moment_photo.hash 
-				FROM moment 
-				LEFT JOIN interest_activity
-				ON moment.interest_activity_id = interest_activity.id
-				LEFT JOIN moment_photo
-				ON moment.id = moment_photo.moment_id  WHERE  (moment.description REGEXP  ? || moment_photo.caption REGEXP ?)
-			
-				UNION 
-				SELECT  'e' AS `source_from`, interest_activity.id as interest_activity_id,  event_photo.picture_url,event_photo.user_id, event_photo.hash
- 				FROM event 
- 				LEFT JOIN interest_activity
-				ON event.interest_activity_id = interest_activity.id
- 				LEFT JOIN event_photo
- 				ON event.id = event_photo.event_id  WHERE  (event.title REGEXP ? || event.description REGEXP ?  || event_photo.caption REGEXP ?)
-
-				)dum ORDER BY interest_activity_id DESC
-			
-			");	
-				if($stmt){
-					$stmt->bind_param('sssssss',$interest_like, $interest_like,$interest_like, $interest_like,$interest_like,$interest_like,$interest_like);
-					if($stmt->execute()){
-						 $result = $stmt->get_result();
-						 if($result !== false && $result->num_rows >= 1){
-							$row = $result->fetch_all(MYSQLI_ASSOC);
-							$stmt->close();
-							return $row;
-						 }
-					}
-				}
-			}
-			echo $this->connection->error;
-			return false;		
-		
-		}
-		
-		*/
-		
-		
 		public function returnMatchedPhotoForMineInterest($limit, $last_m = MAX_PHOTO_BOUND, $last_e = MAX_PHOTO_BOUND ){
 			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
 			$interest_like = '';
@@ -872,136 +797,76 @@
 			return false;
 		}
 		
-		public function getResultForMineUser($limit = 2, $exculsive_list = "'-1'"){
-			$mine_interests = $this->getInterestNameForUser($_SESSION['id'], -1);
-			$interest_like = '';
+		
+		public function getResultForMineUser($limit = 2, $exclusive_list = "'-1'"){
+			include_once MODEL_PATH.'Interest.php';
+			$inerest = new Interest();
+			$mine_interests = $inerest->getInterestNameForUser($_SESSION['id'], -1);
+			$interest_like = ".*";
+			
 			if($mine_interests !== false){
+				$interest_like = '';
 				foreach($mine_interests as $interest){
  					$interest_like .= $interest['name'].'|';	
 				}
 				$interest_like = trim($interest_like,'|');
 			}
-			include_once 'Education.php';
+			
+			include_once MODEL_PATH.'Education.php';
 			$edu = new Education();
 			$school_id = $edu->getSchoolIdByUserId($_SESSION['id']);
-			if($interest_like != ''){
-				if($limit < 0){
-					if($school_id !== false){
-						//use random offset to get random user
-						$stmt = $this->connection->prepare("
-						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-						FROM user 
-						LEFT JOIN interest
-						ON interest.user_id=user.id
-						LEFT JOIN education
-						ON user.id = education.user_id  AND  user.id !=? 
-						WHERE user.id  NOT IN($exculsive_list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ?   ORDER BY RAND()
-					
-						UNION
-						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-						FROM user 
-						LEFT JOIN interest
-						ON interest.user_id=user.id   AND  user.id !=? WHERE  user.id  NOT IN($exculsive_list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?)   ORDER BY RAND()
-						");
-					}
-					else{
-						$stmt = $this->connection->prepare("
-						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-						FROM user 
-						LEFT JOIN interest
-						ON interest.user_id=user.id  AND  user.id !=?   WHERE user.id  NOT IN($exculsive_list) AND  ( interest.name REGEXP ?  || interest.description REGEXP ?)   ORDER BY RAND()
-						");
-					}
-				}
-				else{
-					if($school_id !== false){
-						$stmt = $this->connection->prepare("
-						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-						FROM user 
-						LEFT JOIN interest
-						ON interest.user_id=user.id
-						LEFT JOIN education
-						ON user.id = education.user_id  AND  user.id !=? 
-						WHERE  user.id  NOT IN($exculsive_list) AND (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ? 
-					
-						UNION
-						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-						FROM user 
-						LEFT JOIN interest
-						ON interest.user_id=user.id   AND  user.id !=?   WHERE user.id  NOT IN($exculsive_list) AND   (interest.name REGEXP ?  || interest.description REGEXP ? )   ORDER BY RAND()
-						LIMIT ? 
-					
-						");
-					}
-					else{
-						$stmt = $this->connection->prepare("
-						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-						FROM user 
-						LEFT JOIN interest
-						ON interest.user_id=user.id  AND  user.id !=?   WHERE  user.id  NOT IN($exculsive_list) AND (interest.name REGEXP ?  || interest.description REGEXP ?)   ORDER BY RAND()
-						LIMIT ?
-						");
-					}
-				}
-			}else{
+				$sub_query = '';
 				if($school_id !== false){
-					if($limit < 0){
-						$stmt = $this->connection->prepare("
-							SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-							FROM user 
-							LEFT JOIN education
-							ON user.id = education.user_id  AND  user.id !=?  WHERE user.id  NOT IN($exculsive_list) AND  education.school_id = ?  ORDER BY RAND()
-						");
-					}else{
-						$stmt = $this->connection->prepare("
-							SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-							FROM user 
-							LEFT JOIN education
-							ON user.id = education.user_id  AND  user.id !=? WHERE user.id  NOT IN($exculsive_list) AND  education.school_id = ?   ORDER BY RAND() LIMIT ?
-						");
-					}
-				}else{
-					$stmt = false;
+					$sub_query="
+						(SELECT DISTINCT user.id, 1 as ROLE,  CONCAT(user.firstname,' ',user.lastname) AS fullname,  user.unique_iden AS hash, user.user_access_url 
+							FROM education 
+							LEFT JOIN user
+							ON education.user_id=user.id
+							LEFT JOIN interest
+							ON user.id = interest.user_id 
+							WHERE  user.id !=?  AND user.id  NOT IN($exclusive_list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ?  
+						)
+						UNION
+						";	
 				}
-			}
-			
-			if($stmt){
-				if($interest_like != ''){
-					if($limit < 0){
-						if($school_id !== false){
-							$stmt->bind_param('issiiss',$_SESSION['id'],$interest_like,$interest_like, $school_id,$_SESSION['id'],$interest_like,$interest_like);
+				$sub_query .= "
+						 (SELECT DISTINCT user.id, 2 as ROLE, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url 
+							FROM interest 
+							LEFT JOIN user
+							ON interest.user_id=user.id   AND  user.id !=? WHERE  user.id  NOT IN($exclusive_list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?) 
+						)";
+				
+				$query = "SELECT DISTINCT id, fullname, hash, user_access_url
+					FROM (".$sub_query.") a 
+					ORDER BY ROLE ASC, RAND()";
+				if($limit > 0){
+					$query .= " LIMIT ?"; 
+				}
+				$stmt = $this->connection->prepare($query);
+				if($stmt){
+					if($interest_like !== false && $school_id !== false){
+						if($limit > 0){
+							$stmt->bind_param('issiissi', $_SESSION['id'], $interest_like, $interest_like, $school_id, $_SESSION['id'], $interest_like, $interest_like, $limit);
 						}else{
-							$stmt->bind_param('iss',$_SESSION['id'],$interest_like,$interest_like);
+							$stmt->bind_param('issiiss', $_SESSION['id'], $interest_like, $interest_like, $school_id, $_SESSION['id'], $interest_like, $interest_like);
 						}
 					}else{
-						if($school_id !== false){
-							$stmt->bind_param('issiissi',$_SESSION['id'],$interest_like,$interest_like, $school_id,$_SESSION['id'],$interest_like,$interest_like, $limit);
+						if($limit > 0){
+							$stmt->bind_param('issi', $_SESSION['id'], $interest_like, $interest_like, $limit);
 						}else{
-							$stmt->bind_param('issi',$_SESSION['id'],$interest_like,$interest_like, $limit);
+							$stmt->bind_param('iss', $_SESSION['id'], $interest_like, $interest_like);
 						}
 					}
-				}else{
-					if($school_id !== false){
-						if($limit < 0){
-							$stmt->bind_param('ii',$_SESSION['id'], $school_id);
-						}else{
-							$stmt->bind_param('iii',$_SESSION['id'], $school_id, $limit);
-						}
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$stmt->close();
+							return $result;
+						 }
 					}
-				}
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows >= 1){
-						$stmt->close();
-						return $result;
-					 }
-				}
-			}
-			return false;
+				}	
+				return false;
 		}
-		
-		
-		
 		
 	}
 

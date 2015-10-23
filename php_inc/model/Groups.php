@@ -42,72 +42,86 @@
 		
 		
 		public function getGroupTitleByGroupKey($group_key){
-			$row = $this->getMultipleColumnsBySelector(array('id','type'), 'hash', $group_key);
+			$row = $this->getMultipleColumnsBySelector(array('id','type', 'group_name'), 'hash', $group_key);
 			if($row !== false){
 				$type = $row['type'];
+				$group_name = '';
 				switch($type){
-				case 'e': 
-					$group_name = $this->getGroupMemberTitleByGroupId($row['id']);
-					return $group_name;
-				default:break;
+					case 'e': 
+						$group_name = $row['group_name'];
+						if($group_name === null){
+							$group_name = $this->getEventGroupTitleByGroupId($row['id']);
+						}
+						break;
+					case 'r':
+						$group_name = $row['group_name'];
+						break;
+					default:break;
 				}
+				return $group_name;
 			}
 			return false;
 		}
 		
 		
 		public function getGroupTitleByGroupId($group_id){
-			$type = $this->getColumnById('type', $group_id);
-			if($type !== false){
+			$row = $this->getMultipleColumnsById(array('type', 'group_name'), $group_id);
+			if($row !== false){
+				$type = $row['type'];
+				$group_name = '';
 				switch($type){
-				case 'e': 
-					$group_name = $this->getEventGroupTitleByGroupId($group_id);
-					$group_name = ($group_name !== false)?$group_name:$this->getGroupMemberTitleByGroupId($group_id);
-					return $group_name;
-				default:break;
-				}
-			}
-			return false;
-		}
-		
-		
-		public function getGroupMemberTitleByGroupId($group_id){
-			$user_in = $this->getColumnById('user_in',$group_id);
-			if($user_in !== false){
-				$title = "";
-				$user_array = explode(',',trim($user_in,','));
-				$name_array = array();
-				include_once 'User_Table.php';
-				$user = new User_Table();
-				$count = 0;
-				$names = "";
-				foreach($user_array as $u){
-					if(++$count < 3){
-						$name = $user->getUserFirstNameByUserIden($u).', ';
-						$title .= $name;
-					}else{
+					case 'e': 
+						$group_name = $row['group_name'];
+						if($group_name === null){
+							$group_name = $this->getEventGroupTitleByGroupId($group_id);
+						}
 						break;
-					}
+					case 'r':
+						$group_name = $row['group_name'];
+						break;
+					default:break;
 				}
-				$title =  trim($title,', ');
-				if( sizeof($user_array) > 2 ){
-					$remaining_people = sizeof($user_array) - 2;
-					$title .= ' and '.$remaining_people;
-					if($remaining_people == 1){
-						$title .= ' Person';
-					}else{
-						$title .= ' People';
-					}
-				}
-				
-				
-				return $title;
+				return $group_name;
 				
 			}
 			return false;
-			
 		}
 		
+		
+		// public function getGroupMemberTitleByGroupId($group_id){
+// 			$user_in = $this->getColumnById('user_in',$group_id);
+// 			if($user_in !== false){
+// 				$title = "";
+// 				$user_array = explode(',',trim($user_in,','));
+// 				$name_array = array();
+// 				include_once 'User_Table.php';
+// 				$user = new User_Table();
+// 				$count = 0;
+// 				$names = "";
+// 				foreach($user_array as $u){
+// 					if(++$count < 3){
+// 						$name = $user->getUserFirstNameByUserIden($u).', ';
+// 						$title .= $name;
+// 					}else{
+// 						break;
+// 					}
+// 				}
+// 				$title =  trim($title,', ');
+// 				if( sizeof($user_array) > 2 ){
+// 					$remaining_people = sizeof($user_array) - 2;
+// 					$title .= ' and '.$remaining_people;
+// 					if($remaining_people == 1){
+// 						$title .= ' Person';
+// 					}else{
+// 						$title .= ' People';
+// 					}
+// 				}
+// 				return $title;
+// 			}
+// 			return false;
+// 			
+// 		}
+// 		
 		
 		public function getEventGroupTitleByGroupId($group_id){
 			include_once 'Event_Group.php';
@@ -141,8 +155,7 @@
 			return $this->getMultipleColumnsBySelector(array('id','user_in'),'hash',$group_key);
 		}
 
-		
-		public function searchContactEventGroupByKeyWord($key_word){
+		public function searchContactGroupByKeyWord($key_word){
 			$stmt = $this->connection->prepare("
 			SELECT CONCAT('g-',groups.id) AS queue
 			FROM groups 
@@ -151,11 +164,18 @@
 			LEFT JOIN event
 			ON event_group.event_id = event.id
 			WHERE  groups.user_in LIKE ? AND (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?)
+			
+			UNION 
+			
+			SELECT CONCAT('g-',groups.id) AS queue
+			FROM groups 
+			WHERE groups.user_in LIKE ?  AND  groups.group_name LIKE ?
+			
 			");			
 			if($stmt){
 				$user_in = '%'.$_SESSION['id'].',%';
 				$key_word = '%' .$key_word. '%';
-				$stmt->bind_param('ssss',$user_in,$key_word,$key_word,$key_word);
+				$stmt->bind_param('ssssss',$user_in,$key_word,$key_word,$key_word,$user_in,  $key_word);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
@@ -217,18 +237,22 @@
 		}
 		
 		
-		public function getEventGroupJoinedMemberByGroupKey($group_key){
-			$group_id = $this->getGroupIdByGroupKey($group_key);
-			if($group_id !== false){
-				include_once 'Event_Group.php';
-				$e_g = new Event_Group();
-				$chat_members = $e_g->getEventGroupJoinedMemberByGroupId($group_id);
+		public function getGroupJoinedMemberByGroupKey($group_key){
+			$row = $this->getMultipleColumnsBySelector(array('id','type', 'group_name'), 'hash', $group_key);
+			if($row !== false){
+				if($row['type'] == 'e' && $row['group_name'] === NULL){
+					include_once 'Event_Group.php';
+					$e_g = new Event_Group();
+					$chat_members = $e_g->getEventGroupJoinedMemberByGroupId($row['id']);
+				}else{
+					$chat_members = $this->getChatMembersByGroupId($row['id']);
+				}
 				ob_start();
 				include(TEMPLATE_PATH_CHILD.'group_chat_member.phtml');
 				$content = ob_get_clean();
 				return $content;
 			}
-			return false;
+			
 		}
 		
 		public function getEventGroupEventInfoByGroupKey($group_key){
@@ -240,6 +264,36 @@
 			}
 			return false;
 		}
+		
+		public function getChatMembersByGroupId($group_id){
+			include_once 'User_Table.php';
+			include_once 'Event_Group.php';
+			$user = new User_Table();
+			$user_in = $this->getUserInGroup($group_id); //22,28,29,
+			if($user_in !== false){
+				$users = explode(',',trim($user_in, ','));
+				$content = '';
+				foreach($users as $u){
+					$profile_pic = $user->getLatestProfilePictureForuser($u);
+					$firstname = $user->getUserFirstNameByUserIden($u);
+					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($u);
+					$unique_iden = $user->getUniqueIdenForUser($u);
+					$hash = $user->getUniqueIdenForUser($u);
+					ob_start();
+					include(TEMPLATE_PATH_CHILD.'list_item.phtml');
+					$content .= ob_get_clean();
+				}
+				return $content;
+			}
+			return false;
+		}
+		
+		public function updateGroupNameByGroupId($new_name, $group_id){
+			$this->setColumnById('group_name', $new_name, $group_id);
+		}
+		
+		
+		
 		
 	}
 ?>

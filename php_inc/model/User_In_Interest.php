@@ -305,6 +305,8 @@
 			LEFT JOIN interest
 			ON user_in_interest.user_id = interest.user_id  WHERE ( user_in_interest.user_in = ?  && (interest.name LIKE ? || interest.description LIKE ?)  )
 			
+			
+			
 			");
 			
 			if($stmt){

@@ -75,15 +75,20 @@
 		}
 		
 		
-		
-		
-		public function deleteEventForUserByActivityId($user_id){
+		public function deleteEvent(){
 			//delete photos in this event
 			$event_id = $this->getColumnBySelector('id', 'interest_activity_id', $this->activity_id);
-			$this->event_photo->deleteEventPhotoForUserByEventId($user_id, $event_id);
-			
-			//delete comments in this moment
-			
+			$this->event_photo->deleteAllEventPhotoByEventId($event_id);
+			include_once MODEL_PATH.'Event_Group.php';
+			$e_g =  new Event_Group();
+			$group_id = $e_g->getGroupIdByEventId($event_id);
+			if($group_id !== false){
+				$e_g->deleteEventGroupByEventId($event_id);
+				$event_title = $this->getEventTitleByEventId($event_id);
+				include_once MODEL_PATH.'Groups.php';
+				$group = new Groups();
+				$group->updateGroupNameByGroupId($event_title, $group_id);
+			}
 			//delete the row itself
 			$this->deleteRowByNumericSelector('interest_activity_id', $this->activity_id);
 		}
@@ -342,7 +347,7 @@
 			$activity = new Interest_Activity();
 			$user_found = $in->getUserInInterestByInterestId($interest_id, $limit_num, $offset);
 			include_once MODEL_PATH.'Event_Invitation.php';
-			return $activity->renderInvitationContactBlockByResource($user_found, $post_key, new Invitation());	
+			return $activity->renderInvitationContactBlockByResource($user_found, $post_key, new Event_Invitation());	
 			
 		}
 		
@@ -356,7 +361,7 @@
 			$activity = new Interest_Activity();
 			$user_found = $in->getAllFriendsInUsersInterestByUserId($_SESSION['id']);
 			include_once MODEL_PATH.'Event_Invitation.php';
-			return $activity->renderInvitationContactBlockByResource($user_found, $post_key, new Invitation());	
+			return $activity->renderInvitationContactBlockByResource($user_found, $post_key, new Event_Invitation());	
 		}
 		
 		/* this method is for loading friends for event include */

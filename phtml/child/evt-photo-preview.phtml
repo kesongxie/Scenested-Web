@@ -22,10 +22,15 @@
 	</div>
 </div>
 <div class="media-detail" style="text-align:left;background:#fff;min-height:100px;border-radius:0px 0px 6px 6px;">
-	<div class="media-detial-container" style="padding:20px;margin-left:60px;">
-		<a class="dummy-lk" href="<?php echo $user_page_redirect ?>"><img  class="hover-user-profile" data-key="<?php echo $unique_iden; ?>" style="height: 44px; width: 44px;float:left;margin:0px 14px 14px 0px; border-radius: 6px;margin-left:-60px;" src="<?php echo $profile_pic ?>">
-		<div class="profile-name pointer post-user-name inline-blk hover-user-profile" data-key="<?php echo $unique_iden; ?>"><?php echo htmlentities($fullname) ?></div></a>
-		<div class="inline-blk" style="  margin-left: 10px;  color: #969696;"><?php echo $post_time ?></div>
+	<div class="media-detial-container" style="padding:20px;">
+		<div class="inline-blk user-avator">
+		
+		<img  class="hover-user-profile" data-key="<?php echo $unique_iden; ?>" style=" width: 100%;"  src="<?php echo $profile_pic ?>">
+		</div>
+		
+		<div class="profile-name pointer post-user-name inline-blk hover-user-profile" data-key="<?php echo $unique_iden; ?>"><?php echo htmlentities($fullname) ?></div>
+		
+		<div class="inline-blk pst-tm"><?php echo $post_time ?></div>
 		<div class="visible-post-scope">
 			<div class="visible-content limit-height">
 				<div><?php echo htmlentities($row['description']); ?></div>

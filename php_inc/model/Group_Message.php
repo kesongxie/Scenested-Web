@@ -280,11 +280,11 @@
 					foreach($user_in_group as $u){
 						$message_queue->priorityQueue($u, $queue);
 					}
-					
-					
-					include_once 'User_Profile_Picture.php';
-					$profile = new User_Profile_Picture();
-					$profile_pic = $profile->getLatestProfileImageForUser($_SESSION['id']);
+					include_once MODEL_PATH.'User_Table.php';
+					$user = new User_Table();
+					$profile_pic = $user->getLatestProfilePictureForUser($_SESSION['id']);
+					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($_SESSION['id']);
+					$unique_iden = $user->getUniqueIdenForUser($_SESSION['id']);
 					ob_start();
 					include($this->own_dialog_template_path);
 					$content = ob_get_clean();

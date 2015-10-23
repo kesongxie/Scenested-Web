@@ -183,6 +183,8 @@
 					include_once 'User_Profile_Picture.php';
 					$profile = new User_Profile_Picture();
 					$profile_pic = $profile->getLatestProfileImageForUser($user_sent);
+					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($user_sent);
+					$unique_iden = $user->getUniqueIdenForUser($user_sent);
 					ob_start();
 					include($this->own_dialog_template_path);
 					$content = ob_get_clean();

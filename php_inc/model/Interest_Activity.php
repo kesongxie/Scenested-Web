@@ -13,11 +13,9 @@
 
 		private $moment = null;
 		private $event = null;
-		private $feed_id_list = '-1'; //activity_id in the user's feed
 		public function __construct(){
 			parent::__construct($this->table_name);
 		}
-		
 		
 		public function addEventInterestActivityForUserByInterestId($user_id,$interest_id, $title,$description,$location, $date, $evt_time, $attached_picture, $caption, $with_interest_name){
 			$unique_hash = $this->generateUniqueHash();
@@ -52,6 +50,7 @@
 			$right_content = $this->getIndexAvator();					
 			include_once 'Interest.php';
 			$interest  = new Interest();
+			$feed_id_list = false;
 			if($interest->isUserHasInterest($_SESSION['id'])){
 				$left_content = $this->getRecentPostPreview();			
 			}else{
@@ -67,6 +66,7 @@
 					$user_in.="'".$friend['user_id']."',";
 				}
 			}
+			$count = 0;
 			$user_in = $user_in.$_SESSION['id'];
 			$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) ORDER BY `id` DESC LIMIT 10");			
 			if($stmt){
@@ -76,11 +76,10 @@
 						$rows = $result->fetch_all(MYSQLI_ASSOC);
 						$stmt->close();
 						$count = 1;
-						
 						$feed_id_list = '';
 						foreach($rows as $row){
 							$content = '';
-							$feed_id_list .= $row['id'].',';
+							$feed_id_list .= "'".$row['id']."',";
 							if($row['type'] == 'm'){
 								$content = $this->getMomentInterestActivityBlockByActivityId($row['id'], true);
 							}else if($row['type'] == 'e'){
@@ -92,17 +91,27 @@
 								$left_content.= $content;
 							}
 						}
-						$this->feed_id_list = trim($feed_id_list,',');
+						$_SESSION['index_feed_id_list'] = trim($feed_id_list,',');
+					 }else{
+					 	if(isset($_SESSION['index_feed_id_list'])){
+					 		unset($_SESSION['index_feed_id_list']);
+					 	}
 					 }
 				}
 			}
 			
-			//  $suggest_content = $this->getSuggestPost();
-// 			if($suggest_content !== false){
-// 				$left_content .= $suggest_content['suggest_left_content'];
-// 				$right_content .= $suggest_content['suggest_right_content'];
-// 			}
-
+			if($count < 10){
+				$num_need_to_load = 10 - $count;
+				if(isset($_SESSION['index_feed_id_list'])){
+					$exclusive_list = $_SESSION['index_feed_id_list'];
+				}else{
+					$exclusive_list = "'-1'";
+				}
+				$suggest_content = $this->getSuggestPost($num_need_to_load, $exclusive_list);
+				$left_content.= $suggest_content['suggest_left_content'];
+				$right_content.= $suggest_content['suggest_right_content'];
+			}
+			
 			ob_start();
 			include(TEMPLATE_PATH_CHILD.'index_new_feed.phtml');
 			$content = ob_get_clean();
@@ -123,8 +132,11 @@
 			}
 			$user_in = $user_in.$_SESSION['id'];
 			$activity_id = $this->getActivityIdByKey($last_key);
+			$count = 0;
+			$list_before_load = $_SESSION['index_feed_id_list'];
+			
 			if($activity_id !== false){
-				$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) AND `id` < ? ORDER BY `id` DESC LIMIT 10");			
+				$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) AND `id` < ? AND `id` NOT IN($list_before_load) ORDER BY `id` DESC LIMIT 10");			
 				if($stmt){
 					$stmt->bind_param('i',$activity_id);
 					if($stmt->execute()){
@@ -132,32 +144,51 @@
 						 if($result !== false && $result->num_rows >= 1){
 							$rows = $result->fetch_all(MYSQLI_ASSOC);
 							$stmt->close();
-							$count = 1;
 							$feed_id_list = '';
 							foreach($rows as $row){
 								$content = '';
-								$feed_id_list .= $row['id'].',';
+								$feed_id_list .= "'".$row['id']."',";
 								if($row['type'] == 'm'){
 									$content = $this->getMomentInterestActivityBlockByActivityId($row['id'], true);
 								}else if($row['type'] == 'e'){
 									$content = $this->getEventInterestActivityBlockByActivityId($row['id'], true);
 								}
-								if($count++ % 2 == 0){
+								if(++$count % 2 == 0){
 									$right_content.= $content;
 								}else{
 									$left_content.= $content;
 								}
 							}
-							$this->feed_id_list = $this->feed_id_list.','.trim($feed_id_list,',');
-						 	ob_start();
-							include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
-							$content = ob_get_clean();
-							return $content;	
+							if(isset($_SESSION['index_feed_id_list'])){
+								 $_SESSION['index_feed_id_list'] .= ','.trim($feed_id_list,',');
+							}else{
+								$_SESSION['index_feed_id_list'] = trim($feed_id_list,',');
+							}
 						 }
 					}
 				}			
 			}
-			return false;
+			
+			if($count < 10){
+				$num_need_to_load = 10 - $count;
+				if(isset($_SESSION['index_feed_id_list'])){
+					$exclusive_list = $_SESSION['index_feed_id_list'];
+				}else{
+					$exclusive_list = "'-1'";
+				}
+				$suggest_content = $this->getSuggestPost($num_need_to_load, $exclusive_list);
+				$left_content.= $suggest_content['suggest_left_content'];
+				$right_content.= $suggest_content['suggest_right_content'];
+			}
+			if($list_before_load != $_SESSION['index_feed_id_list']){
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
+				$content = ob_get_clean();
+				return $content;	
+			}else{
+				//there is no more feed to load
+				return false;
+			}
 		}
 		
 		
@@ -606,6 +637,7 @@
 					FROM  event 
 					LEFT JOIN interest_activity
 					ON interest_activity.id = event.interest_activity_id  WHERE interest_activity.user_id = ? AND interest_activity.type = 'e'  
+					
 					UNION 
 					SELECT DISTINCT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id, event.id AS event_id, event.title, event.description,event.date AS date, event.time AS time
 					FROM groups
@@ -614,7 +646,7 @@
 					LEFT JOIN event
 					ON event_group.event_id = event.id
 					LEFT JOIN interest_activity
-					ON event.interest_activity_id = interest_activity.id WHERE groups.user_in LIKE ?
+					ON event.interest_activity_id = interest_activity.id WHERE groups.user_in LIKE ? AND groups.group_name IS NULL
 				) dum ORDER BY TIMESTAMP(date,time) DESC  LIMIT 4
 				");
 			}
@@ -699,7 +731,7 @@
 		
 		
 		public function deleteActivityForUserByActivityKey($user_id, $key){
-			include_once 'Comment.php';
+			include_once MODEL_PATH.'Comment.php';
 			$comment = new Comment();
 			$favor = new Favor_Activity();
 			$column_array = array('id','type');
@@ -713,7 +745,7 @@
 						$this->moment->deleteMomentForUserByActivityId($user_id);
 					}else if($type == 'e'){
 						$this->event = new Event($activity_id);
-						$this->event->deleteEventForUserByActivityId($user_id);
+						$this->event->deleteEvent();
 					}
 					$comment->deleteAllCommentsByActivityId($activity_id);
 					$favor->deleteAllFavorForTarget($activity_id);
@@ -734,7 +766,7 @@
 						$this->moment->deleteMomentForUserByActivityId($user_id);
 					}else if($type == 'e'){
 						$this->event = new Event($activity_id);
-						$this->event->deleteEventForUserByActivityId($user_id);
+						$this->event->deleteEvent($user_id);
 					}
 					$comment->deleteAllCommentsByActivityId($activity_id);
 					$favor->deleteAllFavorForTarget($activity_id);
@@ -817,14 +849,18 @@
 	
 		
 		/* $user_id is the user who is uploading the photo*/
-		public function uploadEvtPhotoByKey($key, $user_id, $photo_file){
+		public function uploadEvtPhotoByKey($key, $user_id, $photo_file, $cover = false){
 			$activity_id  = $this->getRowIdByHashkey($key);
 			if($activity_id !== false){
 				$this->event = new Event($activity_id);
 				if($this->event->isEvtPhotoUploadableByUserForEvent($user_id, $this->event->event_id)){
 					//upload the photo
 					$event_id = $this->event->event_id;
-					return $this->event->event_photo->uploadEventPhotoByEventId($photo_file, $user_id, $event_id);
+					if($cover === false){
+						return $this->event->event_photo->uploadEventPhotoByEventId($photo_file, $user_id, $event_id);
+					}else{
+						return $this->event->event_photo->uploadEventCoverByEventId($photo_file, $user_id, $event_id);
+					}
 				}
 			}
 			return false;
@@ -1632,16 +1668,13 @@
 		}
 		
 		
-		
-		
-		
-		public function getSuggestPost(){
+		public function getSuggestPost($limit = -1, $exclusive_list = "'-1'"){
 			include_once MODEL_PATH.'Interest.php';
 			$interest = new Interest();
 			$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
-			$interest_like = '';
-			$suggest_feed  = false;
+			$interest_like = false;
 			if($mine_interests !== false){
+				$interest_like = '';
 				foreach($mine_interests as $interest){
  					$interest_like .= $interest['name'].'|';	
 				}
@@ -1650,271 +1683,443 @@
 			include_once 'Education.php';
 			$edu = new Education();
 			$school_id =  $edu->getSchoolIdByUserId($_SESSION['id']);
-			$school_id = ($school_id === false)?-1:$school_id;
 			
-			//use random offset to get random user
-			$result_from_interest_and_school = $this->returnSimilarInterestPostInSameCampus($interest_like, $school_id);
-			$result_from_interest_and_school = ($result_from_interest_and_school !== false)?$result_from_interest_and_school:array();
-			$result_from_interest = $this->returnSimilarInterestPost($interest_like);
-			$result_from_interest = ($result_from_interest !== false)?$result_from_interest:array();
-			$result_from_school = $this->returnPostFromSameSchool($school_id);
-			$result_from_school = ($result_from_school !== false)?$result_from_school:array();
-			$rows = array_merge($result_from_interest_and_school,$result_from_interest, $result_from_school);
-			if(sizeof($rows) >= 1 ){
-				$count = 0;
-				$left_content = "";
-				$right_content = "";
-				foreach($rows as $row){
-					$content = '';
-					if($row['type'] == 'm'){
-						$content = $this->getMomentInterestActivityBlockByActivityId($row['activity_id'], true);
-					}else if($row['type'] == 'e'){
-						$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id'], true);
-					}
-					if($count++ % 2 == 0){
-						$left_content.= $content;
+			$sub_query = '';
+			if($school_id !== false || $interest_like !== false){
+			
+			if($school_id !== false){
+				$sub_query="
+					SELECT  interest_activity.id AS activity_id, interest_activity.type
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN moment
+					ON moment.interest_activity_id = interest_activity.id 
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND interest.name REGEXP ? AND interest_activity.type = 'm' AND education.school_id = '$school_id'
+			
+					UNION
+			
+					SELECT interest_activity.id AS activity_id, interest_activity.type
+					FROM moment 
+					LEFT JOIN interest_activity
+					ON moment.interest_activity_id = interest_activity.id
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND interest_activity.type = 'm' AND   ( moment.description REGEXP ? ) AND education.school_id = '$school_id'
+			
+					UNION 
+				
+					SELECT  interest_activity.id AS activity_id, interest_activity.type
+					FROM interest 
+					LEFT JOIN interest_activity
+					ON interest.id = interest_activity.interest_id 
+					LEFT JOIN event
+					ON event.interest_activity_id = interest_activity.id 
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE interest_activity.id NOT IN($exclusive_list) AND interest.name REGEXP ? AND interest_activity.type = 'e' AND education.school_id = '$school_id'
+				
+					UNION
+				
+					SELECT interest_activity.id AS activity_id, interest_activity.type
+					FROM event 
+					LEFT JOIN interest_activity
+					ON   event.interest_activity_id = interest_activity.id
+					LEFT JOIN education
+					ON interest_activity.user_id = education.user_id
+					WHERE  interest_activity.id NOT IN($exclusive_list) AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?)  AND education.school_id = '$school_id'
+					
+					UNION 
+					";	
+			}
+				if($interest_like !== false){
+				$sub_query .= "
+						SELECT  interest_activity.id AS activity_id, interest_activity.type
+						FROM interest 
+						LEFT JOIN interest_activity
+						ON interest.id = interest_activity.interest_id 
+						LEFT JOIN moment
+						ON moment.interest_activity_id = interest_activity.id 
+						LEFT JOIN education
+						ON interest_activity.user_id = education.user_id
+						WHERE interest_activity.id NOT IN($exclusive_list) AND interest.name REGEXP ? AND interest_activity.type = 'm' 
+			
+						UNION
+			
+						SELECT interest_activity.id AS activity_id, interest_activity.type
+						FROM moment 
+						LEFT JOIN interest_activity
+						ON moment.interest_activity_id = interest_activity.id
+						LEFT JOIN education
+						ON interest_activity.user_id = education.user_id
+						WHERE interest_activity.id NOT IN($exclusive_list) AND interest_activity.type = 'm' AND   ( moment.description REGEXP ? )
+			
+						UNION 
+				
+						SELECT  interest_activity.id AS activity_id, interest_activity.type
+						FROM interest 
+						LEFT JOIN interest_activity
+						ON interest.id = interest_activity.interest_id 
+						LEFT JOIN event
+						ON event.interest_activity_id = interest_activity.id 
+						LEFT JOIN education
+						ON interest_activity.user_id = education.user_id
+						WHERE interest_activity.id NOT IN($exclusive_list) AND interest.name REGEXP ? AND interest_activity.type = 'e' 
+				
+						UNION
+				
+						SELECT interest_activity.id AS activity_id, interest_activity.type
+						FROM event 
+						LEFT JOIN interest_activity
+						ON   event.interest_activity_id = interest_activity.id
+						LEFT JOIN education
+						ON interest_activity.user_id = education.user_id
+						WHERE  interest_activity.id NOT IN($exclusive_list) AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?) 
+						";
+				}
+				$query = "SELECT DISTINCT activity_id, type
+					FROM (".$sub_query.") a 
+					ORDER BY activity_id DESC";
+				if($limit > 0){
+					$query .= " LIMIT ?"; 
+				}
+				$stmt = $this->connection->prepare($query);
+				if($stmt){
+					if($limit > 0){
+						if($school_id !== false && $interest_like !== false){
+							$stmt->bind_param('ssssssssssssi',$interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like, $limit);
+						}else if($interest_like != false){
+							$stmt->bind_param('ssssssi',$interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like,$limit);
+						}	
 					}else{
-						$right_content.= $content;
-					}
-				}
-			
-				return array("suggest_left_content"=>$left_content,"suggest_right_content"=>$right_content );
-			}
-			return false;
-		
-		}
-		
-		
-		public function returnSimilarInterestPostInSameCampus($interest_like = false, $school_id = false){
-			//there is no interest_like passed as parameter
-			if($interest_like === false ){
-				include_once MODEL_PATH.'Interest.php';
-				$interest = new Interest();
-				$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
-				$interest_like = '';
-				if($mine_interests !== false){
-					foreach($mine_interests as $interest){
-						$interest_like .= $interest['name'].'|';	
-					}
-					$interest_like = trim($interest_like,'|');
-				}else{
-					return false;
-				}
-			}
-			if($school_id === false){
-				//there is no school_id passed as parameter
-				include_once 'Education.php';
-				$edu = new Education();
-				$school_id =  $edu->getSchoolIdByUserId($_SESSION['id']);
-				if($school_id === false){
-					return false;
-				}
-			}
-			
-			if($interest_like != ''){
-				$stmt = $this->connection->prepare("
-				SELECT * 	
-				FROM
-				(
-					SELECT  interest_activity.id AS activity_id, interest_activity.type
-					FROM interest 
-					LEFT JOIN interest_activity
-					ON interest.id = interest_activity.interest_id 
-					LEFT JOIN moment
-					ON moment.interest_activity_id = interest_activity.id 
-					LEFT JOIN education
-					ON interest_activity.user_id = education.user_id
-					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'm' AND education.school_id = '$school_id'
-			
-					UNION
-			
-					SELECT interest_activity.id AS activity_id, interest_activity.type
-					FROM moment 
-					LEFT JOIN interest_activity
-					ON moment.interest_activity_id = interest_activity.id
-					LEFT JOIN education
-					ON interest_activity.user_id = education.user_id
-					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'm' AND   ( moment.description REGEXP ? ) AND education.school_id = '$school_id'
-			
-					UNION 
-				
-					SELECT  interest_activity.id AS activity_id, interest_activity.type
-					FROM interest 
-					LEFT JOIN interest_activity
-					ON interest.id = interest_activity.interest_id 
-					LEFT JOIN event
-					ON event.interest_activity_id = interest_activity.id 
-					LEFT JOIN education
-					ON interest_activity.user_id = education.user_id
-					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'e' AND education.school_id = '$school_id'
-				
-					UNION
-				
-					SELECT interest_activity.id AS activity_id, interest_activity.type
-					FROM event 
-					LEFT JOIN interest_activity
-					ON   event.interest_activity_id = interest_activity.id
-					LEFT JOIN education
-					ON interest_activity.user_id = education.user_id
-					WHERE  interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?)  AND education.school_id = '$school_id'
-			
-				) dum ORDER BY activity_id DESC
-				");	
-			
-				if($stmt){
-						$stmt->bind_param('ssssss',$interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like);
-						if($stmt->execute()){
-							 $result = $stmt->get_result();
-							 if($result !== false && $result->num_rows >= 1){
-								$rows = $result->fetch_all(MYSQLI_ASSOC);
-								$stmt->close();
-							
-							
+						if($school_id !== false && $interest_like !== false){
+							$stmt->bind_param('ssssssssssss',$interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like);
+						}else if($interest_like != false){
+							$stmt->bind_param('ssssss',$interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like);
+						}	
+					}				
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$rows = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							if(sizeof($rows) >= 1 ){
+								$count = 0;
+								$left_content = "";
+								$right_content = "";
 								foreach($rows as $row){
-									if($this->feed_id_list != '-1'){
-										$this->feed_id_list .= ','.$row['activity_id'];
+									$content = '';
+									if(isset($_SESSION['index_feed_id_list']) ){
+										$_SESSION['index_feed_id_list'] .= ",'".$row['activity_id']."'";
 									}else{
-										$this->feed_id_list = ','.$row['activity_id'];
+										$_SESSION['index_feed_id_list'] = ",'".$row['activity_id']."'";
+									}
+									if($row['type'] == 'm'){
+										$content = $this->getMomentInterestActivityBlockByActivityId($row['activity_id'], true);
+									}else if($row['type'] == 'e'){
+										$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id'], true);
+									}
+									if($count++ % 2 == 0){
+										$left_content.= $content;
+									}else{
+										$right_content.= $content;
 									}
 								}
-								$this->feed_id_list = trim($this->feed_id_list , ',');
-								return $rows;
+								$_SESSION['index_feed_id_list'] = trim($_SESSION['index_feed_id_list'], ',');
+								return array("suggest_left_content"=>$left_content,"suggest_right_content"=>$right_content );
+							}
 						}
-					}
-			}
-			}
-			echo $this->connection->error;
-			return false;
-			
-			
-			
-		
-		}
-		
-		
-		public function returnSimilarInterestPost($interest_like = false){
-			if($interest_like === false ){
-				include_once MODEL_PATH.'Interest.php';
-				$interest = new Interest();
-				$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
-				$interest_like = '';
-				if($mine_interests !== false){
-					foreach($mine_interests as $interest){
-						$interest_like .= $interest['name'].'|';	
-					}
-					$interest_like = trim($interest_like,'|');
-				}else{
-					return false;
-				}
-			}
-			
-			if($interest_like != ''){
-				$stmt = $this->connection->prepare("
-				SELECT * 	
-				FROM
-				(
-					SELECT  interest_activity.id AS activity_id, interest_activity.type
-					FROM interest 
-					LEFT JOIN interest_activity
-					ON interest.id = interest_activity.interest_id 
-					LEFT JOIN moment
-					ON moment.interest_activity_id = interest_activity.id 
-					LEFT JOIN education
-					ON interest_activity.user_id = education.user_id
-					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'm' 
-			
-					UNION
-			
-					SELECT interest_activity.id AS activity_id, interest_activity.type
-					FROM moment 
-					LEFT JOIN interest_activity
-					ON moment.interest_activity_id = interest_activity.id
-					LEFT JOIN education
-					ON interest_activity.user_id = education.user_id
-					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'm' AND   ( moment.description REGEXP ? )
-			
-					UNION 
-				
-					SELECT  interest_activity.id AS activity_id, interest_activity.type
-					FROM interest 
-					LEFT JOIN interest_activity
-					ON interest.id = interest_activity.interest_id 
-					LEFT JOIN event
-					ON event.interest_activity_id = interest_activity.id 
-					LEFT JOIN education
-					ON interest_activity.user_id = education.user_id
-					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'e' 
-				
-					UNION
-				
-					SELECT interest_activity.id AS activity_id, interest_activity.type
-					FROM event 
-					LEFT JOIN interest_activity
-					ON   event.interest_activity_id = interest_activity.id
-					LEFT JOIN education
-					ON interest_activity.user_id = education.user_id
-					WHERE  interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?) 
-			
-				) dum ORDER BY activity_id DESC
-				");	
-			
-				if($stmt){
-						$stmt->bind_param('ssssss',$interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like);
-						if($stmt->execute()){
-							 $result = $stmt->get_result();
-							 if($result !== false && $result->num_rows >= 1){
-								$rows = $result->fetch_all(MYSQLI_ASSOC);
-								$stmt->close();
-							
-							
-								foreach($rows as $row){
-									if($this->feed_id_list != '-1'){
-										$this->feed_id_list .= ','.$row['activity_id'];
-									}else{
-										$this->feed_id_list = ','.$row['activity_id'];
-									}
-								}
-								$this->feed_id_list = trim($this->feed_id_list , ',');
-								return $rows;
-						}
-					}
-				}
-			}
-			echo $this->connection->error;
-			return false;
-			
-			
-		}
-		
-		public function returnPostFromSameSchool($school_id = false){
-			if($school_id === false){
-				//there is no school_id passed as parameter
-				include_once 'Education.php';
-				$edu = new Education();
-				$school_id =  $edu->getSchoolIdByUserId($_SESSION['id']);
-				if($school_id === false){
-					return false;
-				}
-			}
-			$stmt = $this->connection->prepare("
-			SELECT interest_activity.id AS activity_id, interest_activity.type
-			FROM  education
-			LEFT JOIN interest_activity
-			ON education.user_id = interest_activity.user_id
-			WHERE interest_activity.id NOT IN($this->feed_id_list) AND education.school_id = '$school_id' ORDER BY interest_activity.id DESC");			
-			if($stmt){
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows >= 1){
-						$rows = $result->fetch_all(MYSQLI_ASSOC);
-						$stmt->close();
-						return $rows;
-					}
+					}	
 				}
 			}
 			return false;
 		}
 		
+		
+		
+		
+	// 	public function getSuggestPost($limit = -1, $exclusive_list = "'-1'"){
+// 			include_once MODEL_PATH.'Interest.php';
+// 			$interest = new Interest();
+// 			$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
+// 			$interest_like = '';
+// 			$suggest_feed  = false;
+// 			if($mine_interests !== false){
+// 				foreach($mine_interests as $interest){
+//  					$interest_like .= $interest['name'].'|';	
+// 				}
+// 				$interest_like = trim($interest_like,'|');
+// 			}	
+// 			include_once 'Education.php';
+// 			$edu = new Education();
+// 			$school_id =  $edu->getSchoolIdByUserId($_SESSION['id']);
+// 			$school_id = ($school_id === false)?-1:$school_id;
+// 			
+// 			
+// 			$result_from_interest_and_school = $this->returnSimilarInterestPostInSameCampus($interest_like, $school_id);
+// 			$result_from_interest_and_school = ($result_from_interest_and_school !== false)?$result_from_interest_and_school:array();
+// 			$result_from_interest = $this->returnSimilarInterestPost($interest_like);
+// 			$result_from_interest = ($result_from_interest !== false)?$result_from_interest:array();
+// 			$result_from_school = $this->returnPostFromSameSchool($school_id);
+// 			$result_from_school = ($result_from_school !== false)?$result_from_school:array();
+// 			$rows = array_merge($result_from_interest_and_school,$result_from_interest, $result_from_school);
+// 			if(sizeof($rows) >= 1 ){
+// 				$count = 0;
+// 				$left_content = "";
+// 				$right_content = "";
+// 				foreach($rows as $row){
+// 					$content = '';
+// 					if($row['type'] == 'm'){
+// 						$content = $this->getMomentInterestActivityBlockByActivityId($row['activity_id'], true);
+// 					}else if($row['type'] == 'e'){
+// 						$content = $this->getEventInterestActivityBlockByActivityId($row['activity_id'], true);
+// 					}
+// 					if($count++ % 2 == 0){
+// 						$left_content.= $content;
+// 					}else{
+// 						$right_content.= $content;
+// 					}
+// 				}
+// 			
+// 				return array("suggest_left_content"=>$left_content,"suggest_right_content"=>$right_content );
+// 			}
+// 			return false;
+// 		
+// 		}
+		
+		
+		// public function returnSimilarInterestPostInSameCampus($interest_like = false, $school_id = false){
+// 			//there is no interest_like passed as parameter
+// 			if($interest_like === false ){
+// 				include_once MODEL_PATH.'Interest.php';
+// 				$interest = new Interest();
+// 				$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
+// 				$interest_like = '';
+// 				if($mine_interests !== false){
+// 					foreach($mine_interests as $interest){
+// 						$interest_like .= $interest['name'].'|';	
+// 					}
+// 					$interest_like = trim($interest_like,'|');
+// 				}else{
+// 					return false;
+// 				}
+// 			}
+// 			if($school_id === false){
+// 				//there is no school_id passed as parameter
+// 				include_once 'Education.php';
+// 				$edu = new Education();
+// 				$school_id =  $edu->getSchoolIdByUserId($_SESSION['id']);
+// 				if($school_id === false){
+// 					return false;
+// 				}
+// 			}
+// 			
+// 			if($interest_like != ''){
+// 				$stmt = $this->connection->prepare("
+// 				SELECT * 	
+// 				FROM
+// 				(
+// 					SELECT  interest_activity.id AS activity_id, interest_activity.type
+// 					FROM interest 
+// 					LEFT JOIN interest_activity
+// 					ON interest.id = interest_activity.interest_id 
+// 					LEFT JOIN moment
+// 					ON moment.interest_activity_id = interest_activity.id 
+// 					LEFT JOIN education
+// 					ON interest_activity.user_id = education.user_id
+// 					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'm' AND education.school_id = '$school_id'
+// 			
+// 					UNION
+// 			
+// 					SELECT interest_activity.id AS activity_id, interest_activity.type
+// 					FROM moment 
+// 					LEFT JOIN interest_activity
+// 					ON moment.interest_activity_id = interest_activity.id
+// 					LEFT JOIN education
+// 					ON interest_activity.user_id = education.user_id
+// 					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'm' AND   ( moment.description REGEXP ? ) AND education.school_id = '$school_id'
+// 			
+// 					UNION 
+// 				
+// 					SELECT  interest_activity.id AS activity_id, interest_activity.type
+// 					FROM interest 
+// 					LEFT JOIN interest_activity
+// 					ON interest.id = interest_activity.interest_id 
+// 					LEFT JOIN event
+// 					ON event.interest_activity_id = interest_activity.id 
+// 					LEFT JOIN education
+// 					ON interest_activity.user_id = education.user_id
+// 					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'e' AND education.school_id = '$school_id'
+// 				
+// 					UNION
+// 				
+// 					SELECT interest_activity.id AS activity_id, interest_activity.type
+// 					FROM event 
+// 					LEFT JOIN interest_activity
+// 					ON   event.interest_activity_id = interest_activity.id
+// 					LEFT JOIN education
+// 					ON interest_activity.user_id = education.user_id
+// 					WHERE  interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?)  AND education.school_id = '$school_id'
+// 			
+// 				) dum ORDER BY activity_id DESC
+// 				");	
+// 			
+// 				if($stmt){
+// 						$stmt->bind_param('ssssss',$interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like);
+// 						if($stmt->execute()){
+// 							 $result = $stmt->get_result();
+// 							 if($result !== false && $result->num_rows >= 1){
+// 								$rows = $result->fetch_all(MYSQLI_ASSOC);
+// 								$stmt->close();
+// 							
+// 							
+// 								foreach($rows as $row){
+// 									if($this->feed_id_list != '-1'){
+// 										$this->feed_id_list .= ','.$row['activity_id'];
+// 									}else{
+// 										$this->feed_id_list = ','.$row['activity_id'];
+// 									}
+// 								}
+// 								$this->feed_id_list = trim($this->feed_id_list , ',');
+// 								return $rows;
+// 						}
+// 					}
+// 			}
+// 			}
+// 			echo $this->connection->error;
+// 			return false;
+// 			
+// 			
+// 			
+// 		
+// 		}
+		
+		
+	// 	public function returnSimilarInterestPost($interest_like = false){
+// 			if($interest_like === false ){
+// 				include_once MODEL_PATH.'Interest.php';
+// 				$interest = new Interest();
+// 				$mine_interests = $interest->getInterestNameForUser($_SESSION['id'], -1);
+// 				$interest_like = '';
+// 				if($mine_interests !== false){
+// 					foreach($mine_interests as $interest){
+// 						$interest_like .= $interest['name'].'|';	
+// 					}
+// 					$interest_like = trim($interest_like,'|');
+// 				}else{
+// 					return false;
+// 				}
+// 			}
+// 			
+// 			if($interest_like != ''){
+// 				$stmt = $this->connection->prepare("
+// 				SELECT * 	
+// 				FROM
+// 				(
+// 					SELECT  interest_activity.id AS activity_id, interest_activity.type
+// 					FROM interest 
+// 					LEFT JOIN interest_activity
+// 					ON interest.id = interest_activity.interest_id 
+// 					LEFT JOIN moment
+// 					ON moment.interest_activity_id = interest_activity.id 
+// 					LEFT JOIN education
+// 					ON interest_activity.user_id = education.user_id
+// 					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'm' 
+// 			
+// 					UNION
+// 			
+// 					SELECT interest_activity.id AS activity_id, interest_activity.type
+// 					FROM moment 
+// 					LEFT JOIN interest_activity
+// 					ON moment.interest_activity_id = interest_activity.id
+// 					LEFT JOIN education
+// 					ON interest_activity.user_id = education.user_id
+// 					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'm' AND   ( moment.description REGEXP ? )
+// 			
+// 					UNION 
+// 				
+// 					SELECT  interest_activity.id AS activity_id, interest_activity.type
+// 					FROM interest 
+// 					LEFT JOIN interest_activity
+// 					ON interest.id = interest_activity.interest_id 
+// 					LEFT JOIN event
+// 					ON event.interest_activity_id = interest_activity.id 
+// 					LEFT JOIN education
+// 					ON interest_activity.user_id = education.user_id
+// 					WHERE interest_activity.id NOT IN($this->feed_id_list) AND interest.name REGEXP ? AND interest_activity.type = 'e' 
+// 				
+// 					UNION
+// 				
+// 					SELECT interest_activity.id AS activity_id, interest_activity.type
+// 					FROM event 
+// 					LEFT JOIN interest_activity
+// 					ON   event.interest_activity_id = interest_activity.id
+// 					LEFT JOIN education
+// 					ON interest_activity.user_id = education.user_id
+// 					WHERE  interest_activity.id NOT IN($this->feed_id_list) AND interest_activity.type = 'e'  AND  (event.title REGEXP ?  ||  event.description  REGEXP ? || event.location REGEXP ?) 
+// 			
+// 				) dum ORDER BY activity_id DESC
+// 				");	
+// 			
+// 				if($stmt){
+// 						$stmt->bind_param('ssssss',$interest_like, $interest_like,$interest_like, $interest_like, $interest_like,$interest_like);
+// 						if($stmt->execute()){
+// 							 $result = $stmt->get_result();
+// 							 if($result !== false && $result->num_rows >= 1){
+// 								$rows = $result->fetch_all(MYSQLI_ASSOC);
+// 								$stmt->close();
+// 							
+// 							
+// 								foreach($rows as $row){
+// 									if($this->feed_id_list != '-1'){
+// 										$this->feed_id_list .= ','.$row['activity_id'];
+// 									}else{
+// 										$this->feed_id_list = ','.$row['activity_id'];
+// 									}
+// 								}
+// 								$this->feed_id_list = trim($this->feed_id_list , ',');
+// 								return $rows;
+// 						}
+// 					}
+// 				}
+// 			}
+// 			echo $this->connection->error;
+// 			return false;
+// 			
+// 			
+// 		}
+// 		
+// 		public function returnPostFromSameSchool($school_id = false){
+// 			if($school_id === false){
+// 				//there is no school_id passed as parameter
+// 				include_once 'Education.php';
+// 				$edu = new Education();
+// 				$school_id =  $edu->getSchoolIdByUserId($_SESSION['id']);
+// 				if($school_id === false){
+// 					return false;
+// 				}
+// 			}
+// 			$stmt = $this->connection->prepare("
+// 			SELECT interest_activity.id AS activity_id, interest_activity.type
+// 			FROM  education
+// 			LEFT JOIN interest_activity
+// 			ON education.user_id = interest_activity.user_id
+// 			WHERE interest_activity.id NOT IN($this->feed_id_list) AND education.school_id = '$school_id' ORDER BY interest_activity.id DESC");			
+// 			if($stmt){
+// 				if($stmt->execute()){
+// 					 $result = $stmt->get_result();
+// 					 if($result !== false && $result->num_rows >= 1){
+// 						$rows = $result->fetch_all(MYSQLI_ASSOC);
+// 						$stmt->close();
+// 						return $rows;
+// 					}
+// 				}
+// 			}
+// 			return false;
+// 		}
+// 		
 		public function returnMomentFromSchoolKeyWord($school_key_word, $exclusive_list = "'-1'"){
 			include_once 'School.php';
 			$search_school_array = School::getSchooIdsLikeSchoolName($school_key_word);

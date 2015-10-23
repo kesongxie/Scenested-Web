@@ -9,12 +9,12 @@
 				</div>
 			</div>
 			</div>
-			<div class="chat-body" style="padding:0px 10px;position:relative;overflow:hidden;height:90%;">
+			<div class="chat-body child-scrollable" style="padding:0px 10px;position:relative;overflow:hidden;height:90%;">
 					<?php echo $contact_block; ?>
 				<div id="broken-connect-overlay" class="broken-connect<?php echo (isset($_SESSION['id']))?' hdn':'' ?>">
 				</div>	
 			</div>
-			<div class="search-body hdn" style="padding:0px 10px;">
+			<div class="search-body child-scrollable hdn" style="padding:0px 10px;">
 			</div>
 			<div class="chat-footer">
 				<input id="search-contact" type="text" style="border:0px;margin:10px;width:90%;" placeholder="Search friends, interests, events ...">

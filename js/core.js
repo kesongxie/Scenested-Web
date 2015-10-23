@@ -146,7 +146,6 @@ function leaveInterestGroup(thisE){
 		method:'post',
 		data: {key:key},
 		success:function(resp){
-			console.log(resp);
 			if(resp != '1'){
 				parentDiv.remove();
 			}
@@ -166,7 +165,6 @@ function removeActivity(sender){
 		method:'post',
 		data: {key:key},
 		success:function(resp){
-			console.log(resp);
 			postWrapper.css('-webkit-animation',"bounceOutDown 1s").css('animation',"bounceOutDown 1s");
 			setTimeout( function() {
 				postWrapper.remove();
@@ -185,7 +183,6 @@ function removeComment(sender){
 		method:'post',
 		data: {key:key},
 		success:function(resp){
-			console.log(resp);
 			if(resp!='1'){
 				parentDiv.find('.slideshow-comment-wrapper .cmt[data-key='+key+']').remove();
 				comment.remove();
@@ -211,7 +208,6 @@ function removeReply(sender){
 		method:'post',
 		data: {key:key},
 		success:function(resp){
-			console.log(resp);
 			if(resp!='1'){
 				reply_wrapper.remove();
 				var remainedCommentNum = comment_block.find('.cmt').length;
@@ -230,7 +226,6 @@ function removePopoverReply(sender){
 		method:'post',
 		data: {key:key},
 		success:function(resp){
-			console.log(resp);
 			if(resp!='1'){
 				reply_wrapper.remove();
 			}
@@ -255,7 +250,6 @@ function removeEventPhoto(sender){
 			method:'post',
 			data: {key:key, load_key:load_key},
 			success:function(resp){
-				console.log(resp);
 				if(resp != '1'){
 					$('.previewable[data-key='+current_act_image.attr('data-key')+']').remove();
 					//load the image to be display after deleting
@@ -398,7 +392,7 @@ function removeFromInterestGroup(thisE){
 		method:'post',
 		data:{key:key, hash:hash},
 		success:function(resp){
-			console.log(resp);
+			
 			parentDiv.find('.txt_ofl').removeClass('red-act');
 			parentDiv.addClass('in_con_w_opt_it selectable').removeAttr('data-hash title').css('cursor','');
 			thisE.remove();
@@ -582,7 +576,7 @@ function loadIndividualConversation(thisE){
 		method:'post',
 		data:{key:key},
 		success:function(resp){
-			console.log(resp);
+			
 			refreshMessage();
 			thisE.find('.n_r_s').addClass('hdn').text('0');
 			$('#chat-side-content #chat-box').remove();
@@ -600,7 +594,7 @@ function sendPrivateMessage(thisE){
 		method:'post',
 		data:{key:key},
 		success:function(resp){
-			console.log(resp);
+			
 			refreshMessage();
 			$('#chat-side-content #chat-box').remove();
 			$('#chat-side-content').append(resp);
@@ -619,7 +613,7 @@ function loadGroupConversation(thisE){
 		method:'post',
 		data:{key:key},
 		success:function(resp){
-			console.log(resp);
+			
 			refreshMessage();
 			thisE.find('.n_r_s').addClass('hdn').text('0');
 			$('#chat-side-content #chat-box').remove();
@@ -721,6 +715,7 @@ $(function(){
 			$.post(AJAX_DIR+'fetchNewQueueNumber.php',function(resp){
 				var page_title = $('#page-title');
 				if(page_title.attr('data-n') != resp){
+					
 					if(parseInt(resp) > 0){
 						$('#index-noti-red-spot').text(resp).removeClass('hdn');
 					}else{
@@ -960,6 +955,10 @@ $(document).ready(function(){
 					freshBodyChild.each(function(){
 						previous_body.find('.popover-child[data-key='+$(this).attr('data-key')+']').remove();
 					});
+					if(previous_body.find('.popover-child').length < 1){
+						previous_body.html('<div class="empty-feed">You have no previous notification</div>');
+					}
+
 				});
 				previous_body.attr('data-set','true');
 			}
@@ -1040,7 +1039,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					if(resp != '1'){
 						thisE.parents('.option').find('.ignore').remove();
  						thisE.text('Accepted').removeClass('accept animate-opacity pointer plain-lk');
@@ -1059,7 +1058,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					if(resp != '1'){
 						thisE.parents('.option').find('.accept').remove();
  						thisE.text('Ignored').removeClass('ignore animate-opacity pointer plain-lk');
@@ -1079,7 +1078,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					if(resp != '1'){
 						thisE.parents('.option').find('.ignore').remove();
  						thisE.text('Accepted').removeClass('accept animate-opacity pointer plain-lk');
@@ -1100,7 +1099,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					if(resp != '1'){
 						thisE.parents('.option').find('.accept').remove();
  						thisE.text('Ignored').removeClass('ignore animate-opacity pointer plain-lk');
@@ -1147,7 +1146,7 @@ $(document).ready(function(){
  					method:'post',
  					data:{keyForPost:keyForPost,keyForComment:keyForComment,text:text},
  					success:function(resp){
- 						console.log(resp);
+ 						
  						if(resp != '1'){
  							var comment_container = postWrapper.find('.comment-container');
  							postWrapper.find('.cmt-num').text( comment_container.find('.cmt').length + 1);
@@ -1187,7 +1186,7 @@ $(document).ready(function(){
  					method:'post',
  					data:{keyForTarget:keyForTarget,keyForComment:keyForComment,text:text},
  					success:function(resp){
- 						console.log(resp);
+ 						
  						if(resp != '1'){
  							var comment_container = postWrapper.find('.comment-container');
 
@@ -1271,7 +1270,7 @@ $(document).ready(function(){
  					method:'post',
  					data:{keyForTarget:keyForTarget,keyForComment:keyForComment,text:text},
  					success:function(resp){
- 					console.log(resp);
+ 					
  						if(resp != '1'){
  							var comment_container = postWrapper.find('.comment-container');
 
@@ -1312,7 +1311,7 @@ $(document).ready(function(){
  					method:'post',
  					data:{keyForTarget:keyForTarget,keyForComment:keyForComment,text:text},
  					success:function(resp){
- 					console.log(resp);
+ 					
  						if(resp != '1'){
  							parent.find('.reply-comment').trigger('click');
  							txtarea.val('');
@@ -1682,7 +1681,7 @@ $(document).ready(function(){
  					method:'post',
  					data:{key:key},
  					success:function(resp){
- 						console.log(resp);
+ 						
  						parentDiv.append(resp);
  						var operationDiv = parentDiv.find('.in_con_opt_w');
 						operationDiv.removeClass('hdn');
@@ -1842,7 +1841,7 @@ $(document).ready(function(){
  					method:'post',
  					data:{keyForTarget:keyForTarget,keyForInterest:keyForInterest},
  					success:function(resp){
- 					console.log(resp);
+ 					
  						if(resp != '1'){	
  							selected_interest.removeClass('in_con_w_opt_it asct selectable').animate({"padding-left": '10px'},100).css('cursor','default').attr('title','Request Sent');
 							selected_interest.find('.txt_ofl').after('<img src="'+IMGDIR+'plane_sent_icon.png" class="request-sent" title="Request Sent" >');
@@ -2110,6 +2109,7 @@ $(document).ready(function(){
  					method:'post',
  					data:{key:key, text:text},
  					success:function(resp){
+ 						console.log(resp);
  						if(resp != '1'){
  							txtarea.val('');
  							body.append(resp);
@@ -2144,7 +2144,7 @@ $(document).ready(function(){
  					method:'post',
  					data:{key:key, text:text},
  					success:function(resp){
- 						console.log(resp);
+ 						
  						if(resp != '1'){
  							txtarea.val('');
  							body.append(resp);
@@ -2185,7 +2185,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					if(resp != '1'){
 						chat_box.remove();
 						side_target.remove();
@@ -2208,7 +2208,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					chat_box.find('#main-conversation').addClass('hdn');
 					chat_box.find('#side-member').html(resp).removeClass('hdn');
 				}
@@ -2227,7 +2227,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					chat_box.find('#main-conversation, #side-member').addClass('hdn');
 					var event_info = chat_box.find('#side-event-info');
 					event_info.html(resp).removeClass('hdn');
@@ -2328,7 +2328,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					var joined_num = joined_num_div.first().text();
 					joined_num_div.text(++joined_num);
 					joined_label.text('people going');
@@ -2354,7 +2354,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					
 					var joined_num = joined_num_div.first().text();
 					joined_num = (--joined_num > 1)?joined_num:1;
@@ -2389,7 +2389,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					thisE.removeClass('favor-activity').addClass('undo-favor-activity').attr('title','Undo Favor');
 					loadFavorNumberForActivity(parentDiv);
 					loadFavorActivityMember(thisE, true);
@@ -2410,7 +2410,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					thisE.removeClass('undo-favor-activity').addClass('favor-activity').attr('title','Favor');
 					loadFavorNumberForActivity(parentDiv);
 					loadFavorActivityMember(thisE, true);
@@ -2575,7 +2575,7 @@ $(function($) {
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					thisE.addClass('undo-favor-comment').removeClass('favor-comment');
 					loadFavorNumberForComment(parentDiv);
 					loadCommentFavorPlainList(thisE, key);
@@ -2596,7 +2596,7 @@ $(function($) {
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					thisE.removeClass('undo-favor-comment').addClass('favor-comment');
 					loadFavorNumberForComment(parentDiv);
 					loadCommentFavorPlainList(thisE, key);
@@ -2618,7 +2618,7 @@ $(function($) {
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					thisE.addClass('undo-favor-reply').removeClass('favor-reply');
 					loadFavorNumberForReply(parentDiv);
 					loadReplyFavorPlainList(thisE, key);
@@ -2638,7 +2638,7 @@ $(function($) {
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					thisE.removeClass('undo-favor-reply').addClass('favor-reply');
 					loadFavorNumberForReply(parentDiv);
 					loadReplyFavorPlainList(thisE, key);
@@ -2657,7 +2657,7 @@ $(function($) {
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					$('#dialog-popup-overlay').removeClass('hdn');
 					$('#evt-invitation-wrapper').html(resp).removeClass('hdn').attr('data-key',key);
 				}	
@@ -2757,7 +2757,7 @@ $(function($) {
 					method:'post',
 					data:{q:q, key:key, pkey:pkey},
 					success:function(resp){
-						console.log(resp);
+						
 						if(resp != '1'){
 							parentContact.find('.contact-inner').addClass('hdn');
 							parentContact.find('.suggest-contact-inner').html(resp).removeClass('hdn');
@@ -3038,7 +3038,7 @@ $(function($) {
 						method:'post',
 						data:{key:key, keys:keys},
 						success:function(resp){
-							console.log(resp);
+							
 							if(resp != '1'){
 								var selected_bar = parentDiv.find('#selected-bar');
 								var selected_avator = selected_bar.find('.selected-icon-avator');
@@ -3129,7 +3129,7 @@ $(function($) {
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					invited_list.remove();
 					var remaining_target_count = detail.find('.invited-list').length;
 					parentDiv.find('#invitation-invited-num').text(remaining_target_count).attr('data-num',remaining_target_count);
@@ -3160,7 +3160,6 @@ $(function($) {
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
 					if(resp != '1'){
 						thisE.parents('.option').find('.ignore').remove();
  						thisE.text('Accepted').removeClass('accept animate-opacity pointer plain-lk');
@@ -3175,8 +3174,52 @@ $(function($) {
 	
 	/*ends with include friend popup dialog javascript*/
 	
+	$('body').on({
+		mouseover:function(){
+			var slide_up_blk = $(this).find('.slide-up-blk');
+			slide_up_blk.animate({
+			'bottom':'0px'
+			},100);
+		}, 
+		mouseleave:function(){
+			var slide_up_blk = $(this).find('.slide-up-blk');
+			slide_up_blk.animate({
+			'bottom':'-30px'
+			},100);
+		}
+		
+		
+	
+	},'.slide-up-blk-trigger');
 	
 	
+	$('body').on('change', '.event-upload-cover', function(){
+		var parent = $(this).parents('.evt-cover');
+		var imgTarget = parent.find('.temp-preview');
+		imgTarget.removeClass('hdn');
+		var avator_loading_icon = parent.find('.wht-loading-overlay');
+		readURL(this,imgTarget);
+		avator_loading_icon.removeClass("hdn");
+		var data=new FormData();
+		var key =  $(this).parents('.evt-block').attr('data-key');
+		data.append('profile-pic',$(this)[0].files[0]);
+		data.append('key', key);
+		$.ajax({
+			url:AJAX_DIR+'uld_event_cover.php',
+			type:'POST',
+			processData: false,
+			contentType: false,
+			data:data,
+			success:function(resp){
+				if(resp == '1'){
+					presentPopupDialog("Bad Image", BAD_IMAGE_MESSAGE, "Got it", "", null, null );
+					imgTarget.attr('src',old_src);
+				}else{
+					parent.html(resp);
+				}
+			}
+		});
+   	});
 	
 	
 });

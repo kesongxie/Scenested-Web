@@ -15,7 +15,6 @@
 		
 		public function getEventPhotoResourceByMomentId($event_id){
 			return  $this->getMultipleColumnsBySelector(array('hash','picture_url', 'user_id'), 'event_id', $event_id);
-
 		}
 		
 		
@@ -40,12 +39,21 @@
 		}
 		
 		
-		public function deleteEventPhotoForUserByEventId($user_id, $event_id){
-			$url = $this->getEventPhotoUrlByEventId($event_id);
-			if($url != false){
-				$this->deleteMediaByPictureUrl($url, $user_id);
-				$this->deleteRowBySelector('event_id', $event_id);
+		public function deleteAllEventPhotoByEventId($event_id){
+			$this->deleteEventPhotoByEventId($event_id);
+		}
+		
+		
+		public function deleteEventPhotoByEventId($event_id){
+			//delete all the photos
+			$rows = $this->getAllRowsMultipleColumnsBySelector(array('id','picture_url','user_id'), 'event_id', $event_id);
+			if($rows !== false){
+				foreach($rows as $row){
+					$this->deleteMediaByPictureUrl($row['picture_url'], $row['user_id']);
+					$this->deleteRowBySelectorForUser('id', $row['id'], $row['user_id']);
+				}
 			}
+			return false;
 		}
 		
 		
@@ -60,6 +68,25 @@
 		public function getPhotoNumberForEvent($event_id){
 			return $this->getRowsNumberForStringColumn('event_id',$event_id);
 		}
+		
+		
+		
+		
+		public function uploadEventCoverByEventId($photo_file, $user_id, $event_id, $caption = null){
+			$hash = $this->generateUniqueHash();
+			$result = $this->uploadCaptionableMediaForAssocColumn($photo_file, $user_id, $caption,$hash, 'event_id' , $event_id);
+			if($result !== false){
+				include_once MODEL_PATH.'User_Media_Prefix.php';
+				$prefix = new User_Media_Prefix();
+				$picture_url = $prefix->getUserMediaPrefix($user_id).'/'.$result['picture_url'];
+				ob_start();
+				include TEMPLATE_PATH_CHILD.'evt_cover.phtml';
+				$content = ob_get_clean();
+				return $content;
+			}
+			return false;
+		}
+		
 		
 		public function uploadEventPhotoByEventId($photo_file, $user_id, $event_id, $caption = null){
 			$hash = $this->generateUniqueHash();

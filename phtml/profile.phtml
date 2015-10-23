@@ -47,7 +47,7 @@
 							<?php endif; ?>
 							<?php if($page_own):  //allow changing ?>
 								<label for="upload-cover" id="avator-change-cover-label"  class="pointer"  title="upload cover photo">Change Cover</label>
-								<form method="POST" style="position:absolute;top:0px;width:0px;height:0px;" enctype="multipart/form-data">
+								<form method="POST" style="display:none" enctype="multipart/form-data">
 									<input id="upload-cover" class="hdn-input" type="file" name="profile-pic" title="upload cover photo">
 								</form>
 								<div class="overlay hdn" style="text-align:center;opacity:0.45;background:#fff;"><div class="vertical-center"><img class="loading-icon" style="width:60px;height:40px;" src="<?php echo IMGDIR; ?>loading_icon.gif"></div></div>

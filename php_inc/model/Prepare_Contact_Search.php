@@ -17,7 +17,7 @@
 				}
 			}
 			
-			$result = $group->searchContactEventGroupByKeyWord($key_word);
+			$result = $group->searchContactGroupByKeyWord($key_word);
 			if($result !== null && $result !== false){
 				foreach($result as $queue){
 					if(!in_array($queue['queue'],$queue_array)){
@@ -25,6 +25,10 @@
 					}
 				}
 			}
+			
+			
+			
+			
 			
 			$message_queue = implode(',',$queue_array);
 			$m_q = new Message_Queue();

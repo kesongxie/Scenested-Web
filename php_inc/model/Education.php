@@ -204,6 +204,60 @@
 		}
 		
 		
+		public function returnSimilarInterestUserInSchool($limit = -1, $exclusive_list = "-1''"){
+			include_once MODEL_PATH.'Interest.php';
+			$inerest = new Interest();
+			$mine_interests = $inerest->getInterestNameForUser($_SESSION['id'], -1);
+			$interest_like = false;
+			if($mine_interests !== false){
+				$interest_like = '';
+				foreach($mine_interests as $interest){
+ 					$interest_like .= $interest['name'].'|';	
+				}
+				$interest_like = trim($interest_like,'|');
+			}
+			
+			$school_id = $this->getSchoolIdByUserId($_SESSION['id']);
+		
+			if($interest_like !== false && $school_id !== false){
+				$query = "
+						SELECT DISTINCT user.id, CONCAT(user.firstname,' ',user.lastname) AS fullname,  user.unique_iden AS hash, user.user_access_url 
+						FROM education 
+						LEFT JOIN user
+						ON education.user_id=user.id
+						LEFT JOIN interest
+						ON user.id = interest.user_id 
+						WHERE  user.id !=?  AND user.id  NOT IN($exclusive_list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?) AND education.school_id = ?  
+						ORDER BY RAND()
+				";
+				if($limit > 0){
+					$query .= " LIMIT ?"; 
+				}
+				$stmt = $this->connection->prepare($query);
+				if($stmt){
+					if($interest_like !== false && $school_id !== false){
+						if($limit > 0){
+							$stmt->bind_param('issii', $_SESSION['id'], $interest_like, $interest_like, $school_id,$limit);
+						}else{
+							$stmt->bind_param('issi', $_SESSION['id'], $interest_like, $interest_like, $school_id);
+						}
+					}
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$stmt->close();
+							return $result;
+						 }
+					}
+				}	
+				
+			}
+			return false;	
+				
+		}
+		
+		
+		
 		
 		
 		

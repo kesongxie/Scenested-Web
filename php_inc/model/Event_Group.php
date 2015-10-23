@@ -127,8 +127,13 @@
 				include_once 'Event.php';
 				$e = new Event();
 				return $e->getEventInforByEventId($event_id, $group_id);
+			}else{
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'broken_event_info.phtml');
+				$content = ob_get_clean();
+				return $content;
 			}
-			return false;
+			
 		}
 		
 		public function getEventTextInfoByGroupId($group_id){
@@ -138,6 +143,7 @@
 				$e = new Event();
 				return $e->getEventTextResource($event_id);
 			}
+			return false;
 		}
 		
 		

@@ -1,7 +1,6 @@
 <?php
 	//	contains global constants such as folder structures
 	//for page rendering 
-	
 	include_once 'server_cred.php';
 	define("IMGDIR",ROOTDIR."media/");
 	define("E_IMGDIR",IMGDIR.'e/');

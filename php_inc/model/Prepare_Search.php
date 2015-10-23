@@ -59,8 +59,6 @@
 		
 		
 		
-		
-		
 		public function getContentForNameType($rows_need_to_fetch = 4){
 			include_once MODEL_PATH.'User_Table.php';
 			$user =  new User_Table();

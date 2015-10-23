@@ -1,10 +1,10 @@
 <?php
 	include_once '../php_inc/core.inc.php';
-	include_once PHP_INC_MODEL.'Groups.php';
+	include_once MODEL_PATH.'Groups.php';
 
 	if( isset($_POST['key']) && !empty(trim($_POST['key'])) ){
 		$g = new Groups();
-		$members = $g->getEventGroupJoinedMemberByGroupKey($_POST['key']);
+		$members = $g->getGroupJoinedMemberByGroupKey($_POST['key']);
 		if($members !== false){
 			echo $members;
 		}else{
