@@ -1648,12 +1648,10 @@ $(document).ready(function(){
  				});
 			}else{
 				var operationDiv = parentDiv.find('.fri-oper');
-				$('.popover').not(operationDiv).addClass('hdn');
-				operationDiv.toggleClass('hdn');
+	//			$('.fri-oper.popover').not(operationDiv).addClass('hdn');
+ 				operationDiv.toggleClass('hdn');
 			}
 			return false;
-			
-			
 		}
 	},'.user-profile.operation-triggeable .toggle-operation');
 	
@@ -1710,7 +1708,7 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
-			presentPopupDialog("Leave Interest Group", "Do you want to leave this interest group", "No", "Yes", leaveInterestGroup, $(this) );
+			presentPopupDialog("Leave Interest Group", "Do you want to unconnect from this interest", "No", "Yes", leaveInterestGroup, $(this) );
 			return false;
 		}
 	},'.user-profile.operation-triggeable .leave-interest-group');
@@ -2389,7 +2387,6 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					
 					thisE.removeClass('favor-activity').addClass('undo-favor-activity').attr('title','Undo Favor');
 					loadFavorNumberForActivity(parentDiv);
 					loadFavorActivityMember(thisE, true);
@@ -2505,6 +2502,10 @@ $(function($) {
  	$('body').on({
     	mouseleave:function(){
 			 $(this).html('').addClass('hdn').css({'top':'', 'left':''});
+		}, 
+		click:function(){
+			$(this).find('.fri-oper').addClass('hdn');
+			return false;
 		}
 	},'.hover-avator-wrapper');
 	

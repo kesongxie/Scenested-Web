@@ -54,6 +54,24 @@ ExpiresDefault "access 2 days"
 	RewriteRule ^login$ login.php [NC,L]
 </IfModule>
 
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^about$ about.php [NC,L]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^privacy$ privacy.php [NC,L]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^terms$ terms.php [NC,L]
+</IfModule>
+
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On

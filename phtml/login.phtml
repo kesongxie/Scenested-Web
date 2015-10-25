@@ -17,23 +17,14 @@
 		<![endif]-->
 	</head>
 	<body>
-		<div id="login-header">
-			<div id="login-header-inner">
-				<div id="logo" class="gradient-red-background left-bar inline-blk">
-				Higout
-				</div>
-				<div class="inline-blk right-bar">
-					<span id="prompt-sign-up-header-top" class="pointer"><img class="right-bar-item" src="<?php echo IMGDIR ?>lock.png"  title="login" />Log in</span>
-					<span id="prompt-log-in-header-top" class="pointer" ><img  id="signup-icon" class="right-bar-item" src="<?php echo IMGDIR ?>signup_icon.jpg"  title="signUp">Sign up</span>
-				</div>
-			</div>
-		</div>
+		<?php include_once TEMPLATE_PATH_CHILD.'login_header.phtml'; ?>
 		
 		<div id="login-body">
 			<div id="login-body-inner" style="height:100%;">
-				<div class="left-bar" style="height:100%;">
-					<h2 style="font-size:30px;margin-top:80px;color:#333">Your interest matters.</h2>
+				<div class="left-bar" style="height:100%;width:50%;">
+					<h2 style="font-size:30px;margin-top:60px;color:#333">Your interest matters.</h2>
 						<div style="font-size:16px;padding-left:3px;">Moment, event, friends and more</div>
+				<img src="<?php echo IMGDIR; ?>intro.png" style="margin-left: -40px;width:100%;">
 				</div>
 				<div class="right-bar">
 					<div id="login-form" class="light-gray-shadow dialog">
@@ -56,8 +47,8 @@
 							<div id="login-form-footer" class="dialog-footer">
 								<div class="vertical-center">
 									<input id="login-remember" name="login-remember" type="checkbox">
-									<label for="login-remember" >Remember Me</label>
-									<a class="plain-lk animate-opacity" style="margin-left:100px;" href="<?php echo PASSWORD_RESET; ?>">Forgot Password?</a>
+									<label for="login-remember" style="margin-left:2px;" >Remember Me</label>
+									<a class="plain-lk animate-opacity" style="margin-left:100px;font-size:13px;" href="<?php echo PASSWORD_RESET; ?>">Forgot Password?</a>
 								</div>
 							</div>
 						</form>
@@ -84,8 +75,8 @@
 							</div>
 								<div id="signup-form-footer" class="dialog-footer">
 								<div id="signup-gender" class="left-bar" style="width:60%;margin-left:4px;position:relative">	
-									<input type="radio" name="signup-gender" value="1"><label for="sign-up-f">Female</label>	
-									<input type="radio" name="signup-gender" value="2" style="margin-left:4px;"><label for="sign-up-m">Male</label>	
+									<input type="radio" id="sign-up-f" name="signup-gender" value="1"><label for="sign-up-f">Female</label>	
+									<input type="radio" id="sign-up-m" name="signup-gender" value="2" style="margin-left:4px;"><label for="sign-up-m">Male</label>	
 									<div id="signup-term-prompt">By clicking the sign up button, you agree with our <a href="terms.php" class="plain-lk" style="color:rgb(8, 39, 187)">term of use</a></div>
 								</div>
 								<div id="signup-button-wrapper" class="right-bar" style="width:30%;min-width:86.7px;max-width:90px;margin-right:4px;margin-top:6px;"  >

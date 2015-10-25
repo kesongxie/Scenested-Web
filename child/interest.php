@@ -2,8 +2,6 @@
 	include_once PHP_INC_MODEL_ROOT_REF.'Interest.php';
 	$interest = new Interest();
 	
-		
-	
 	$active_interest_id = -1;
 	if(isset($_GET['a'])){
 		$interest_id = $interest->getInterestIdByNameForUser($_GET['a'],$request_user_page_id);

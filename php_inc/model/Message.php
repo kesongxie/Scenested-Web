@@ -180,9 +180,9 @@
 					$message_queue = new Message_Queue();
 					$queue = $this->sent_from.$user_sent.',';
 					$message_queue->priorityQueue($user_get, $queue);
-					include_once 'User_Profile_Picture.php';
-					$profile = new User_Profile_Picture();
-					$profile_pic = $profile->getLatestProfileImageForUser($user_sent);
+					include_once 'User_Table.php';
+					$user = new User_Table();
+					$profile_pic = $user->getLatestProfilePictureForUser($user_sent);
 					$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($user_sent);
 					$unique_iden = $user->getUniqueIdenForUser($user_sent);
 					ob_start();

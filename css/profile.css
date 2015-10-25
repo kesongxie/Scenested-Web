@@ -150,19 +150,33 @@
 }
 
 
-
 #profile-sider-bar-right{
-	width:64%;
 	vertical-align:top;
+	width:64%;
 	min-width:700px;
 	margin-left:10px;
 }
 
+
+/* 
+@media (max-width: 1024px){
+	#profile-sider-bar-right{
+		width:55%;
+		min-width:500px;
+	}
+}
+
+ */
+
+
+
 #profile-sider-bar-right #profile-navigation-bar {
 	position: relative;
 	margin:22px 0px 16px 0px;
-	width: 100%;
+	/* 
+width: 100%;
 	min-width: 693px;
+ */
 	border-bottom: 1px solid #EEEEEE;
 	padding-left:14px;
 }

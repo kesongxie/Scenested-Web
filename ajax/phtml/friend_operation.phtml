@@ -4,7 +4,7 @@
 		<div class="inner-w" style="height:100%;position:relative;overflow:hidden;width:100%">
 			<div class="main" style="position:absolute;width:100%;left:0px;background:#fff;">
 				<div class="in_con_w_opt_it add-interest-group" style="cursor:default">Connect to Interest<img src="<?php echo IMGDIR ?>right_nxt.png" style="float:right;margin-top:4px" height="12" width="12"></div>
-				<div class="in_con_w_opt_it view-connection">Connections<img src="<?php echo IMGDIR ?>right_nxt.png" style="float:right;margin-top:4px" height="12" width="12"></div>
+				<div class="in_con_w_opt_it view-connection"><div class="inline-blk txt_ofl" style="width:86%"><?php echo $firstname; ?>'s Interests</div><img src="<?php echo IMGDIR ?>right_nxt.png" style="float:right;margin-top:4px" height="12" width="12"></div>
 				<div class="in_con_w_opt_it individual-contact">Message</div>
 			</div>
 			
@@ -53,7 +53,7 @@
 			
 			<!--starts collection group-->
 			<div class="sub connection-group child-scrollable hdn">
-				<div class="back-to-main"><img class="prev" src="<?php echo IMGDIR ?>left_nxt.png" height="12" width="12">Connections</div>
+				<div class="back-to-main"><img class="prev" src="<?php echo IMGDIR ?>left_nxt.png" height="12" width="12"><?php echo $firstname; ?>'s Interests</div>
 				<div style="max-height:130px;overflow:scroll">
 		
 			
@@ -62,9 +62,11 @@
 						<div class="in_con_border_top" data-key="<?php echo $row['hash'] ?>" title="In <?php echo $row['firstname'] ?>'s <?php echo htmlentities($row['name']) ?> interest group">
 							<img class="label-image" src="<?php echo $row['picture_url'] ?>">
 							<div class="inline-blk txt_ofl red-act" style="width:95px;margin-top:3px;font-size:13px;"><?php echo htmlentities($row['name']); ?></div>
-							<img class="leave-interest-group pointer animate-opacity" src="<?php echo IMGDIR ?>minus_icon.png" title="Leave this interest group" height="16" wdith="16" style="float:right;margin-top:8px;">
+							<img class="leave-interest-group pointer animate-opacity" src="<?php echo IMGDIR ?>minus_icon.png" title="Unconnect from this interest" height="16" wdith="16" style="float:right;margin-top:8px;">
 						</div>
 					<?php endforeach; ?>
+				<?php else: ?>
+					<div style="margin:12px;">You are not in <?php echo $firstname; ?>'s interest groups.</div>
  				<?php endif ?>
  				</div>
 				</div>

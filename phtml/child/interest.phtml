@@ -27,7 +27,7 @@
 	<?php $count = 0; ?>
 	<?php foreach($user_interests as $user_interest): ?>
 			<?php $count++; ?>
-			<div class="interest-side-label interest-sider-navi pointer<?php echo ($active_interest_id == $user_interest['id'] ||  ($count == 1 && !isset($_GET['a'])))?' active':'' ?>" data-labelfor="<?php echo $user_interest['id'];?>" data-href="<?php echo $user_interest['data_href']; ?>"  title="<?php echo htmlentities($user_interest['name']);?>">
+			<div class="interest-side-label interest-sider-navi txt_ofl pointer<?php echo ($active_interest_id == $user_interest['id'] ||  ($count == 1 && !isset($_GET['a'])))?' active':'' ?>" data-labelfor="<?php echo $user_interest['id'];?>" data-href="<?php echo $user_interest['data_href']; ?>"  title="<?php echo htmlentities($user_interest['name']);?>">
 				<div class="vertical-center"><img src="<?php echo $user_interest['picture_url']; ?>"><div class="inline-blk txt_ofl<?php echo ($active_interest_id == $user_interest['id']  || ($count == 1 && !isset($_GET['a'])) ) ?' red-act':''; ?>" style="width:95px;margin-top:3px;font-size:13px;"><?php echo htmlentities($user_interest['name']);?></div></div>
 			</div>	
  	<?php  endforeach;  //end display side ?>

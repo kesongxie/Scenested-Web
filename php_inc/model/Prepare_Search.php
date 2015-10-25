@@ -50,7 +50,7 @@
 				}else if($this->search_type == 'moment'){
 					$content = $this->getContentForMomentType(4);
 				}else if($this->search_type == 'photo'){
-					$content = $this->getContentForPhotoType(10);
+					$content = $this->getContentForPhotoType(20);
 				}
 			}
 			
@@ -362,7 +362,6 @@
 		public function renderPhotosByResource($rows, $scroll_load = false){
 			include_once MODEL_PATH.'User_Media_Base.php';
 			$media_base = new User_Media_Base();
-
 			$left_content = "";
 			$right_content = "";	
 			if($rows !== false){
@@ -378,6 +377,8 @@
 					}
 				}
 			}
+			
+			
 			ob_start();
 			if($scroll_load){
 				include(TEMPLATE_PATH_CHILD.'loading_feed_wrapper.phtml');
