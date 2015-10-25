@@ -133,6 +133,7 @@ function removeStudy(sender){
 
 
 
+
 $(document).ready(function(){
 
 	var in_navi_count = 0;
@@ -142,8 +143,6 @@ $(document).ready(function(){
 			$(this).css('-webkit-animation',' bounceInUp '+(in_navi_count*0.5)+'s');
 		});
 	}	
-
-
 	$('.avator-inner-bottom').on({
 		mouseover:function(){
 			$(this).find('.avator-upload-inner-wrapper').fadeIn('fast');
@@ -1207,8 +1206,6 @@ $(document).ready(function(){
 			presentPopupDialog("Remove Study", "Do you want to remove the study \""+major_name+"\"", "Cancel", "Remove", removeStudy, $(this) );
 		}
 	},'.major-wrapper .remove');
-
-	
 
 	
 });

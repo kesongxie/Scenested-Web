@@ -59,7 +59,7 @@
 			
  				<?php if($rows_in !== false && sizeof($rows_in) > 0): ?>
 					<?php foreach($rows_in as $row): ?>
-						<div class="in_con_border_top" data-key="<?php echo $row['hash'] ?>" title="In <?php echo $row['firstname'] ?>'s <?php echo htmlentities($row['name']) ?> interest group">
+						<div class="in_con_border_top" data-key="<?php echo $row['hash'] ?>" title="You are in <?php echo $row['firstname'] ?>'s <?php echo htmlentities($row['name']) ?> interest group">
 							<img class="label-image" src="<?php echo $row['picture_url'] ?>">
 							<div class="inline-blk txt_ofl red-act" style="width:95px;margin-top:3px;font-size:13px;"><?php echo htmlentities($row['name']); ?></div>
 							<img class="leave-interest-group pointer animate-opacity" src="<?php echo IMGDIR ?>minus_icon.png" title="Unconnect from this interest" height="16" wdith="16" style="float:right;margin-top:8px;">

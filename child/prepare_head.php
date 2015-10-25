@@ -9,7 +9,6 @@
 		header('location:'.LOGIN_PAGE);
 	}
 	
-	
 	$notification_queue = new User_Notification_Queue(null);
 	$queue_list = $notification_queue->getNotificationQueueForUser($_SESSION['id']);
 	$queues =  ($queue_list != '')? explode(',',trim($queue_list,',' )):false;

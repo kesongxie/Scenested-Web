@@ -1,7 +1,7 @@
 /* global javascript file, contains core functions */
 var SIGNUP_ALERT_MESSAGE = new Array();
 var BAD_IMAGE_MESSAGE = "A valid image is of type PNG or JPG and it's less than 5M";
-
+var PREVIOUS_CHAT_SIZE_STATE;
 
 
 function readURL(input,tg) {
@@ -117,6 +117,8 @@ function setVisibleContentWithParent(parent, text){
 		}
 	});	
 }
+
+
 
 
 // function resetResizableOption(thisE){
@@ -487,7 +489,37 @@ function refreshMessage(){
 			$('#chat-outer-wrapper .broken-connect').removeClass('hdn');
 		}
 	});
+	
 }
+
+function  resetChatLayout(){
+	var width = $(window).width();
+	var wrapper = $('#chat-outer-wrapper');
+	
+	if(width >= 1024 && width < 1200){
+		wrapper.find('.child-scrollable .contact:gt(2)').addClass('hdn');
+		wrapper.removeClass('chat-strech chat-min').addClass('chat-shrink');
+	}else if(width >= 1200){
+		$('#chat-outer-wrapper .child-scrollable .contact').removeClass('hdn');
+		wrapper.removeClass('chat-shrink chat-min').addClass('chat-strech');
+	}else{
+		wrapper.removeClass('chat-strech chat-shrink').addClass('chat-min');
+	}
+	PREVIOUS_CHAT_SIZE_STATE = wrapper.attr('class');
+}
+
+
+var refreshMessage = (function(){
+		var original_refreshMessage = refreshMessage; 
+		return function(){
+			original_refreshMessage();
+			var width = $(window).width();
+			if(width > 1200){
+				resetChatLayout();
+			}
+		}
+	}
+)();
 
 
 
@@ -708,6 +740,12 @@ function getUserOperationSystem(){
 }
 
 
+
+
+
+
+
+
 $(function(){
 	if($('#login-header').length < 1){
 		setInterval(function(){
@@ -739,19 +777,17 @@ $(function(){
 			loadMessageWithActiveUser();
 		},5000);
 	}
-	
-	
-	
+	resetChatLayout();
 	
 	var u_os = getUserOperationSystem();
 	if(u_os.indexOf('Mac') != -1){
 		$('body').on({
 			mouseover:function(){
-				$('body').css('overflow','hidden');
+				$('body').css({'overflow-y':'hidden','overflow-x':'hidden' });
 				$(this).css('overflow','auto');
 			},
 			mouseleave:function(){
-				$('body').css('overflow','auto');
+				$('body').css({'overflow-y':'auto','overflow-x':'hidden' });
 				$(this).css('overflow','hidden');
 			}
 		},'.child-scrollable');
@@ -1039,7 +1075,7 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					console.log(resp);
+					
 					if(resp != '1'){
 						thisE.parents('.option').find('.ignore').remove();
  						thisE.text('Accepted').removeClass('accept animate-opacity pointer plain-lk');
@@ -2106,7 +2142,6 @@ $(document).ready(function(){
  					method:'post',
  					data:{key:key, text:text},
  					success:function(resp){
- 						console.log(resp);
  						if(resp != '1'){
  							txtarea.val('');
  							body.append(resp);
@@ -3220,6 +3255,29 @@ $(function($) {
 			}
 		});
    	});
+	
+	
+	
+	$(window).resize(function() {
+	 	resetChatLayout(); 
+	});
+	
+	
+	$('#chat-outer-wrapper .chat-header').click(function(){
+		var width = $(window).width();
+		if(width < 1200){
+			var wrapper = $(this).parents('#chat-outer-wrapper');
+			if(wrapper.hasClass('chat-min') || wrapper.hasClass('chat-shrink')){
+				wrapper.addClass('chat-strech').removeClass('chat-shrink chat-min');
+				$('#chat-outer-wrapper .child-scrollable .contact').removeClass('hdn');
+			}else{
+				wrapper.removeClass('chat-strech').addClass(PREVIOUS_CHAT_SIZE_STATE);
+				if(PREVIOUS_CHAT_SIZE_STATE == 'chat-shrink'){
+					wrapper.find('.child-scrollable .contact:gt(2)').addClass('hdn');
+				}
+			}
+		}
+	})
 	
 	
 });

@@ -153,7 +153,7 @@
 #profile-sider-bar-right{
 	vertical-align:top;
 	width:64%;
-	min-width:700px;
+	/* min-width:700px; */
 	margin-left:10px;
 }
 
@@ -389,4 +389,9 @@ div#favor-evt-label-wrapper .favor-evt-wrapper{
 	color:#48489D;
 }
  */
+ 
+ #friend-content-wrapper{
+ 	width: 80%;
+    margin-right: -12px;
+ }
 

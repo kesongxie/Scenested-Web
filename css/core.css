@@ -21,6 +21,7 @@ body{
 	-webkit-font-smoothing: subpixel-antialiased;
 	min-height:720px;
 	padding-bottom:80px;
+	overflow-x:hidden;
 }
 
 
@@ -373,8 +374,9 @@ div.ui-datepicker{
 	position: absolute;
 	top: 19px;
 	left: 334px;
-	width: 376px;
-	
+	/* width: 376px; */
+	width:28%;
+	min-width:280px;
 }
 
 .header #global-search-bar  #global-search-bar-inner{
@@ -1076,12 +1078,8 @@ div.ui-datepicker{
 
 /*starts with chat template*/
 #chat-outer-wrapper{
-	border: 2px solid #f0f0f0;
 	background:#fff;
-	box-shadow: -10px 1px 10px #EAEAEA;
-	height: 84%;
-	/* height:260px; */
-	min-width: 222px;
+	min-width: 190px;
 	width: 17%;
 	background: white;
 	right: 0px;
@@ -1089,9 +1087,52 @@ div.ui-datepicker{
 	z-index: 96;
 	font-size: 12px;
 	position: fixed;
-	border-radius: 4px 0px 0px 0px;
+	border-radius: 6px 6px 0px 0px;
 	max-width:246px;
 }
+
+
+.chat-strech{
+	height: 84% !important;
+	box-shadow: -10px 1px 10px #EAEAEA;
+	border: 2px solid #f0f0f0;
+}
+
+.chat-shrink{
+	height: 40% !important;
+	box-shadow: -1px 1px 10px #EAEAEA;
+	border: 2px solid #f0f0f0;
+}
+
+.chat-min{
+	height: 34px !important;
+	box-shadow: none;
+	border: 0px;
+}
+
+
+/* 
+@media (max-width: 1200px){
+	#chat-outer-wrapper{
+		height:40%;
+		
+		
+	}
+}
+
+@media (max-width: 1014px){
+	#chat-outer-wrapper{
+		height:34px;
+		box-shadow: none;
+		border: 0px;
+		
+	}
+}
+ */
+
+
+
+
 
 #chat-outer-wrapper #broken-connect-overlay{
 	background:#fff;
@@ -1268,7 +1309,7 @@ div.ui-datepicker{
 .user-profile-wrapper{
 	box-shadow: 1px 1px 10px #EAEAEA;
 	border:1px solid #EAEAEA;
-	margin:0px 20px 20px 0px;
+	margin:0px 16px 20px 0px;
 	border-radius: 4px;
 	overflow: hidden;
 	height:280px;
