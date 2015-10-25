@@ -79,7 +79,7 @@ function deleteInterest(sender){
 		method:'post',
 		data: {key:key},
 		success:function(resp){
-			console.log(resp);
+			
 			resetDialog();
 			var inner_wrapper = $('#interest-content-wrapper .interest-content-inner-wrapper[data-key='+key+']');
 			inner_wrapper.css('-webkit-animation',"bounceOutDown 1s").css('animation',"bounceOutDown 1s");
@@ -170,7 +170,6 @@ $(document).ready(function(){
 				contentType: false,
 				data:data,
 				success:function(resp){
-					console.log(resp);
 					loading_wrapper.hide();
 					actionButton.text("Add Interest");
 					if(resp == '1'){
@@ -186,7 +185,7 @@ $(document).ready(function(){
 						$('#i-interest-navi .interest-sider-navi').removeClass('active');
 						var mid_content = $($.parseHTML(resp)).filter('#node-mid-content');								
 						var side_content = $($.parseHTML(resp)).filter('#node-side-content');			
-						$('#interest-content-wrapper').append(mid_content.html()).removeClass('hdn');
+						$('#interest-content-wrapper').prepend(mid_content.html()).removeClass('hdn');
 						side_content.children('.interest-side-label').css('-webkit-animation',' bounceInUp 1s');
 						$('#i-interest-navi').append(side_content.html());
 
@@ -249,7 +248,7 @@ $(document).ready(function(){
 				contentType: false,
 				data:data,
 				success:function(resp){
-					console.log(resp);
+					
 					if(resp == '1'){
 						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 					}else{	

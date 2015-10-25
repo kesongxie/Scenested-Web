@@ -147,8 +147,12 @@
 						if($this->setColumnById('process', 'y', $row['id']) && $this->setColumnById('process_time', date('Y-m-d H:i:s'), $row['id'])  ){
 							//push to the notification queue
 							$this->noti_queue->addNotificationQueueForUserWithCustomSendFrom($row['user_id'], $row['id'], $this->accept_noti_send_from_code);				
-							include_once 'User_In_Interest.php';
+							include_once MODEL_PATH.'User_In_Interest.php';
 							$in = new User_In_Interest();
+							include_once MODEL_PATH.'Message_Queue.php';
+							$m_q = new Message_Queue();
+							$m_q->makeIndividualTopAtContactListById($row['user_id'], $accept_user);
+							$m_q->makeIndividualTopAtContactListById($accept_user, $row['user_id']);
 							return $in->addUserInInterest($row['interest_id'], $row['user_id'], $accept_user);
 						}
 					 }

@@ -1039,10 +1039,11 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					
+					console.log(resp);
 					if(resp != '1'){
 						thisE.parents('.option').find('.ignore').remove();
  						thisE.text('Accepted').removeClass('accept animate-opacity pointer plain-lk');
+ 						refreshMessage();
  					}
 				}
 			});
@@ -1078,7 +1079,6 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key},
 				success:function(resp){
-					
 					if(resp != '1'){
 						thisE.parents('.option').find('.ignore').remove();
  						thisE.text('Accepted').removeClass('accept animate-opacity pointer plain-lk');
@@ -1699,7 +1699,6 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
-			$(this).parents('.user-profile').addClass('hdn');
 			var target_name = $(this).parents('.user-profile').find('.fullname').text();
 			presentPopupDialog("Remove from Interest Group", "Do you want to remove \""+target_name+"\" from this interest group", "Cancel", "Remove", removeFromInterestGroup, $(this) );
 			return false;

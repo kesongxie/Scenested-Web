@@ -223,7 +223,7 @@
 				}else if($exp >=2 && $exp<=10){
 					$experience = $exp." Years";
 				}else{
-					$experience = "More than 10 years";
+					$experience = "10+ years";
 				}
 				return $experience;
 			}

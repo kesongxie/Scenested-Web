@@ -206,10 +206,14 @@
 		
 		
 		
-		public function makeIndividualTopAtContactListById($user_id){
+		public function makeIndividualTopAtContactListById($user_id, $for_user = false){
 			if($user_id !== false){
 				$user_queue = 'm-'.$user_id.',';
-				$this->priorityQueue($_SESSION['id'], $user_queue);
+				if($for_user === false){
+					$this->priorityQueue($_SESSION['id'], $user_queue);
+				}else{
+					$this->priorityQueue($for_user, $user_queue);
+				}
 				return true;
 			}
 			return false;
