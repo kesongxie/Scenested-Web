@@ -13,7 +13,7 @@
 	define("JS_PATH", ROOTDIR.'js/');
 	define("CHILD_JS_PATH", JS_PATH.'child_js/');
 	define("SPINNER_ICON", IMGDIR."spinner.gif");
-	define("LOGO_URL",IMGDIR.'media/logo.png');
+	define("LOGO_URL",IMGDIR.'logo.png');
 
 	//paths for php file system
 	define("DOCUMENT_ROOT",'../');

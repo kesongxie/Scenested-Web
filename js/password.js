@@ -3,7 +3,6 @@ $(document).ready(function(){
 		click:function(){
 			var thisE = $(this);
 			var input = thisE.parents('#search-account').find('input');
-
 			var email = input.val().trim();
 			if(email == ''){
 				return false;
@@ -77,7 +76,6 @@ $(document).ready(function(){
 				method:'post',
 				data:{key:key, p:p},
 				success:function(resp){
-					console.log(resp);
 					if(resp == '1'){
 						showPopOverDialog(password_input, password_input.parents('#reset-password'), "Strong passwords combine numbers, letters, punctuations and at least six characters")
 					}else{

@@ -146,12 +146,7 @@ $(document).ready(function(){
 						errorMessage = "The password should be at least 6 characters"
 					}
 				}
-				else if(fieldId == 'signup-re-password'){
-					if($(this).val() != $('#signup-password').val() ){
-						$('#signup-field-wrapper .sign-up-alert').remove();
-						errorMessage = "The passwords you entered don't match";
-					}
-				}
+				
 				if(errorMessage != ''){
 					parentDiv.prepend('<span class="sign-up-alert">'+ errorMessage +'</span>');
 				}
