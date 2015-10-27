@@ -277,18 +277,6 @@ textarea{
 	box-shadow:1px 1px 10px #f0f0f0;
 }
 
-#logo{
-/* 
-	box-shadow: 1px 1px 10px gray;
- */
-	border-radius: 5px;
-	text-align: center;
-	padding: 8px 14px;
-	color: #fff;
-	font-size: 16px;
-	font-weight:bold;
-}
-
 .vertical-center{
 	position: relative;
   	top: 50%;
