@@ -5,9 +5,13 @@
 			<div style="background:#fff; padding:10px 0px 16px 20px;"><?php echo $request_user_page_firstname ?> hasn't added any friends yet.</div>
 		<?php endif; ?>
 <div id="friend-content-wrapper" class="inline-blk " style="width: 90%;margin-top: 10px;">
-	<?php if($_SESSION['id'] == $request_user_page_id)
-		foreach($user_found as $u){
-			echo $user->returnUserAvatorByResource($u);
+	<?php 
+		if($_SESSION['id'] == $request_user_page_id){
+			if($user_found !== false){
+				foreach($user_found as $u){
+					echo $user->returnUserAvatorByResource($u);
+				}
+			}
  		}
 	 ?>
 </div>
