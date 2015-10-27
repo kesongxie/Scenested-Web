@@ -172,6 +172,7 @@ $(document).ready(function(){
 				contentType: false,
 				data:data,
 				success:function(resp){
+					console.log(resp);
 					if(resp == '1'){
 						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 						return false;
@@ -484,6 +485,8 @@ $(document).ready(function(){
 					//odd, the last post is at the left hand side
 					var last_key = right_content.find('.post-wrapper').last().attr('data-key');
 				}
+				console.log(last_key);
+				
 				$.ajax({
 					url:AJAX_DIR+'loadIndexFeed.php',
 					method:'post',

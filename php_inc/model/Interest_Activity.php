@@ -31,6 +31,12 @@
 						//failed
 						$this->deleteRowById($interest_activity_id);
 						return false;
+					}else{
+						if(isset($_SESSION['index_feed_id_list'])){
+							$_SESSION['index_feed_id_list'] .= ",'".$interest_activity_id."'";
+						}else{
+							$_SESSION['index_feed_id_list'] = $interest_activity_id;
+						}
 					}
 					$stmt->close();
 					return $this->getEventInterestActivityBlockByActivityId($interest_activity_id, $with_interest_name);
@@ -133,7 +139,7 @@
 			$user_in = $user_in.$_SESSION['id'];
 			$activity_id = $this->getActivityIdByKey($last_key);
 			$count = 0;
-			$list_before_load = $_SESSION['index_feed_id_list'];
+			$list_before_load = isset($_SESSION['index_feed_id_list'])?$_SESSION['index_feed_id_list']:"'-1'";
 			
 			if($activity_id !== false){
 				$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) AND `id` < ? AND `id` NOT IN($list_before_load) ORDER BY `id` DESC LIMIT 10");			
@@ -190,9 +196,6 @@
 				return false;
 			}
 		}
-		
-		
-		
 		
 		
 		public function getIndexAvator(){
@@ -432,6 +435,12 @@
 						//failed
 						$this->deleteRowById($interest_activity_id);
 						return false;
+					}else{
+						if(isset($_SESSION['index_feed_id_list'])){
+							$_SESSION['index_feed_id_list'] .= ",'".$interest_activity_id."'";
+						}else{
+							$_SESSION['index_feed_id_list'] = $interest_activity_id;
+						}
 					}
 					$stmt->close();
 					return $this->getMomentInterestActivityBlockByActivityId($interest_activity_id, $with_interest_name);
