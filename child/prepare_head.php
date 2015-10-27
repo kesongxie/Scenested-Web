@@ -4,6 +4,7 @@
 	include_once MODEL_PATH.'User_Notification_Queue.php';
 	include_once MODEL_PATH.'Notification_Verifier.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'Auth_Tokens.php';
+	include_once MODEL_PATH.'User_Table.php';
 	$auth_tokens = new Auth_Tokens();
 	if(!isset($_SESSION['id']) && !$auth_tokens->auth_token_valified()){
 		header('location:'.LOGIN_PAGE);
@@ -28,14 +29,17 @@
 	$m_q = new Message_Queue();
 	
 	$new_message_notification_num = $m_q->getNewMessageTotalNumForUser($_SESSION['id']);	
-
+	
+	$user = new User_Table();
+	
+	
+	
 	if($new_message_notification_num > 0){
 		$title = 'Message('.$new_message_notification_num.')';
 	}else if($notification_number > 0){
 		$title = 'Notification('.$notification_number.')';
 	}else{
-		$title = 'Higout';
+		$fullname_of_page = $user->returnFullnameByAccessUrl($_SERVER['REQUEST_URI']);
+		$title = ($fullname_of_page !== false)?$fullname_of_page:'Higout';
 	}
-	
-	
 ?>

@@ -29,13 +29,13 @@
 	<?php if($user_id == $_SESSION['id']): ?>
 	<div class="side-block-edit-wrapper edu hdn">
 		<div class="popover-throwable school-name-input-wrapper edit-input hdn" style="margin-bottom:10px;">
-			<div style="width:100%;"><input type="text" class="fcy-txt" value="<?php echo $education['school_name']; ?>" placeholder="School name..." maxlength="100"></div>
+			<div style="width:100%;"><input id="edu-input" type="text" class="fcy-txt" value="<?php echo $education['school_name']; ?>" placeholder="School name..." maxlength="100"></div>
 			<div class="school-name-suggest hdn">
 			</div>
 		</div>
 		
 		<div class="popover-throwable major-name-input-wrapper edit-input hdn" >
-			<div style="width:100%;"><input type="text" class="fcy-txt" value="<?php echo htmlentities($education['study']); ?>" placeholder="What do you study..." maxlength="100"></div>
+			<div style="width:100%;"><input id="major-input" type="text" class="fcy-txt" value="<?php echo htmlentities($education['study']); ?>" placeholder="What do you study..." maxlength="100"></div>
 			<div class="major-name-suggest hdn">
 				
 			</div>

@@ -33,7 +33,7 @@
 			<div class="txt_ofl" style="color:rgb(172, 172, 172);font-size:13px;">
 			<?php 
 				if($interest_list != ''){
-					echo 'Interested in '.$interest_list;
+					echo $interest_list;
 				}else{
 					$education = new Education();
 					$educ = $education->getEducationByUserId($u['id']);

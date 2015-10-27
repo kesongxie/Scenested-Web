@@ -1,3 +1,5 @@
+global_sch_hover = -1;
+
 function doneWithInterestEditing(editingDiv){
 	var parentDiv = editingDiv.parents('.interest-profile');
 	editingDiv.css('-webkit-animation',"flipOutY 0.4s").css('animation',"flipOutY 0.4s").addClass('hdn');
@@ -32,12 +34,6 @@ function renderVisibleScope(desc,src){
 	}
 	return  description;
 }
-
-
-
-
-
-	
 
 	
 function startSlideComment(evt_wrapper){
@@ -951,10 +947,9 @@ $(document).ready(function(){
 	},'.side-block-wrapper .hide-edit');
 	
 	
+	
 	$('body').on({
 		keyup:function(evt){
-		
-		
 			var thisE = $(this);
 			var name = thisE.val();
 			var parentDiv = thisE.parents('.side-block-wrapper');
@@ -966,8 +961,13 @@ $(document).ready(function(){
 			parentDiv.find('.popover-dialog-wrapper').remove();
 			if(name.trim() == ''){
 				suggest.html('').addClass('hdn');
+				return false;
 			}
 			if(evt.keyCode == 13){
+				var hover_act = suggest.find('.light-hover-act .text');
+				if(hover_act.length > 0){
+					name = hover_act.text().trim();
+				}
 				if(name.trim() == ''){
 					showPopOverDialog(thisE, parentDiv, "Please add a name for your school");
 					return false;
@@ -979,7 +979,7 @@ $(document).ready(function(){
 					success:function(resp){
 						console.log(resp);
 						if(resp != '1'){
-							console.log(resp);
+							thisE.val(name);
 							empty.removeClass('act').addClass('hdn');
 							edit.removeClass('act').addClass('hdn');
 							main.addClass('act').removeClass('hdn');
@@ -999,7 +999,10 @@ $(document).ready(function(){
 						}
 					}	
 				});
-			}else{
+			}
+			
+			
+			else if(evt.keyCode != 40 && evt.keyCode != 38){
 				$.ajax({
 					url:AJAX_DIR+'suggest_school.php',
 					method:'post',
@@ -1010,6 +1013,30 @@ $(document).ready(function(){
 				});
 			}
 		},
+		keydown:function(e){
+			var keyPressed = e.keyCode;
+ 			if(keyPressed == 13){
+ 				e.preventDefault();
+ 				return false;	
+ 			}else if(keyPressed == 40){
+				//down arrow
+				var parentDiv = $(this).parents('.side-block-wrapper').find('.school-name-suggest')
+				var total_result = parentDiv.find('.suggest-item').length;
+				if(total_result > 0){
+					global_sch_hover = (++global_sch_hover)%total_result;
+					parentDiv.find('.suggest-item').removeClass('light-hover-act');
+					parentDiv.find('.suggest-item:eq('+global_sch_hover+')').addClass('light-hover-act');
+				}
+ 			}else if(keyPressed == 38){
+ 				var parentDiv = $(this).parents('.side-block-wrapper').find('.school-name-suggest')
+				var total_result = parentDiv.find('.suggest-item').length;
+				if(total_result > 0){
+					global_sch_hover = (--global_sch_hover)%total_result;
+					parentDiv.find('.suggest-item').removeClass('light-hover-act');
+					parentDiv.find('.suggest-item:eq('+global_sch_hover+')').addClass('light-hover-act');
+				}
+ 			}
+ 		},
 		blur:function(){
 			var parentDiv = $(this).parents('.popover-throwable');
 			var popOver = parentDiv.find('.popover-dialog-wrapper');

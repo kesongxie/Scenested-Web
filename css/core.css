@@ -159,6 +159,10 @@ textarea{
 	z-index:-1;
 }
 
+.light-hover-act{
+	background:#f3f3f3 
+}
+
 .light-hover:hover{
 	background:#f3f3f3 !important;
 }
@@ -843,8 +847,13 @@ div.ui-datepicker{
 }
 
 .post-operation-icon{
-	opacity:0.4;
+	opacity:0.3;
 	margin-right:6px;
+}
+.action-num{
+	font-weight:bold;
+/* 	color:#B1B1B1; */
+	color:#A0A0A0;
 }
 
 .post-operation-icon:hover{
@@ -852,7 +861,7 @@ div.ui-datepicker{
 }
 
 .t-j{
-	opacity:0.6;
+	opacity: 0.46;
 }
 
 
@@ -1628,7 +1637,7 @@ img.gallery-navi{
 }
 
 .invitation-wrapper .inner .body .right-content .contact{
-	overflow:scroll;
+	overflow:auto;
 	height:88%;
 	width:100%;
 }

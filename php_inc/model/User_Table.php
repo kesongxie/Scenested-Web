@@ -391,7 +391,21 @@
 			return false;
 		}
 		
-		
+		public function returnFullnameByAccessUrl($url){
+			$url_array = explode('/', trim($url,'/'));
+			if($url_array !== false && sizeof($url_array) >= 2){
+				$base = $url_array[0];
+				if($base == 'user'){
+					$access_url = $url_array[1];
+					$name_array = $this->getMultipleColumnsBySelector(array('firstname','lastname'), 'user_access_url', $access_url);
+					if($name_array !== false){
+						return $name_array['firstname'].' '.$name_array['lastname'];
+					}
+				}
+			}
+			return false;
+			
+		}	
 	
 		
 	}

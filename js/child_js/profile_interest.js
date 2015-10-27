@@ -79,7 +79,6 @@ function deleteInterest(sender){
 		method:'post',
 		data: {key:key},
 		success:function(resp){
-			
 			resetDialog();
 			var inner_wrapper = $('#interest-content-wrapper .interest-content-inner-wrapper[data-key='+key+']');
 			inner_wrapper.css('-webkit-animation',"bounceOutDown 1s").css('animation',"bounceOutDown 1s");
@@ -179,6 +178,7 @@ $(document).ready(function(){
 					}else if(resp == '3'){
 						presentPopupDialog("Interest Existed",'The interest <span class="plain-lk pointer" style="color:#062AA3">'+ name + '</span> has already existed', "Got it", "", null, null );
 					}else{	
+						$('#add-new-interest-navi').removeClass('hdn');
 						var add_interest_wrapper = $('#add-new-interest-wrapper');
 						add_interest_wrapper.css('-webkit-animation',"zoomOut 0.5s").css('animation',"zoomOut 0.5s").addClass('hdn');
 						$('.interest-content-inner-wrapper').addClass('hdn').removeClass('blk');
@@ -188,7 +188,6 @@ $(document).ready(function(){
 						$('#interest-content-wrapper').prepend(mid_content.html()).removeClass('hdn');
 						side_content.children('.interest-side-label').css('-webkit-animation',' bounceInUp 1s');
 						$('#i-interest-navi').append(side_content.html());
-
 						setVisibleContentWithParent(mid_content.find('.interest-content-inner-wrapper'),'Read more');
 						//reset elements
 						parentDiv.find('input, textarea, select').val('');

@@ -11,7 +11,7 @@
 			<!--starts int-group-->
 			<div class="sub int-group child-scrollable hdn">
 				<div class="back-to-main"><img class="prev" src="<?php echo IMGDIR ?>left_nxt.png" height="12" width="12">Connect to Interest</div>
-				<div style="max-height:130px;overflow:scroll">
+				<div style="max-height:130px;overflow:auto">
 					<?php if($rows !== false && sizeof($rows) > 0): ?>
 					<?php foreach($rows as $row): ?>
 						<?php  
@@ -54,7 +54,7 @@
 			<!--starts collection group-->
 			<div class="sub connection-group child-scrollable hdn">
 				<div class="back-to-main"><img class="prev" src="<?php echo IMGDIR ?>left_nxt.png" height="12" width="12"><?php echo $firstname; ?>'s Interests</div>
-				<div style="max-height:130px;overflow:scroll">
+				<div style="max-height:130px;overflow:auto">
 		
 			
  				<?php if($rows_in !== false && sizeof($rows_in) > 0): ?>

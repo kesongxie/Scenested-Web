@@ -19,6 +19,7 @@
 			$user = new User_Table();
 			$fullname = $user->getUserFullnameByUserIden($user_id);
 			$reset_dir = ROOTDIR."password.php?reset=".$key."&code=".$hash;
+			$logo_url = LOGO_URL;
 			ob_start();
 			include(self::RESET_PASSWORD_EMAIL_PATH);
 			$content = ob_get_clean();

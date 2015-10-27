@@ -13,7 +13,8 @@
 	define("JS_PATH", ROOTDIR.'js/');
 	define("CHILD_JS_PATH", JS_PATH.'child_js/');
 	define("SPINNER_ICON", IMGDIR."spinner.gif");
-	
+	define("LOGO_URL",IMGDIR.'media/logo.png');
+
 	//paths for php file system
 	define("DOCUMENT_ROOT",'../');
 	define("U_MEDAI_FOLDER_DIR",DOCUMENT_ROOT.'media_u/');
@@ -46,6 +47,5 @@
 	define("DEFAULT_INTEREST_LABEL_IMAGE_PREFIX",DEFAULT_IMAGE.'interest-label-');
 	define("MAX_INTEREST_LABEL_COLOR_RANDOM_INDEX", 6);
 	define("MAX_PHOTO_BOUND", 10000000);	
-	
 	
 ?>
