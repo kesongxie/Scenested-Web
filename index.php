@@ -1,4 +1,4 @@
-<?php
+<?php   
 	include_once 'php_inc/core.inc.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'User_Table.php';
 	include_once PHP_INC_MODEL_ROOT_REF.'User_Profile_Picture.php';

@@ -610,3 +610,9 @@
 [28-Oct-2015 22:34:44 CST6CDT] PHP Warning:  require_once(Database_Connection.php): failed to open stream: No such file or directory in /home/higout/public_html/php_inc/model/Core_Table.php on line 2
 [28-Oct-2015 22:34:44 CST6CDT] PHP Fatal error:  require_once(): Failed opening required 'Database_Connection.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/higout/public_html/php_inc/model/Core_Table.php on line 2
 [28-Oct-2015 22:35:31 CST6CDT] PHP Parse error:  syntax error, unexpected '.', expecting ',' or ';' in /home/higout/public_html/php_inc/model/User_Media_Base.php on line 10
+[28-Oct-2015 22:39:44 CST6CDT] PHP Parse error:  syntax error, unexpected '.', expecting ',' or ';' in /home/higout/public_html/php_inc/model/User_Media_Base.php on line 10
+[28-Oct-2015 22:40:55 CST6CDT] PHP Parse error:  syntax error, unexpected '.', expecting ',' or ';' in /home/higout/public_html/php_inc/model/User_Media_Base.php on line 10
+[28-Oct-2015 22:40:56 CST6CDT] PHP Parse error:  syntax error, unexpected '.', expecting ',' or ';' in /home/higout/public_html/php_inc/model/User_Media_Base.php on line 10
+[28-Oct-2015 22:45:57 CST6CDT] PHP Parse error:  syntax error, unexpected '.', expecting ',' or ';' in /home/higout/public_html/php_inc/model/User_Media_Base.php on line 10
+[28-Oct-2015 22:49:09 CST6CDT] PHP Parse error:  syntax error, unexpected '.', expecting ',' or ';' in /home/higout/public_html/php_inc/model/User_Media_Base.php on line 10
+[28-Oct-2015 23:00:46 CST6CDT] PHP Parse error:  syntax error, unexpected '.', expecting ',' or ';' in /home/higout/public_html/php_inc/model/User_Media_Base.php on line 10
