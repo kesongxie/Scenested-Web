@@ -83,18 +83,33 @@
 		public function getFavorPlainListForTarget($target_id){
 			$rows = $this->getAllRowsColumnBySelector('user_id', 'target_id',$target_id);
 			if($rows !== false){
-				include_once 'User_Table.php';
+			 	include_once 'User_Table.php';
 				$user = new User_Table();
 				if(sizeof($rows) > 1){
 					$result = '';
 					foreach($rows as $row){
-						 $result .= $user->getUserFullnameByUserIden($row['user_id']).', ';
+						if($row['user_id'] == $_SESSION['id']){
+						 	 $result .= 'You'.', ';
+						}else{
+							 $result .= $user->getUserFullnameByUserIden($row['user_id']).', ';
+						}
+							
 					}
+					
 					return trim($result,', ').' favor this';
 					
 				}else{
-					$fullname = $user->getUserFullnameByUserIden($rows[0]['user_id']);
-					return $fullname.' favors this';
+					if($rows[0]['user_id'] != $_SESSION['id']){
+						$name = $user->getUserFullnameByUserIden($rows[0]['user_id']);
+					}else{
+						$name = 'You';
+					}
+					
+					if($name == 'You'){
+						return $name.' favor this';
+					}else{
+						return $name.' favors this';
+					}
 				}
 			}
 			return false;

@@ -8,6 +8,7 @@
 			$email = strtolower($email);
 			$firstname = ucfirst(strtolower($firstname));
 			$lastname = ucfirst(strtolower($lastname));
+			$logo_url = LOGO_URL;
 			ob_start();
 			include(self::SIGNUP_EMAIL_PATH);
 			$content = ob_get_clean();

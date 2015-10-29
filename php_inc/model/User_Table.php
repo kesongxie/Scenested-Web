@@ -18,7 +18,7 @@
 			while($found){
 				//regenerate
 				$count++;
-				$user_access_url = $firstname.'.'.$lastname.'.'.$count;
+				$user_access_url = $firstname.'.'.$lastname.$count;
 				$found = $this->isStringValueExistingForColumn($user_access_url, 'user_access_url');
 			}
 			$firstname = ucfirst($firstname);
