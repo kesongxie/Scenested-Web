@@ -2,14 +2,15 @@ body{
 	font-size:15px;
 }
 
-#privacy-body{
+#terms-body{
 	width:80%;
 	margin:0px auto;
 	margin-bottom:20px;
+
 }
 
 
-#privacy-body .title{
+#terms-body .title{
 	font-size:20px;
 	margin-top:40px;
 	color:#333;
