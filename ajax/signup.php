@@ -77,7 +77,7 @@
 			$message = EMAIL::getSignUpEmailMessage($email, $firstname, $lastname, $code, $register_id);
 			$headers  = 'MIME-Version: 1.0' . "\r\n";
 			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-			$headers .= 'From: Higout <no-reply@lsere.com>'."\r\n";
+			$headers .= 'From: Higout '.SERVER_MAIL_FROM ."\r\n";
 			if($email_account_activation->insertEntry($register_id, $code) && mail($to, $subject, $message, $headers)){
 				$user_table = new User_Table();
 				$auth_tokens = new Auth_Tokens();

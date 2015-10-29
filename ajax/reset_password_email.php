@@ -17,7 +17,7 @@
 			$message = Email::getResetPasswordEmailMessage($to, $user_id, $_POST['key'], $hash );
 			$headers  = 'MIME-Version: 1.0' . "\r\n";
 			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-			$headers .= 'From: Higout <no-reply@lsere.com>'."\r\n";
+			$headers .= 'From: Higout '.SERVER_MAIL_FROM."\r\n";
 			if($retrieve->insertEntry($user_id, $hash) && mail($to, $subject, $message, $headers)){
 				echo '0';
 			}else{
