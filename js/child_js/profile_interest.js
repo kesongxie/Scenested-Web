@@ -1,4 +1,3 @@
-
 function loadInterest(thisE){
 	var  label_key = thisE.attr('data-labelfor');
 	var sideLabel = thisE.parents('#i-interest-navi').find('.interest-side-label');
@@ -247,7 +246,6 @@ $(document).ready(function(){
 				contentType: false,
 				data:data,
 				success:function(resp){
-					
 					if(resp == '1'){
 						presentPopupDialog("Bad Image",BAD_IMAGE_MESSAGE, "Got it", "", null, null );
 					}else{	
