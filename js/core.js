@@ -110,7 +110,7 @@ function checkPassword(str)
 function setVisibleContentWithParent(parent, text){
 	parent.find('.visible-content').each(function(){
 		var scrollHeight = $(this)[0].scrollHeight;
-		if( scrollHeight > 32 && typeof scrollHeight !== "undefined" &&  scrollHeight > $(this).innerHeight() ){
+		if( typeof scrollHeight !== "undefined" &&  scrollHeight > $(this).innerHeight() ){
 			if($(this).parents('.visible-post-scope').find('.visible-control').length < 1){
 					$(this).parents('.visible-post-scope').find('.visible-content').after('<div class="visible-control plain-lk pointer inline-blk rdm" >'+text+'</div>');
 			}

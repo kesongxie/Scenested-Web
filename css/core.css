@@ -729,6 +729,7 @@ div.ui-datepicker{
 .interest-profile .dialog-body .limit-height{
 	overflow:hidden;
 	max-height:92px;
+	min-height:60px;
 }
 
 .post-text .limit-height{
