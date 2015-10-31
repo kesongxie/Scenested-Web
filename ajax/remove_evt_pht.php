@@ -8,7 +8,7 @@
 		if($delete === false){
 			echo '1';
 		}else{
-			 $load = $pht->loadSingleEvtPhotoByKey($_POST['load_key'],$_SESSION['id'] );
+			 $load = $pht->loadSingleEvtPhotoByKey($_POST['load_key']);
 			 if($load === false){
 			 	echo '1';
 			 }else{
