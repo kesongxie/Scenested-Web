@@ -292,6 +292,57 @@
 			$this->setColumnById('group_name', $new_name, $group_id);
 		}
 		
+		//get all the unique users that in the parameter user's event
+		public function getUserArrayWithEventConnectionToUser($user_id){
+				$user_like = '%'.$user_id.',%';
+				$stmt = $this->connection->prepare("SELECT `user_in` FROM `$this->table_name` WHERE `user_in` like ? AND `type`= 'e' AND `group_name` IS NULL");
+				if($stmt){
+					$stmt->bind_param('s',$user_like);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$rows = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							$result_array = array();
+							foreach($rows as $row){
+								$temp_array = explode(',',trim($row['user_in'], ','));
+								$result_array = array_merge($result_array, $temp_array);		
+							}
+							return array_diff(array_unique($result_array), array($user_id));
+						 }
+					}
+				}
+				return false;
+		}
+		/*get all the joined or added event for user*/
+		public function getEventArrayForUser($user_id){
+			$user_like = '%'.$user_id.',%';
+				$stmt = $this->connection->prepare("
+				SELECT event_group.event_id
+				FROM groups
+				LEFT JOIN event_group
+				ON groups.id = event_group.group_id
+				WHERE `user_in` like ? AND groups.type= 'e' AND groups.group_name IS NULL
+				");
+				if($stmt){
+					$stmt->bind_param('s',$user_like);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$rows = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							$result_array = array();
+							foreach($rows as $row){
+								$result_array = array_merge($result_array, array($row['event_id']));		
+							}
+							return $result_array;
+						 }
+					}
+				}
+				echo $this->connection->error;
+				return false;
+		}
+		
 		
 		
 		

@@ -252,6 +252,7 @@ function removeEventPhoto(sender){
 			method:'post',
 			data: {key:key, load_key:load_key},
 			success:function(resp){
+				console.log(resp);
 				if(resp != '1'){
 					$('.previewable[data-key='+current_act_image.attr('data-key')+']').remove();
 					//load the image to be display after deleting

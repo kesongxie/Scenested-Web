@@ -106,12 +106,12 @@
 		}
 		
 		
-		public function loadSingleEvtPhotoByKey($hash, $user_id){
-			$result = $this->getMultipleColumnsBySelector(array('id','event_id','picture_url'),'hash',$hash);
+		public function loadSingleEvtPhotoByKey($hash){
+			$result = $this->getMultipleColumnsBySelector(array('id','user_id','event_id','picture_url'),'hash',$hash);
 			if($result !== false){
 				include_once 'User_Media_Prefix.php';
 				$prefix = new User_Media_Prefix();
-				$picture_url = convertThumbPathToOriginPath($prefix->getUserMediaPrefix($user_id).'/'.$result['picture_url']);
+				$picture_url = convertThumbPathToOriginPath($prefix->getUserMediaPrefix($result['user_id']).'/'.$result['picture_url']);
 				$previous_photo_hash = $this->getPreviousPhotoBeforeRowForEvent($result['id'],$result['event_id']);
 				$next_photo_hash = $this->getNextPhotoAfterRowForEvent($result['id'],$result['event_id']);
 				ob_start();

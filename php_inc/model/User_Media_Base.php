@@ -133,17 +133,37 @@
 		
 		
 		public function getUserMediaBlockByUserId($user_id){
-			$stmt = $this->connection->prepare("
-				SELECT  'm' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM moment_photo WHERE `user_id` = ?
+			/*get users that are in the $user_id's events*/
+			include_once MODEL_PATH.'Groups.php';
+			$group = new Groups();
+			
+			$event_array = $group->getEventArrayForUser($user_id);
+			$list = false;
+			if($event_array !== false && sizeof($event_array) > 0){
+				$list = '';
+				foreach($event_array as $event){
+					$list.="'".$event."',";
+				}
+				$list = trim($list, ',');
+			}
+			$query = "SELECT  'm' AS `source_from`, `id`, `user_id`,`picture_url`, `upload_time`, `hash`  FROM moment_photo WHERE `user_id` = ?
 				UNION  
-				SELECT  'e' AS `source_from`, `id`, `picture_url`, `upload_time`, `hash`  FROM event_photo WHERE `user_id` = ?
+				SELECT  'e' AS `source_from`, `id`, `user_id`,`picture_url`, `upload_time`, `hash`  FROM event_photo WHERE `user_id` = ?
 				UNION  
-				SELECT  'p' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_picture WHERE `user_id` = ?
+				SELECT  'p' AS `source_from`, `id`,`user_id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_picture WHERE `user_id` = ?
 				UNION  
-				SELECT  'c' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_cover WHERE `user_id` = ?
-				ORDER BY upload_time DESC LIMIT 10
-			");	
-		
+				SELECT  'c' AS `source_from`, `id`,`user_id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_cover WHERE `user_id` = ?
+				";
+			
+			if($list !== false){
+				$query .=  "UNION  
+				SELECT  'e' AS `source_from`, `id`,`user_id`, `picture_url`, `upload_time`, `hash`  FROM event_photo WHERE `event_id` IN($list) 
+				";
+			}
+			
+			$query .= "ORDER BY upload_time DESC LIMIT 10";
+			$stmt = $this->connection->prepare($query);
+			
 			if($stmt){
 					$stmt->bind_param('iiii',$user_id, $user_id,$user_id,$user_id);
 					if($stmt->execute()){
@@ -157,7 +177,7 @@
 								$right_content = "";
 								$count = 0;
 								foreach($rows as $row){
-									$content= $this->renderPhotoStreamByPictureUrl($row['picture_url'], $user_id, $row['source_from'], $row['hash']);
+									$content= $this->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id'], $row['source_from'], $row['hash']);
 									if($content !== false){
 										if($count++ % 2 == 0){
 											$left_content.= $content;
@@ -352,28 +372,49 @@
 		
 		
 		public function loadProfilePhotoStream($l_m, $r_m, $l_e, $r_e,$l_p, $r_p,$l_c, $r_c, $user_key){
-			include_once MODEL_PATH.'User_Table.php';
+		include_once MODEL_PATH.'Groups.php';
+		include_once MODEL_PATH.'User_Table.php';
+		
+		include_once MODEL_PATH.'Groups.php';
 			$user = new User_Table();
 			$user_id = $user->getUserIdByKey($user_key);
 			if($user_id !== false){
-				 $stmt = $this->connection->prepare("
-					SELECT  'm' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM moment_photo WHERE `user_id` = ? AND `id` < ?
+				$group = new Groups();
+				$event_array = $group->getEventArrayForUser($user_id);
+				$list = false;
+				if($event_array !== false && sizeof($event_array) > 0){
+					$list = '';
+					foreach($event_array as $event){
+						$list.="'".$event."',";
+					}
+					$list = trim($list, ',');
+				}
+				$query = "SELECT  'm' AS `source_from`, `id`, `user_id`,`picture_url`, `upload_time`, `hash`  FROM moment_photo WHERE `user_id` = ? AND `id` < ?
 					UNION  
-					SELECT  'e' AS `source_from`, `id`, `picture_url`, `upload_time`, `hash`  FROM event_photo WHERE `user_id` = ? AND `id` < ?
+					SELECT  'e' AS `source_from`, `id`, `user_id`,`picture_url`, `upload_time`, `hash`  FROM event_photo WHERE `user_id` = ? AND `id` < ?
 					UNION  
-					SELECT  'p' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_picture WHERE `user_id` = ? AND `id` < ?
+					SELECT  'p' AS `source_from`, `id`,`user_id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_picture WHERE `user_id` = ? AND `id` < ?
 					UNION  
-					SELECT  'c' AS `source_from`, `id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_cover WHERE `user_id` = ? AND `id` < ?
-					ORDER BY upload_time DESC LIMIT 10
-				");	
-
+					SELECT  'c' AS `source_from`, `id`,`user_id`,`picture_url`, `upload_time`, `hash`  FROM user_profile_cover WHERE `user_id` = ? AND `id` < ?
+					";
+			
+				if($list !== false){
+					$query .=  "UNION  
+					SELECT  'e' AS `source_from`, `id`,`user_id`, `picture_url`, `upload_time`, `hash`  FROM event_photo WHERE `event_id` IN($list) AND `id` < ?
+					";
+				}
+				
+			
+			
+				$query .= "ORDER BY upload_time DESC LIMIT 10";
+				$stmt = $this->connection->prepare($query);
 				if($stmt){
 					$last_m = $this->getLastLoadedStreamId($l_m, $r_m, 'm');
 					$last_e = $this->getLastLoadedStreamId($l_e, $r_e, 'e');
 					$last_p = $this->getLastLoadedStreamId($l_p, $r_p, 'p');
 					$last_c = $this->getLastLoadedStreamId($l_c, $r_c, 'c');
 				
-					$stmt->bind_param('iiiiiiii',$user_id,$last_m, $user_id, $last_e, $user_id, $last_p,$user_id, $last_c);
+					$stmt->bind_param('iiiiiiiii',$user_id,$last_m, $user_id, $last_e, $user_id, $last_p,$user_id, $last_c, $last_e);
 				
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
@@ -385,7 +426,7 @@
 								$right_content = "";
 								$count = 0;
 								foreach($rows as $row){
-									$content= $this->renderPhotoStreamByPictureUrl($row['picture_url'], $user_id, $row['source_from'], $row['hash']);
+									$content= $this->renderPhotoStreamByPictureUrl($row['picture_url'], $row['user_id'], $row['source_from'], $row['hash']);
 									if($content !== false){
 										if($count++ % 2 == 0){
 											$left_content.= $content;
