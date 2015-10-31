@@ -258,6 +258,8 @@
 					$comment_text =  $this->getColumnById('text',$reply['target_id']);
 				}
 				$isReply = $this->checkWhetherUserHasRepliedToReply($_SESSION['id'], $reply_id);
+				$favor_number = $this->getReplyLikeNumber($reply_id);
+				$favored = $this->isSessionUserFavorReply($reply_id);
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.$this->popover_notification_template_path);
 				$reply_block = ob_get_clean();

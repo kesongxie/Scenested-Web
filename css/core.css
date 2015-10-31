@@ -1714,3 +1714,8 @@ img.gallery-navi{
 	background:#fff;
 }
 
+.popover-dialog-wrapper{
+	min-width:140px;
+	
+}
+
