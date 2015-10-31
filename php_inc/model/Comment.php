@@ -53,10 +53,10 @@
 				$text = $comment['text'];
 				$user_id = $comment['user_id'];
 				$hash = $comment['hash'];
-				$favor_number = $this->getCommentLikeNumber($comment_id);
 				$post_owner_id = $this->getPostUserIdByActivityId($comment['activity_id']);
 				$reply_block = $this->getReplyBlockByCommentId($comment_id);
 				$favored = $this->isSessionUserFavorComment($comment_id);
+				$favor_number = $this->getCommentLikeNumber($comment_id);
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.$this->template_path);
 				$comment_block = ob_get_clean();
@@ -179,6 +179,8 @@
 				
 				$post_detail = $activity->getNotificationPostDetailByActivityId($comment['activity_id']);
 				$post_owner_id = $this->getPostUserIdByActivityId($comment['activity_id']);
+				$favored = $this->isSessionUserFavorComment($comment_id);
+				$favor_number = $this->getCommentLikeNumber($comment_id);
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.$this->popover_notification_template_path);
 				$comment_block = ob_get_clean();
