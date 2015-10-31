@@ -387,6 +387,10 @@
 				
 				$operation_dispable = ($group_key !== false || $interest_activity['user_id'] == $_SESSION['id']);
 				
+				$favor = new Favor_Activity();
+				$favor_number = $favor->getFavorNum($activity_id);
+				$favored = $favor->isSessionUserAlreadyFavor($activity_id);
+				
 				ob_start();
 				include(SCRIPT_INCLUDE_BASE.'phtml/child/post_event_block.phtml');
 				$event_block = ob_get_clean();
