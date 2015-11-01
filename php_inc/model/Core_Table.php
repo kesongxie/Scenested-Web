@@ -1,11 +1,11 @@
 <?php
-	require_once 'Database_Connection.php';
+	require_once  $_SERVER['DOCUMENT_ROOT'].'/php_inc/model/Database_Connection.php';
 	require_once  $_SERVER['DOCUMENT_ROOT'].'/php_inc/global_constant.php';
 
 	/*
 		core_table is the base class for other table class
 	*/
-	class core_table{
+	class Core_Table{
 		private $table_name;
 		public $connection;
 		
@@ -542,6 +542,7 @@
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false){
+					 	$stmt->close();
 						return $result->num_rows;
 					 }
 				}
@@ -557,6 +558,7 @@
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false){
+					 	$stmt->close();
 						return $result->num_rows;
 					 }
 				}
@@ -746,6 +748,7 @@
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result->num_rows == 1){
+					 	$stmt->close();
 						return true;
 					 }
 				}
@@ -764,6 +767,7 @@
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result->num_rows == 1){
+					 	$stmt->close();
 						return true;
 					 }
 				}
@@ -780,6 +784,7 @@
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result->num_rows == 1){
+					 	$stmt->close();
 						return true;
 					 }
 				}
