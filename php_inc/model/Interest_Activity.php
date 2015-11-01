@@ -47,6 +47,14 @@
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
 		public function getInitialPageFeed(){
 			include_once 'User_In_Interest.php';
 			$in = new User_In_Interest();
@@ -2457,6 +2465,7 @@
 			return $this->returnMatchedEventForMineInterest(4,$list);
 		}
 		
+		/* for mobile site*/
 		
 		
 	}
