@@ -1,8 +1,11 @@
 *{
-	color:#333;
+	color:#4E4E4E;
 }
 .post-wrapper{
 	margin-bottom: 0px !important;
 	box-shadow: none !important;
 	-webkit-box-shadow: none !important;
+}
+.post-user-name{
+	color: rgb(22, 25, 140) !important;
 }
