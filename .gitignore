@@ -3,6 +3,10 @@ mobile/
 js/glob.js
 php_inc/server_cred.php
 php_inc/model/Database_Connection.php
+<<<<<<< HEAD
 /error_log
 /ajax/error_log
 /ajax/phtml/error_log
+=======
+mobile/
+>>>>>>> 2209c469a81e355396810ad7c1391ba63fd574fe

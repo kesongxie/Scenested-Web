@@ -12,6 +12,8 @@ body{
 	font-size:14px;
 	position: relative;
 	background-color:#fff;
+	min-width: 1150px;
+    max-width: 1750px;
 /* 	background-color:#FBFBFB; */
 	margin: 0px auto;
 	line-height: 1.5;
