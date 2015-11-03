@@ -1,5 +1,6 @@
 *{
 	color:#4E4E4E;
+	font-size:15px;
 }
 .post-wrapper{
 	margin-bottom: 0px !important;
@@ -9,6 +10,7 @@
 .post-user-name{
 	color: rgb(22, 25, 140) !important;
 }
+
 .post-sub-title{
 	color:#6F6F6F;
 }
