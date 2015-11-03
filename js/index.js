@@ -24,7 +24,6 @@ function loadIndexRecentPreview(){
 	});
 }
 
-
 $(document).ready(function(){
 	$('body').on({
 		click:function(){
