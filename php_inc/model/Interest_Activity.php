@@ -54,7 +54,7 @@
 		
 		
 		
-		
+		//2 columns
 		public function getInitialPageFeed(){
 			include_once 'User_In_Interest.php';
 			$in = new User_In_Interest();
@@ -131,6 +131,81 @@
 			$content = ob_get_clean();
 			return $content;
 		}
+		
+		
+		public function getOneColumnInitialPageFeed(){
+			include_once 'User_In_Interest.php';
+			$in = new User_In_Interest();
+			$friends = $in->getAllFriendsInUsersInterest();
+			
+			// $content .= $this->getIndexAvator();					
+			include_once 'Interest.php';
+			$interest  = new Interest();
+			$feed_id_list = false;
+			if($interest->isUserHasInterest($_SESSION['id'])){
+				$content = $this->getRecentPostPreview();			
+			}else{
+				$content = $interest->getAddNewInterestBlock();
+				ob_start();
+				include(TEMPLATE_PATH_CHILD.'index_post_wrapper.phtml');
+				$content .= ob_get_clean();			
+			}
+			
+			$user_in = '';
+			if($friends !== false && sizeof($friends >= 1 )){
+				foreach($friends as $friend){
+					$user_in.="'".$friend['user_id']."',";
+				}
+			}
+			$count = 0;
+			$user_in = $user_in.$_SESSION['id'];
+			$stmt = $this->connection->prepare("SELECT `id`,`type` FROM `$this->table_name` WHERE `user_id` IN ($user_in) ORDER BY `id` DESC LIMIT 10");			
+			if($stmt){
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						$count = 1;
+						$feed_id_list = '';
+						foreach($rows as $row){
+							$post = '';
+							$feed_id_list .= "'".$row['id']."',";
+							if($row['type'] == 'm'){
+								$post = $this->getMomentInterestActivityBlockByActivityId($row['id'], true);
+							}else if($row['type'] == 'e'){
+								$post = $this->getEventInterestActivityBlockByActivityId($row['id'], true);
+							}
+							$content .= $post;
+						}
+						$_SESSION['index_feed_id_list'] = trim($feed_id_list,',');
+					 }else{
+					 	if(isset($_SESSION['index_feed_id_list'])){
+					 		unset($_SESSION['index_feed_id_list']);
+					 	}
+					 }
+				}
+			}
+			
+			// if($count < 10){
+// 				$num_need_to_load = 10 - $count;
+// 				if(isset($_SESSION['index_feed_id_list'])){
+// 					$exclusive_list = $_SESSION['index_feed_id_list'];
+// 				}else{
+// 					$exclusive_list = "'-1'";
+// 				}
+// 				$suggest_content = $this->getSuggestPost($num_need_to_load, $exclusive_list);
+// 				$left_content.= $suggest_content['suggest_left_content'];
+// 				$right_content.= $suggest_content['suggest_right_content'];
+// 			}
+			
+			ob_start();
+			include(TEMPLATE_PATH_CHILD.'index_new_feed_one_column.phtml');
+			$content = ob_get_clean();
+			return $content;
+		}
+		
+		
 		
 		public function loadMoreFeed($last_key){
 			include_once 'User_In_Interest.php';
