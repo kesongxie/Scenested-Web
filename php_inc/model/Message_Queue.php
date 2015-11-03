@@ -110,8 +110,6 @@
 		}
 		
 		
-		
-		
 		public function loadMessageChatBoxByKey($user_id, $conversation_with_key, $top_to_contact = false){
 			include_once 'User_Table.php';
 			$user = new User_Table();

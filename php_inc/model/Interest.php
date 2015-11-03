@@ -671,14 +671,18 @@
 			if($exclusive_users !== false){
 				$stmt = $this->connection->prepare("
 					SELECT DISTINCT interest.user_id AS user_id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-					FROM interest 
+					FROM user_profile_picture
+					LEFT JOIN interest
+					ON interest.user_id = user_profile_picture.user_id
 					LEFT JOIN user
 					ON interest.user_id = user.id WHERE  user.id NOT IN($list) AND interest.user_id != ?  AND interest.user_id NOT IN($exclusive_users) ORDER BY RAND() LIMIT ?  
 				");
 			}else{
 				$stmt = $this->connection->prepare("
 					SELECT DISTINCT interest.user_id AS user_id, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.id, user.unique_iden AS hash, user.user_access_url 
-					FROM interest 
+					FROM user_profile_picture
+					LEFT JOIN interest 
+					ON interest.user_id = user_profile_picture.user_id
 					LEFT JOIN user
 					ON interest.user_id = user.id  WHERE  user.id NOT IN($list) AND  interest.user_id != ?  ORDER BY RAND() LIMIT ? 
 				");
@@ -817,9 +821,12 @@
 			$school_id = $edu->getSchoolIdByUserId($_SESSION['id']);
 				$sub_query = '';
 				if($school_id !== false){
+					//suggest those user with profile picture
 					$sub_query="
 						(SELECT DISTINCT user.id, 1 as ROLE,  CONCAT(user.firstname,' ',user.lastname) AS fullname,  user.unique_iden AS hash, user.user_access_url 
-							FROM education 
+							FROM user_profile_picture
+							LEFT JOIN education 
+							ON education.user_id = user_profile_picture.user_id
 							LEFT JOIN user
 							ON education.user_id=user.id
 							LEFT JOIN interest
@@ -831,9 +838,12 @@
 				}
 				$sub_query .= "
 						 (SELECT DISTINCT user.id, 2 as ROLE, CONCAT(user.firstname,' ',user.lastname) AS fullname, user.unique_iden AS hash, user.user_access_url 
-							FROM interest 
+							FROM user_profile_picture
+							LEFT JOIN interest
+							ON interest.user_id = user_profile_picture.user_id
 							LEFT JOIN user
-							ON interest.user_id=user.id   AND  user.id !=? WHERE  user.id  NOT IN($exclusive_list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?) 
+							ON interest.user_id=user.id
+							WHERE user.id !=?  AND user.id  NOT IN($exclusive_list) AND  (interest.name REGEXP ?  || interest.description REGEXP ?) 
 						)";
 				
 				$query = "SELECT DISTINCT id, fullname, hash, user_access_url
@@ -842,6 +852,9 @@
 				if($limit > 0){
 					$query .= " LIMIT ?"; 
 				}
+				
+			
+				
 				$stmt = $this->connection->prepare($query);
 				if($stmt){
 					if($interest_like !== false && $school_id !== false){
