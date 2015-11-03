@@ -4,7 +4,7 @@
 	<?php  if($interest_activity['user_id'] == $_SESSION['id']): ?>
 		<img src="<?php echo IMGDIR ?>down_arrow_icon.png" class="trigger-pop toggle-operation pointer hdn">
 	<?php endif; ?>
-	<div style="margin-left: 10px; color: #969696;">
+	<div class="post-sub-title" style="margin-left: 10px;">
 		<?php if($with_interest_name): ?>
 				<a class="plain-lk" style="color:inherit" href="<?php echo $interest_access_url; ?>"><?php echo htmlentities($interest_name); ?></a>
 				- 
