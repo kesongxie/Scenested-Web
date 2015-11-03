@@ -15,7 +15,7 @@ body{
 /* 	background-color:#FBFBFB; */
 	margin: 0px auto;
 	line-height: 1.5;
-	font-family:Gill, Helvetica, sans-serif;
+	font-family:helvetica, arial, sans-serif;
 	-webkit-font-smoothing: subpixel-antialiased;
 	min-height:720px;
 	padding-bottom:80px;
