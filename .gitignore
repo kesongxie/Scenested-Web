@@ -1,4 +1,5 @@
 media_u/
+mobile/
 js/glob.js
 php_inc/server_cred.php
 php_inc/model/Database_Connection.php
