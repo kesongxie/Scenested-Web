@@ -113,7 +113,7 @@
 		public function loadMessageChatBoxByKey($user_id, $conversation_with_key, $top_to_contact = false){
 			include_once 'User_Table.php';
 			$user = new User_Table();
-			$fullname = $user->getUserFullnameByUserIden($conversation_with_key);
+			$fullname = $user->getUserFullnameByUniqueIden($conversation_with_key);
 			$user_with = $user->getUserIdByKey($conversation_with_key);
 			$user_page_redirect =  USER_PROFILE_ROOT.$user->getUserAccessUrl($user_with);
 			$unique_iden = $user->getUniqueIdenForUser($user_with);

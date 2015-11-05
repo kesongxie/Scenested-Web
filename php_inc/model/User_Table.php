@@ -91,11 +91,28 @@
 			return $this->getUserInfoByUserIden('user_iden',$user_iden);
 		}
 		
+		public function getUserFullnameByUniqueIden($user_iden){
+			$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname FROM `$this->table_name` WHERE `unique_iden` = ?  LIMIT 1  ");
+			if($stmt){
+			
+				$stmt->bind_param('s', $user_iden);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$row = $result->fetch_assoc();
+						$stmt->close();
+						return $row['fullname'];
+					 }
+				}
+			}
+			return false;
+		}
+		
 		
 		public function getUserFullnameByUserIden($user_iden){
-			$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname FROM `$this->table_name` WHERE ( `id` = ? || `user_iden`=? || `unique_iden` = ?) LIMIT 1  ");
+			$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname FROM `$this->table_name` WHERE `id` = ?  LIMIT 1  ");
 			if($stmt){
-				$stmt->bind_param('iss', $user_iden, $user_iden,$user_iden);
+				$stmt->bind_param('i', $user_iden);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){
