@@ -94,7 +94,6 @@
 		public function getUserFullnameByUniqueIden($user_iden){
 			$stmt = $this->connection->prepare("SELECT CONCAT(firstname,' ',lastname) AS fullname FROM `$this->table_name` WHERE `unique_iden` = ?  LIMIT 1  ");
 			if($stmt){
-			
 				$stmt->bind_param('s', $user_iden);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
