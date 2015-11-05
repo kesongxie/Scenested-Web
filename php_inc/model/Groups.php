@@ -159,9 +159,9 @@
 			$stmt = $this->connection->prepare("
 			SELECT CONCAT('g-',groups.id) AS queue
 			FROM groups 
-			LEFT JOIN event_group
+			JOIN event_group
 			ON groups.id = event_group.group_id 
-			LEFT JOIN event
+			JOIN event
 			ON event_group.event_id = event.id
 			WHERE  groups.user_in LIKE ? AND (event.title LIKE ? || event.description LIKE ? || event.location LIKE ?)
 			
@@ -316,16 +316,17 @@
 		}
 		/*get all the joined or added event for user*/
 		public function getEventArrayForUser($user_id){
-			$user_like = '%'.$user_id.',%';
+				$user_in_a = $user_id.',%';
+				$user_in_b = '%,'.$user_id.',%';
 				$stmt = $this->connection->prepare("
 				SELECT event_group.event_id
 				FROM groups
 				LEFT JOIN event_group
 				ON groups.id = event_group.group_id
-				WHERE `user_in` like ? AND groups.type= 'e' AND groups.group_name IS NULL
+				WHERE (`user_in` like ? || `user_in` like ?)  AND groups.type= 'e' AND groups.group_name IS NULL
 				");
 				if($stmt){
-					$stmt->bind_param('s',$user_like);
+					$stmt->bind_param('ss',$user_in_a, $user_in_b);
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
 						 if($result !== false && $result->num_rows >= 1){

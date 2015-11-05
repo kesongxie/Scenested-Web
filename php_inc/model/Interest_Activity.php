@@ -660,19 +660,20 @@
 					UNION 
 					SELECT DISTINCT interest_activity.id AS activity_id,interest_activity.interest_id, interest_activity.hash,interest_activity.user_id, event.id AS event_id, event.title, event.description,event.date AS date, event.time AS time
 					FROM groups
-					LEFT JOIN event_group
+					JOIN event_group
 					ON groups.id = event_group.group_id 
-					LEFT JOIN event
+					JOIN event
 					ON event_group.event_id = event.id
-					LEFT JOIN interest_activity
-					ON event.interest_activity_id = interest_activity.id WHERE groups.user_in LIKE ? AND groups.group_name IS NULL
+					JOIN interest_activity
+					ON event.interest_activity_id = interest_activity.id WHERE (groups.user_in LIKE ? || groups.user_in LIKE ?)AND groups.group_name IS NULL
 				) dum ORDER BY TIMESTAMP(date,time) DESC  LIMIT 4
 				");
 			}
 			
 			if($stmt){
-				$user_in = '%'.$user_id.',%';
-				$stmt->bind_param('is',$user_id, $user_in);
+				$user_in_a = $user_id.',%';
+				$user_in_b = '%,'.$user_id.',%';
+				$stmt->bind_param('iss',$user_id, $user_in_a, $user_in_b);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false){
