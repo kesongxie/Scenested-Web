@@ -1,45 +1,128 @@
-<div class="time_picker_outer_wrapper popover hdn">
-		<div class="time_picker_inner_header">
-			Select Time
+<div class="overlay hdn" style="background:#000;z-index:99;opacity:0.4;"></div>
+<div id="edit-dialog-wrapper" class="vertical-center hdn">
+	<div id="edit-dialog-wrapper-inner" class="inline-blk">
+	<div id="edit-profile-dialog-wrapper" class="segue-wrapper inline-blk">
+		<div class="segue-main segue">
+			<div class="dialog-title">
+				<div class="dialog-title-text">Edit Profile</div>
+			</div>
+			<div style="width:100%;overflow:hidden">
+				<img style="width:100%;margin-top:-70%;display: block;" src="http://localhost:8888/media/dummy/1.jpeg">
+			</div>
+		
+			<div style="margin:-60px 0px 10px 20px;text-align:left">
+				<div class="inline-blk" style="border:6px solid #fff;border-radius:3px;">
+					<img  src="<?php echo DUMMY_MEDIA ?>avator.jpg" style="height:80px;width:80px;">
+				</div>
+				<div style="font-weight: 600;font-size: 18px; color: #223D50; margin-left: 3px;">Jamie Liang</div>
+			</div>
+			<div style="border-top:1px solid #eaeaea;padding:10px 24px;">
+				<div>
+					<div class="content-editable entry-focus" contenteditable="true" style="text-align:left;min-height:48px;" data-end = "true" placeholder="Short bio" ></div>
+				</div>
+			</div>
+		
+			<div id="add-scene-bar" class="option-bar">
+				<div style="position:relative;cursor:default;">
+					<input style="width:100%;border:0px;position:relative;left:0px;background:inherit" readonly placeholder="Travel, Beauty, Supreme"/>
+					<span style="position:absolute;right:0px;top:0px;color: #B0B0B0;">Edit<img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" style="position:relative;top:2px;margin-left:2px;" /></span>
+				</div>
+			</div>
+			<div style="border-top:1px solid #eaeaea;padding:10px 24px;text-align:right">
+				<div>
+					<button id="cancel-e-p-button" class="animated-button gray-action-button" style="padding:0px 20px;margin-right:6px;">CANCEL</button>
+
+					<button id="save-e-p-button" class="animated-button blue-action-button" style="padding:0px 30px;">SAVE</button>
+				</div>
+			</div>
 		</div>
-		<div class="time_picker_inner_body">
-			<div class="time_picker_inner_wrapper">
-				<div class="time_picker_time_part">
-				<div class="time_picker_item">00:30</div><div class="time_picker_item asct">01:00</div><div class="time_picker_item">01:30</div><div class="time_picker_item">02:00</div><div class="time_picker_item">02:30</div><div class="time_picker_item">03:00</div><div class="time_picker_item">03:30</div><div class="time_picker_item">04:00</div><div class="time_picker_item">04:30</div><div class="time_picker_item">05:00</div><div class="time_picker_item">05:30</div><div class="time_picker_item">06:00</div><div class="time_picker_item">06:30</div><div class="time_picker_item">07:00</div><div class="time_picker_item">07:30</div><div class="time_picker_item">08:00</div><div class="time_picker_item">08:30</div><div class="time_picker_item">09:00</div><div class="time_picker_item">09:30</div><div class="time_picker_item">10:00</div><div class="time_picker_item">10:30</div><div class="time_picker_item">11:00</div><div class="time_picker_item">11:30</div><div class="time_picker_item">12:00</div></div>
-				
-				<div class="time_picker_ampm_part">
-					<div class="ampm_part_item asct">AM</div>
-					<div class="ampm_part_item">PM</div>
+		<div id="add-scene-segue" class="segue-detail segue" style="position:absolute;right:-100%;top:0px;width:100%;" >
+			<div class="dialog-title"  >
+				<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Cancel</div>
+				<div class="dialog-title-text">Add Scene Labels</div>
+			</div>
+			<div class="dialog-body" style="height:300px;">
+					<div style="border-bottom:1px solid #eaeaea;padding:10px 24px;">
+						<div>
+							<input style="width:100%;border:0px;"  placeholder="Enter a scene lable name, such as music, travel, etc"/>
+						</div>
+					</div>
+					<div class="bb-list">
+						<div>
+							<div class="label-red" style="">Travel (5 Scenes)</div>
+						</div>
+					</div>
+					
+					
+					<div class="bb-list">
+						<div>
+							<div class="label-red" style="">Beauty (1 Scene)</div>
+						</div>
+					</div>
+					
+					<div class="bb-list">
+						<div>
+							<div class="label-red" style="">Supreme</div>
+						</div>
+					</div>
+			</div>
+			
+			<div class="" style="border-top:1px solid #eaeaea;padding:10px 24px;text-align:right">
+				<div>
+					<button class="animated-button blue-action-button segue-to-main-action" style="padding:0px 30px;">DONE</button>
 				</div>
 			</div>
 		</div>
 	</div>
-<div id="preview-popup-overlay" class="overlay ol hdn" style="opacity:1; background-color:rgba(0,0,0,.82);position:fixed !important"></div>	
-<div id="evt-preview" class="preview-dialog dl vertical-center evt-block hdn"></div>
+	
+	<div id="add-scene-dialog-wrapper" class="segue-wrapper inline-blk hdn">
 
-<div id="photo-preview" class="preview-dialog dl hdn">
-	<div class="content-wrapper vertical-center" style="margin:0px auto;width:50vw;min-width:600px;">
+
+		<div class="segue-main segue">
+			<div class="dialog-title">
+				<div class="dialog-title-text">Add Scene</div>
+			</div>
+			<div style="width:100%;overflow:hidden">
+				<img style="width:100%;margin-top:-70%;display: block;" src="http://localhost:8888/media/dummy/1.jpeg">
+			</div>
+		
+			<div style="margin:-60px 0px 10px 0px;text-align:center">
+				<div class="inline-blk" style="border:6px solid #fff;border-radius:3px;">
+					<img  src="<?php echo DUMMY_MEDIA ?>avator.jpg" style="height:80px;width:80px;">
+				</div>
+				<div style="font-weight: 600;font-size: 18px; color: #223D50; margin-left: 3px;">Jamie Liang</div>
+			</div>
+			<div style="border-top:1px solid #eaeaea;padding:10px 24px;">
+				<div>
+					<div class="scene-box content-editable entry-focus" contenteditable="true" style="text-align:left;min-height:48px;" data-end = "true" placeholder="What's in the scene?" ></div>
+				</div>
+			</div>
+		
+			
+			
+			<div class="option-bar">
+				<div style="position:relative;cursor:default;">
+					<input style="width:100%;border:0px;position:relative;left:0px;background:inherit" readonly placeholder="December 23, 2015"/>
+					<span style="position:absolute;right:0px;top:0px;color: #B0B0B0;">Edit<img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" style="position:relative;top:2px;margin-left:2px;" /></span>
+				</div>
+			</div>
+			
+			<div id="add-scene-bar" class="option-bar">
+				<div style="position:relative;cursor:default;">
+					<input style="width:100%;border:0px;position:relative;left:0px;background:inherit" readonly placeholder="Location for this scene"/>
+					<span style="position:absolute;right:0px;top:0px;color: #B0B0B0;">Edit<img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" style="position:relative;top:2px;margin-left:2px;" /></span>
+				</div>
+			</div>
+			
+			<div style="border-top:1px solid #eaeaea;padding:10px 24px;text-align:right">
+				<div>
+					<button id="cancel-e-p-button" class="animated-button gray-action-button" style="padding:0px 20px;margin-right:6px;">CANCEL</button>
+
+					<button id="save-e-p-button" class="animated-button blue-action-button" style="padding:0px 30px;">ADD</button>
+				</div>
+			</div>
+		</div>
+	
+	</div>
 	</div>
 </div>
-
-
-
-
-<div id="dialog-popup-overlay" class="overlay ol hdn"></div>	
-<div id="popup-dialog-wrapper" class="vertical-center dl hdn"style="position:fixed;width:100%;margin-top:-40px;z-index:10001;text-align:center;"></div>
-
-
-
-<div id="evt-invitation-wrapper" class="invitation-wrapper vertical-center hdn">
-</div>
-
-<div id="evt-include-friend-wrapper" class="invitation-wrapper vertical-center hdn">
-</div>
-
-
-<div class="hover-avator-wrapper hdn" style="z-index:9999;position:absolute">
-</div>
-
-
-	
-

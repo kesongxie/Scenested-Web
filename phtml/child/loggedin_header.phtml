@@ -1,9 +1,11 @@
 <div class="header">
 	<div class="header-inner" style="width:90%;margin:0px auto;height:60px;" >
-		<div id="logo" class="left-bar inline-blk vertical-center">
-			<img src="<?php echo LOGO_URL; ?>" height="44" width="80" style="display:block">
+		<!-- 
+<div id="logo" class="left-bar inline-blk vertical-center">
+			<a href="<?php echo ROOTDIR ?>"><img src="<?php echo LOGO_URL; ?>" height="44" width="80" style="display:block"></a>
 		</div>
 		
+ -->
 		
 		<div id="global-search-bar">
 			<div id="global-search-bar-inner">
@@ -26,8 +28,11 @@
 		</div>
 		<div id="loggedin-menu">
 				<ul>
-					<a href="<?php echo ROOTDIR; ?>" style="text-decoration:none;"><span class="header-navi-item"><img src="<?php echo IMGDIR ?>home_icon.png" id="home_icon" class="animate-opacity" height="25" width="25" title="Home"><span>Home</span></span></a>
-					<span id="header-notification-delegate" class="header-navi-item pointer">
+					<!-- 
+<a href="<?php echo ROOTDIR; ?>" style="text-decoration:none;">
+					<span class="header-navi-item"><img src="<?php echo IMGDIR ?>home_icon.png" id="home_icon" class="animate-opacity" height="25" width="25" title="Home"><span>Home</span></span></a>
+				
+ -->	<span id="header-notification-delegate" class="header-navi-item pointer">
 					<span style="position:relative">
 						<img src="<?php echo IMGDIR ?>notification.png" class="animate-opacity" height="24" width="24" title="Notifications">
 						<span id="index-noti-red-spot" class="n_r_s<?php echo ($notification_number > 0)?'':' hdn' ?>"><?php echo $notification_number ?></span>
@@ -55,7 +60,9 @@
 
 					</span>
 					</span>
+<!-- 
 				<span id="loggin-user-icon"><img src="<?php echo $session_user_profile_image_url; ?>" width="30" height="30" style="cursor:pointer" ></span></ul>
+ -->
 				<div id="setting-menu" class="popover hdn" >
 					<div class="in_con_opt_w_inner" style="position:relative;width:100%;">
 						<div class="arrow-up" style="position:absolute;top:-15px;right:6px;border-bottom:10px solid #FFFFFF"></div>

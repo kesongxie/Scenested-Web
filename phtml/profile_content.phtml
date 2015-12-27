@@ -1,0 +1,225 @@
+<?php //include_once 'child/prepare_head.php'; ?>
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<title id="page-title"  >Scenested</title>
+<!-- 
+	<link rel="shortcut icon" type="image/x-icon" href="<?php echo IMGDIR; ?>favicon.ico" />
+ -->
+	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/core.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/animate.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/smoothness/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/profile.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/index.css">
+	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/jquery.js"></script>
+	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/jquery-ui.js"></script>
+	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/glob.js"></script>
+	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/core.js"></script>
+	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/profile.js"></script>
+
+
+	<!--[if lt IE 9]>
+	<script src="dist/html5shiv.js"></script>
+	<![endif]-->
+	</head>
+	
+	
+	<!--400.625px post wrapper.-->
+	<body>
+		<?php //require_once 'child/loggedin_header.php'; ?>
+
+		<div style="width:100%;background:#fff;border-bottom:1px solid #eaeaea">
+			<div style="margin:0px 46px;text-align:center" class="">
+				<div class="inline-blk" style="color:#1D4D79;font-size:16px;padding:12px 0px;">
+					<input id="gl-search-input" type="text" style="padding:6px 30px 6px 12px;border-radius:21px;border:1px solid #eaeaea" placeholder="Search">
+					<img src="<?php echo IMGDIR ?>search_icon.png" height="14" width="14" class="pointer"  style="margin: 0px 0px 0px -30px">
+				</div>
+			</div>	
+		</div>
+
+		<div style="width:100%;overflow:hidden">
+			<div style="width:100%;" >
+			<div style="position:relative" style="height:400px;overflow:hidden">
+				<div class="inline-blk" style="position:absolute;right:10px;top:10px;background:#000;opacity:0.6"></div>
+				<img style="width:100%;margin-top:-70%;display: block;" src="<?php echo DUMMY_MEDIA ?>1.jpeg">
+				<div id="cover-caption" style="position: absolute;bottom: 10px; right: 10px;">
+					<div style="color: #fff;text-align:right" class="hdn">@JamieLiang</div>
+					<div style="text-align:right;color: #fff;" class="hdn">From Jamie's Travel</div>
+ 					<div class="inline-blk hdn"  style="margin:30px 0px;position:fixed;top:350px;right:20px;">
+						<button class="animated-button" style="padding:0px 20px;background:#fff;border:1px solid #eaeaea">EDIT PROFILE</button>
+					</div>
+ 
+				</div>
+			</div>
+			
+			
+			</div>
+			
+			<div id="profile-main-container" style="font-size:0px;">
+				<div id="profile-left-content-wrapper" class="inline-blk">
+					<div id="profile-left-content-inner-wrapper" class="" >
+						<div id="profile-avator-wrapper" class="" style="position:relative">
+							<img id="profile-avator" src="<?php echo DUMMY_MEDIA ?>avator.jpg">
+							<div id="avator-edit-profile" class="">
+								<div id="a-e-p-overlay"></div>
+								<div id="a-e-p-edit">EDIT PROFILE</div>
+							</div>
+						</div>
+					
+						<div id="profile-name-wrapper" class="">
+							<div id="profile-name" class="txt-overflow">Jamie Liang</div>
+						</div>
+						
+						
+						
+						<div style="margin:10px 0px 12px 0px;font-size:0px;">
+								<div class="inline-blk pointer" style="font-size:15px;margin-right: 20px;">
+									<div class="profile-data-label" >Scenes</div>
+									<div class="profile-data">12</div>
+								</div>
+								<div class="inline-blk pointer" style="font-size:15px;margin-right:20px;">
+									<div class="profile-data-label" >Followers</div>
+									<div class="profile-data">60</div>
+								</div>
+								<div class="inline-blk pointer" style="font-size:15px;">
+
+									<div class="profile-data-label" >Following</div>
+									<div class="profile-data">84</div>
+								</div>
+							</div>
+						
+							
+						
+						<div id="profile-short-bio" class="profile-bio" style="color:#0C304A;margin-top:10px;">
+							Love traveling around the world.<!-- , and I will love to explore the world around me. -->
+						</div>
+						<div id="profile-interest-wrapper"  style="margin-top:2px;">
+							<div class="profile-bio" style="color:#223D50;" class="" >
+								<a href="#" class="plain-lk"><span style="color:#751B1B">Travel</span></a>, 
+								<a href="#" class="plain-lk"><span style="color:#751B1B">Beauty</span></a>,
+								<a href="#" class="plain-lk"><span style="color:#751B1B">Supreme</span></a>
+
+							</div>
+						</div>
+		
+						<div id="profile-follow" class="">
+							
+							
+							
+							<div class="inline-blk"  style="margin:30px 0px;">
+								<button id="add-scene-button" class="animated-button blue-action-button">ADD SCENE</button>
+							</div>
+							
+								<div class="inline-blk hdn"  style="margin:30px 0px;">
+								<button id="follow-button" class="animated-button blue-action-button" style="padding:0px 30px;">&#9825 FOLLOW</button>
+							</div>
+							
+							
+						</div>
+								
+	
+						
+	
+ 					</div>
+				</div>
+			
+			
+				<div id="profile-right-content-wrapper" class="inline-blk">
+					<div class="post">
+						<div style="padding: 10px 20px;">
+							<img class="post-avator inline-blk" src="<?php echo DUMMY_MEDIA ?>avator.jpg">
+							<div class="post-user-info inline-blk" style="width:90%;">
+								<div>
+									<span class="post-user-name pointer" style="color:#223D50">Jamie Liang</span><span style="margin-left:10px;font-size:15px;"><a href="#" title="link to people with similar interest in your near location" class="plain-lk"><span style="color:#751B1B">Travel</span></a> - 2h</span>
+								</div>
+								
+								
+								
+								<div style="font-size:15px;margin-top: 4px;line-height: 21px;">
+									<span>This is the best <a href="#" title="more about Tiramisu" class="plain-lk"><span style="color:#1D4D79">#Tiramisu</span></a> from the world most famous store in Italia, and I had great fun to explore the things i had nver experienced before.</span>
+								</div>
+							</div>
+						</div>
+						<div class="content">
+							<div class="inline-blk post-master">
+								<div class="inline-blk post-tag-date">
+									<div class="date">
+										<div><span class="day">03</span><span class="mon">Nov</span></div>
+										<div class="year" >2014</div>
+
+									</div>
+								</div>
+							
+							<!-- 
+	<div class="pointer" style="font-size:13px; margin:0px 20px 10px 0px;float: right;"><a href="http://maps.google.com/?q=Calle Donà Castello, 5364, 30122 Venezia, Città Metropolitana di Venezia, Italy" target="_blank" class="plain-lk" style="margin-top:-2px;color:#1D4D79">Città Metropolitana di Venezia, Italy</a></div>
+ -->
+
+
+
+								<div>
+									<img class="post-attached-img" src="<?php echo DUMMY_MEDIA?>IMG_5101.jpeg">
+								</div>
+							
+							<!-- 
+<div class="inline-blk pointer" style="font-size:13px;float:right;margin:20px;"><a href="http://maps.google.com/?q=Calle Donà Castello, 5364, 30122 Venezia, Città Metropolitana di Venezia, Italy" target="_blank" class="plain-lk" style="margin-top:-2px;color:#1D4D79">Città Metropolitana di Venezia, Italy</a></div>
+
+ -->
+
+								<div style="padding:2px 20px 10px 20px;clear:both;">
+									<!-- 
+<div class="pointer" style="font-size:14px;float:right;margin-top:6p;x"><a href="http://maps.google.com/?q=Calle Donà Castello, 5364, 30122 Venezia, Città Metropolitana di Venezia, Italy" target="_blank" class="plain-lk" style="margin-top:-2px;color:#1D4D79">Città Metropolitana di Venezia, Italy</a></div>
+ -->
+
+
+									<div class="post-user-interact" style="text-align:left;clear:both">
+
+										<div class="inline-blk toggle-comment pointer"><img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>ci.png" title="Comment" height="16" width="16"><div class="inline-blk cmt-num action-num" style="margin:-3px 8px 0px 0px">0</div></div>
+										<div class="inline-blk" style="margin-top:3px;"><img class="post-operation-icon pointer undo-favor-activity" src="<?php echo IMGDIR ?>like_action.png" title="Undo Favor" height="17" width="19" style="margin-right: 4px; margin-top: 2px;"><div class="inline-blk action-num favor-num  toggle-activity-favor plain-lk pointer" style="margin-top:0px;">3</div></div>
+<!-- 
+										<div class="inline-blk pointer" style="margin-left:16px;" ><img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>dot_icon.png" title="More" height="24" width="24"></div>
+ -->
+
+										<div class="inline-blk pointer" style="float:right;" ><img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>dot_icon.png" title="More" height="24" width="24"></div>
+
+<!-- 
+										<div class="inline-blk pointer" style="font-size:14px;float:right;"><a href="http://maps.google.com/?q=Calle Donà Castello, 5364, 30122 Venezia, Città Metropolitana di Venezia, Italy" target="_blank" class="plain-lk" style="margin-top:-2px;color:#1D4D79">Città Metropolitana di Venezia, Italy</a></div>
+ -->
+
+
+
+									</div>	
+									<!-- 
+<div class="post-interaction" style="margin-top:20px;">
+										<div>
+											<div class="inline-blk"><img class="activity-avator" src="<?php echo DUMMY_MEDIA ?>IMG_3722.jpeg"></div>
+											<div class="inline-blk">
+												<div><a  href="#" class="plain-lk" style="color:#1D4D79;margin-right:6px;">Quixia Xie</a><span style="color:#676767">2h</span></div>
+												<div><a href="#" class="plain-lk" style="color:#1D4D79;margin-right:6px;">@jamie</a>and you forgot to bring us some souvenir!</div>
+											</div>
+										</div>
+									</div>
+ -->
+								</div>
+								
+								
+								
+								
+							</div>
+							
+						</div>
+					</div>
+					
+					
+				</div>
+			</div>
+			
+			
+			
+			
+			
+		</div>
+		<?php include_once TEMPLATE_PATH_CHILD.'footer-overlay-element.phtml'; ?>
+
+	</body>
+</html>

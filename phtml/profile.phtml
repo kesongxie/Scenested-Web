@@ -1,114 +1,142 @@
+<?php include_once 'child/prepare_head.php'; ?>
 <!DOCTYPE html>
 <html>
-	<?php include_once 'child/prepare_head.php'; ?>
 	<head>
 	<meta charset="utf-8">
-
-	<title id="page-title" data-m="<?php echo $new_message_notification_num; ?>"  data-n="<?php echo $notification_number; ?>" data-from="<?php echo  $request_user_page_fullname; ?>"  >
-		<?php echo ($title == 'hIpout')?$request_user_page_fullname:$title; ?>
-	</title>
+	<title id="page-title" data-m="<?php echo $new_message_notification_num; ?>"  data-n="<?php echo $notification_number; ?>"  ><?php echo $title; ?></title>
 	<link rel="shortcut icon" type="image/x-icon" href="<?php echo IMGDIR; ?>favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/core.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/animate.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/smoothness/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/profile.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/index.css">
 	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/jquery.js"></script>
 	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/jquery-ui.js"></script>
 	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/glob.js"></script>
 	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/core.js"></script>
-	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/profile.js"></script>
+	<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/index.js"></script>
 
-    <?php if(isset($_GET['s']) && $_GET['s']=='friends'): ?>	
-		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/child_js/profile_friend.js"></script>
-	<?php elseif(isset($_GET['s']) && $_GET['s']=='photos'): ?>
-		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/child_js/profile_photo.js"></script>
-	<?php elseif(isset($_GET['s']) && $_GET['s']=='events'): ?>
-		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/child_js/profile_event.js"></script>
-	<?php else: ?>	
-		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/child_js/profile_interest.js"></script>
-	<?php endif;?>
 
-	
 	<!--[if lt IE 9]>
 	<script src="dist/html5shiv.js"></script>
 	<![endif]-->
 	</head>
-
+	
+	
+	<!--400.625px post wrapper.-->
 	<body>
-		<?php require_once 'child/loggedin_header.php'; ?>
-		<div id="profile-global-container" >
-			<div id="profile-sider-bar-left" class="inline-blk side-bar">
-					<div id="avator-wrapper" class="user-profile operation-triggeable" style="height:230px;" data-key="<?php echo $request_user_page_hash; ?>">
-						<div class="avator-inner-top"  style="z-index:1">
-							<?php $cover_pic = $user->getLatestCoverForuser($request_user_page_id); ?>
-							<img class="profile-image<?php echo ($cover_pic === false)?' hdn':'' ?>" src="<?php echo $cover_pic; ?>" >
-							<?php if($request_user_page_id != $_SESSION['id']): ?>
-								<img src="<?php echo IMGDIR ?>menu_navi_icon.png" style="float:none;width:20px;height:14px;position: absolute; right: 12px; top: 12px;"class="trigger-pop hdn toggle-operation pointer">
-							<?php endif; ?>
-							<?php if($page_own):  //allow changing ?>
-								<label for="upload-cover" id="avator-change-cover-label"  class="pointer"  title="upload cover photo">Change Cover</label>
-								<form method="POST" style="display:none" enctype="multipart/form-data">
-									<input id="upload-cover" class="hdn-input" type="file" name="profile-pic" title="upload cover photo">
-								</form>
-								<div class="overlay hdn" style="text-align:center;opacity:0.45;background:#fff;"><div class="vertical-center"><img class="loading-icon" style="width:60px;height:40px;" src="<?php echo IMGDIR; ?>loading_icon.gif"></div></div>
-							<?php endif; ?>
-						</div>
-						<div class="avator-inner-bottom" style="z-index:2">
-							<?php if($page_own): //allow changing ?>
-								<label id="avator-upload-label"  for="upload-profile" class="pointer" title="upload profile image">
-										<div class="avator-picture-wrapper">
-											<img class="profile-image"  src="<?php echo $session_user_profile_image_url; ?>" />
-											<div class="picture-upload-black-overlay avator-upload-inner-wrapper"></div>
-											<div class="avator-upload-inner-wrapper"><div class="vertical-center"><img class="camera-icon" src="<?php echo IMGDIR ?>camera.png" height="20" width="20"></div></div>
-											<div class="loading-icon-wrapper"><div class="vertical-center"><img class="loading-icon" src="<?php echo IMGDIR; ?>loading_icon.gif" height="40" width="40"></div></div>
-										</div>
-									<form method="POST" class="hdn-form hdn-input" enctype="multipart/form-data">
-										<input id="upload-profile" class="hdn-input" type="file" name="profile-pic" title="upload profile image">
-									</form>
-								</label>
-							<?php else: ?>
-								<label>
-									<div class="avator-picture-wrapper">
-											<img class="profile-image" src="<?php echo  $user->getLatestProfilePictureForuser($request_user_page_id); ?>" />
-									</div>
-								</label>
-							<?php endif; ?>
-							
-							<div class="avator-name"><?php echo htmlentities($request_user_page_fullname); ?></div>
-						</div>
-					</div>
-				<?php include_once 'child/abouts_side_block.php'; ?>
-
-				<?php //include_once 'child/favor_evt_block.php'; ?>	
+		
+		<div style="width:100%">
+			<div style="width:100%;" >
+			<div style="position:relative">
+				<img style="width:100%;margin-top:-70%;display: block;" src="<?php echo DUMMY_MEDIA ?>1.jpeg">
+				<div class="cover-caption" style="position: absolute;bottom: 10px; right: 10px;">
+					<div style="color: #fff;text-align:right">@JamieLiang</div>
+					<div style="text-align:right;color: #fff;">From Jamie's Travelling</div>
+				</div>
+				<div style="position: absolute;bottom: -50px; right: 10px;">
+					<button class="follow-button silver-button" style="margin-right:10px;color:#676767;background:#F5F5F5">Edit Profile</button>
+				</div>
+				
+				
 			</div>
 			
-			<div id="profile-sider-bar-right" class="inline-blk">
-					<div id="profile-navigation-bar">
-						<a href="<?php echo $user_profile_url.'/interests'; ?>"><div  class="navi-item<?php if(!isset($_GET['s'])||($_GET['s']!='events' && $_GET['s']!='groups'&& $_GET['s']!='moments' && $_GET['s']!='friends' && $_GET['s']!='photos' && $_GET['s']!='about')){echo ' active-navi';}else{echo ' deactive-navi';}?>"   >Interests<div  class="sub-text" style="left:15px;">events & moments</div></div></a>
-						<a href="<?php echo $user_profile_url.'/events'; ?>" ><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='events'){echo ' active-navi';}else{echo ' deactive-navi';}?>">Events<div class="sub-text" style="left:15px;" >upcomings & joined</div></div></a>
-						<a href="<?php echo $user_profile_url.'/friends'; ?>"><div   class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='friends'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Friends<div  class="sub-text" style="left:15px;">connections</div></div></a>
-						<a href="<?php echo $user_profile_url.'/photos';?>"><div class="navi-item<?php if(isset($_GET['s']) && $_GET['s']=='photos'){echo ' active-navi';}else{echo ' deactive-navi';}?>" >Photos<div  class="sub-text" style="left:11px;">want to share</div></div></a>
+			
 			</div>
-					
-					<div id="profile-mid-content" data-fetchable = "true">
-						<?php 
-							if(isset($_GET['s']) && $_GET['s'] == 'events'){
-								require_once 'child/event.php';
-							}else if(isset($_GET['s']) && $_GET['s'] == 'friends'){
-								require_once 'child/friend.php';
-							}else if(isset($_GET['s']) && $_GET['s'] == 'photos'){
-								require_once 'child/photo.php';
-							}else{
-								require_once 'child/interest.php';
-							}
-						?>
-					</div>
-			</div>
-		</div>
+			
+			<div style="font-size:0px;">
+				<div id="profile-left-content-wrapper" class="inline-blk">
+					<div id="profile-left-content-inner-wrapper">
+						<div id="profile-avator-wrapper"><img id="profile-avator" src="<?php echo DUMMY_MEDIA ?>avator.jpg"></div>
+						<div id="profile-name-wrapper">
+							<div id="profile-name" class="txt-overflow">Jamie Liang</div>
+						</div>
+						<div class="profile-activity-wrapper" style="font-size:15px;">
+							<div class="profile-activity" class="txt-overflow">Moment 0</div>
+							<div class="profile-activity" class="txt-overflow">Follower 0</div>
+							<div class="profile-activity" class="txt-overflow">Following 0</div>
+						</div>
+						
+						<div id="profile-shot-bio" class="hdn" style="color:#223D50;font-size:15px;margin-top:10px;">
+							Love traveling around the world.
+						</div>
+						<div id="profile-interest-wrapper" class="hdn">
+							<div style="font-size:15px;color:#223D50;" >Interested in 
+								<a href="#" class="plain-lk"><span style="color:#751B1B">Travel</span></a>, 
+								<a href="#" class="plain-lk"><span style="color:#751B1B">Fashion</span></a>
+							</div>
+						</div>
 
- 
- 	<?php include_once 'child/chat.php'; ?>
- 	<?php include_once TEMPLATE_PATH_CHILD.'footer-overlay-element.phtml'; ?>
- 	</body>
+						
+							<div id="profile-follow">
+							<div class="hdn" style="margin:30px 16px;"><button class="follow-button">&#9825 FOLLOW</button></div>
+							<div class=""  style="margin:30px 16px;">
+								<!-- 
+<button class="follow-button silver-button" style="margin-right:10px;color:#676767;background:#F5F5F5">Edit Profile</button>
+								
+ --><button class="follow-button">ADD INTEREST</button>
+							</div>
+						</div>
 	
+ 					</div>
+				</div>
+			
+			
+				<div id="profile-right-content-wrapper" class="inline-blk">
+					<div style="font-size:28px;margin-top:10px;">NO POST TO SHOW.</div>
+				
+				
+					<div class="post hdn">
+						<div>
+							<img class="post-avator inline-blk" src="<?php echo DUMMY_MEDIA ?>avator.jpg">
+							<div class="post-user-info inline-blk" style="width:50%;">
+								<div><span class="post-user-name pointer" style="color:#223D50">Jamie Liang</span><span style="margin-left:10px;font-size:15px;"><a href="#" title="link to people with similar interest in your near location" class="plain-lk"><span style="color:#751B1B">Travel</span></a> - 2h</span></div>
+								<div style="font-size:15px;margin-top: 4px;line-height: 21px;"><!-- <span>Leaning Tower of Pisa</span> - <span>Travel</span> -->
+									<span>This is the best <a href="#" title="more about Tiramisu" class="plain-lk"><span style="color:#1D4D79">#Tiramisu</span></a> from the world most famous store in Italia, and I had great fun to explore the things i had nver experienced before.</span>
+								</div>
+							</div>
+						</div>
+						<div class="content">
+							<div class="inline-blk post-master">
+								<div>
+									<img class="post-attached-img" src="<?php echo DUMMY_MEDIA?>IMG_5101.jpeg">
+								</div>
+								<div class="post-user-interact">
+									<div class="inline-blk pointer" style="font-size:13px;float:left;"><img style="opacity:0.6;margin-top:-2px;margin-right:4px;" src="<?php echo IMGDIR ?>location.png"  height="16" width="16"><a href="http://maps.google.com/?q=Calle Donà Castello, 5364, 30122 Venezia, Città Metropolitana di Venezia, Italy" target="_blank" class="plain-lk" style="margin-top:-2px;color:#1D4D79">Città Metropolitana di Venezia, Italy</a></div>
+
+									<div class="inline-blk toggle-comment pointer"><img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>ci.png" title="Comment" height="16" width="16"><div class="inline-blk cmt-num action-num" style="margin:-3px 8px 0px 0px">0</div></div>
+									<div class="inline-blk" style="margin-top:-3px;"><img class="post-operation-icon pointer undo-favor-activity" src="<?php echo IMGDIR ?>heart.png" title="Undo Favor" height="17" width="19" style="margin-right: 4px; margin-top: 2px;"><div class="inline-blk action-num favor-num  toggle-activity-favor plain-lk pointer" style="margin-top:0px;">3</div></div>
+								</div>	
+								<div class="favor-list list hdn">
+									<div class="favor-list-inner list-inner">
+									</div>
+								</div>
+								<div class="comment-block hdn">
+									<textarea class="fcy-txt comment-txt" style="margin-top:12px;" data-key="8bf3ff1e95e093f419715dbc"></textarea>
+									<div class="comment-container" style="margin-top:20px;">
+									</div>
+								</div>
+							</div>
+							<div class="inline-blk post-detail">
+								<div class="date">
+									<div><span class="day">03</span><span class="mon">Nov</span></div>
+									<div class="year" >2014</div>
+								</div>
+								<div class="description hdn" style="margin:20px 0px 0px 10px;">
+									<div class="text" style="font-size:15px;">This is the best Tiramisu from the world most famous store in Italia</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			
+			
+			
+		</div>
+		<?php //include_once TEMPLATE_PATH_CHILD.'footer-overlay-element.phtml'; ?>
+
+	</body>
 </html>

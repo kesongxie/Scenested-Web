@@ -3,6 +3,8 @@
 	//for page rendering 
 	include_once 'server_cred.php';
 	define("IMGDIR",ROOTDIR."media/");
+	define("DUMMY_MEDIA",IMGDIR."dummy/");
+
 	define("E_IMGDIR",IMGDIR.'e/');
 	define("DEFAULT_IMAGE",IMGDIR.'default_image/');
 	define("U_IMGDIR",ROOTDIR."media_u/");
