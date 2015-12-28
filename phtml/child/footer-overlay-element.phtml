@@ -18,7 +18,7 @@
 			</div>
 			<div style="border-top:1px solid #eaeaea;padding:10px 24px;">
 				<div>
-					<div class="content-editable entry-focus" contenteditable="true" style="text-align:left;min-height:48px;" data-end = "true" placeholder="Short bio" ></div>
+					<div id="edit-short-bio" class="two-rows-box content-editable entry-focus" contenteditable="true" style="text-align:left;min-height:48px;" data-end = "true" placeholder="Short bio" ></div>
 				</div>
 			</div>
 		
@@ -32,7 +32,7 @@
 				<div>
 					<button id="cancel-e-p-button" class="animated-button gray-action-button" style="padding:0px 20px;margin-right:6px;">CANCEL</button>
 
-					<button id="save-e-p-button" class="animated-button blue-action-button" style="padding:0px 30px;">SAVE</button>
+					<button id="save-e-p-button" class="animated-button blue-action-button" style="padding:0px 34px;">SAVE</button>
 				</div>
 			</div>
 		</div>
@@ -75,31 +75,30 @@
 		</div>
 	</div>
 	
-	<div id="add-scene-dialog-wrapper" class="segue-wrapper inline-blk hdn">
-
-
-		<div class="segue-main segue">
+	<div id="add-scene-dialog-wrapper" class="segue-wrapper inline-blk" style="background-color:">
+		<div class="segue-main segue act">
 			<div class="dialog-title">
 				<div class="dialog-title-text">Add Scene</div>
 			</div>
-			<div style="width:100%;overflow:hidden">
-				<img style="width:100%;margin-top:-70%;display: block;" src="http://localhost:8888/media/dummy/1.jpeg">
-			</div>
-		
-			<div style="margin:-60px 0px 10px 0px;text-align:center">
-				<div class="inline-blk" style="border:6px solid #fff;border-radius:3px;">
-					<img  src="<?php echo DUMMY_MEDIA ?>avator.jpg" style="height:80px;width:80px;">
+			<div id="attach-post-photo" style="width:100%;overflow:hidden;position:relative;height:128px;font-size:0px;">
+				<div  class="inline-blk hdn" style="width:128px;"><img class="" style="width:100%;display: block;" src="http://localhost:8888/media/dummy/IMG_5101.jpeg"></div>
+<!-- 
+				<div  class="inline-blk" style="width:25%;"><img class="" style="width:100%;display: block;" src="http://localhost:8888/media/dummy/IMG_9327.jpeg"></div>
+ -->
+
+				
+				<div  class="inline-blk" style="width:512px;background: #1C3E5A;height:100%;text-align:center;cursor:pointer">
+					<div class="inline-blk vertical-center"><img src="<?php echo IMGDIR; ?>camera.png" height="25" width="29"><div style="font-size:16px;font-weight:600;margin-left:10px;color:#fff">Attach Photos</div></div>
 				</div>
-				<div style="font-weight: 600;font-size: 18px; color: #223D50; margin-left: 3px;">Jamie Liang</div>
 			</div>
+			
 			<div style="border-top:1px solid #eaeaea;padding:10px 24px;">
 				<div>
-					<div class="scene-box content-editable entry-focus" contenteditable="true" style="text-align:left;min-height:48px;" data-end = "true" placeholder="What's in the scene?" ></div>
+					<div  class="two-rows-box content-editable entry-focus" contenteditable="true" style="text-align:left;min-height:48px;" data-end = "true" placeholder="What's in the scene?" ></div>
 				</div>
 			</div>
+			
 		
-			
-			
 			<div class="option-bar">
 				<div style="position:relative;cursor:default;">
 					<input style="width:100%;border:0px;position:relative;left:0px;background:inherit" readonly placeholder="December 23, 2015"/>
@@ -118,10 +117,31 @@
 				<div>
 					<button id="cancel-e-p-button" class="animated-button gray-action-button" style="padding:0px 20px;margin-right:6px;">CANCEL</button>
 
-					<button id="save-e-p-button" class="animated-button blue-action-button" style="padding:0px 30px;">ADD</button>
+					<button id="save-e-p-button" class="animated-button blue-action-button" style="padding:0px 34px;">ADD</button>
 				</div>
 			</div>
 		</div>
+	
+		<div id="post-photo-layout-segue" class="segue-detail segue" style="position:absolute;right:-100%;top:0px;width:100%;" >
+			<div class="dialog-title"  >
+				<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Done</div>
+				<div class="dialog-title-text">Preview and Layout</div>
+			</div>
+			<div class="dialog-body photo-layout-body" style="overflow:hidden;cursor:move">
+				<img src="http://localhost:8888/media/dummy/IMG_5101.jpeg" style="width:100%;display:block">
+			</div>
+			
+			<div class="hdn" style="border-top:1px solid #eaeaea;padding:10px 24px;text-align:right;">
+				<div>
+					<button class="animated-button blue-action-button segue-to-main-action" style="padding:0px 30px;">DONE</button>
+				</div>
+
+			</div>
+		</div>
+
+	
+	
+	
 	
 	</div>
 	</div>

@@ -2,12 +2,15 @@ function openEditDialog(targetElementId){
 	$('.overlay, #edit-dialog-wrapper').removeClass('hdn');
 	var parent_wrapper = $('#edit-dialog-wrapper');
 	parent_wrapper.find('.segue-wrapper').addClass('hdn');
-	var edit_wrapper = parent_wrapper.find(targetElementId).removeClass('hdn');
-	edit_wrapper.css('height', edit_wrapper.find('.segue-main').height());
+	var edit_wrapper = parent_wrapper.find(targetElementId);
+	edit_wrapper.removeClass('hdn');
+	edit_wrapper.css('height', edit_wrapper.find('.segue.act').height());
+//	edit_wrapper.css({'height':edit_wrapper.find('#post-photo-layout-segue').height(), 'position':'relative'});
 	parent_wrapper.find('.entry-focus').focus();
 	$('body').addClass('unscrollable');
 	
 }
+
 
 $(document).ready(function(){
 	$('body').on({
@@ -34,10 +37,11 @@ $(document).ready(function(){
 		}
 	},'#save-e-p-button');
 	
-
+	
+	
 	$('body').on({
 		click:function(){
-			$('#add-scene-segue').css({'-webkit-animation':'','animation':''});
+			resetSegueDetail();
 			$(this).parents('.segue-detail').css({'-webkit-animation':'','animation':''});
 			$('#a-e-p-overlay, #a-e-p-edit').css({'-webkit-animation':'editSlideDown 0.5s','animation':'editSlideDown 0.5s','bottom':'-40px'});
 			openEditDialog('#edit-profile-dialog-wrapper');
@@ -47,8 +51,13 @@ $(document).ready(function(){
 	
 	$('body').on({
 		click:function(){
+			resetSegueDetail();
 			openEditDialog('#add-scene-dialog-wrapper');
 			return false;
 		}
 	},'#add-scene-button');
+	
+
+	
+	
 });

@@ -89,6 +89,39 @@ function returnIndexForNode(thisE){
 		return $(thisE).contents().index(node);
 	}
 	
+function setCaretPosition(thisE, currentCaretPos){
+	var cursor_move = currentCaretPos;
+	var nodeIndex = 0;
+	var caretPos = 0;
+	$(thisE).contents().each(function(i, node){
+		if(cursor_move > 0){
+			if(node.nodeType == 1){
+				//span
+				var text_length = $(node).text().length;
+				if(cursor_move > text_length){
+					cursor_move -= text_length;
+					nodeIndex++;
+				}else{
+					//stop
+					caretPos = cursor_move;
+					return false;
+				}
+			}else{
+				var text_length = $(node).text().length;
+				if(cursor_move > text_length){
+					cursor_move -= text_length;
+					nodeIndex++;
+				}else{
+					//stop
+					caretPos = cursor_move;
+					return false;
+				}
+			}
+		}
+	});
+	moveCaretPosition(thisE, caretPos, nodeIndex) ;
+}	
+
 function isUndoKeyPressed(e){
 	if (navigator.appVersion.indexOf("Win")!=-1){
 		//windows.	
@@ -115,11 +148,16 @@ function closeEditDialog(){
 	$('body').removeClass('unscrollable');
 }
 
-
-	
 /*ends scene box editor functions*/
 
+function toggleDialogVerticalVerticalCenterPos(){
+	$('#edit-dialog-wrapper').toggleClass('sugue-adjust');
+}
 
+
+function resetSegueDetail(){
+	$('.segue-detail').css({'-webkit-animation':'','animation':''});
+}
 
 $(document).ready(function(){
 	$('button input div img').on('click', function(e){
@@ -137,14 +175,16 @@ $(document).ready(function(){
 		click:function(e){
 			var segue_wrapper = $(this).parents('.segue-wrapper');
 			var segue_main = segue_wrapper.find('.segue-main');
-			segue_main.addClass('hdn')
+			segue_wrapper.css('height',segue_main.height());
+			segue_main.addClass('hdn');
 			$('#add-scene-segue').css({'-webkit-animation':'segueSlideInLeft 0.3s','animation':'segueSlideInLeft 0.3s', 'right':'0px'});
 			var segue_height = $('#add-scene-segue').height();
+			
 			setTimeout(function(){
 				segue_wrapper.animate({
 					'height': segue_height
-				},200);
-			},200);
+				},100);
+			},400);
 			segue_wrapper.css('position','relative');
 			return false;
 		}
@@ -152,20 +192,21 @@ $(document).ready(function(){
 	
 	$('body #edit-dialog-wrapper-inner').on({
 		click:function(e){
+			toggleDialogVerticalVerticalCenterPos();
 			var segue_wrapper = $(this).parents('.segue-wrapper');
 			var segue_main = segue_wrapper.find('.segue-main');
 			segue_main.removeClass('hdn');
 			var segue_detail = $(this).parents('.segue-detail');
 			segue_detail.css({'-webkit-animation':'segueSlideOutRight 0.3s','animation':'segueSlideOutRight 0.3s','right':'-100%'});
 			var segue_height = segue_main.height();
-			console.log(segue_height);
 			setTimeout(function(){
 				segue_wrapper.animate({
 					'height': segue_height
-				},200, function(){
+				},100, function(){
 					segue_wrapper.css('position','');
 				});
-			},100);
+			},400);
+			
  			return false;
 		}
 	
@@ -189,7 +230,11 @@ $(document).ready(function(){
 				$(this).html('');
 			}
 		},
+		keypress:function(e){
+		 	return e.which != 13; //disable return key press
+		},
 		keyup:function(e){
+			$(this).parents('.segue-wrapper').css('height','');
 			var old_text = $(this).attr('data-val');
 			var text = $(this).text(); 
 			var caretPos = getCaretCharacterOffsetWithin(this);
@@ -201,6 +246,7 @@ $(document).ready(function(){
 			}
 			if(old_text != text){
 				$(this).attr('data-val',text);
+				text = text.replace(/\n/,'');
 				text = text.replace(/ /g, '\u00a0'); //replace white space with &nbsp
 				var rich_text = text.replace(/(.?)(#|@)(\w+)(\W?)/g, replacer);
 				if($(this).attr('data-end') == 'true'){
@@ -209,39 +255,21 @@ $(document).ready(function(){
 				} else{
 					var caretPos = getCaretCharacterOffsetWithin(this); //this is the caret pos regarding the entire node
 					$(this).html(rich_text);
-					var cursor_move = caretPos;
-					var nodeIndex = 0;
-					var caretPos = 0;
-					$(this).contents().each(function(i, node){
-						if(cursor_move > 0){
-							if(node.nodeType == 1){
-								//span
-								var text_length = $(node).text().length;
-								if(cursor_move > text_length){
-									cursor_move -= text_length;
-									nodeIndex++;
-								}else{
-									//stop
-									caretPos = cursor_move;
-									return false;
-								}
-							}else{
-								var text_length = $(node).text().length;
-								if(cursor_move > text_length){
-									cursor_move -= text_length;
-									nodeIndex++;
-								}else{
-									//stop
-									caretPos = cursor_move;
-									return false;
-								}
-							}
-						}
-					});
-					moveCaretPosition(this, caretPos, nodeIndex) ;
+					setCaretPosition(this, caretPos);
 				}
 			}
 		},
+		paste:function(e){
+		  	e.preventDefault();
+  			var pasted_text = e.originalEvent.clipboardData.getData('Text');
+			var oldcaretPos = getCaretCharacterOffsetWithin(this);
+			var newCaretPos = oldcaretPos + pasted_text.length;
+			var old_text = $(this).text();
+			var new_text = old_text.substring(0, oldcaretPos)+pasted_text+old_text.substring(oldcaretPos);
+			$(this).html(new_text);
+			setCaretPosition(this, newCaretPos);
+		},
+		
 		click:function(){
 			var caretPos = getCaretCharacterOffsetWithin(this);
 			var text_length = $(this).text().length;
@@ -250,9 +278,37 @@ $(document).ready(function(){
 			}else{
 				$(this).attr('data-end','true');
 			}
+		},
+		focus:function(){
+			setEndOfContenteditable(this);
 		}
 	},'.content-editable');
 
+	
+	$('body #edit-dialog-wrapper-inner').on({
+		click:function(e){
+			e.stopPropagation();
+			toggleDialogVerticalVerticalCenterPos();
+			var segue_wrapper = $(this).parents('.segue-wrapper');
+			var wrapper_width = segue_wrapper.width();
+			segue_wrapper.find('#post-photo-layout-segue .photo-layout-body').css('max-height',wrapper_width);
+			
+			var segue_main = segue_wrapper.find('.segue-main').removeClass('act');
+			segue_wrapper.css('height',segue_main.height())
+			segue_main.addClass('hdn');
+			$('#post-photo-layout-segue').css({'-webkit-animation':'segueSlideInLeft 0.3s','animation':'segueSlideInLeft 0.3s', 'right':'0px'}).addClass('act');
+			var segue_height = $('#post-photo-layout-segue').height();
+			
+			setTimeout(function(){
+				segue_wrapper.animate({
+					'height': segue_height,
+				},100);
+			},400);
+			segue_wrapper.css('position','relative');
+			return false;
+		}
+	
+	},'#attach-post-photo');
 	
 
 });
