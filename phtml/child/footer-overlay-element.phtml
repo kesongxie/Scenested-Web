@@ -75,21 +75,18 @@
 		</div>
 	</div>
 	
-	<div id="add-scene-dialog-wrapper" class="segue-wrapper inline-blk" style="background-color:">
+	<div id="add-scene-dialog-wrapper" class="segue-wrapper inline-blk" >
 		<div class="segue-main segue act">
 			<div class="dialog-title">
 				<div class="dialog-title-text">Add Scene</div>
 			</div>
-			<div id="attach-post-photo" style="width:100%;overflow:hidden;position:relative;height:128px;font-size:0px;">
-				<div  class="inline-blk hdn" style="width:128px;"><img class="" style="width:100%;display: block;" src="http://localhost:8888/media/dummy/IMG_5101.jpeg"></div>
-<!-- 
-				<div  class="inline-blk" style="width:25%;"><img class="" style="width:100%;display: block;" src="http://localhost:8888/media/dummy/IMG_9327.jpeg"></div>
- -->
-
-				
-				<div  class="inline-blk" style="width:512px;background: #1C3E5A;height:100%;text-align:center;cursor:pointer">
-					<div class="inline-blk vertical-center"><img src="<?php echo IMGDIR; ?>camera.png" height="25" width="29"><div style="font-size:16px;font-weight:600;margin-left:10px;color:#fff">Attach Photos</div></div>
-				</div>
+			<div id="attach-post-photo-banner" style="width:100%;overflow:hidden;position:relative;height:128px;font-size:0px;background-color: #000;">
+				<label for="attach-post-photo" id="attach-post-photo-label">
+					<div class="inline-blk vertical-center"><img src="<?php echo IMGDIR; ?>camera.png" height="25" width="29"><div style="font-size:16px;font-weight:600;color:#fff">Attach <span class="expand-text">Photos</span></div></div>
+					<form method="POST" style="display:none" enctype="multipart/form-data">
+						<input id="attach-post-photo" class="hdn-input" type="file" name="attach-post-photo" >
+					</form>
+				</label>
 			</div>
 			
 			<div style="border-top:1px solid #eaeaea;padding:10px 24px;">
@@ -125,10 +122,23 @@
 		<div id="post-photo-layout-segue" class="segue-detail segue" style="position:absolute;right:-100%;top:0px;width:100%;" >
 			<div class="dialog-title"  >
 				<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Done</div>
-				<div class="dialog-title-text">Preview and Layout</div>
+				<div class="dialog-title-text" data-default-title="Layout Photos">Layout Photos</div>
 			</div>
-			<div class="dialog-body photo-layout-body" style="overflow:hidden;cursor:move">
-				<img src="http://localhost:8888/media/dummy/IMG_5101.jpeg" style="width:100%;display:block">
+			<div id="layout-draggable" class="dialog-body photo-layout-body" style="overflow:hidden;cursor:move;height:512px;font-size:0px;">
+				
+				<div class="photo-segment-container inline-blk two-column-horizon hdn" data-container-queue = "1">
+					<div class="photo-segment"  data-segment-queue = "1">
+						<img class="photo" src="" >
+					</div>
+				</div>
+				
+				<div class="photo-segment-container inline-blk two-column-horizon hdn" data-container-queue = "2">
+					<div class="photo-segment"  data-segment-queue = "2">
+						<img class="photo" src="" >
+					</div>
+				</div>
+				
+				
 			</div>
 			
 			<div class="hdn" style="border-top:1px solid #eaeaea;padding:10px 24px;text-align:right;">

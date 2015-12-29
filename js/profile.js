@@ -5,7 +5,8 @@ function openEditDialog(targetElementId){
 	var edit_wrapper = parent_wrapper.find(targetElementId);
 	edit_wrapper.removeClass('hdn');
 	edit_wrapper.css('height', edit_wrapper.find('.segue.act').height());
-//	edit_wrapper.css({'height':edit_wrapper.find('#post-photo-layout-segue').height(), 'position':'relative'});
+	edit_wrapper.css('position','relative');
+	//edit_wrapper.css('height',edit_wrapper.find('#post-photo-layout-segue').height());
 	parent_wrapper.find('.entry-focus').focus();
 	$('body').addClass('unscrollable');
 	
@@ -26,14 +27,14 @@ $(document).ready(function(){
 	$('body #edit-dialog-wrapper-inner').on({
 		click:function(e){
 			e.stopPropagation();
-			closeEditDialog();
+			closeEditDialog(true);
 		}
 	},'#cancel-e-p-button');
 	
 	$('body #edit-dialog-wrapper-inner').on({
 		click:function(e){
 			e.stopPropagation();
-			closeEditDialog();
+			closeEditDialog(true);
 		}
 	},'#save-e-p-button');
 	
