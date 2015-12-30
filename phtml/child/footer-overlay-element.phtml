@@ -80,7 +80,7 @@
 			<div class="dialog-title">
 				<div class="dialog-title-text">Add Scene</div>
 			</div>
-			<div id="attach-post-photo-banner" style="width:100%;overflow:hidden;position:relative;height:128px;font-size:0px;background-color: #000;">
+			<div id="attach-post-photo-banner" data-modified = "false" style="width:100%;overflow:hidden;position:relative;height:128px;font-size:0px;background-color: #000;">
 				<label for="attach-post-photo" id="attach-post-photo-label">
 					<div class="inline-blk vertical-center"><img src="<?php echo IMGDIR; ?>camera.png" height="25" width="29"><div style="font-size:16px;font-weight:600;color:#fff">Attach <span class="expand-text">Photos</span></div></div>
 					<form method="POST" style="display:none" enctype="multipart/form-data">
@@ -118,27 +118,24 @@
 				</div>
 			</div>
 		</div>
-	
 		<div id="post-photo-layout-segue" class="segue-detail segue" style="position:absolute;right:-100%;top:0px;width:100%;" >
 			<div class="dialog-title"  >
 				<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Done</div>
 				<div class="dialog-title-text" data-default-title="Layout Photos">Layout Photos</div>
 			</div>
-			<div id="layout-draggable" class="dialog-body photo-layout-body" style="overflow:hidden;cursor:move;height:512px;font-size:0px;">
+			<div id="layout-draggable" class="dialog-body photo-layout-body" data-layout-mode = "two-column-horizon" style="overflow:hidden;cursor:move;height:512px;font-size:0px;position:relative">
 				
-				<div class="photo-segment-container inline-blk two-column-horizon hdn" data-container-queue = "1">
-					<div class="photo-segment"  data-segment-queue = "1">
-						<img class="photo" src="" >
-					</div>
+			<div class="photo-segment-container inline-blk two-column-horizon" data-container-queue = "1" >
+				<div class="photo-segment"  data-segment-queue = "1" >
+					<img class="photo"  src="" >
 				</div>
-				
-				<div class="photo-segment-container inline-blk two-column-horizon hdn" data-container-queue = "2">
-					<div class="photo-segment"  data-segment-queue = "2">
-						<img class="photo" src="" >
-					</div>
+			</div>
+			<div class="photo-segment-container inline-blk two-column-horizon hdn" data-container-queue = "2">
+				<div class="photo-segment"  data-segment-queue = "2">
+					<img class="photo" src="" >
 				</div>
-				
-				
+			</div>
+
 			</div>
 			
 			<div class="hdn" style="border-top:1px solid #eaeaea;padding:10px 24px;text-align:right;">

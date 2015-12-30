@@ -514,6 +514,33 @@ textarea{
 }
 
 
+.photo-constriant{
+	z-index:-1;
+}
+
+.photo{
+	margin-top:0px;
+	margin-left:0px;
+}
+
+
+
+
+
+.two-column-horizon-up{
+	width:100%;
+	position:absolute;
+	top:-256px;
+	height:768px;
+}
+
+.two-column-horizon-down{
+	width:100%;
+	position:absolute;
+	top:0px;
+}
+
+
 
 
 
