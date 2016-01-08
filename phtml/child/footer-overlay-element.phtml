@@ -80,13 +80,23 @@
 			<div class="dialog-title">
 				<div class="dialog-title-text">Add Scene</div>
 			</div>
-			<div id="attach-post-photo-banner" data-modified = "false" style="width:100%;overflow:hidden;position:relative;height:128px;font-size:0px;background-color: #000;">
-				<label for="attach-post-photo" id="attach-post-photo-label">
-					<div class="inline-blk vertical-center"><img src="<?php echo IMGDIR; ?>camera.png" height="25" width="29"><div style="font-size:16px;font-weight:600;color:#fff">Attach <span class="expand-text">Photos</span></div></div>
-					<form method="POST" style="display:none" enctype="multipart/form-data">
-						<input id="attach-post-photo" class="hdn-input" type="file" name="attach-post-photo" >
-					</form>
-				</label>
+			<div id="attach-post-photo-banner" data-modified = "false">
+				<label for="attach-post-photo-1" id="attach-post-photo-label">
+						<div class="inline-blk vertical-center"><img src="<?php echo IMGDIR; ?>camera.png" height="25" width="29"><div style="font-size:16px;font-weight:600;color:#fff">Attach <span class="expand-text">Photos</span></div></div>
+				<!-- 
+		<input  class="attach-post-photo hiddenInput" id="attach-post-photo-2" type="file"   >						<input  class="attach-post-photo hiddenInput" id="attach-post-photo-3"  type="file"  >
+						<input  class="attach-post-photo hiddenInput last" id="attach-post-photo-4" type="file"   >
+						<input  class="attach-post-photo hiddenInput seudo">
+
+			
+ -->	</label>
+			
+			
+			<input  class="attach-post-photo hiddenInput first next" id="attach-post-photo-1" type="file" >
+
+
+				
+				
 			</div>
 			
 			<div style="border-top:1px solid #eaeaea;padding:10px 24px;">
@@ -112,9 +122,8 @@
 			
 			<div style="border-top:1px solid #eaeaea;padding:10px 24px;text-align:right">
 				<div>
-					<button id="cancel-e-p-button" class="animated-button gray-action-button" style="padding:0px 20px;margin-right:6px;">CANCEL</button>
-
-					<button id="save-e-p-button" class="animated-button blue-action-button" style="padding:0px 34px;">ADD</button>
+					<button id="cancel-scene-button" class="animated-button gray-action-button" style="padding:0px 20px;margin-right:6px;">CANCEL</button>
+					<button id="add-scene-button" class="animated-button blue-action-button" style="padding:0px 34px;">ADD</button>
 				</div>
 			</div>
 		</div>
@@ -127,6 +136,7 @@
 				
 			<div class="photo-segment-container inline-blk two-column-horizon" data-container-queue = "1" >
 				<div class="photo-segment"  data-segment-queue = "1" >
+					
 					<img class="photo"  src="" >
 				</div>
 			</div>

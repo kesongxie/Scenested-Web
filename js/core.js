@@ -5,6 +5,8 @@ var mouseViewPortX = 0;
 var mouseViewPortY = 0;
 var TWO_COLUMN_HORIZON_ANGLE_SLOPE = 5;
 var TWO_COLUMN_VERTICAL_ANGLE_SLOPE = 0.4;
+var ROOTDIR = 'http://localhost:8888/';
+var AJAXDIR = ROOTDIR+'ajax/';
 
 var LAYOUT_MODE = {'twoColumnHorizon':'two-column-horizon','twoColumnVertical':'two-column-vertical'}
 
@@ -167,6 +169,9 @@ function closeEditDialog(reset){
 	}
 }
 
+
+
+
 /*ends scene box editor functions*/
 
 function toggleDialogVerticalVerticalCenterPos(){
@@ -234,15 +239,64 @@ function unsetPostPhotoModified(){
 	$('#attach-post-photo-banner').attr('data-modified','false');
 }
 
+
+function ImageValidator(fileInput, callback){
+	var data = new FormData();
+	data.append('file', fileInput.files[0]);
+	$.ajax({
+		url:AJAXDIR+'validateImageFile.php',
+		type:'post',
+		data:data,
+		processData: false, 
+		contentType: false,
+		success:function(resp){
+			if(resp == '0'){
+				callback(fileInput);
+			}else{
+				console.log('invalid');
+			}
+		}
+	});
+}
+	
+
+
+function addPostPhoto(fileInput){
+		
+		var $this=  $(fileInput);
+		var label = $this.parents('#attach-post-photo-label');
+		var expand_text = label.find('.expand-text');
+		var current_width = parseInt(label.width());
+		label.animate({
+			'width':'-=128px'
+		}, {
+				duration:300, 
+				start:function(){
+					if( current_width <= 256){
+						expand_text.addClass('hdn');
+					}
+				},
+				complete:function(){
+					var banner = $('#attach-post-photo-banner');
+					//var current_index = banner.find('.post-photo-thumbnail').length + 1;
+					label.before('<div class="post-photo-thumbnail pending"><img class="photo-thumbnail" ><img class="remove-circle-icon" src="'+IMGDIR+'remove_icon.png" height="14" width="14"></div>');
+					var thumb_wrapper =  banner.find('.post-photo-thumbnail.pending');
+					var photo_thumb = thumb_wrapper.find('.photo-thumbnail');
+					readURL(fileInput, photo_thumb);
+					thumb_wrapper.removeClass('pending');
+					$this.next().addClass('next');
+					$this.removeClass('next').addClass('set');
+					var next_id = label.find('.attach-post-photo.next').attr('id');
+					label.attr('for',next_id);
+				}
+		});
+		setPostPhotoModified();
+	}
+
 $(document).ready(function(){
-	// $('button input div img').on('click', function(e){
-// 		e.stopPropagation();
-// 
-// 	
-// 	});
 	
 	$('#edit-dialog-wrapper-inner').click(function(){
-		return false;
+	//	return false;
 	});	
 
 
@@ -362,7 +416,9 @@ $(document).ready(function(){
 	
 	$('body #edit-dialog-wrapper-inner').on({
 		click:function(e){
-			e.stopPropagation();
+			 e.stopPropagation();
+			
+			
 		}
 	
 	},'#attach-post-photo');
@@ -376,46 +432,39 @@ $(document).ready(function(){
 	},'#attach-post-photo-label');
 	
 	
+	
+	
 	$('body #edit-dialog-wrapper-inner').on({
 		change:function(){
-			var thisE = this;
-			var label = $(this).parents('#attach-post-photo-label');
-			var expand_text = label.find('.expand-text');
-			var current_width = parseInt(label.width());
-			
-			label.animate({
-				'width':'-=128px'
-			}, {
-					duration:300, 
-					start:function(){
-						if( current_width <= 256){
-							expand_text.addClass('hdn');
-						}
-					},
-					complete:function(){
-						var banner = $('#attach-post-photo-banner');
-						var label = banner.find('#attach-post-photo-label');
-						label.before('<div class="post-photo-thumbnail pending"><img class="photo-thumbnail" ><img class="remove-circle-icon" src="'+IMGDIR+'remove_icon.png" height="14" width="14"></div>');
-						var thumb_wrapper =  banner.find('.post-photo-thumbnail.pending');
-						var photo_thumb = thumb_wrapper.find('.photo-thumbnail');
-						readURL(thisE, photo_thumb);
-						thumb_wrapper.removeClass('pending');
-						$(thisE).val('');
-					}
-			});
-			setPostPhotoModified();
-			
+			ImageValidator(this, addPostPhoto);
 		}
-	},'#attach-post-photo');
+	},'.attach-post-photo.next');
+	
+	
+	
+	
+	
+	
+	
 	
 	$('body #edit-dialog-wrapper-inner').on({
 		click:function(){
-			var banner = $(this).parents('#attach-post-photo-banner');
+			var $this = $(this);
+			var banner = $this.parents('#attach-post-photo-banner');
 			var label = banner.find('#attach-post-photo-label');
 			var expand_text = label.find('.expand-text');
 			var current_width = parseInt(label.width());
-			
-			$(this).parents('.post-photo-thumbnail').remove();
+			$this.parents('.post-photo-thumbnail').remove();	
+			var next_input_to_load = label.find('.attach-post-photo.next');
+			if(!next_input_to_load.hasClass('first')){
+				var input_will_be_load = next_input_to_load.prev();
+				if(input_will_be_load.hasClass('set')){
+					input_will_be_load.removeClass('set').addClass('next'); //mark as next, so that is available 
+				}
+				label.attr('for',input_will_be_load.attr('id')); //the id should match the new available input
+				input_will_be_load.val(''); //reset the input value
+				next_input_to_load.removeClass('next');
+			}
 			label.animate({
 				'width':'+=128px'
 			}, {duration:300, 
@@ -425,15 +474,12 @@ $(document).ready(function(){
 					}
 				}
 			});
-			
 			setPostPhotoModified();	
 			return false;
 		}
 	},'.post-photo-thumbnail .remove-circle-icon');
 	
-// 	 $( "#layout-draggable" ).sortable({
-//      	 revert: true
-//     });
+
 	
 	var startDragX = 0, startDragY = 0;
 	var stopDragX = 0, stopDragY = 0;
@@ -578,7 +624,7 @@ $(document).ready(function(){
 	
 	
 	
-	/* --------droppable working, but unadjustable---------- */
+	/* --------droppable working, now adjustable---------- */
 	
 
 	$('.photo-segment').draggable({
@@ -598,11 +644,10 @@ $(document).ready(function(){
 		drag:function(event,ui){
 			if(initial_rect.left < mouseViewPortX && mouseViewPortX < initial_rect.right && initial_rect.top < mouseViewPortY && mouseViewPortY < initial_rect.bottom){
 				//don't move the element at all, using the default helper that make the element looks like static
-				
 				var photo = $(this).find('.photo');
 				var mode = getLayoutMode();
 				if(mode == LAYOUT_MODE.twoColumnHorizon){
-					var max_dropppable_distance = photo.height() - 256;
+					var max_draggable_distance = photo.height() - 256;
 					if(mouseY - startDragY > 0){
 						//down
 						var current_margin_top = parseInt(photo.css('margin-top'));
@@ -613,14 +658,14 @@ $(document).ready(function(){
 						}
 					}else{
 						var current_margin_top = parseInt(photo.css('margin-top'));
-						if( current_margin_top > -max_dropppable_distance  ){
+						if( current_margin_top > -max_draggable_distance  ){
 							current_margin_top -=4;
-							current_margin_top = (current_margin_top < -max_dropppable_distance)?-max_dropppable_distance:current_margin_top;
+							current_margin_top = (current_margin_top < -max_draggable_distance)?-max_draggable_distance:current_margin_top;
 							photo.animate({'margin-top': current_margin_top+'px'}, 0);
 						}	
 					}
 				}else if(mode == LAYOUT_MODE.twoColumnVertical){
-					var max_dropppable_distance = photo.width() - 256;
+					var max_draggable_distance = photo.width() - 256;
 					if(mouseX - startDragX > 0){
 						//down
 						var current_margin_top = parseInt(photo.css('margin-left'));
@@ -631,20 +676,13 @@ $(document).ready(function(){
 						}
 					}else{
 						var current_margin_top = parseInt(photo.css('margin-left'));
-						if( current_margin_top > -max_dropppable_distance  ){
+						if( current_margin_top > -max_draggable_distance  ){
 							current_margin_top -=4;
-							current_margin_top = (current_margin_top < -max_dropppable_distance)?-max_dropppable_distance:current_margin_top;
+							current_margin_top = (current_margin_top < -max_draggable_distance)?-max_draggable_distance:current_margin_top;
 							photo.animate({'margin-left': current_margin_top+'px'}, 0);
 						}	
 					}
 				}
-				
-				
-				
-				
-				
-				
-					
 			}else{	
 				//when the cursor move out of the original container, make the helper becomes original that make it look it's moving
 				
@@ -668,9 +706,6 @@ $(document).ready(function(){
 			var src_target = ui.draggable;
 			var des_container_queue = des_container.attr('data-container-queue');
 			var src_target_queue = src_target.attr('data-segment-queue');
-			
-			
-			console.log(des_container_queue+" "+src_target_queue );
 			if(des_container_queue != src_target_queue){
 				des_container.find('.photo').addClass('drop-photo-scale-animation');
 				var title_text = $('#post-photo-layout-segue .dialog-title-text');
@@ -691,7 +726,8 @@ $(document).ready(function(){
 						title_text.text('Swap');
 						swap = true;
 					}
-				}else if(mode == LAYOUT_MODE.twoColumnVertical){
+				}
+				else if(mode == LAYOUT_MODE.twoColumnVertical){
 					var slope = (stopDragY - startDragY)/(stopDragX - startDragX);
 					if( -TWO_COLUMN_VERTICAL_ANGLE_SLOPE < slope && slope < TWO_COLUMN_VERTICAL_ANGLE_SLOPE){
 						title_text.text('Swap');
@@ -714,10 +750,8 @@ $(document).ready(function(){
 			var src_target = ui.draggable;
 			var des_target = des_container.find('.photo-segment');
 			var src_container = src_target.parents('.photo-segment-container');
-			
 			var des_container_queue = des_container.attr('data-container-queue');
 			var src_target_queue = src_target.attr('data-segment-queue');
-			
 			if(des_container_queue != src_target_queue){
 				//swap the element 
 				var changeToVertical = (!drag_down && drag_left )  || (drag_down && !drag_left) ;
@@ -734,15 +768,12 @@ $(document).ready(function(){
 						des_container.removeClass('two-column-horizon').addClass('two-column-vertical');
 						src_target.draggable('option','axis','x');
 						des_target.draggable('option','axis','x');
-						
-						
 						setLayoutMode(LAYOUT_MODE.twoColumnVertical);
 					}else{
 						src_container.removeClass('two-column-vertical').addClass('two-column-horizon');
 						des_container.removeClass('two-column-vertical').addClass('two-column-horizon');
 						src_target.draggable('option','axis','y');
 						des_target.draggable('option','axis','y');
-						
 						setLayoutMode(LAYOUT_MODE.twoColumnHorizon);
 					}
 				}
@@ -781,6 +812,9 @@ $(document).ready(function(){
 						var container = layout_body.find('.photo-segment-container[data-container-queue="'+(index+1)+'"]');
 						container.removeClass('hdn');
 						var photo = container.find('.photo').attr('src', $(this).attr('src'));
+						photo.attr('data-width', photo.width());
+						photo.attr('data-height', photo.height());
+						
 					});
 					unsetPostPhotoModified();
 				}
@@ -802,7 +836,49 @@ $(document).ready(function(){
 	},'.post-photo-thumbnail');
 	
 	
+	function getIntValueFromCSSStyle(style){
+		return parseInt(style.replace('px',''));
+	}
+	function swapInputPosition(inputIndex1, inputIndex2){
+		
 	
+	}
+	
+	
+	
+	
+	$('#add-scene-dialog-wrapper').on({
+		click:function(){
+			var layout_mode = getLayoutMode();
+			if(layout_mode == LAYOUT_MODE.twoColumnHorizon){
+				$('#layout-draggable .photo').each(function(){
+					var $this = $(this);
+					var adjusted_margin = getIntValueFromCSSStyle($this.css('margin-top'));
+					var image_height = getIntValueFromCSSStyle($this.attr('data-height'));
+					var adjusted_ratio = adjusted_margin/image_height;
+				});
+			}
+		
+			var formData = new FormData();
+			$('#attach-post-photo-label input.set').each(function(index){
+				formData.append('file-'+index, this.files[0]);
+			});
+			
+			
+			$.ajax({
+				url:AJAXDIR+'testCropImage.php',
+				type:'post',
+				data:formData,
+				processData: false, //prevent the data to be transformed into string automatically
+ 				contentType: false, //false, tell jquery not to send any content type header
+				success:function(resp){
+					console.log(resp);
+				}
+			});
+			return false;
+		}
+	
+	},'#add-scene-button');
 	
 
 });
