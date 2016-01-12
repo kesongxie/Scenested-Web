@@ -1,16 +1,40 @@
-#profile-left-content-wrapper{
+/* starts profile user cover */
+#profile-whole-container > #profile-body-whole-container > .user-cover > .inner{
+	position:relative;
+	width:100%;
+/* 
+	min-height:300px;
+ */
+	max-height:400px;
+	overflow:hidden;
+	background:#1C3E5A;
+	border-bottom: 1px solid
+}
+
+#profile-whole-container > #profile-body-whole-container > .user-cover > .inner > .cover-image{
+	width:100%;
+	display: block;
+}
+/* ends profile user cover */
+
+
+/*  starts profile main content */
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper{
+	display:inline-block;	
+	vertical-align:top;
 	position:relative;
 }
 
 
-#profile-left-content-wrapper #profile-avator-wrapper{
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper{
  	display:inline-block;
 	border:6px solid #fff;
 	border-radius:3px;
 	overflow:hidden;
+	position:relative;
 }
 
-#profile-left-content-wrapper #profile-avator-wrapper #a-e-p-overlay{
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper > #avator-edit-profile > #a-e-p-overlay{
 	position:absolute;
 	bottom:-40px;
 	width:100%;
@@ -20,7 +44,7 @@
 	cursor:pointer;
 }
 
-#profile-left-content-wrapper #profile-avator-wrapper #a-e-p-edit{
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper > #avator-edit-profile >  #a-e-p-edit{
 	position:absolute;
 	bottom:-40px;
 	color:#fff;
@@ -33,259 +57,208 @@
 }
 
 
-
-#profile-left-content-wrapper #profile-name-wrapper{
-	margin:0px 0px 0px 0px
-}
-
-#profile-left-content-wrapper #profile-name-wrapper #profile-name{
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-name-wrapper > #profile-name{
 	font-weight:600;
 	font-size:22px;
 	color:#223D50;
 }
 
-.profile-data{
+
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper{
+	margin:10px 0px 12px 0px;
+	font-size:0px;
+}
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block{
+	font-size:15px;
+}
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block:nth-child(2){
+	margin:0px 20px;
+}
+
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data{
  	text-align:center;
  	color:#080835;
  	font-weight:600;
  	color:#333A60;
 }
 
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data-label{
+	color:#080835
+}
 
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-short-bio{
+	color:#0C304A;
+	margin-top:10px;
+}
+
+
+
+
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-right-content-wrapper{
+	display:inline-block;	
+	vertical-align:top;
+}
+
+
+
+
+
+
+
+
+/*  ends profile main content */
+
+
+/* large screen text align left*/
 @media(min-width:1124px){
-	#profile-main-container{
-		text-align:left;
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content{
+		text-align: left;
+    	margin-left: 0px;
 	}
 }
 
+/* smaller screen text align center */
 @media(max-width:1124px){
-	#profile-main-container{
-		text-align:center;
-		margin-left:-120px;
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content{
+		text-align: center;
+    	margin-left: -100px;
 	}
 }
 
 
 
+/*  profile css for desktop view */
+@media (min-width: 520px) {
+	#profile-whole-container{
+		min-width:882px;
+	}
 
-/*profile css for desktop view*/
-@media (min-width: 930px) {
-	#profile-left-content-wrapper{
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper{
 		width:24%;
 		padding:20px;
+		min-width:270px;
 		text-align:left;
 	}
-	#profile-right-content-wrapper{
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-right-content-wrapper{
 		width:50%;
 	}
 	
-	
-	#profile-left-content-wrapper #profile-avator-wrapper #profile-avator{
-		height:140px;
-		width:140px;
-	}
-	
-	.post{
-		box-shadow:1px 1px 10px #838383;
-	}
-	
-	#profile-left-content-inner-wrapper{
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper{
 		margin:-138px 0px 20px 36px;
 	}
-
-	#cover-caption{
-		display:block;
-	}
 	
-	.profile-data-label{
-		font-size: 15px;
-	}
-	
-	
-	#profile-left-content-wrapper #profile-name-wrapper #profile-name{
-		font-size:24px;
-	}
-	
-	.profile-data{
-		font-size: 20px;
-	}
-	
-	#profile-left-content-wrapper #profile-avator-wrapper{
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper{
 		margin-left:-4px;
 	}
 	
-	.profile-bio{
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper > #profile-avator{
+		height:140px;
+		width:140px;
+		display:block;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-name-wrapper > #profile-name{
+		font-size:24px;
+	}
+	
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data-label{
+		font-size: 15px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data{
+		font-size: 20px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-short-bio{
 		font-size:15px;
 	}
 	
-	#edit-dialog-wrapper{
-		/* margin-top:-20px; */
-	}
-	
 	#edit-dialog-wrapper #edit-dialog-wrapper-inner{
-		/* width:40%; */
 		width:512px;
 	}
 	
-
+	.post{
+		box-shadow:1px 1px 10px #D7D7D7;
+		max-width: 600px;
+	}
 }
 /*profile css for mobile view*/
 
-@media (max-width: 930px) {
-	#profile-left-content-wrapper{
+@media (max-width: 520px) {
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content{
+		text-align: center;
+    	margin-left: 0px;
+	}
+
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper{
 		width:100%;
 		text-align:center;
 	}
-	#profile-right-content-wrapper{
-		width:100%;
+	
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper{
+		margin-left:0px;
 	}
 	
-	#profile-left-content-wrapper #profile-avator-wrapper #profile-avator{
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper > #profile-avator{
 		height:80px;
 		width: 80px;
 	}
 	
-	.post{
-		border-top:1px solid #D6D6D6;
-	}
-	#profile-left-content-inner-wrapper{
-		margin:-70px 20px 20px 20px;
-	}
-	
-	#cover-caption{
-		display:none;
-	}
-	.profile-data-label{
-		font-size: 13px;
-	}
-	#profile-left-content-wrapper #profile-name-wrapper #profile-name{
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-name-wrapper > #profile-name{
 		font-size:18px;
 	}
 	
-	#profile-main-container{
-		text-align:center;
-		margin-left:0px;
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-right-content-wrapper{
+		width:100%;
 	}
 	
-	.profile-data{
+
+	.post{
+		border-top:1px solid #D6D6D6;
+	}
+	.post .date, #add-scene-button{
+		display:none;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper{
+		margin:-70px 20px 0px 20px;
+	}
+	
+
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data-label{
+		font-size: 13px;
+	}
+	
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data{
 		font-size: 16px;
 	}
 	
-	#profile-left-content-wrapper #profile-avator-wrapper{
-		margin-left:0px;
-	}
 	
-	.profile-bio{
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-short-bio{
 		font-size:13px;
 	}
 	
-	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-right-content-wrapper{
+		margin-top:0px;
+	}
+		
 	#edit-dialog-wrapper{
 		margin-top:0px;
 		height:100%;
 		background:#fff;
 	}
 	
-	
-	
 	#edit-dialog-wrapper #edit-dialog-wrapper-inner{
 		width:100%;
 	}
 }
-
-#add-scene-button{
-	padding:0px 30px;
-}
-#follow-button{
-	padding:0px 40px;
-}
-
-#profile-right-content-wrapper{
-	text-align:left;
-	margin-bottom:10px;
-}
-
-
-@-webkit-keyframes editSlideUp{
-	from{
-		bottom:-40px;
-	}
-	to{
-		bottom:0px;
-	}
-}
-
-
-@keyframes editSlideUp{
-	from{
-		bottom:-40px;
-	}
-	to{
-		bottom:0px;
-	}
-}
-
-
-
-
-@-webkit-keyframes editSlideDown{
-	from{
-		bottom:0px;
-	}
-	to{
-		bottom:-40px;
-	}
-}
-
-
-@keyframes editSlideDown{
-	from{
-		bottom:0px;
-	}
-	to{
-		bottom:-40px;
-	}
-}
-
-@-webkit-keyframes segueSlideInLeft{
-	from{
-		right:-100%;
-	}
-	to{
-		right:0px;
-	}
-}
-
-@keyframes segueSlideInLeft{
-	from{
-		right:-100%;
-	}
-	to{
-		right:0px;
-	}
-}
-
-
-
-@-webkit-keyframes segueSlideOutRight{
-	from{
-		right:0px
-	}
-	to{
-		right:-100%;
-	}
-}
-
-@keyframes segueSlideOutRight{
-	from{
-		right:0px
-	}
-	to{
-		right:-100%;
-	}
-}
-
-
-
 
 

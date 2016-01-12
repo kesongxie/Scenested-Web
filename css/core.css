@@ -1,21 +1,4 @@
-*{
-	margin:0px;
-	padding:0px;
-	color:#676767;
-}
 
-body{
-	font-size:14px;
-	position: relative;
-	background-color:#fff;
-    max-width: 1750px;
-	margin: 0px auto;
-	line-height: 1.5;
-	font-family:helvetica, arial, sans-serif;
-	-webkit-font-smoothing: subpixel-antialiased;
-	min-height:720px;
-	overflow-x:hidden;
-}
 
 .unscrollable{
 	overflow:hidden;
@@ -88,17 +71,6 @@ textarea{
 }
 
 
-#gl-search-input{
-	width:180px;
-}
-
-#gl-search-input{
-	background-color: #F8F8F8;
-	font-size:14px !important;
-}
-#gl-search-input:focus{
-	background-color: #fff;
-}
 
 
 .inline-blk{
@@ -126,97 +98,7 @@ textarea{
   cursor:text;
 }
 
-/*starts post template*/
-.post{
-	padding:6px 0px;
-	background:#fff;
-}
 
-.post .post-user-info{
-	margin-left: 54px;
-}
-
-.post .post-user-info .post-user-name{
-	color:#323232;
-	font-weight:600;
-	font-size:15px;
-}
-
-.post .post-operation-icon{
-	opacity:0.3;
-	margin-right:6px;
-}
-.post .action-num{
-	font-weight:bold;
-	color:#A0A0A0;
-}
-
-.post .post-avator{
-	height:48px;
-	width:48px;
-	border-radius:50%;
-	position:absolute;
-}
-.post .post-master{
-	margin-top:10px;
-	width:100%;
-	position:relative;
-/* 
-	max-width:520px;
- */
-	/* border-bottom:1px solid #e4e4e4; */
-	/* padding-bottom:20px; */
-}
-
-.post .post-master .post-attached-img{
-	width:100%;
-	display: block;
-	border-radius:0px;
-}
-
-.post .post-master .post-user-interact{
-	margin-top: 10px;
-	text-align:right;
-}
-.post .post-master .post-user-interact .action-num{
-	font-size:14px;
-}
-
-.post .post-master .post-user-interact .toggle-comment{
-	vertical-align:bottom
-}
-
-.post .post-tag-date{
-	position:absolute;
-	top:-92px;
-	right:-74px;
-}
-.post .post-tag-date .date{
-	margin-left:10px;
-}
-.post .post-tag-date .date .day{
-	color:#333;
-	font-weight:600;
-	font-size:30px;
-	margin-right:2px;
-}
-.post .post-tag-date .date .mon, .post .post-tag-date .date .year{
-	font-size:14px;
-	margin-top:-4px;
-}
-.post .post-interaction{
-	text-align:left;
-	clear:both;
-	font-size:14px;
-}
-
-.post .post-interaction .activity-avator{
-	width:36px;
-	height:36px;
-	border-radius:50%;
-}
-
-/*ends post template*/
 
 .remove-circle-icon{
 	opacity:0.6;
@@ -329,22 +211,10 @@ textarea{
  	border:1px solid #1C5B96;
 }
 
-
-
-
-
-
-
-
-
 .gray-action-button{
 	border: 1px solid #D1D1D1 !important;
 }
  
-
-.profile-data-label{
-	color:#080835
-}
 
 
 .overlay{
@@ -455,6 +325,7 @@ textarea{
 
 .post-photo-thumbnail>.photo-thumbnail{
 	display: block;
+	cursor:pointer;
 }
 
 .post-photo-thumbnail>.remove-circle-icon{
@@ -478,9 +349,7 @@ textarea{
 	color:inherit;
 }
 
-#layout-draggable{
-	background:#000;
-}
+
 .photo-container-highlight{
 	border: 2px solid blue;
 }
@@ -495,6 +364,11 @@ textarea{
 .photo-layout-body .photo-segment{
 	height:100%;
 	overflow:hidden;
+	width:100%;
+}
+
+.photo-layout-body .photo-segment .swap-content-container{
+	height:100%;
 	width:100%;
 }
 
@@ -564,11 +438,122 @@ textarea{
 }
 
 
+#add-scene-dialog-wrapper #post-photo-layout-segue #layout-draggable{
+	background:#000;
+	overflow:hidden;
+	cursor:move;
+	height:512px;
+	width:512px;
+	font-size:0px;
+	position:relative
+}
 
 
 
 /* ends the add scene dialog */
 
 
+/*starts profile css*/
 
+
+
+#add-scene-button{
+	padding:0px 30px;
+}
+#follow-button{
+	padding:0px 40px;
+}
+
+#profile-right-content-wrapper{
+	text-align:left;
+	margin-bottom:10px;
+}
+
+
+@-webkit-keyframes editSlideUp{
+	from{
+		bottom:-40px;
+	}
+	to{
+		bottom:0px;
+	}
+}
+
+
+@keyframes editSlideUp{
+	from{
+		bottom:-40px;
+	}
+	to{
+		bottom:0px;
+	}
+}
+
+
+
+
+@-webkit-keyframes editSlideDown{
+	from{
+		bottom:0px;
+	}
+	to{
+		bottom:-40px;
+	}
+}
+
+
+@keyframes editSlideDown{
+	from{
+		bottom:0px;
+	}
+	to{
+		bottom:-40px;
+	}
+}
+
+@-webkit-keyframes segueSlideInLeft{
+	from{
+		right:-100%;
+	}
+	to{
+		right:0px;
+	}
+}
+
+@keyframes segueSlideInLeft{
+	from{
+		right:-100%;
+	}
+	to{
+		right:0px;
+	}
+}
+
+
+
+@-webkit-keyframes segueSlideOutRight{
+	from{
+		right:0px
+	}
+	to{
+		right:-100%;
+	}
+}
+
+@keyframes segueSlideOutRight{
+	from{
+		right:0px
+	}
+	to{
+		right:-100%;
+	}
+}
+
+
+
+
+
+
+
+/*ends profile css*/
 

@@ -6,15 +6,15 @@
 			<div class="dialog-title">
 				<div class="dialog-title-text">Edit Profile</div>
 			</div>
-			<div style="width:100%;overflow:hidden">
-				<img style="width:100%;margin-top:-70%;display: block;" src="http://localhost:8888/media/dummy/1.jpeg">
+			<div style="width:100%;overflow:hidden;height:160px;">
+				<img style="width:100%;display: block;" src="http://192.168.1.101:8888/media/dummy/IMG_5101.jpg">
 			</div>
 		
 			<div style="margin:-60px 0px 10px 20px;text-align:left">
 				<div class="inline-blk" style="border:6px solid #fff;border-radius:3px;">
 					<img  src="<?php echo DUMMY_MEDIA ?>avator.jpg" style="height:80px;width:80px;">
 				</div>
-				<div style="font-weight: 600;font-size: 18px; color: #223D50; margin-left: 3px;">Jamie Liang</div>
+				<div style="font-weight: 600;font-size: 18px; color: #223D50; margin-left: 3px;">Kesong Xie</div>
 			</div>
 			<div style="border-top:1px solid #eaeaea;padding:10px 24px;">
 				<div>
@@ -84,19 +84,13 @@
 				<label for="attach-post-photo-1" id="attach-post-photo-label">
 						<div class="inline-blk vertical-center"><img src="<?php echo IMGDIR; ?>camera.png" height="25" width="29"><div style="font-size:16px;font-weight:600;color:#fff">Attach <span class="expand-text">Photos</span></div></div>
 				<!-- 
-		<input  class="attach-post-photo hiddenInput" id="attach-post-photo-2" type="file"   >						<input  class="attach-post-photo hiddenInput" id="attach-post-photo-3"  type="file"  >
+	
+								<input  class="attach-post-photo hiddenInput" id="attach-post-photo-3"  type="file"  >
 						<input  class="attach-post-photo hiddenInput last" id="attach-post-photo-4" type="file"   >
 						<input  class="attach-post-photo hiddenInput seudo">
 
 			
  -->	</label>
-			
-			
-			<input  class="attach-post-photo hiddenInput first next" id="attach-post-photo-1" type="file" >
-
-
-				
-				
 			</div>
 			
 			<div style="border-top:1px solid #eaeaea;padding:10px 24px;">
@@ -132,17 +126,22 @@
 				<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Done</div>
 				<div class="dialog-title-text" data-default-title="Layout Photos">Layout Photos</div>
 			</div>
-			<div id="layout-draggable" class="dialog-body photo-layout-body" data-layout-mode = "two-column-horizon" style="overflow:hidden;cursor:move;height:512px;font-size:0px;position:relative">
+			<div id="layout-draggable" class="dialog-body photo-layout-body" data-layout-mode = "two-column-horizon">
 				
 			<div class="photo-segment-container inline-blk two-column-horizon" data-container-queue = "1" >
 				<div class="photo-segment"  data-segment-queue = "1" >
-					
-					<img class="photo"  src="" >
+					<div class="swap-content-container">
+						<input  class="attach-post-photo hiddenInput first next" id="attach-post-photo-1" type="file" >
+						<img class="photo"  src="" >
+					</div>
 				</div>
 			</div>
 			<div class="photo-segment-container inline-blk two-column-horizon hdn" data-container-queue = "2">
 				<div class="photo-segment"  data-segment-queue = "2">
-					<img class="photo" src="" >
+					<div class="swap-content-container">
+						<input  class="attach-post-photo hiddenInput" id="attach-post-photo-2" type="file"   >
+						<img class="photo" src="" >
+					</div>
 				</div>
 			</div>
 

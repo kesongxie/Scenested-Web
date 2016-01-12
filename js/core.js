@@ -262,9 +262,10 @@ function ImageValidator(fileInput, callback){
 
 
 function addPostPhoto(fileInput){
-		
 		var $this=  $(fileInput);
-		var label = $this.parents('#attach-post-photo-label');
+		var add_scene_wrapper = $('#edit-dialog-wrapper #add-scene-dialog-wrapper');
+		var banner =  add_scene_wrapper.find('#attach-post-photo-banner');
+		var label = banner.find('#attach-post-photo-label');
 		var expand_text = label.find('.expand-text');
 		var current_width = parseInt(label.width());
 		label.animate({
@@ -277,16 +278,17 @@ function addPostPhoto(fileInput){
 					}
 				},
 				complete:function(){
-					var banner = $('#attach-post-photo-banner');
-					//var current_index = banner.find('.post-photo-thumbnail').length + 1;
 					label.before('<div class="post-photo-thumbnail pending"><img class="photo-thumbnail" ><img class="remove-circle-icon" src="'+IMGDIR+'remove_icon.png" height="14" width="14"></div>');
 					var thumb_wrapper =  banner.find('.post-photo-thumbnail.pending');
 					var photo_thumb = thumb_wrapper.find('.photo-thumbnail');
 					readURL(fileInput, photo_thumb);
 					thumb_wrapper.removeClass('pending');
-					$this.next().addClass('next');
+					add_scene_wrapper.find('#post-photo-layout-segue')
+					
+					var next_input_will_load = $this.parents('.photo-segment-container').next().find('.attach-post-photo');
+					next_input_will_load.addClass('next');
 					$this.removeClass('next').addClass('set');
-					var next_id = label.find('.attach-post-photo.next').attr('id');
+					var next_id =next_input_will_load.attr('id');
 					label.attr('for',next_id);
 				}
 		});
@@ -455,16 +457,22 @@ $(document).ready(function(){
 			var expand_text = label.find('.expand-text');
 			var current_width = parseInt(label.width());
 			$this.parents('.post-photo-thumbnail').remove();	
-			var next_input_to_load = label.find('.attach-post-photo.next');
-			if(!next_input_to_load.hasClass('first')){
-				var input_will_be_load = next_input_to_load.prev();
-				if(input_will_be_load.hasClass('set')){
-					input_will_be_load.removeClass('set').addClass('next'); //mark as next, so that is available 
-				}
-				label.attr('for',input_will_be_load.attr('id')); //the id should match the new available input
-				input_will_be_load.val(''); //reset the input value
-				next_input_to_load.removeClass('next');
+		
+			var input_will_be_load = $('#layout-draggable .photo-segment-container input.attach-post-photo.set').last();
+			if(input_will_be_load.hasClass('set')){
+				input_will_be_load.removeClass('set').addClass('next'); //mark as next, so that is available 
 			}
+			label.attr('for',input_will_be_load.attr('id')); //the id should match the new available input
+			input_will_be_load.val(''); //reset the input value
+			
+			var parent_input_to_be_removed = input_will_be_load.parents('.photo-segment-container').next('.photo-segment-container');
+			if(parent_input_to_be_removed.length > 0){
+				var input_to_be_removed = parent_input_to_be_removed.find('.attach-post-photo');
+				if(input_to_be_removed.hasClass('next')){
+					input_to_be_removed.removeClass('next');
+				}
+			}
+		
 			label.animate({
 				'width':'+=128px'
 			}, {duration:300, 
@@ -756,9 +764,11 @@ $(document).ready(function(){
 				//swap the element 
 				var changeToVertical = (!drag_down && drag_left )  || (drag_down && !drag_left) ;
 				if(swap ||  changeToVertical){
-					var src_content = src_container.find('.photo');
-					src_container.find('.photo-segment').html(des_container.find('.photo'));
+					//swap 
+					var src_content = src_container.find('.swap-content-container');
+					src_container.find('.photo-segment').html(des_container.find('.swap-content-container'));
 					des_container.find('.photo-segment').html(src_content);
+					
 				}
 				
 				var currentMode = getLayoutMode();
@@ -781,6 +791,13 @@ $(document).ready(function(){
 				photo_segment.css({'left':'0px', 'top':'0px', 'right':'0px', 'bottom':'0px'});
 				photo_segment.find('.photo').css('margin', '0px');
 				
+				var src_photo = src_container.find('.photo');
+				src_photo.attr('data-width', src_photo.width());
+				src_photo.attr('data-height', src_photo.height());
+		
+				var des_photo = des_container.find('.photo');
+				des_photo.attr('data-width', des_photo.width());
+				des_photo.attr('data-height', des_photo.height());
 			}
 			$('#layout-draggable .photo-segment').css({'top':'0px'});
 			$('.photo-segment-container .photo').removeClass('drop-photo-scale-animation');
@@ -849,21 +866,45 @@ $(document).ready(function(){
 	
 	$('#add-scene-dialog-wrapper').on({
 		click:function(){
+			var formData = new FormData();
 			var layout_mode = getLayoutMode();
+			var layout_draggable = $('#layout-draggable');
+			
+			
 			if(layout_mode == LAYOUT_MODE.twoColumnHorizon){
-				$('#layout-draggable .photo').each(function(){
+				layout_draggable.find('.photo-segment-container').each(function(index){
 					var $this = $(this);
-					var adjusted_margin = getIntValueFromCSSStyle($this.css('margin-top'));
-					var image_height = getIntValueFromCSSStyle($this.attr('data-height'));
-					var adjusted_ratio = adjusted_margin/image_height;
+					var $input = $this.find('input.attach-post-photo');
+					if($input.hasClass('set') && $input.get(0).files.length > 0){
+						formData.append('file_'+index, $input.get(0).files[0]);
+						var $photo = $this.find('.photo');
+						var adjusted_margin = getIntValueFromCSSStyle($photo.css('margin-top'));
+						var image_height = getIntValueFromCSSStyle($photo.attr('data-height'));
+						var adjusted_margin_ratio = adjusted_margin/image_height;
+						var image_container_scale = $this.height()/image_height;
+						var ratio = 'image_container_scale='+image_container_scale+'&adjusted_margin_ratio='+adjusted_margin_ratio;
+						formData.append('ratio_'+index, ratio);
+					}
+				});
+			}else if(layout_mode == LAYOUT_MODE.twoColumnVertical){
+				layout_draggable.find('.photo-segment-container').each(function(index){
+					var $this = $(this);
+					var $input = $this.find('input.attach-post-photo');
+					if($input.hasClass('set') && $input.get(0).files.length > 0){
+						formData.append('file_'+index, $input.get(0).files[0]);
+						var $photo = $this.find('.photo');
+						var adjusted_margin = getIntValueFromCSSStyle($photo.css('margin-left'));
+						var image_height = getIntValueFromCSSStyle($photo.attr('data-width'));
+						var adjusted_margin_ratio = adjusted_margin/image_height;
+						var image_container_scale = $this.width()/image_height;
+						var ratio = 'image_container_scale='+image_container_scale+'&adjusted_margin_ratio='+adjusted_margin_ratio;
+						formData.append('ratio_'+index, ratio);
+					}
 				});
 			}
 		
-			var formData = new FormData();
-			$('#attach-post-photo-label input.set').each(function(index){
-				formData.append('file-'+index, this.files[0]);
-			});
-			
+			formData.append('layout_mode', layout_mode);
+		
 			
 			$.ajax({
 				url:AJAXDIR+'testCropImage.php',
@@ -879,6 +920,14 @@ $(document).ready(function(){
 		}
 	
 	},'#add-scene-button');
+		
+	
+	$('body').on({
+		click:function(){
+			closeEditDialog();
+		}
+	},'#edit-dialog-wrapper #cancel-scene-button');
+	
 	
 
 });

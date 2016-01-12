@@ -6,7 +6,6 @@ function openEditDialog(targetElementId){
 	edit_wrapper.removeClass('hdn');
 	edit_wrapper.css('height', edit_wrapper.find('.segue.act').height());
 	edit_wrapper.css('position','relative');
-	//edit_wrapper.css('height',edit_wrapper.find('#post-photo-layout-segue').height());
 	parent_wrapper.find('.entry-focus').focus();
 	$('body').addClass('unscrollable');
 	
