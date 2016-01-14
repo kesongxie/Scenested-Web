@@ -155,6 +155,9 @@ $(document).ready(function(){
 			formData.append('image_container_scale_width', image_container_scale_width);
 			var imageFile = parent_wrapper.find('#cover-image-upload');
 			formData.append('file', imageFile[0].files[0]);
+			
+			var ds = new DataState(imageFile);
+			ds.setTargetDataStateToProcessing();
 			$.ajax({
 				url:AJAXDIR+'upload_cover.php',
 				method:'post',
@@ -162,7 +165,13 @@ $(document).ready(function(){
 				processData:false,
 				contentType:false,
 				success:function(resp){
-					console.log(resp);
+					if(resp != '1'){
+						$('#profile-cover').attr('src',resp);
+						ds.setTargetDataStateToReady();
+						imageFile.val('');
+					}else{
+						console.log('error');
+					}
 				}
 			
 			});
@@ -197,6 +206,9 @@ $(document).ready(function(){
 			var imageFile = parent_wrapper.find('#avator-image-upload');
 			formData.append('file', imageFile[0].files[0]);
 			
+			var ds = new DataState(imageFile);
+			ds.setTargetDataStateToProcessing();
+		
 			$.ajax({
 				url:AJAXDIR+'upload_avator.php',
 				method:'post',
@@ -204,46 +216,96 @@ $(document).ready(function(){
 				processData:false,
 				contentType:false,
 				success:function(resp){
-					console.log(resp);
+					if(resp != '1'){
+						$('#profile-avator').attr('src',resp);
+						ds.setTargetDataStateToReady();
+						imageFile.val('');
+					}else{
+						console.log('error');
+					}
 				}
 			
 			});
 	}
 	
-	function updateProfileBio(bio_text){
-		bio_text = bio_text.replace(/\u00a0/g,' '); //replace &nbsp with space
+	function updateProfileBio(bio){
+		var bio_text =  bio.text().trim().replace(/\u00a0/g,' '); //replace &nbsp with space
+		var ds = new DataState(bio);
+		ds.setTargetDataStateToProcessing();
 		$.ajax({
 			url:AJAXDIR+'update_bio.php',
 			method:'post',
 			data:{bio_text:bio_text},
 			success:function(resp){
-				console.log(resp);
+				$('#profile-left-content-wrapper #profile-short-bio').text(resp);
+				ds.setTargetDataStateToReady();
 			}
 		});
 	}
+	
+	
 
+	function closeSystemMessage(){
+		$('#glob-overlay, #system-message').addClass('hdn');
+		$('body').removeClass('unscrollable');
+	}
+	
+
+	/*  
+		@param avator_ds 
+			a DataState instance for avator input, containing the the data-state, either processing or ready
+			isStateReady returns true when the file finishes its uploading
+		@param cover_ds 
+			a DataState instance for cover input, containing the the data-state, either processing or ready
+			isStateReady returns true when the file finishes its uploading
+		@param bio_ds 
+			a DataState instance for bio, containing the the data-state, either processing or ready
+			isStateReady returns true when the file finishes its uploading
+		@param intIdM
+			a intervalIdManager instance that contains the information of the intervalId, after the intervalId is set
+	*/
+	function saveProfileCallBack(avator_ds, cover_ds, bio_ds, intIdM){
+		if(avator_ds.isStateReady() && cover_ds.isStateReady() && bio_ds.isStateReady()){
+			closeSystemMessage();
+			clearInterval(intIdM.getIntervalIdOnElement());
+			var edit_wrapper = $('#edit-profile-dialog-wrapper');
+			edit_wrapper.find('#edit-cover-wrapper, #edit-avator-image-wrapper').css('cursor','pointer');
+			edit_wrapper.find('.upload-label').removeClass('hdn');
+			intIdM.destoryIntervalIdOnElement();
+		}
+	}
+	
+	
 	$('#edit-profile-dialog-wrapper').on({
 		click:function(){
 			var dialog_wrapper =  $(this).parents('#edit-profile-dialog-wrapper');
 			var avatorFile = dialog_wrapper.find('#avator-image-upload');
+			
 			//update avator
 			if(avatorFile[0].files.length > 0){
 				uploadProfileAvator();
 			}
+			
 			//update cover
 			var coverFile = dialog_wrapper.find('#cover-image-upload');
 			if(coverFile[0].files.length > 0){
 				uploadProfileCover();
 			}
 			//update bio
-			var bio_text = dialog_wrapper.find('#edit-short-bio').text();
-			updateProfileBio(bio_text);
+			var bio = dialog_wrapper.find('#edit-short-bio');
+			updateProfileBio(bio);
 			
-			
+			var avator_ds = new DataState(avatorFile);
+			var cover_ds = new DataState(coverFile);
+			var bio_ds = new DataState(bio);
+	
 			dialog_wrapper.addClass('hdn');
-			$('#system-message').removeClass('hdn');
+			var systemMessage = $('#system-message');
+			systemMessage.removeClass('hdn');
 			
-			
+			var intIdM = new intervalIdManager(systemMessage);
+			var intervalId = setInterval(saveProfileCallBack, 1000, avator_ds, cover_ds,bio_ds, intIdM);
+			intIdM.setIntervalIdOnElement(intervalId);
 		}
 	},'#save-e-p-button');
 
@@ -263,6 +325,9 @@ $(document).ready(function(){
 						}else{
 							thisE.val('');
 							$('#add-scene-label-input-wrapper').after(resp);
+							var respHtml = $.parseHTML(resp);
+							var label_text = $(respHtml).find('.scene-label').text();
+							$('#profile-scene-label-wrapper').find('.profile-bio').prepend('<a href="#" class="plain-lk scene-label">'+label_text+'</a>, ');
 						}
 					}
 				});

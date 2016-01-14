@@ -7,7 +7,7 @@
 body{
 	font-size:14px;
 	position: relative;
-	background-color:#fff;
+	background-color:#fdfdfd;
     max-width: 1750px;
 	margin: 0px auto;
 	line-height: 1.5;
@@ -96,6 +96,9 @@ body{
 	opacity:0.4;
 }
 
+.unscrollable{
+	overflow:hidden;
+}
 
 .bb-list{
 	border-bottom:1px solid #eaeaea;
@@ -108,6 +111,10 @@ body{
 	border-top:1px solid #eaeaea;
 	padding:10px 24px;
 	cursor:default;
+}
+
+.expand-text{
+	color:inherit;
 }
 
 
@@ -126,11 +133,12 @@ body{
 	padding:6px 0px;
 	background:#fff;
 	border:1px solid #eaeaea;
-	margin-bottom:20px;
+	margin-bottom:40px;
 }
 
 .post > .post-top{
-	padding: 10px 20px;
+	/* padding: 10px 20px;*/
+	padding: 16px 20px;
 	position:relative;
 }
 
@@ -165,7 +173,7 @@ body{
 }
 
 .post > .post-top > .post-user-info > .post-head-line > .post-user-name{
-	color:##223D50;
+	color:#080835;
 	font-weight:600;
 	font-size:15px;
 }
@@ -394,7 +402,7 @@ body{
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-avator-wrapper .avator-name{
 	font-weight: 600;
 	font-size: 18px; 
-	color: #223D50; 
+	color: #080835; 
 	margin: 2px 0px 0px 3px;
 }
 

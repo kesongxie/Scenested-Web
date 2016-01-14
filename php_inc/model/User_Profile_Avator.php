@@ -3,7 +3,8 @@
 
 	class User_Profile_Avator extends User_Media_Base{
 		private $table_name = "user_profile_avator";
-		
+		private $primary_key = "user_profile_avator_id";
+	
 		public function __construct(){
 			parent::__construct($this->table_name);
 		}
@@ -59,13 +60,13 @@
 		
 		public function uploadAvatorPicture($file, $ratio_scale_assoc){
 			$user_id = $_SESSION['id'];
-			$results = $this->getAllRowsMultipleColumnsByUserId(array('id','picture_url'), $user_id);	
+			$results = $this->getAllRowsMultipleColumnsByUserId(array($this->primary_key,'picture_url'), $user_id);	
 			$dst_dimension = array(
 							"large" => array("width" => AVATOR_PHOTO_MAX_WIDTH, "height" => AVATOR_PHOTO_MAX_HEIGHT ),
 							"thumb" => array("width" => AVATOR_PHOTO_THUMB_WIDTH,"height" => AVATOR_PHOTO_THUMB_HEIGHT )
 							);
 	
-			$upload = $this->uploadMediaForUser($file, $user_id, $ratio_scale_assoc, true, $dst_dimension);
+			$upload = $this->uploadMediaForUser($file, $user_id, $ratio_scale_assoc, true, true, $dst_dimension);
 			if($upload === false){
 				return false;
 			}
@@ -73,7 +74,7 @@
 			if($results !== false){
 				foreach($results as $result){
 					$old_image_url = $result['picture_url'];
-					$old_image_row_id = $result['id'];
+					$old_image_row_id = $result[$this->primary_key];
 					$flile_m = new File_Manager();
 					//remove the old record after successfully update the new media file
 					$flile_m->removeMediaFileForUser($old_image_url, $user_id);
@@ -82,14 +83,7 @@
 			}
 			return $upload;
 		}
-		
-		
-		
-		
-		
-		
-		
-		
+	
 		public function loadProfilePhotoPreviewBlock($hash){
 			$stmt = $this->connection->prepare("
 			SELECT `user_id`, `picture_url`, `upload_time` FROM `user_profile_picture` WHERE `hash` = ? LIMIT 1

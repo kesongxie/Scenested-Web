@@ -60,7 +60,8 @@
 #profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-name-wrapper > #profile-name{
 	font-weight:600;
 	font-size:22px;
-	color:#223D50;
+	/* color:#223D50; */
+	color:#080835;
 }
 
 
@@ -83,7 +84,7 @@
  	text-align:center;
  	color:#080835;
  	font-weight:600;
- 	color:#333A60;
+ /* 	color:#333A60; */
 }
 
 #profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data-label{
@@ -184,7 +185,8 @@
 	}
 	
 	.post{
-		box-shadow:1px 1px 10px #D7D7D7;
+		/* box-shadow:1px 1px 10px #D7D7D7; */
+		box-shadow: 1px 1px 10px #EDEDED;
 		max-width: 600px;
 	}
 }

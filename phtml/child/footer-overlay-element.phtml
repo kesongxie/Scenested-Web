@@ -1,4 +1,4 @@
-<div class="overlay hdn"></div>
+<div id="glob-overlay" class="overlay hdn"></div>
 <div id="edit-dialog-wrapper" class="vertical-center hdn">
 	<div id="edit-dialog-wrapper-inner" class="inline-blk">
 	<div id="edit-profile-dialog-wrapper" class="segue-wrapper inline-blk">
@@ -15,7 +15,7 @@
 					<div class="label-text">Change Cover</div>
 				</div>
 				<form method="post" enctype="multipart/form-data" class="hdn">
-					<input type="file" id="cover-image-upload" >
+					<input type="file" id="cover-image-upload" data-state = "ready" >
 				</form>
 			</label>
 			<div id="edit-avator-wrapper">
@@ -27,13 +27,13 @@
 						<img class="camera-icon" src="<?php echo IMGDIR ?>camera.png">
 					</div>
 					<form method="post" enctype="multipart/form-data" class="hdn">
-						<input type="file" id="avator-image-upload" >
+						<input type="file" id="avator-image-upload" data-state = "ready"  >
 					</form>
 				</label>
 				<div class="avator-name">Kesong Xie</div>
 			</div>
 			<div class="text-list-wrapper">
-				<div id="edit-short-bio" class="two-rows-box content-editable entry-focus" contenteditable="true" data-end = "true" placeholder="Short bio" ><?php echo $bio; ?></div>
+				<div id="edit-short-bio" class="two-rows-box content-editable entry-focus" contenteditable="true" data-end = "true"  data-state = "ready" placeholder="Short bio" ><?php echo $bio; ?></div>
 			</div>
 			<div id="edit-scene-label" class="text-list-wrapper">
 				<div class="inner">
@@ -110,14 +110,14 @@
 			</div>
 			
 		
-			<div class="option-bar">
+			<div class="text-list-wrapper">
 				<div style="position:relative;cursor:default;">
 					<input style="width:100%;border:0px;position:relative;left:0px;background:inherit" readonly placeholder="December 23, 2015"/>
 					<span style="position:absolute;right:0px;top:0px;color: #B0B0B0;">Edit<img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" style="position:relative;top:2px;margin-left:2px;" /></span>
 				</div>
 			</div>
 			
-			<div id="add-scene-bar" class="option-bar">
+			<div id="add-scene-bar" class="text-list-wrapper">
 				<div style="position:relative;cursor:default;">
 					<input style="width:100%;border:0px;position:relative;left:0px;background:inherit" readonly placeholder="Location for this scene"/>
 					<span style="position:absolute;right:0px;top:0px;color: #B0B0B0;">Edit<img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" style="position:relative;top:2px;margin-left:2px;" /></span>
@@ -174,5 +174,5 @@
 </div>
 
 <div id="system-message" style="position: fixed;width: 100%;text-align: center;z-index: 100;" class="hdn vertical-center">
-	<div style="background:#E6AD45;font-weight:600;display:inline-block;padding:16px;color:#000;border-radius:2px;" >Saving Profile...</div>
+	<div style="background:#FFC04E;font-weight:600;display:inline-block;padding:16px;color:#000;border-radius:2px;" >Saving Profile...</div>
 </div>

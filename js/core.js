@@ -1,3 +1,43 @@
+/*\
+|*|
+|*|  IE-specific polyfill that enables the passage of arbitrary arguments to the
+|*|  callback functions of javascript timers (HTML5 standard syntax).
+|*|
+|*|  https://developer.mozilla.org/en-US/docs/Web/API/window.setInterval
+|*|
+|*|  Syntax:
+|*|  var timeoutID = window.setTimeout(func, delay, [param1, param2, ...]);
+|*|  var timeoutID = window.setTimeout(code, delay);
+|*|  var intervalID = window.setInterval(func, delay[, param1, param2, ...]);
+|*|  var intervalID = window.setInterval(code, delay);
+|*|
+\*/
+
+// for < IE9 ,setTimeout() or setInterval() callback argument 
+if (document.all && !window.setTimeout.isPolyfill) {
+  var __nativeST__ = window.setTimeout;
+  window.setTimeout = function (vCallback, nDelay /*, argumentToPass1, argumentToPass2, etc. */) {
+    var aArgs = Array.prototype.slice.call(arguments, 2);
+    return __nativeST__(vCallback instanceof Function ? function () {
+      vCallback.apply(null, aArgs);
+    } : vCallback, nDelay);
+  };
+  window.setTimeout.isPolyfill = true;
+}
+
+if (document.all && !window.setInterval.isPolyfill) {
+  var __nativeSI__ = window.setInterval;
+  window.setInterval = function (vCallback, nDelay /*, argumentToPass1, argumentToPass2, etc. */) {
+    var aArgs = Array.prototype.slice.call(arguments, 2);
+    return __nativeSI__(vCallback instanceof Function ? function () {
+      vCallback.apply(null, aArgs);
+    } : vCallback, nDelay);
+  };
+  window.setInterval.isPolyfill = true;
+}
+
+
+
 /*************** starts global variable ***********/
 var mouseX = 0;
 var mouseY = 0;
@@ -12,6 +52,39 @@ var LAYOUT_MODE = {'twoColumnHorizon':'two-column-horizon','twoColumnVertical':'
 
 /*************** ends global variable ***********/
 
+/*******  DataState object set the data-state attribute of the given element ******/
+
+//The constructor receive a selector of a element 
+var DataState = function (target) {
+	this.target = target;
+	this.dataState = {'processing':'processing','ready':'ready'};
+};
+DataState.prototype.setTargetDataStateToProcessing = function(){
+	this.target.attr('data-state', this.dataState.processing);
+}
+DataState.prototype.setTargetDataStateToReady = function(){
+	this.target.attr('data-state', this.dataState.ready);
+}
+DataState.prototype.isStateReady = function(){
+	return this.target.attr('data-state') == this.dataState.ready;
+}
+/************************  Ends DataState class declaration ***********************/
+
+
+/************************  intervalIdManager sets, gets and remove intervalId on the receiving parameter in the constructor   ***********************/
+var intervalIdManager = function(ele){
+	this.ele = ele;
+}
+intervalIdManager.prototype.setIntervalIdOnElement = function(intervalId){
+	this.ele.attr('data-intId', intervalId);
+}
+intervalIdManager.prototype.getIntervalIdOnElement = function(){
+	return this.ele.attr('data-intId');
+}
+intervalIdManager.prototype.destoryIntervalIdOnElement = function(){
+	this.ele.removeAttr('data-intId');
+}
+/***********************  ends intervalIdManager  class declaration ***********************/
 
 /*starts scene box editor functions*/
 function replacer(match, p1, p2, p3, p4){
@@ -277,6 +350,8 @@ function setPostPhotoModified(){
 function unsetPostPhotoModified(){
 	$('#attach-post-photo-banner').attr('data-modified','false');
 }
+
+
 
 
 function ImageValidator(fileInput, callback){
@@ -941,16 +1016,16 @@ $(document).ready(function(){
 			formData.append('layout_mode', layout_mode);
 		
 			
-			$.ajax({
-				url:AJAXDIR+'testCropImage.php',
-				type:'post',
-				data:formData,
-				processData: false, //prevent the data to be transformed into string automatically
- 				contentType: false, //false, tell jquery not to send any content type header
-				success:function(resp){
-					console.log(resp);
-				}
-			});
+			// $.ajax({
+// 				url:AJAXDIR+'testCropImage.php',
+// 				type:'post',
+// 				data:formData,
+// 				processData: false, //prevent the data to be transformed into string automatically
+//  				contentType: false, //false, tell jquery not to send any content type header
+// 				success:function(resp){
+// 					console.log(resp);
+// 				}
+// 			});
 			return false;
 		}
 	

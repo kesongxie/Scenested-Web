@@ -23,7 +23,7 @@
 				destination
 		*/
 		
-		public function uploadMediaForUser($file, $user_id, $ratio_scale_assoc, $cropped = false, $dst_dimension = NULL){
+		public function uploadMediaForUser($file, $user_id, $ratio_scale_assoc, $thumb_return = true, $cropped = false, $dst_dimension = NULL){
 			$user_media_prefix = new User_Media_Prefix();
 			$hash = $this->generateUniqueHash();
 			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
@@ -42,7 +42,10 @@
 					$stmt->bind_param('isss',$user_id, $picture_url, $time,$hash);
 					if($stmt->execute()){
 						$stmt->close();
-						return true;
+						if($thumb_return === false){
+							$picture_url = convertThumbPathToOriginPath($picture_url);
+						}
+						return U_IMGDIR.$prefix.'/'.$picture_url;
 					}
 				}
 			}

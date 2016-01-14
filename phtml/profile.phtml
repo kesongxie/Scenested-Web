@@ -34,7 +34,7 @@
 		<div id="profile-body-whole-container">
 			<div class="user-cover">
 				<div class="inner">
-					<img class="cover-image" src="<?php echo convertThumbPathToOriginPath($user_profile_cover_image) ?>">
+					<img id="profile-cover" class="cover-image" src="<?php echo convertThumbPathToOriginPath($user_profile_cover_image) ?>">
 				</div>
 			</div>
 			<div id="profile-main-content">
@@ -68,14 +68,14 @@
 							</div>
 					
 						<div id="profile-short-bio" class="profile-bio">
-							<?php echo $bio; ?>
+							<?php echo htmlentities($bio); ?>
 						</div>
-						<div id="profile-interest-wrapper"  style="margin-top:2px;">
-							<div class="profile-bio" style="color:#223D50;" class="" >
+						<div id="profile-scene-label-wrapper"  style="margin-top:2px;">
+							<div class="profile-bio" >
 								<?php if($labels !== false): ?>
 									<?php $label_num = sizeof($labels); $counter = 1; ?>
 									<?php foreach($labels as $label): ?>
-										<a href="#" class="plain-lk"><span class="scene-label"><?php echo htmlentities($label['name']) ?></span></a><?php echo ($counter++ != $label_num)?',':'' ?>
+										<a href="#" class="plain-lk scene-label"><?php echo htmlentities($label['name']) ?></a><?php echo ($counter++ != $label_num)?',':'' ?>
 									<?php endforeach; ?>
 								<?php endif; ?>
 							</div>
@@ -147,7 +147,7 @@
 							<div class="post-user-info inline-blk">
 								<div class="post-head-line">
 									<span class="post-user-name pointer">Kesong Xie</span>
-									<span class="head-additional-info"><a href="#" title="link to people with similar interest in your near location" class="plain-lk"><span class="label-red">Programming</span></a> - 2h</span>
+									<span class="head-additional-info"><a href="#" title="link to people with similar interest in your near location" class="plain-lk"><span class="scene-label">Programming</span></a> - 2h</span>
 								</div>
 								<div class="post-content-text">
 									<span>A guy like me who is so picky about how the work looks is probably not suitable to join a ' <a href="#"  class="plain-lk"><span class="hash-tag">#hackathon</span></a>, but it's a great experience, though.</span>
