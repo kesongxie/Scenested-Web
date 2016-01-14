@@ -250,6 +250,17 @@
 		margin-top:0px;
 	}
 		
+		
+	#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-avator-wrapper{
+		margin: -44px 0px 10px 20px;
+	}	
+		
+	#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-avator-wrapper > #edit-avator-image-wrapper{
+		height:70px;
+		width:70px;
+		border: 4px solid #fff;
+	}	
+		
 	#edit-dialog-wrapper{
 		margin-top:0px;
 		height:100%;
@@ -259,6 +270,10 @@
 	#edit-dialog-wrapper #edit-dialog-wrapper-inner{
 		width:100%;
 	}
+	
+
+
+	
 }
 
 

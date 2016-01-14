@@ -9,6 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/profile.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo ROOTDIR; ?>css/animate.css">
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/jquery.js"></script>
+		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/touch-punch-min.js"></script>
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/jquery-ui.js"></script>
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/glob.js"></script>
 		<script type="text/javascript" src="<?php echo ROOTDIR; ?>js/core.js"></script>
@@ -33,14 +34,14 @@
 		<div id="profile-body-whole-container">
 			<div class="user-cover">
 				<div class="inner">
-					<img class="cover-image" src="http://192.168.1.101:8888/media/dummy/IMG_5101.jpg">
+					<img class="cover-image" src="<?php echo convertThumbPathToOriginPath($user_profile_cover_image) ?>">
 				</div>
 			</div>
 			<div id="profile-main-content">
 				<div id="profile-left-content-wrapper">
 					<div id="profile-left-content-inner-wrapper" >
 						<div id="profile-avator-wrapper">
-							<img id="profile-avator" src="<?php echo DUMMY_MEDIA ?>avator.jpg">
+							<img id="profile-avator" src="<?php echo convertThumbPathToOriginPath($user_profile_avator_image) ?>">
 							<div id="avator-edit-profile">
 								<div id="a-e-p-overlay"></div>
 								<div id="a-e-p-edit">EDIT PROFILE</div>
@@ -67,14 +68,16 @@
 							</div>
 					
 						<div id="profile-short-bio" class="profile-bio">
-							Programming nerd with a sense of design.
+							<?php echo $bio; ?>
 						</div>
 						<div id="profile-interest-wrapper"  style="margin-top:2px;">
 							<div class="profile-bio" style="color:#223D50;" class="" >
-								<a href="#" class="plain-lk"><span style="color:#751B1B">Programming</span></a>, 
-								<a href="#" class="plain-lk"><span style="color:#751B1B">Tennis</span></a>,
-								<a href="#" class="plain-lk"><span style="color:#751B1B">Guitar</span></a>
-
+								<?php if($labels !== false): ?>
+									<?php $label_num = sizeof($labels); $counter = 1; ?>
+									<?php foreach($labels as $label): ?>
+										<a href="#" class="plain-lk"><span class="scene-label"><?php echo htmlentities($label['name']) ?></span></a><?php echo ($counter++ != $label_num)?',':'' ?>
+									<?php endforeach; ?>
+								<?php endif; ?>
 							</div>
 						</div>
 	
@@ -102,7 +105,7 @@
 							<div class="post-user-info inline-blk">
 								<div class="post-head-line">
 									<span class="post-user-name pointer">Kesong Xie</span>
-									<span class="head-additional-info"><a href="#" title="link to people with similar interest in your near location" class="plain-lk"><span class="label-red">Tennis</span></a> - 2h</span>
+									<span class="head-additional-info"><a href="#" title="link to people with similar interest in your near location" class="plain-lk"><span class="scene-label">Tennis</span></a> - 2h</span>
 								</div>
 								<div class="post-content-text">
 									<span>How does it feel for this years' <a href="#"  class="plain-lk"><span class="hash-tag">#USOpen</span></a> I think <span class="hash-tag">@RogerFederer</span> is going to fight into the final.</span>
@@ -132,9 +135,6 @@
 							</div>	
 						</div>
 					</div>
-					
-					
-					
 					<div class="post">
 						<div class="post-top">
 							<div class="inline-blk post-tag-date">
@@ -177,8 +177,6 @@
 							</div>	
 						</div>
 					</div>
-					
-					
 				</div>
 			</div>
 		</div>

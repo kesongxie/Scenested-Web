@@ -49,8 +49,12 @@
 		}
 		
 		
-		
-		public function upload_cropped_file($file, $dir, $x_position_ratio, $y_position_ratio, $crop_square = true, $cropped_aspect_ratio){
+		/* 
+			@param $ratio_scale_assoc
+				the $_POST form the client side script, including image_container_scale_width, image_container_scale_height, 
+		 		adjusted_ratio_width, adjusted_ratio_height
+		 */
+		public function upload_cropped_file($file, $dir, $ratio_scale_assoc, $dst_dimension){
 			include_once 'ak_img_lib.php';
 			$fulldir = U_MEDAI_FOLDER_DIR.$dir;
 			$result = "";
@@ -68,29 +72,26 @@
 				$extension = getMediaFileExtension($file);
 				$filename = getRandomString().'.'.$extension; //rename the file
 				$large_destination_path = $randomFolderDir.'/'.$filename;
-				$medium_destination_path = $randomFolderDir.'/'.MEDIA_MEDIUM_THUMBNAIL_PREFIX.$filename;
-				$min_destination_path = $randomFolderDir.'/'.MEDIA_THUMBNAIL_PREFIX.$filename;
+ 				$min_destination_path = $randomFolderDir.'/'.MEDIA_THUMBNAIL_PREFIX.$filename;
 				$target_file = $file["tmp_name"];
 				
+				$dst_w = $dst_dimension['large']['width'];
+				$dst_h = $dst_dimension['large']['height'];
 				
-				$desc_width = 1200;
-				$desc_height = 1200 * $cropped_aspect_ratio;
-				
-				crop_image($target_file, $large_destination_path, $desc_width, $desc_height, $x_position_ratio, $y_position_ratio, $extension, $crop_square, $cropped_aspect_ratio);
-				
-				
-				$desc_width = 400;
-				$desc_height = 400 * $cropped_aspect_ratio;	
-				crop_image($target_file, $medium_destination_path, $desc_width, $desc_height, $x_position_ratio, $y_position_ratio,  $extension, $crop_square, $cropped_aspect_ratio);
+				// $dst_w = COVER_PHOTO_MAX_WIDTH;
+// 				$dst_h = COVER_PHOTO_MAX_HEIGHT;
+				crop_upload_file($file, $large_destination_path, $ratio_scale_assoc, $dst_w, $dst_h  );
 				
 				
+				// $dst_w = COVER_PHOTO_THUMB_WIDTH;
+// 				$dst_h = COVER_PHOTO_THUMB_HEIGHT;
 				
-				$desc_width = 120;
-				$desc_height = 120 * $cropped_aspect_ratio;	
-				crop_image($target_file, $min_destination_path, $desc_width, $desc_height, $x_position_ratio, $y_position_ratio, $extension, $crop_square, $cropped_aspect_ratio);
+				$dst_w = $dst_dimension['thumb']['width'];
+				$dst_h = $dst_dimension['thumb']['height'];
+				crop_upload_file($file, $min_destination_path, $ratio_scale_assoc, $dst_w, $dst_h  );
 				
 				
-				return $result.'/'.MEDIA_MEDIUM_THUMBNAIL_PREFIX.$filename;
+				return $result.'/'.MEDIA_THUMBNAIL_PREFIX.$filename;
 				
 			}
 			return false;
@@ -102,13 +103,9 @@
 		
 		
 		
-		
-		
-		
 		//$dir is where the media file located
 		
 		public function removeMediaFileForUser($dir, $user_id) { 
-			include_once PHP_INC_MODEL.'User_Media_Prefix.php';
 			$user_media_prefix = new User_Media_Prefix();
 			$fullPathForFile = $user_media_prefix->isMediaFileForUser($dir, $user_id);
 			if($fullPathForFile !== false){

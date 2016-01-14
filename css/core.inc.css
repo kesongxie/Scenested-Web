@@ -17,6 +17,12 @@ body{
 	overflow-x:hidden;
 }
 
+.txt-overflow{
+	white-space: nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis
+}
+
 /* starts global header css  */
 
 #gl-header{
@@ -68,13 +74,52 @@ body{
 
 /* ends global header css  */
 
-.label-red{
+
+/* global css */
+.scene-label{
 	color:#751B1B;
 }
 
 .hash-tag{
 	color:#1D4D79;
 }
+
+.overlay{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+	overflow:hidden;
+	background:#000;
+	z-index:99;
+	opacity:0.4;
+}
+
+
+.bb-list{
+	border-bottom:1px solid #eaeaea;
+	padding:10px 24px;
+	cursor:default;
+}
+
+
+.bt-list{
+	border-top:1px solid #eaeaea;
+	padding:10px 24px;
+	cursor:default;
+}
+
+
+[contenteditable=true]:empty:before{
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color:#9E9E9E;
+  font-size:15px;
+  cursor:text;
+}
+
+/* global css */
 
 /* starts post css*/
 .post{
@@ -216,3 +261,240 @@ body{
 	}
 }
 /* desktop view*/
+
+
+
+/* starts edit dialog wrapper*/
+#edit-dialog-wrapper{
+	position:fixed;
+	width:100%;
+	text-align:center;
+	z-index:100;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner{
+	border-radius:3px;
+	overflow:hidden;
+}
+
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper{
+	width:100%;
+	background: #fff;
+	overflow:hidden;
+	border-radius:3px;
+	text-align:left;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue > .dialog-title{
+	width:100%;
+	background:#fff;
+	text-align:center;
+	border-bottom:1px solid #eaeaea;
+	position:relative;
+	padding:12px 0px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue > .dialog-title > .dialog-title-text{
+ 	font-weight:600;
+ 	font-size:16px;
+ }
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main{
+	padding:0px 0px 0px 0px;
+	overflow:hidden;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-cover-wrapper{
+	width:100%;
+	height:160px;
+	overflow:hidden;
+	background-color:#1C3E5A;
+	text-align:center;
+	position:relative;
+	cursor:pointer;
+	display:block;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-cover-wrapper > #profile-cover-constraint{
+	position:absolute;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-cover-wrapper > #profile-cover-image{
+	width:100%;
+	display: block;
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-cover-wrapper > .overlay{
+	z-index:0;
+	opacity:0.6;
+	width:101%;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-cover-wrapper > .upload-label > .camera-icon{
+	width:29px;
+	height:25px;
+	margin-right:6px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-cover-wrapper > .upload-label > .label-text{
+	font-size:16px;
+	font-weight:600;
+	color:#fff;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-avator-wrapper{
+	margin:-84px 0px 10px 20px;
+	text-align:left;
+	position:relative;
+	display:inline-block;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-avator-wrapper > #edit-avator-image-wrapper{
+	border:6px solid #fff;
+	border-radius:3px;
+	display:inline-block;
+	position:relative;
+	height:100px;
+	width:100px;
+	text-align:center;
+	cursor:pointer;
+	overflow:hidden;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-avator-wrapper > #edit-avator-image-wrapper > #profile-avator-constraint{
+	position:absolute;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-avator-wrapper > #edit-avator-image-wrapper > .overlay{
+	opacity:0.6;
+	z-index:0;
+}
+
+
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-avator-wrapper > #edit-avator-image-wrapper > #profile-avator-image{
+	height:100%;
+	width:100%;
+	display:block;
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-avator-wrapper .avator-name{
+	font-weight: 600;
+	font-size: 18px; 
+	color: #223D50; 
+	margin: 2px 0px 0px 3px;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue > .text-list-wrapper{
+	border-top:1px solid #eaeaea;
+	padding:10px 24px;
+	background-color:#fff;
+	text-align:left;
+	cursor:default;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > #edit-short-bio{
+	min-height:48px;
+	cursor:text;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner{
+	color:#9E9E9E;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner > .action-navigator{
+	float:right;
+	color:#BDBDBD;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner > .action-navigator > .icon{
+	position:relative;
+	top:2px;
+	margin-left:2px;
+	height:16px;
+	width:16px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner > .text-list{
+	color:inherit;
+	font-size:15px;
+	width:80%;	
+	display:inline-block;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper .segue > .dialog-action > .dialog-action-inner{
+	text-align:right;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper .segue > .dialog-action > .dialog-action-inner > #cancel-e-p-button{
+	padding:0px 20px;
+	margin-right:6px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper .segue > .dialog-action > .dialog-action-inner > #save-e-p-button{
+	padding:0px 34px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue > .dialog-title > .segue-to-main{
+	position:absolute;
+	left:20px;
+	font-size:15px;
+	cursor:default;
+	color:#B0B0B0;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #add-scene-segue{
+	position:absolute;
+	right:-100%;
+	top:0px;
+	width:100%;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #add-scene-segue > .dialog-body{
+	height:300px;
+	overflow:scroll;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #add-scene-segue > .dialog-body > #add-scene-label-input-wrapper{
+	border-bottom:1px solid #eaeaea;
+	padding:10px 24px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #add-scene-segue > .dialog-body > #add-scene-label-input-wrapper > #add-scene-label-input{
+	width:100%;
+	border:0px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper .two-rows-box{
+	max-height:148px;
+	overflow-y:scroll;
+	overflow-x:hidden;
+}
+
+
+
+
+
+
+
+
+/* ends edit dialog wrapper*/
+
+

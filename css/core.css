@@ -34,11 +34,7 @@ textarea{
 	resize:none;
 	overflow:auto;
 }
-.txt-overflow{
-	white-space: nowrap;
-	overflow:hidden;
-	text-overflow:ellipsis
-}
+
 .hashtag{
 	color:#1D4D79;
 }
@@ -90,13 +86,6 @@ textarea{
   	-moz-transform: translateY(-50%);
 }
 
-[contenteditable=true]:empty:before{
-  content: attr(placeholder);
-  display: block; /* For Firefox */
-  color:#9E9E9E;
-  font-size:15px;
-  cursor:text;
-}
 
 
 
@@ -217,38 +206,6 @@ textarea{
  
 
 
-.overlay{
-	position:absolute;
-	top:0px;
-	left:0px;
-	width:100%;
-	height:100%;
-	opacity:0.6;
-	z-index:999;
-	overflow:hidden;
-}
-
-.dialog-title{
-	width:100%;
-	background:#fff;
-	text-align:center;
-	border-bottom:1px solid #eaeaea;
-	position:relative;
-	padding:12px 0px;
-}
-.dialog-title-text{
- 	font-weight:600;
- 	font-size:16px;
- }
-
-
-
-.option-bar{
-	background-color:#fff;
-	border-top:1px solid #eaeaea;
-	padding:10px 24px;
-}
-
 .segue{
 	background: #fff;
 }
@@ -264,54 +221,8 @@ textarea{
 	color:#B0B0B0;
 }
 
-.label-red{
-	color:#751B1B;
-}
-
-.bb-list{
-	border-bottom:1px solid #eaeaea;
-	padding:10px 24px;
-	cursor:default;
-}
-
-
-.bt-list{
-	border-top:1px solid #eaeaea;
-	padding:10px 24px;
-	cursor:default;
-}
-
-#edit-dialog-wrapper{
-	position:fixed;
-	width:100%;
-	text-align:center;
-	z-index:100;
-}
-
 .sugue-adjust{
 	margin-top: 0px !important;
-}
-
-#edit-dialog-wrapper #edit-dialog-wrapper-inner{
-	border-radius:3px;
-	overflow:hidden;
-}
-
-#edit-dialog-wrapper #edit-dialog-wrapper-inner>.segue-wrapper{
-	width:100%;
-	background: #fff;
-	overflow:hidden;
-	border-radius:3px;
-}
-
-#edit-dialog-wrapper #edit-dialog-wrapper-inner>.segue-wrapper>.segue-main{
-	padding:0px 0px 0px 0px;overflow:hidden;
-}
-
-#edit-dialog-wrapper #edit-dialog-wrapper-inner>.segue-wrapper .two-rows-box{
-	max-height:148px;
-	overflow-y:scroll;
-	overflow-x:hidden;
 }
 
 .post-photo-thumbnail{
@@ -344,9 +255,6 @@ textarea{
 	text-align:center;
 	cursor:pointer;
 	display:inline-block;
-}
-.expand-text{
-	color:inherit;
 }
 
 
@@ -400,10 +308,6 @@ textarea{
 	margin-top:0px;
 	margin-left:0px;
 }
-
-
-
-
 
 .two-column-horizon-up{
 	width:100%;

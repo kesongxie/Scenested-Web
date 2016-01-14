@@ -1,4 +1,4 @@
-<div class="overlay hdn" style="background:#000;z-index:99;opacity:0.4;"></div>
+<div class="overlay hdn"></div>
 <div id="edit-dialog-wrapper" class="vertical-center hdn">
 	<div id="edit-dialog-wrapper-inner" class="inline-blk">
 	<div id="edit-profile-dialog-wrapper" class="segue-wrapper inline-blk">
@@ -6,76 +6,86 @@
 			<div class="dialog-title">
 				<div class="dialog-title-text">Edit Profile</div>
 			</div>
-			<div style="width:100%;overflow:hidden;height:160px;">
-				<img style="width:100%;display: block;" src="http://192.168.1.101:8888/media/dummy/IMG_5101.jpg">
-			</div>
-		
-			<div style="margin:-60px 0px 10px 20px;text-align:left">
-				<div class="inline-blk" style="border:6px solid #fff;border-radius:3px;">
-					<img  src="<?php echo DUMMY_MEDIA ?>avator.jpg" style="height:80px;width:80px;">
+			<label for="cover-image-upload" id="edit-cover-wrapper">
+				<div id="profile-cover-constraint"></div>
+				<img id="profile-cover-image" src="<?php echo $user_profile_cover_image ?>">
+				<div class="overlay"></div>
+				<div class="upload-label inline-blk vertical-center">
+					<img class="camera-icon" src="<?php echo IMGDIR ?>camera.png">
+					<div class="label-text">Change Cover</div>
 				</div>
-				<div style="font-weight: 600;font-size: 18px; color: #223D50; margin-left: 3px;">Kesong Xie</div>
+				<form method="post" enctype="multipart/form-data" class="hdn">
+					<input type="file" id="cover-image-upload" >
+				</form>
+			</label>
+			<div id="edit-avator-wrapper">
+				<label for="avator-image-upload" id="edit-avator-image-wrapper">
+					<div id="profile-avator-constraint"></div>
+					<img id="profile-avator-image" src="<?php echo $user_profile_avator_image; ?>">
+					<div class="overlay"></div>
+					<div class="upload-label inline-blk vertical-center">
+						<img class="camera-icon" src="<?php echo IMGDIR ?>camera.png">
+					</div>
+					<form method="post" enctype="multipart/form-data" class="hdn">
+						<input type="file" id="avator-image-upload" >
+					</form>
+				</label>
+				<div class="avator-name">Kesong Xie</div>
 			</div>
-			<div style="border-top:1px solid #eaeaea;padding:10px 24px;">
-				<div>
-					<div id="edit-short-bio" class="two-rows-box content-editable entry-focus" contenteditable="true" style="text-align:left;min-height:48px;" data-end = "true" placeholder="Short bio" ></div>
+			<div class="text-list-wrapper">
+				<div id="edit-short-bio" class="two-rows-box content-editable entry-focus" contenteditable="true" data-end = "true" placeholder="Short bio" ><?php echo $bio; ?></div>
+			</div>
+			<div id="edit-scene-label" class="text-list-wrapper">
+				<div class="inner">
+					<span class="action-navigator">Edit<img src="<?php echo IMGDIR; ?>right_nxt.png" class="icon" /></span>
+					<div class="text-list txt-overflow">
+						<?php if($labels !== false): ?>
+							<?php $label_num = sizeof($labels); $counter = 1; ?>
+							<?php foreach($labels as $label): ?>
+								<?php echo htmlentities($label['name']) ?><?php echo ($counter++ != $label_num)?',':'' ?>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					</div>
 				</div>
 			</div>
-		
-			<div id="add-scene-bar" class="option-bar">
-				<div style="position:relative;cursor:default;">
-					<input style="width:100%;border:0px;position:relative;left:0px;background:inherit" readonly placeholder="Travel, Beauty, Supreme"/>
-					<span style="position:absolute;right:0px;top:0px;color: #B0B0B0;">Edit<img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" style="position:relative;top:2px;margin-left:2px;" /></span>
-				</div>
-			</div>
-			<div style="border-top:1px solid #eaeaea;padding:10px 24px;text-align:right">
-				<div>
-					<button id="cancel-e-p-button" class="animated-button gray-action-button" style="padding:0px 20px;margin-right:6px;">CANCEL</button>
-
-					<button id="save-e-p-button" class="animated-button blue-action-button" style="padding:0px 34px;">SAVE</button>
+			<div class="dialog-action text-list-wrapper">
+				<div class="dialog-action-inner">
+					<button id="cancel-e-p-button" class="animated-button gray-action-button">CANCEL</button>
+					<button id="save-e-p-button" class="animated-button blue-action-button">SAVE</button>
 				</div>
 			</div>
 		</div>
-		<div id="add-scene-segue" class="segue-detail segue" style="position:absolute;right:-100%;top:0px;width:100%;" >
+		
+		
+		<div id="add-scene-segue" class="segue-detail segue">
 			<div class="dialog-title"  >
-				<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Cancel</div>
-				<div class="dialog-title-text">Add Scene Labels</div>
+				<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Back</div>
+				<div class="dialog-title-text">Add Scene Label</div>
 			</div>
-			<div class="dialog-body" style="height:300px;">
-					<div style="border-bottom:1px solid #eaeaea;padding:10px 24px;">
-						<div>
-							<input style="width:100%;border:0px;"  placeholder="Enter a scene lable name, such as music, travel, etc"/>
-						</div>
+			<div class="dialog-body">
+					<div id="add-scene-label-input-wrapper">
+						<input id="add-scene-label-input" placeholder="Enter a scene label name, such as music, travel etc"/>
 					</div>
-					<div class="bb-list">
-						<div>
-							<div class="label-red" style="">Travel (5 Scenes)</div>
-						</div>
-					</div>
-					
-					
-					<div class="bb-list">
-						<div>
-							<div class="label-red" style="">Beauty (1 Scene)</div>
-						</div>
-					</div>
-					
-					<div class="bb-list">
-						<div>
-							<div class="label-red" style="">Supreme</div>
-						</div>
-					</div>
+					<?php if($labels !== false): ?>
+						<?php foreach($labels as $label): ?>
+							<div class="bb-list scene-label-wrapper">
+								<div>
+									<div class="scene-label"><?php echo $label['name']; ?></div>
+								</div>
+							</div>
+						<?php endforeach; ?>
+					<?php endif; ?>
 			</div>
-			
-			<div class="" style="border-top:1px solid #eaeaea;padding:10px 24px;text-align:right">
-				<div>
+			<div class="dialog-action text-list-wrapper">
+				<div class="dialog-action-inner">
 					<button class="animated-button blue-action-button segue-to-main-action" style="padding:0px 30px;">DONE</button>
 				</div>
 			</div>
+			
 		</div>
 	</div>
 	
-	<div id="add-scene-dialog-wrapper" class="segue-wrapper inline-blk" >
+	<div id="add-scene-dialog-wrapper" class="segue-wrapper inline-blk hdn" >
 		<div class="segue-main segue act">
 			<div class="dialog-title">
 				<div class="dialog-title-text">Add Scene</div>
@@ -161,4 +171,8 @@
 	
 	</div>
 	</div>
+</div>
+
+<div id="system-message" style="position: fixed;width: 100%;text-align: center;z-index: 100;" class="hdn vertical-center">
+	<div style="background:#E6AD45;font-weight:600;display:inline-block;padding:16px;color:#000;border-radius:2px;" >Saving Profile...</div>
 </div>

@@ -7,8 +7,8 @@ var TWO_COLUMN_HORIZON_ANGLE_SLOPE = 5;
 var TWO_COLUMN_VERTICAL_ANGLE_SLOPE = 0.4;
 var ROOTDIR = 'http://localhost:8888/';
 var AJAXDIR = ROOTDIR+'ajax/';
-
-var LAYOUT_MODE = {'twoColumnHorizon':'two-column-horizon','twoColumnVertical':'two-column-vertical'}
+var DRAG_MODE =  {'verticalMode':'vertical','horizonMode':'horizon'};
+var LAYOUT_MODE = {'twoColumnHorizon':'two-column-horizon','twoColumnVertical':'two-column-vertical'};
 
 /*************** ends global variable ***********/
 
@@ -86,16 +86,18 @@ function moveCaretPosition(thisE, caretPos, nodeEditingIndex){
 		var el = thisE.childNodes[nodeEditingIndex];
 		var range = document.createRange();
 		var sel = window.getSelection();
-		if(el.nodeType == 3){
-			//this is a text node
-			range.setStart(el, caretPos);
-		}else{
-			range.setStart(el.childNodes[0], caretPos);
+		if(typeof el !== 'undefined'){
+			if(el.nodeType == 3){
+				//this is a text node
+				range.setStart(el, caretPos);
+			}else{
+				range.setStart(el.childNodes[0], caretPos);
+			}
+			range.collapse(true);
+			sel.removeAllRanges();
+			sel.addRange(range);
+			thisE.focus();
 		}
-		range.collapse(true);
-		sel.removeAllRanges();
-		sel.addRange(range);
-		thisE.focus();
 }
 
 function returnIndexForNode(thisE){
@@ -184,24 +186,61 @@ function resetSegueDetail(){
 }
 
 
-function readURL(input,tg) {
+/*
+	@param constraint
+		 constraint within which the tg allowed to drag, adjustable is set to true 
+	@param v_w
+		 visible width of the image
+	@param v_h
+		 visible height of the image
+				
+	
+*/
+function readURL(input,tg, resize, adjustable, constraint, v_w, v_h){
 	if (input.files && input.files[0]) {
 		var reader = new FileReader();
 		reader.onload = function (e) {
-			tg.addClass('hdn');
+			//tg.addClass('hdn');
 			var url = e.target.result;
 			tg.attr('src', url);
 			 var image = new Image();
 			image.src = url;
 			image.onload = function() {
-				if(this.width > this.height){
-					//landscape
-					tg.css('height','100%');
-				}else{
-					//portrait
-					tg.css('width','100%');
+				if(resize){
+					if(this.width > this.height){
+						//landscape
+						tg.css({'height':'100%', 'width':'auto'});
+					}else{
+						//portrait
+						tg.css({'height':'auto', 'width':'100%'});
+					}
 				}
-				tg.removeClass('hdn');
+				//tg.removeClass('hdn');
+				
+				if(adjustable){
+					//calculate the size, position of the constraint
+					var tg_width = tg.width();
+					var tg_height = tg.height();
+					if(tg_width/tg_height <= v_w/v_h){
+						//adjust vertically
+						tg.attr('data-mode', DRAG_MODE.verticalMode);
+						tg.css({'width':'100%', 'height':'auto', 'left':'0px', 'top':'0px', 'buttom':'0px', 'right':'0px'});
+						var tg_h = tg.height();
+						var constraint_height = 2 * tg_h - v_h;
+						var position_adjust = -(constraint_height - tg_h);
+						constraint.css({'height': constraint_height,'width':'100%', 'top':position_adjust, 'left':'0px'});
+						tg.draggable('option', 'axis', 'y');
+					}else{
+						//adjust horizontally
+						tg.attr('data-mode', DRAG_MODE.horizonMode);
+						tg.css({'height':'100%', 'width':'auto', 'left':'0px', 'top':'0px', 'buttom':'0px', 'right':'0px'});
+						var tg_w = tg.width();
+						var constraint_width = 2 * tg_w - v_w;
+						var position_adjust = -(constraint_width - tg_w);
+						constraint.css({'width': constraint_width, 'height':'100%','left':position_adjust, 'top':'0px'});
+						tg.draggable('option', 'axis', 'x');
+					}
+				}
 			};
 		}
 		reader.readAsDataURL(input.files[0]);
@@ -295,13 +334,18 @@ function addPostPhoto(fileInput){
 		setPostPhotoModified();
 	}
 
+
+
+function getIntValueFromCSSStyle(style){
+	return parseInt(style.replace('px',''));
+}
+
+
 $(document).ready(function(){
 	
 	$('#edit-dialog-wrapper-inner').click(function(){
 	//	return false;
 	});	
-
-
 	$('body #edit-dialog-wrapper-inner').on({
 		click:function(e){
 			var segue_wrapper = $(this).parents('.segue-wrapper');
@@ -319,7 +363,7 @@ $(document).ready(function(){
 			segue_wrapper.css('position','relative');
 			return false;
 		}
-	},'.option-bar#add-scene-bar');
+	},'.text-list-wrapper#edit-scene-label');
 	
 	$('body #edit-dialog-wrapper-inner').on({
 		click:function(e){
@@ -853,14 +897,7 @@ $(document).ready(function(){
 	},'.post-photo-thumbnail');
 	
 	
-	function getIntValueFromCSSStyle(style){
-		return parseInt(style.replace('px',''));
-	}
-	function swapInputPosition(inputIndex1, inputIndex2){
-		
-	
-	}
-	
+
 	
 	
 	
@@ -869,8 +906,6 @@ $(document).ready(function(){
 			var formData = new FormData();
 			var layout_mode = getLayoutMode();
 			var layout_draggable = $('#layout-draggable');
-			
-			
 			if(layout_mode == LAYOUT_MODE.twoColumnHorizon){
 				layout_draggable.find('.photo-segment-container').each(function(index){
 					var $this = $(this);

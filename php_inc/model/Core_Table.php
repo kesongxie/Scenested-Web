@@ -29,7 +29,8 @@
 		}
 		
 		public function deleteRowForUserById($user_id, $id){
-			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `id` = ?  AND `user_id`=? LIMIT 1");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$primary_key` = ?  AND `user_id`=? LIMIT 1");
 			$stmt->bind_param('ii', $id, $user_id);
 			if($stmt->execute()){
 				$stmt->close();
@@ -41,7 +42,8 @@
 	
 		
 		public function deleteRowById($id){
-			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `id` = ? LIMIT 1");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$primary_key` = ? LIMIT 1");
 			$stmt->bind_param('i', $id);
 			if($stmt->execute()){
 				$stmt->close();
@@ -86,10 +88,6 @@
 		
 		
 		
-		
-		
-		
-		
 		public function deleteRowByNumericSelector($selector_column, $selector_value){
 			$selector_column = $this->connection->escape_string($selector_column);
 			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? ");
@@ -109,7 +107,8 @@
 		
 		public function getColumnById($column,$id){
 			$column = $this->connection->escape_string($column);
-			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` = ? LIMIT 1 ");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$primary_key` = ? LIMIT 1 ");
 			$stmt->bind_param('i',$id);
 			if($stmt->execute()){
 				 $result = $stmt->get_result();
@@ -125,7 +124,8 @@
 		
 		public function getColumnByUserId($column,$user_id){
 			$column = $this->connection->escape_string($column);
-			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `user_id` = ?  ORDER BY `id` DESC LIMIT 1");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `user_id` = ?  ORDER BY `$primary_key` DESC LIMIT 1");
 			if($stmt){
 				$stmt->bind_param('i', $user_id);
 				if($stmt->execute()){
@@ -137,6 +137,7 @@
 					 }
 				}
 			}
+			echo $this->connection->error;
 			return false;
 		}
 		
@@ -165,10 +166,11 @@
 		public function getAllRowsColumnBySelectorForUser($column,$selector_column,$selector_value,$user_id, $asc = false){
 				$column = $this->connection->escape_string($column);
 				$selector_column = $this->connection->escape_string($selector_column);
+				$primary_key = $this->table_name.'_id';
 				if($asc){
 					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `user_id`=? AND `$selector_column` = ? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE  `user_id`=? AND `$selector_column` = ? ORDER BY `id` DESC");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE  `user_id`=? AND `$selector_column` = ? ORDER BY `$primary_key` DESC");
 				}
 				if($stmt){
 					$stmt->bind_param('is',$user_id, $selector_value);
@@ -195,10 +197,11 @@
 		*/
 		public function getColumnByUserIdFetchAll($column,$user_id, $ascend = false){
 			$column = $this->connection->escape_string($column);
+			$primary_key = $this->table_name.'_id';
 			if($ascend){
-				$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `user_id` = ?  ORDER BY `id` ASC ");
+				$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `user_id` = ?  ORDER BY `$primary_key` ASC ");
 			}else{
-				$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `user_id` = ?  ORDER BY `id` DESC ");
+				$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `user_id` = ?  ORDER BY `$primary_key` DESC ");
 			}
 			if($stmt){
 				$stmt->bind_param('i', $user_id);
@@ -216,12 +219,13 @@
 		
 		
 		public function getAllRowsColumnBySelector($column, $selector_column, $selector_value, $asc = false){
-			$column = $this->connection->escape_string($column);
+				$column = $this->connection->escape_string($column);
 				$selector_column = $this->connection->escape_string($selector_column);
+				$primary_key = $this->table_name.'_id';
 				if($asc){
 					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `$primary_key` DESC");
 				}
 				if($stmt){
 					$stmt->bind_param('s', $selector_value);
@@ -242,17 +246,18 @@
 		public function getRowsColumnBySelector($column, $selector_column, $selector_value, $limit_num = 1, $offset = 0, $asc = false){
 			$column = $this->connection->escape_string($column);
 				$selector_column = $this->connection->escape_string($selector_column);
+				$primary_key = $this->table_name.'_id';
 				if($offset != 0){
 					if($asc){
-						$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? AND `id` < ? LIMIT ? ");
+						$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? AND `$primary_key` < ? LIMIT ? ");
 					}else{
-						$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? AND `id` < ? ORDER BY `id` DESC LIMIT ? ");
+						$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? AND `$primary_key` < ? ORDER BY `$primary_key` DESC LIMIT ? ");
 					}
 				}else{
 					if($asc){
 						$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ?  LIMIT ? ");
 					}else{
-						$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC LIMIT ? ");
+						$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `$primary_key` DESC LIMIT ? ");
 					}
 				}
 				if($stmt){
@@ -279,10 +284,11 @@
 				$selector_column = $this->connection->escape_string($selector_column);
 				$targets = implode('`,`',$column_array);
 				$targets = '`'.$targets.'`';
+				$primary_key = $this->table_name.'_id';
 				if($asc){
 					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT ?,? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC LIMIT ?,? ");
+					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `$primary_key` DESC LIMIT ?,? ");
 				}
 				if($stmt){
 				$stmt->bind_param('sii', $selector_value, $offset,$limit_num);
@@ -305,7 +311,7 @@
 				if($asc){
 					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `id` DESC");
+					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `$primary_key` DESC");
 				}if($stmt){
 				$stmt->bind_param('s', $selector_value);
 				if($stmt->execute()){
@@ -317,7 +323,6 @@
 					 }
 				}
 			}
-			
 			echo $this->connection->error;
 			return false;
 		}
@@ -391,7 +396,8 @@
 		public function checkColumnValueExistForUser($column, $column_value, $user_id){
 			$column = $this->connection->escape_string($column);
 			$column_value = $this->connection->escape_string($column_value);
-			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? AND `user_id` = ? LIMIT 1 ");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? AND `user_id` = ? LIMIT 1 ");
 			if($stmt){
 				$stmt->bind_param('si', $column_value, $user_id);
 				if($stmt->execute()){
@@ -408,7 +414,8 @@
 		public function checkNumericColumnValueExistForUser($column, $column_value, $user_id){
 			$column = $this->connection->escape_string($column);
 			$column_value = $this->connection->escape_string($column_value);
-			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? AND `user_id` = ? LIMIT 1 ");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? AND `user_id` = ? LIMIT 1 ");
 			if($stmt){
 				$stmt->bind_param('ii', $column_value, $user_id);
 				if($stmt->execute()){
@@ -425,7 +432,8 @@
 		
 		
 		public function isRowForUserExists($user_id){
-			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE  `user_id` = ? LIMIT 1 ");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE  `user_id` = ? LIMIT 1 ");
 			if($stmt){
 				$stmt->bind_param('i', $user_id);
 				if($stmt->execute()){
@@ -444,7 +452,8 @@
 		public function getMultipleColumnsById($column_array, $id){
 			$targets = implode('`,`',$column_array);
 			$targets = '`'.$targets.'`';
-			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `id` = ? LIMIT 1");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$primary_key` = ? LIMIT 1");
 			if($stmt){
 				$stmt->bind_param('i', $id);
 				if($stmt->execute()){
@@ -470,11 +479,11 @@
 		public function getAllRowsMultipleColumnsByUserId($column_array, $user_id, $asc = false){
 			$targets = implode('`,`',$column_array);
 			$targets = '`'.$targets.'`';
-			
+			$primary_key = $this->table_name.'_id';
 			if($asc){
 				$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `user_id` = ? ");
 			}else{
-				$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `user_id` = ? ORDER BY `id` DESC");
+				$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `user_id` = ? ORDER BY `$primary_key` DESC");
 			}
 			if($stmt){
 				$stmt->bind_param('i', $user_id);
@@ -518,7 +527,8 @@
 		public function getLastRowMultipleColumnsByUserId($column_array, $user_id){
 			$targets = implode('`,`',$column_array);
 			$targets = '`'.$targets.'`';
-			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `user_id` = ? ORDER BY `id` DESC LIMIT 1 ");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `user_id` = ? ORDER BY `$primary_key` DESC LIMIT 1 ");
 			if($stmt){
 				$stmt->bind_param('i', $user_id);
 				if($stmt->execute()){
@@ -536,7 +546,8 @@
 		
 		public function getRowsNumberForNumericColumn($column, $column_value){
 			$column = $this->connection->escape_string($column);
-			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? ");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? ");
 			if($stmt){
 				$stmt->bind_param('i', $column_value);
 				if($stmt->execute()){
@@ -552,7 +563,8 @@
 		
 		public function getRowsNumberForStringColumn($column, $column_value){
 			$column = $this->connection->escape_string($column);
-			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? ");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? ");
 			if($stmt){
 				$stmt->bind_param('s', $column_value);
 				if($stmt->execute()){
@@ -570,6 +582,7 @@
 		public function getColumnRowsGreaterThanSelector($column,$selector_column, $selector_value,  $limit = -1, $asc = false ){
 			$column = $this->connection->escape_string($column);
 			$selector_column = $this->connection->escape_string($selector_column);
+			$primary_key = $this->table_name.'_id';
 			if($asc){
 				if($limit > 0){
 					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` > ? LIMIT ? ");
@@ -578,9 +591,9 @@
 				}
 			}else{
 				if($limit > 0){
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` > ? ORDER BY `id` DESC LIMIT ? ");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` > ? ORDER BY `$primary_key` DESC LIMIT ? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` > ? ORDER BY `id` DESC ");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` > ? ORDER BY `$primary_key` DESC ");
 				}
 			}	
 			if($stmt){
@@ -606,17 +619,18 @@
 		public function getColumnRowsGreaterThanRowId($column, $row_id,$selector_name, $selector_value,  $limit = -1, $asc = false ){
 			$selector_name = $this->connection->escape_string($selector_name);
 			$column = $this->connection->escape_string($column);
+			$primary_key = $this->table_name.'_id';
 			if($asc){
 				if($limit > 0){
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` > ?  AND `$selector_name` = ? LIMIT ? ");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$primary_key` > ?  AND `$selector_name` = ? LIMIT ? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` > ? AND `$selector_name` = ?  ");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$primary_key` > ? AND `$selector_name` = ?  ");
 				}
 			}else{
 				if($limit > 0){
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` > ? AND `$selector_name` = ?  ORDER BY `id` DESC LIMIT ? ");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$primary_key` > ? AND `$selector_name` = ?  ORDER BY `$primary_key` DESC LIMIT ? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` > ? AND `$selector_name` = ?  ORDER BY `id` DESC ");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$primary_key` > ? AND `$selector_name` = ?  ORDER BY `$primary_key` DESC ");
 				}
 			}	
 			if($stmt){
@@ -640,17 +654,18 @@
 		public function getColumnRowsLessThanRowId($column, $row_id,$selector_name, $selector_value,  $limit = -1, $asc = false ){
 			$selector_name = $this->connection->escape_string($selector_name);
 			$column = $this->connection->escape_string($column);
+			$primary_key = $this->table_name.'_id';
 			if($asc){
 				if($limit > 0){
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` < ?  AND `$selector_name` = ? LIMIT ? ");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$primary_key` < ?  AND `$selector_name` = ? LIMIT ? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` < ? AND `$selector_name` = ?  ");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$primary_key` < ? AND `$selector_name` = ?  ");
 				}
 			}else{
 				if($limit > 0){
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` < ? AND `$selector_name` = ?  ORDER BY `id` DESC LIMIT ? ");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$primary_key` < ? AND `$selector_name` = ?  ORDER BY `$primary_key` DESC LIMIT ? ");
 				}else{
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `id` < ? AND `$selector_name` = ?  ORDER BY `id` DESC ");
+					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$primary_key` < ? AND `$selector_name` = ?  ORDER BY `$primary_key` DESC ");
 				}
 			}	
 			if($stmt){
@@ -711,7 +726,8 @@
 	
 		public function setColumnById($column, $value, $id){
 			$column = $this->connection->escape_string($column);
-			$stmt = $this->connection->prepare("UPDATE `$this->table_name` SET `$column`=? WHERE `id` = ? LIMIT 1");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("UPDATE `$this->table_name` SET `$column`=? WHERE `$primary_key` = ? LIMIT 1");
 			if($stmt){
 				$stmt->bind_param('si', $value, $id);
 				if($stmt->execute()){
@@ -742,7 +758,8 @@
 		*/
 		public function isStringValueExistingForColumn($value, $column){
 			$column = $this->connection->escape_string($column);
-			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? LIMIT 1");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? LIMIT 1");
 			if($stmt){
 				$stmt->bind_param('s', $value);
 				if($stmt->execute()){
@@ -761,7 +778,8 @@
 		
 		public function isNumericValueExistingForColumn($value, $column){
 			$column = $this->connection->escape_string($column);
-			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` WHERE `$column` = ? LIMIT 1");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? LIMIT 1");
 			if($stmt){
 				$stmt->bind_param('i', $value);
 				if($stmt->execute()){
@@ -778,7 +796,8 @@
 		
 		
 		public function isRowExists($row_id){
-			$stmt = $this->connection->prepare("SELECT `id` FROM `$this->table_name` LIMIT 1");
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` LIMIT 1");
 			if($stmt){
 				$stmt->bind_param('i', $value);
 				if($stmt->execute()){
@@ -804,7 +823,8 @@
 		}
 		
 		public function getRowIdByHashkey($key){
-			return $this->getColumnBySelector('id', 'hash', $key);
+			$primary_key = $this->table_name.'_id';
+			return $this->getColumnBySelector($primary_key, 'hash', $key);
 		}
 		
 		
