@@ -208,6 +208,36 @@
 		  }
 		}
 	  }
+	  
+	  
+	function replacer($matches){
+		if($matches[1] != '' && ($matches[1] == '#' || $matches[1] == '@')){
+			return $matches[0]; 
+		}else{
+			if($matches[4] != '' && ($matches[4] == '#' || $matches[4] == '@')){
+				return $matches[0];
+			}else{
+				return $matches[1].'<span class="hash-tag plain-lk">'.$matches[2].$matches[3].'</span>'.$matches[4];
+			}
+		}
+	}
+	
+	function enRichText($text){
+		return preg_replace_callback('/(.?)(#|@)(\w+)(\W?)/', 'replacer', $text );
+	}
+
+	
+	function getWidthsPercentageWithEqualHeightOfTwoImages($width1, $height1, $width2, $height2, $container_width){
+		$resized_width1 = ($height2 * $container_width )/$width2;
+		$resized_width1 /= $height1/$width1 + $height2/$width2;
+		$resized_width1_percentage = $resized_width1/$container_width;
+		$resized_width2_percentage = 1 - $resized_width1_percentage;
+		return array("resized_width1_percentage"=>$resized_width1_percentage*100, "resized_width2_percentage"=>$resized_width2_percentage*100);
+	}
+	
+	
+	
+	
 	
 	
 	

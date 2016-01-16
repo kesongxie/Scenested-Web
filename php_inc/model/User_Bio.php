@@ -23,14 +23,14 @@
 			if($this->isBioExistedForUser($user_id)){
 				$this->setColumnByNumericSelector('bio', $bio, 'user_id', $user_id);
 				$this->setColumnByNumericSelector('time', $time, 'user_id', $user_id);
-				return $this->getBioForUser($user_id);
+				return enRichText($this->getBioForUser($user_id));
 			}else{
 				//create row
 				$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`bio`, `time`) VALUES(?, ?, ?)");
 				$stmt->bind_param('iss',$user_id,$bio, $time);
 				if($stmt->execute()){
 					$stmt->close();
-					return $this->getBioForUser($user_id);
+					return enRichText($this->getBioForUser($user_id));
 				}
 				return false;
 			}

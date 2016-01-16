@@ -109,21 +109,7 @@ $(document).ready(function(){
 		}
 	},'#avator-image-upload');
 	
-	
-	
-	
-	
-	
-	
-	
-	
 
-	// $('body #edit-dialog-wrapper-inner').on({
-// 		click:function(e){
-// 			e.stopPropagation();
-// 			closeEditDialog(true);
-// 		}
-// 	},'#save-e-p-button');
 
 
 
@@ -237,7 +223,7 @@ $(document).ready(function(){
 			method:'post',
 			data:{bio_text:bio_text},
 			success:function(resp){
-				$('#profile-left-content-wrapper #profile-short-bio').text(resp);
+				$('#profile-left-content-wrapper #profile-short-bio').html(resp);
 				ds.setTargetDataStateToReady();
 			}
 		});

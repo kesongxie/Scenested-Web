@@ -41,7 +41,7 @@
 				<div id="profile-left-content-wrapper">
 					<div id="profile-left-content-inner-wrapper" >
 						<div id="profile-avator-wrapper">
-							<img id="profile-avator" src="<?php echo convertThumbPathToOriginPath($user_profile_avator_image) ?>">
+							<img id="profile-avator" src="<?php echo $user_profile_avator_image; ?>">
 							<div id="avator-edit-profile">
 								<div id="a-e-p-overlay"></div>
 								<div id="a-e-p-edit">EDIT PROFILE</div>
@@ -68,9 +68,9 @@
 							</div>
 					
 						<div id="profile-short-bio" class="profile-bio">
-							<?php echo htmlentities($bio); ?>
+							<?php echo enRichText($bio); ?>
 						</div>
-						<div id="profile-scene-label-wrapper"  style="margin-top:2px;">
+						<div id="profile-scene-label-wrapper">
 							<div class="profile-bio" >
 								<?php if($labels !== false): ?>
 									<?php $label_num = sizeof($labels); $counter = 1; ?>
@@ -93,6 +93,8 @@
 					</div>
 				</div>
 				<div id="profile-right-content-wrapper">
+					
+				
 					<div class="post">
 						<div class="post-top">
 							<div class="inline-blk post-tag-date">
@@ -102,20 +104,58 @@
 								</div>
 							</div>
 							<img class="post-avator inline-blk" src="<?php echo DUMMY_MEDIA ?>avator.jpg">
-							<div class="post-user-info inline-blk">
-								<div class="post-head-line">
-									<span class="post-user-name pointer">Kesong Xie</span>
-									<span class="head-additional-info"><a href="#" title="link to people with similar interest in your near location" class="plain-lk"><span class="scene-label">Tennis</span></a> - 2h</span>
+							<div class="post-user-info inline-blk" style="margin-left:0px;">
+								<div class="post-head-line" style="margin-left: 59px;">
+									<span class="post-user-name pointer">Kesong Xie</span> - 2h
+									<div class="head-additional-info" style="margin-left:0px;"><a href="#" title="link to people with similar interest in your near location" class="plain-lk">
+										<span class="scene-label">Tennis</span></a> -
+										<span class="scene-location plain-lk" style="font-size:14px;color:#1D4D79;" >USTA Billie Jean King National Tennis Center</span>
+									</div>
 								</div>
-								<div class="post-content-text">
-									<span>How does it feel for this years' <a href="#"  class="plain-lk"><span class="hash-tag">#USOpen</span></a> I think <span class="hash-tag">@RogerFederer</span> is going to fight into the final.</span>
+								<div class="post-content-text" style="margin-top:16px">
+									<span>How does it feel for this years' <a href="#"  class="plain-lk"><span class="hash-tag">#USOpen</span></a>, I think <span class="hash-tag">@RogerFederer</span> is going to fight into the final.</span>
 								</div>
 							</div>
 						</div>
 						<div class="post-mid">
 							<div class="inline-blk post-image">
-								<div class="post-image-one-picture">
-									<img class="post-attached-img" src="<?php echo DUMMY_MEDIA?>IMG_5101.jpg">
+								<div class="post-image-picture">
+											<?php 
+ 												$url1 = DUMMY_MEDIA.'IMG_4513.JPG';
+ 												$url2 =  DUMMY_MEDIA.'IMG_4515.JPG';
+ 												list($width1, $height1) = getimagesize($url1);
+												list($width2, $height2) = getimagesize($url2);
+												$array = getWidthsPercentageWithEqualHeightOfTwoImages($width1, $height1, $width2, $height2, 600);
+											 ?>
+										
+											<div class="post-attached-img-wrapper" style="float:left;width:<?php echo $array['resized_width1_percentage'] ?>%;">
+												<img class="post-attached-img" src="<?php echo $url1; ?>" >
+											</div>
+											
+											<div class="post-attached-img-wrapper"style="float:right;width:<?php echo $array['resized_width2_percentage'] ?>%;">
+												<img class="post-attached-img" src="<?php echo $url2; ?>">
+											</div>
+											
+											
+											<?php 
+ 												$url1 = DUMMY_MEDIA.'IMG_4510.JPG';
+ 												$url2 =  DUMMY_MEDIA.'IMG_4525.JPG';
+ 												list($width1, $height1) = getimagesize($url1);
+												list($width2, $height2) = getimagesize($url2);
+												$array = getWidthsPercentageWithEqualHeightOfTwoImages($width1, $height1, $width2, $height2, 600);
+											 ?>
+										
+											<div class="post-attached-img-wrapper" style="float:left;width:<?php echo $array['resized_width1_percentage'] ?>%;">
+												<img class="post-attached-img" src="<?php echo $url1; ?>" >
+											</div>
+											
+											<div class="post-attached-img-wrapper"style="float:right;width:<?php echo $array['resized_width2_percentage'] ?>%;">
+												<img class="post-attached-img" src="<?php echo $url2; ?>">
+											</div>
+											
+											
+									
+									
 								</div>
 							</div>
 						</div>
@@ -135,25 +175,36 @@
 							</div>	
 						</div>
 					</div>
-					<div class="post">
+					
+					
+					
+					
+					
+					
+					<div class="post hdn">
 						<div class="post-top">
 							<div class="inline-blk post-tag-date">
 								<div class="date">
 									<div><span class="day">02</span><span class="mon">May</span></div>
-									<div class="year" >2015</div>
+									<div class="year" >2014</div>
 								</div>
 							</div>
 							<img class="post-avator inline-blk" src="<?php echo DUMMY_MEDIA ?>avator.jpg">
-							<div class="post-user-info inline-blk">
-								<div class="post-head-line">
-									<span class="post-user-name pointer">Kesong Xie</span>
-									<span class="head-additional-info"><a href="#" title="link to people with similar interest in your near location" class="plain-lk"><span class="scene-label">Programming</span></a> - 2h</span>
+							<div class="post-user-info inline-blk" style="margin-left:0px;">
+								<div class="post-head-line" style="margin-left: 59px;">
+									<span class="post-user-name pointer">Kesong Xie</span> - 3d
+									<div class="head-additional-info" style="margin-left:0px;"><a href="#" title="link to people with similar interest in your near location" class="plain-lk">
+										<span class="scene-label">Programming</span></a> 
+										<span class="scene-location plain-lk hdn" style="font-size:14px;color:#1D4D79;" >USTA Billie Jean King National Tennis Center</span>
+									</div>
 								</div>
-								<div class="post-content-text">
+									<div class="post-content-text" style="margin-top:16px">
 									<span>A guy like me who is so picky about how the work looks is probably not suitable to join a ' <a href="#"  class="plain-lk"><span class="hash-tag">#hackathon</span></a>, but it's a great experience, though.</span>
 								</div>
 							</div>
 						</div>
+						
+						
 						<div class="post-mid">
 							<div class="inline-blk post-image">
 								<div class="post-image-one-picture">

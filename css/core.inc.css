@@ -117,6 +117,85 @@ body{
 	color:inherit;
 }
 
+.dummy-lk{
+	text-decoration:none;
+}
+
+.plain-lk{
+	text-decoration:none;
+	cursor:pointer;
+}
+.plain-lk:hover{
+	text-decoration:underline;
+}
+
+.animated-button{
+	padding: 0px 11px;
+	background: none;
+    border-radius: 3px;
+  	line-height: 30px;
+ 	font-weight:700;
+ 	cursor:pointer;
+ 	font-size:13px;
+}
+
+.animated-button:hover{
+	transform:scale(1.01,1.01);
+	-webkit-transform:scale(1.01,1.01);
+	-ms-transform:scale(1.01,1.01);
+}
+
+.animated-button:active{
+	transform:scale(1,1);
+	-webkit-transform:scale(1,1);
+	-ms-transform:scale(1,1);
+}
+
+.follow-button{
+	color: #386D9E;
+ 	border:1px solid #1B5E9C;
+}
+
+.follow-button:hover{
+	color: #25527C;
+ 	border:1px solid #1C5B96;
+}
+
+
+
+
+.action-button{
+	cursor:pointer;
+	color:#fff;
+	border-radius: 4px;
+}
+
+.red-action-button{
+ 	border:1px solid #9F1B1B;
+ 	color:#A01212;
+}
+
+.red-action-button:hover{
+ 	border:1px solid #921717;
+ 	color:#920F0F;
+}
+
+
+.blue-action-button{
+	color: #386D9E;
+ 	border:1px solid #1B5E9C
+}
+
+.blue-action-button:hover{
+	color: #25527C;
+ 	border:1px solid #1C5B96;
+}
+
+.gray-action-button{
+	border: 1px solid #D1D1D1 !important;
+}
+ 
+
 
 [contenteditable=true]:empty:before{
   content: attr(placeholder);
@@ -137,7 +216,6 @@ body{
 }
 
 .post > .post-top{
-	/* padding: 10px 20px;*/
 	padding: 16px 20px;
 	position:relative;
 }
@@ -175,7 +253,7 @@ body{
 .post > .post-top > .post-user-info > .post-head-line > .post-user-name{
 	color:#080835;
 	font-weight:600;
-	font-size:15px;
+	font-size:16px;
 }
 
 .post > .post-top > .post-user-info > .post-head-line > .head-additional-info{
@@ -186,9 +264,9 @@ body{
 
 
 .post > .post-top > .post-user-info > .post-content-text{
-	font-size:15px;
 	margin-top: 4px;
-	line-height: 21px;
+	line-height:1.4;
+	font-size:16px;
 }
 
 .post > .post-mid > .post-image{
@@ -197,13 +275,24 @@ body{
 	position:relative;
 }
 
-.post > .post-mid  > .post-image > .post-image-one-picture > .post-attached-img{
+.post > .post-mid  > .post-image > .post-image-picture {
+	overflow:hidden;
+}
+
+.post > .post-mid  > .post-image > .post-image-picture .post-attached-img-wrapper{
+	width:calc(50%);
+	overflow:hidden;
+	display:inline-block;	
+}
+
+
+.post > .post-mid  > .post-image > .post-image-picture  .post-attached-img{
 	width:100%;
 	display: block;
 	border-radius:0px;
 }
 
-.post > .post-mid > post-image > .post-image-one-picture{
+.post > .post-mid > post-image > .post-image-picture{
 	max-height:600px;
 	overflow:hidden;
 }
@@ -241,6 +330,9 @@ body{
 .post > .post-bottom > .post-user-interact > .post-action-label > .cmt-num{
 	margin-left:1px;
 }
+
+
+
 
 /*  ends post css */
 

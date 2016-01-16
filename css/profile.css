@@ -84,7 +84,6 @@
  	text-align:center;
  	color:#080835;
  	font-weight:600;
- /* 	color:#333A60; */
 }
 
 #profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data-label{
@@ -92,8 +91,7 @@
 }
 
 #profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-short-bio{
-	color:#0C304A;
-	margin-top:10px;
+	margin-top:24px;
 }
 
 
@@ -121,6 +119,11 @@
 		text-align: left;
     	margin-left: 0px;
 	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper > #profile-avator{
+		width:150px;
+		height:150px;
+	}
 }
 
 /* smaller screen text align center */
@@ -128,6 +131,11 @@
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content{
 		text-align: center;
     	margin-left: -100px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper > #profile-avator{
+		width:140px;
+		height:140px;
 	}
 }
 
@@ -144,6 +152,7 @@
 		padding:20px;
 		min-width:270px;
 		text-align:left;
+		margin-right:10px;
 	}
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-right-content-wrapper{
 		width:50%;
@@ -158,8 +167,6 @@
 	}
 	
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper > #profile-avator{
-		height:140px;
-		width:140px;
 		display:block;
 	}
 	
@@ -169,7 +176,7 @@
 	
 	
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data-label{
-		font-size: 15px;
+		font-size: 16px;
 	}
 	
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data{
@@ -179,6 +186,12 @@
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-short-bio{
 		font-size:15px;
 	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-scene-label-wrapper{
+		font-size:15px;
+		margin-top:10px;
+	}
+	
 	
 	#edit-dialog-wrapper #edit-dialog-wrapper-inner{
 		width:512px;
@@ -235,7 +248,7 @@
 	
 
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data-label{
-		font-size: 13px;
+		font-size: 15px;
 	}
 	
 	
@@ -244,8 +257,16 @@
 	}
 	
 	
+	
+	
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-short-bio{
-		font-size:13px;
+		font-size:15px;
+	}
+	
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-scene-label-wrapper{
+		font-size:15px;
+		margin-top:10px;
 	}
 	
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-right-content-wrapper{
@@ -271,6 +292,10 @@
 	
 	#edit-dialog-wrapper #edit-dialog-wrapper-inner{
 		width:100%;
+	}
+	
+	.post{
+		margin-bottom:10px;
 	}
 	
 

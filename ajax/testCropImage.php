@@ -77,60 +77,16 @@ foreach($_POST['ratio_0'] as $ratio_key => $ratio_value){
 	*/
 	
 	
-	/*
-		array(5) {
-		  ["name"]=>
-		  string(12) "IMG_0871.JPG"
-		  ["type"]=>
-		  string(10) "image/jpeg"
-		  ["tmp_name"]=>
-		  string(36) "/Applications/MAMP/tmp/php/phpL5V75T"
-		  ["error"]=>
-		  int(0)
-		  ["size"]=>
-		  int(745304)
-		}
-		array(4) {
-		  ["adjusted_ratio_height"]=>
-		  string(9) "0.2734375"
-		  ["image_container_scale_height"]=>
-		  string(18) "0.4166666666666667"
-		  ["adjusted_ratio_width"]=>
-		  string(1) "0"
-		  ["image_container_scale_width"]=>
-		  string(1) "1"
-	*/
-	
-	
-	$image_container_scale_width = $_POST['image_container_scale_width'];
-	$image_container_scale_height = $_POST['image_container_scale_height'];
-	$adjusted_ratio_width = $_POST['adjusted_ratio_width'];
-	$adjusted_ratio_height = $_POST['adjusted_ratio_height'];
-	
-	
-	// var_dump($image_container_scale_width);	
-// 	var_dump($image_container_scale_height);	
-// 	
-	
-	
-	$file = $_FILES['file'];
-	list($src_w, $src_h, $extension) = getimagesize($file['tmp_name']);
-	$extension = getMediaFileExtension($file);
-	$dst_w =  1280;
-	$dst_h = 400;
-	
-	
-	if ($extension == "gif"){ 
-	  $src_image = imagecreatefromgif($file['tmp_name']);
-	} else if($extension == "png"){ 
-	  $src_image = imagecreatefrompng($file['tmp_name']);
-	} else { 
-	  $src_image = imagecreatefromjpeg($file['tmp_name']);
+	if(sizeof($_FILES) != $_POST['file_length']){
+		echo '1';
+		die();
 	}
-	$dst_image = imagecreatetruecolor($dst_w, $dst_h); //create a black canvas, return image identifier
-	imagecopyresampled ($dst_image, $src_image, 0, 0, $src_w * $adjusted_ratio_width, $src_h * $adjusted_ratio_height , $dst_w ,  $dst_h ,  $src_w * $image_container_scale_width ,  $src_h * $image_container_scale_height);
-	imagejpeg($dst_image, MEDIA_U.'newimage.jpg', 100);
 	
+	var_dump($_FILES);
+	var_dump($_POST);
+	
+	
+
 	
 	
 	

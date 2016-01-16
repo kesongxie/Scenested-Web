@@ -88,7 +88,7 @@ intervalIdManager.prototype.destoryIntervalIdOnElement = function(){
 
 /*starts scene box editor functions*/
 function replacer(match, p1, p2, p3, p4){
- 	var re = /^[^#@]$/;
+ 	var re = /^\s$/;
  	var length_before = typeof p1 !== 'undefined'?p1.length:0;
  	var length_after = typeof p4 !== 'undefined'?p4.length:0;
  	var returnValues = '';
@@ -445,13 +445,13 @@ function addPostPhoto(fileInput){
 					var photo_thumb = thumb_wrapper.find('.photo-thumbnail');
 					readURL(fileInput, photo_thumb, true);
 					thumb_wrapper.removeClass('pending');
+					add_scene_wrapper.find('#post-photo-layout-segue')
+					
+					var next_input_will_load = $this.parents('.photo-segment-container').next().find('.attach-post-photo');
+					next_input_will_load.addClass('next');
 					$this.removeClass('next').addClass('set');
-					var next_input_will_load = label.find('input.attach-post-photo').not('.set').first();
-					if(next_input_will_load.length > 0){
-						next_input_will_load.addClass('next');
-						var next_id =next_input_will_load.attr('id');
-						label.attr('for',next_id);
-					}
+					var next_id =next_input_will_load.attr('id');
+					label.attr('for',next_id);
 				}
 		});
 		setPostPhotoModified();
@@ -464,64 +464,7 @@ function getIntValueFromCSSStyle(style){
 }
 
 
-/*
-	resize two images to fit in a container with specific width, and 
-	resize two images with same height.
-	@param width1
-		   the width of the first image
-	@param height1
-		   the height of the first image
-	@param width2
-		   the width of the second image
-	@param height2
-		   the height of the second image
-	@param container_width
-		   the width of the container the fits these two images
-*/
-function getWidthsPercentageWithEqualHeightOfTwoImages(width1, height1, width2, height2, container_width){
-	var resized_width1;
-	resized_width1 = (height2 * container_width )/width2
-	resized_width1 /= height1/width1 + height2/width2;
-	var resized_width1_percentage = resized_width1/container_width;
-	var resized_width2_percentage = 1 - resized_width1_percentage;
-	return {"resized_width1_percentage":resized_width1_percentage, "resized_width2_percentage":resized_width2_percentage}
-
-}
-
-
-
-
 $(document).ready(function(){
-	
-	// var pics = $('.post-image-picture');
-// 	var img_wrapper_1 = pics.find('.post-attached-img-wrapper').first();
-// 	var img_wrapper_2 = pics.find('.post-attached-img-wrapper').last()
-// 	
-// 	var width1, width2, height1, height2, container_width = 600;
-// 	var image_object1 = new Image();
-// 	var img_1 = img_wrapper_1.find('.post-attached-img');
-// 	
-// 	image_object1.src = img_1.attr("src");
-// 	image_object1.onload = function() {
-// 		width1 = this.width;
-// 		height1 = this.height;
-// 		
-// 		var img_2 = img_wrapper_2.find('.post-attached-img');
-// 		var image_object2 = new Image();
-// 		image_object2.src = img_2.attr("src");
-// 		image_object2.onload = function() {
-// 			width2 = this.width;
-// 			height2 = this.height;
-// 			
-// 			
-// 			
-// 			var percentages = getWidthsPercentageWithEqualHeightOfTwoImages(width1, height1, width2, height2, container_width);
-// 			img_wrapper_1.css('width',percentages['resized_width1_percentage']*100+'%' );
-// 			img_wrapper_2.css('width',percentages['resized_width2_percentage']*100+'%');
-// 		};
-// 	};
-// 	
-	
 	
 	$('#edit-dialog-wrapper-inner').click(function(){
 	//	return false;
@@ -691,16 +634,22 @@ $(document).ready(function(){
 			var expand_text = label.find('.expand-text');
 			var current_width = parseInt(label.width());
 			$this.parents('.post-photo-thumbnail').remove();	
-			var input_will_be_load = label.find('input.attach-post-photo.set').last();
+		
+			var input_will_be_load = $('#layout-draggable .photo-segment-container input.attach-post-photo.set').last();
 			if(input_will_be_load.hasClass('set')){
 				input_will_be_load.removeClass('set').addClass('next'); //mark as next, so that is available 
 			}
 			label.attr('for',input_will_be_load.attr('id')); //the id should match the new available input
 			input_will_be_load.val(''); //reset the input value
-			var input_to_be_removed = input_will_be_load.next();
-			if(input_to_be_removed.hasClass('next')){
-				input_to_be_removed.removeClass('next');
+			
+			var parent_input_to_be_removed = input_will_be_load.parents('.photo-segment-container').next('.photo-segment-container');
+			if(parent_input_to_be_removed.length > 0){
+				var input_to_be_removed = parent_input_to_be_removed.find('.attach-post-photo');
+				if(input_to_be_removed.hasClass('next')){
+					input_to_be_removed.removeClass('next');
+				}
 			}
+		
 			label.animate({
 				'width':'+=128px'
 			}, {duration:300, 
@@ -715,29 +664,426 @@ $(document).ready(function(){
 		}
 	},'.post-photo-thumbnail .remove-circle-icon');
 	
+
+	
+	var startDragX = 0, startDragY = 0;
+	var stopDragX = 0, stopDragY = 0;
+	
+	var initial_rect;
+	
+	/*$('.photo').draggable({
+		containment:'#photo-constriant',
+		axis:'y',
+		scroll:false,
+		revert:'valid',
+		opacity:0.8,
+		zIndex:100,
+		start:function(event,ui){
+			startDragX = mouseX;
+			startDragY = mouseY;
+			initial_rect = ui.helper.parents('.photo-segment-container')[0].getBoundingClientRect();
+		},
+		drag:function(event,ui){
+			
+			if(initial_rect.left < mouseViewPortX && mouseViewPortX < initial_rect.right && initial_rect.top < mouseViewPortY && mouseViewPortY < initial_rect.bottom){
+				console.log('in');
+				//$(this).draggable( "option", "containment", "#photo-constriant" );
+// 				$(this).draggable( "option", "revert", "false" );
+			}else{	
+				console.log('out');
+				$(this).draggable( "option", "containment", "" );
+// 				$(this).draggable( "option", "revert", "invalid" );
+			}
+		},
+		stop:function(event,ui){
+			
+		}
+	});
+*/
+
+	
+	var drag_left = false;
+	var drag_down = false;
+	var swap = false;
+	
+ 	/*$('.photo-segment-container').droppable({
+		accept:'.photo',
+		tolerance:'pointer',
+		over:function(event, ui){
+			var mode = getLayoutMode();
+			var des_container = $(this);
+			var src_target = ui.draggable; //photo
+			var des_container_queue = des_container.attr('data-container-queue');
+			var src_target_queue = src_target.parent('.photo-segment').attr('data-segment-queue');
+			if(des_container_queue != src_target_queue){
+				des_container.find('.photo').addClass('drop-photo-scale-animation');
+				var title_text = $('#post-photo-layout-segue .dialog-title-text');
+				stopDragX = mouseX;
+				stopDragY = mouseY;
+				if(mode == LAYOUT_MODE.twoColumnHorizon){
+					var slope = (stopDragY - startDragY)/(stopDragX - startDragX);
+					if( -TWO_COLUMN_HORIZON_ANGLE_SLOPE < slope && slope < TWO_COLUMN_HORIZON_ANGLE_SLOPE ){
+						drag_down = (stopDragY - startDragY > 0);
+						drag_left = (drag_down) ? (slope > 0?false:true) : (slope > 0?true:false);
+						if(drag_left){
+							title_text.text('Drag to left');	
+						}else{
+							title_text.text('Drag to right');	
+						}
+						swap = false;
+					}else{
+						title_text.text('Swap');
+						swap = true;
+					}
+				}else if(mode == LAYOUT_MODE.twoColumnVertical){
+					var slope = (stopDragY - startDragY)/(stopDragX - startDragX);
+					if( -TWO_COLUMN_VERTICAL_ANGLE_SLOPE < slope && slope < TWO_COLUMN_VERTICAL_ANGLE_SLOPE){
+						title_text.text('Swap');
+						swap = true;
+					}else{
+						drag_down = (stopDragY - startDragY > 0);
+						drag_left = (drag_down) ? (slope > 0?false:true) : (slope > 0?true:false);
+						if(drag_down){
+							title_text.text('Drag to bottom');	
+						}else{
+							title_text.text('Drag to top');	
+						}
+						swap = false;	
+					}
+				}
+			}
+		},
+		drop:function(event, ui){
+		 	var des_container = $(this); //container
+			var src_target = ui.draggable; //photo
+			
+			var des_target = des_container.find('.photo'); //photo
+			var src_container = src_target.parents('.photo-segment-container'); //container
+			
+			var des_container_queue = des_container.attr('data-container-queue');
+			var src_target_queue = src_target.parent('.photo-segment').attr('data-segment-queue');
+			
+			if(des_container_queue != src_target_queue){
+				//swap the element 
+				var changeToVertical = (!drag_down && drag_left )  || (drag_down && !drag_left) ;
+				if(swap ||  changeToVertical){
+					var src_url = src_target.attr('src');
+					var des_url = des_target.attr('src');
+					src_target.attr('src',des_url);
+					des_target.attr('src', src_url);
+				}
+				if(!swap){
+					if(getLayoutMode() == LAYOUT_MODE.twoColumnHorizon){
+						src_container.removeClass('two-column-horizon').addClass('two-column-vertical');
+						des_container.removeClass('two-column-horizon').addClass('two-column-vertical');
+						src_target.draggable('option','axis','x');
+						des_target.draggable('option','axis','x');
+						setLayoutMode(LAYOUT_MODE.twoColumnVertical);
+					}else{
+						src_container.removeClass('two-column-vertical').addClass('two-column-horizon');
+						des_container.removeClass('two-column-vertical').addClass('two-column-horizon');
+						src_target.draggable('option','axis','y');
+						des_target.draggable('option','axis','y');
+						setLayoutMode(LAYOUT_MODE.twoColumnHorizon);
+					}
+					
+				}
+			}
+			
+				$('#layout-draggable .photo-segment .photo').css({'left':'0px', 'top':'0px'});
+		
+			$('.photo-segment-container .photo').removeClass('drop-photo-scale-animation');
+			var title_text = $('#post-photo-layout-segue .dialog-title-text');
+			title_text.text($(title_text).attr('data-default-title'));
+			
+		}, 
+		deactivate:function(event,ui){
+			return false;
+		}
+	
+	});
+	*/
+	
+	
+	
+	
+	
+	
+	/* --------droppable working, now adjustable---------- */
+	
+
+	$('.photo-segment').draggable({
+		containment:'#layout-draggable',
+		scroll:false,
+		revert:"invalid",
+		opacity:0.8,
+		zIndex:100,
+		helper:function(){
+			return '<div></div>';	
+		},
+		start:function(event, ui){
+			startDragX = mouseX;
+			startDragY = mouseY;
+			initial_rect = $(this).parents('.photo-segment-container')[0].getBoundingClientRect();
+		},
+		drag:function(event,ui){
+			if(initial_rect.left < mouseViewPortX && mouseViewPortX < initial_rect.right && initial_rect.top < mouseViewPortY && mouseViewPortY < initial_rect.bottom){
+				//don't move the element at all, using the default helper that make the element looks like static
+				var photo = $(this).find('.photo');
+				var mode = getLayoutMode();
+				if(mode == LAYOUT_MODE.twoColumnHorizon){
+					var max_draggable_distance = photo.height() - 256;
+					if(mouseY - startDragY > 0){
+						//down
+						var current_margin_top = parseInt(photo.css('margin-top'));
+						if(current_margin_top < 0){
+							current_margin_top +=4;
+							current_margin_top = (current_margin_top > 0)?0:current_margin_top;
+							photo.animate({'margin-top': current_margin_top+'px'}, 0);
+						}
+					}else{
+						var current_margin_top = parseInt(photo.css('margin-top'));
+						if( current_margin_top > -max_draggable_distance  ){
+							current_margin_top -=4;
+							current_margin_top = (current_margin_top < -max_draggable_distance)?-max_draggable_distance:current_margin_top;
+							photo.animate({'margin-top': current_margin_top+'px'}, 0);
+						}	
+					}
+				}else if(mode == LAYOUT_MODE.twoColumnVertical){
+					var max_draggable_distance = photo.width() - 256;
+					if(mouseX - startDragX > 0){
+						//down
+						var current_margin_top = parseInt(photo.css('margin-left'));
+						if(current_margin_top < 0){
+							current_margin_top +=4;
+							current_margin_top = (current_margin_top > 0)?0:current_margin_top;
+							photo.animate({'margin-left': current_margin_top+'px'}, 0);
+						}
+					}else{
+						var current_margin_top = parseInt(photo.css('margin-left'));
+						if( current_margin_top > -max_draggable_distance  ){
+							current_margin_top -=4;
+							current_margin_top = (current_margin_top < -max_draggable_distance)?-max_draggable_distance:current_margin_top;
+							photo.animate({'margin-left': current_margin_top+'px'}, 0);
+						}	
+					}
+				}
+			}else{	
+				//when the cursor move out of the original container, make the helper becomes original that make it look it's moving
+				
+				//$(this).addClass('hdn');
+				$(this).draggable( "option", "helper", "original" );
+			}
+		},
+		stop:function(event,ui){
+					
+		}
+	});
+	
+	
+	$('.photo-segment-container').droppable({
+		accept:'.photo-segment',
+		tolerance:'pointer',
+		over:function(event, ui){
+			var mode = getLayoutMode();
+			var des_container = $(this);
+			var des_container = $(this);
+			var src_target = ui.draggable;
+			var des_container_queue = des_container.attr('data-container-queue');
+			var src_target_queue = src_target.attr('data-segment-queue');
+			if(des_container_queue != src_target_queue){
+				des_container.find('.photo').addClass('drop-photo-scale-animation');
+				var title_text = $('#post-photo-layout-segue .dialog-title-text');
+				stopDragX = mouseX;
+				stopDragY = mouseY;
+				if(mode == LAYOUT_MODE.twoColumnHorizon){
+					var slope = (stopDragY - startDragY)/(stopDragX - startDragX);
+					if( -TWO_COLUMN_HORIZON_ANGLE_SLOPE < slope && slope < TWO_COLUMN_HORIZON_ANGLE_SLOPE ){
+						drag_down = (stopDragY - startDragY > 0);
+						drag_left = (drag_down) ? (slope > 0?false:true) : (slope > 0?true:false);
+						if(drag_left){
+							title_text.text('Drag to left');	
+						}else{
+							title_text.text('Drag to right');	
+						}
+						swap = false;
+					}else{
+						title_text.text('Swap');
+						swap = true;
+					}
+				}
+				else if(mode == LAYOUT_MODE.twoColumnVertical){
+					var slope = (stopDragY - startDragY)/(stopDragX - startDragX);
+					if( -TWO_COLUMN_VERTICAL_ANGLE_SLOPE < slope && slope < TWO_COLUMN_VERTICAL_ANGLE_SLOPE){
+						title_text.text('Swap');
+						swap = true;
+					}else{
+						drag_down = (stopDragY - startDragY > 0);
+						drag_left = (drag_down) ? (slope > 0?false:true) : (slope > 0?true:false);
+						if(drag_down){
+							title_text.text('Drag to bottom');	
+						}else{
+							title_text.text('Drag to top');	
+						}
+						swap = false;	
+					}
+				}
+			}
+		},
+		drop:function(event, ui){
+			var des_container = $(this);
+			var src_target = ui.draggable;
+			var des_target = des_container.find('.photo-segment');
+			var src_container = src_target.parents('.photo-segment-container');
+			var des_container_queue = des_container.attr('data-container-queue');
+			var src_target_queue = src_target.attr('data-segment-queue');
+			if(des_container_queue != src_target_queue){
+				//swap the element 
+				var changeToVertical = (!drag_down && drag_left )  || (drag_down && !drag_left) ;
+				if(swap ||  changeToVertical){
+					//swap 
+					var src_content = src_container.find('.swap-content-container');
+					src_container.find('.photo-segment').html(des_container.find('.swap-content-container'));
+					des_container.find('.photo-segment').html(src_content);
+					
+				}
+				
+				var currentMode = getLayoutMode();
+				if(!swap){
+					if( currentMode == LAYOUT_MODE.twoColumnHorizon){
+						src_container.removeClass('two-column-horizon').addClass('two-column-vertical');
+						des_container.removeClass('two-column-horizon').addClass('two-column-vertical');
+						src_target.draggable('option','axis','x');
+						des_target.draggable('option','axis','x');
+						setLayoutMode(LAYOUT_MODE.twoColumnVertical);
+					}else{
+						src_container.removeClass('two-column-vertical').addClass('two-column-horizon');
+						des_container.removeClass('two-column-vertical').addClass('two-column-horizon');
+						src_target.draggable('option','axis','y');
+						des_target.draggable('option','axis','y');
+						setLayoutMode(LAYOUT_MODE.twoColumnHorizon);
+					}
+				}
+				var photo_segment = $('#layout-draggable .photo-segment');
+				photo_segment.css({'left':'0px', 'top':'0px', 'right':'0px', 'bottom':'0px'});
+				photo_segment.find('.photo').css('margin', '0px');
+				
+				var src_photo = src_container.find('.photo');
+				src_photo.attr('data-width', src_photo.width());
+				src_photo.attr('data-height', src_photo.height());
+		
+				var des_photo = des_container.find('.photo');
+				des_photo.attr('data-width', des_photo.width());
+				des_photo.attr('data-height', des_photo.height());
+			}
+			$('#layout-draggable .photo-segment').css({'top':'0px'});
+			$('.photo-segment-container .photo').removeClass('drop-photo-scale-animation');
+			var title_text = $('#post-photo-layout-segue .dialog-title-text');
+			title_text.text($(title_text).attr('data-default-title'));
+			
+		}, 
+		deactivate:function(event,ui){
+			return false;
+		}
+	
+	});
+	
+	$('body #edit-dialog-wrapper-inner').on({
+		click:function(){
+			var banner = $(this).parents('#attach-post-photo-banner');
+			var length = banner.find('.post-photo-thumbnail').length;
+			if(length > 1){
+				toggleDialogVerticalVerticalCenterPos();
+				var segue_wrapper = $(this).parents('.segue-wrapper');
+				segue_wrapper.css('position','relative');
+				var wrapper_width = segue_wrapper.width();
+				var segue_main = segue_wrapper.find('.segue-main').removeClass('act');
+				var post_layout_segue = $('#post-photo-layout-segue');
+				var layout_body = post_layout_segue.find('.photo-layout-body');
+				if(isPostPhotoModified()){
+					resetTwoColumnLayout();
+					banner.find('.photo-thumbnail').each(function(index){
+						var container = layout_body.find('.photo-segment-container[data-container-queue="'+(index+1)+'"]');
+						container.removeClass('hdn');
+						var photo = container.find('.photo').attr('src', $(this).attr('src'));
+						photo.attr('data-width', photo.width());
+						photo.attr('data-height', photo.height());
+						
+					});
+					unsetPostPhotoModified();
+				}
+			
+				segue_wrapper.css('height',segue_main.height());
+				segue_main.addClass('hdn');
+				post_layout_segue.css({'-webkit-animation':'segueSlideInLeft 0.3s','animation':'segueSlideInLeft 0.3s', 'right':'0px'}).addClass('act');
+				var segue_height = post_layout_segue.height();
+
+				setTimeout(function(){
+					segue_wrapper.animate({
+						'height': segue_height,
+					},100);
+				},400);
+				segue_wrapper.css('position','relative');
+			 
+			 }
+		}
+	},'.post-photo-thumbnail');
+	
+	
+
+	
+	
+	
 	$('#add-scene-dialog-wrapper').on({
 		click:function(){
 			var formData = new FormData();
-			var input_set = $('#attach-post-photo-label .attach-post-photo.set');
-			var input_length = input_set.length;
-			if(input_length > 0 && input_length < 5){
-				input_set.each(function(index){
-					if(this.files && this.files.length > 0){
-						formData.append('file_'+index, this.files[0]);
+			var layout_mode = getLayoutMode();
+			var layout_draggable = $('#layout-draggable');
+			if(layout_mode == LAYOUT_MODE.twoColumnHorizon){
+				layout_draggable.find('.photo-segment-container').each(function(index){
+					var $this = $(this);
+					var $input = $this.find('input.attach-post-photo');
+					if($input.hasClass('set') && $input.get(0).files.length > 0){
+						formData.append('file_'+index, $input.get(0).files[0]);
+						var $photo = $this.find('.photo');
+						var adjusted_margin = getIntValueFromCSSStyle($photo.css('margin-top'));
+						var image_height = getIntValueFromCSSStyle($photo.attr('data-height'));
+						var adjusted_margin_ratio = adjusted_margin/image_height;
+						var image_container_scale = $this.height()/image_height;
+						var ratio = 'image_container_scale='+image_container_scale+'&adjusted_margin_ratio='+adjusted_margin_ratio;
+						formData.append('ratio_'+index, ratio);
+					}
+				});
+			}else if(layout_mode == LAYOUT_MODE.twoColumnVertical){
+				layout_draggable.find('.photo-segment-container').each(function(index){
+					var $this = $(this);
+					var $input = $this.find('input.attach-post-photo');
+					if($input.hasClass('set') && $input.get(0).files.length > 0){
+						formData.append('file_'+index, $input.get(0).files[0]);
+						var $photo = $this.find('.photo');
+						var adjusted_margin = getIntValueFromCSSStyle($photo.css('margin-left'));
+						var image_height = getIntValueFromCSSStyle($photo.attr('data-width'));
+						var adjusted_margin_ratio = adjusted_margin/image_height;
+						var image_container_scale = $this.width()/image_height;
+						var ratio = 'image_container_scale='+image_container_scale+'&adjusted_margin_ratio='+adjusted_margin_ratio;
+						formData.append('ratio_'+index, ratio);
 					}
 				});
 			}
-			formData.append('file_length',input_length);
-			$.ajax({
-				url:AJAXDIR+'testCropImage.php',
-				type:'post',
-				data:formData,
-				processData: false, //prevent the data to be transformed into string automatically
- 				contentType: false, //false, tell jquery not to send any content type header
-				success:function(resp){
-					console.log(resp);
-				}
-			});
+		
+			formData.append('layout_mode', layout_mode);
+		
+			
+			// $.ajax({
+// 				url:AJAXDIR+'testCropImage.php',
+// 				type:'post',
+// 				data:formData,
+// 				processData: false, //prevent the data to be transformed into string automatically
+//  				contentType: false, //false, tell jquery not to send any content type header
+// 				success:function(resp){
+// 					console.log(resp);
+// 				}
+// 			});
 			return false;
 		}
 	
