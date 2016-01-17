@@ -124,6 +124,25 @@
 		width:150px;
 		height:150px;
 	}
+	
+	/* 
+.post > .post-mid  > .post-image > .post-image-picture  .post-attached-img{
+		width:101%;
+		-webkit-transition: -webkit-transform 0.4s;
+		-ms-transition: -ms-transform 0.4s;
+		-o-transition: -o-transform 0.4s;
+		transition: transform 0.4s;
+	}
+
+
+	.post > .post-mid  > .post-image > .post-image-picture  .post-attached-img:hover{
+		transform:scale(1.03, 1.03);
+		-webkit-transform:scale(1.03, 1.03);
+		-ms-transform:scale(1.03, 1.03);
+		-o-transform:scale(1.03, 1.03);
+	}
+ */
+
 }
 
 /* smaller screen text align center */
@@ -202,6 +221,10 @@
 		box-shadow: 1px 1px 10px #EDEDED;
 		max-width: 600px;
 	}
+	
+	
+	
+	
 }
 /*profile css for mobile view*/
 
@@ -237,9 +260,18 @@
 
 	.post{
 		border-top:1px solid #D6D6D6;
+		margin-bottom:10px;
 	}
 	.post .date, #add-scene-button{
 		display:none;
+	}
+	
+	.post > .post-top > .post-user-info > .post-content-text{
+		font-size:14px;
+	}
+	
+	.post > .post-top > .post-user-info > .post-head-line > .head-additional-info{
+		font-size:14px;
 	}
 	
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper{
@@ -248,24 +280,24 @@
 	
 
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data-label{
-		font-size: 15px;
+		font-size: 14px;
 	}
 	
 	
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data{
-		font-size: 16px;
+		font-size: 15px;
 	}
 	
 	
 	
 	
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-short-bio{
-		font-size:15px;
+		font-size:14px;
 	}
 	
 	
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-scene-label-wrapper{
-		font-size:15px;
+		font-size:14px;
 		margin-top:10px;
 	}
 	
@@ -294,11 +326,7 @@
 		width:100%;
 	}
 	
-	.post{
-		margin-bottom:10px;
-	}
 	
-
 
 	
 }

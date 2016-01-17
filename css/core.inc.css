@@ -96,6 +96,22 @@ body{
 	opacity:0.4;
 }
 
+#system-message{
+	position: fixed;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+}
+
+#system-message > .text{
+	background:#FFC04E;
+	font-weight:600;
+	display:inline-block;
+	padding:16px;
+	color:#000;
+	border-radius:2px;
+}
+
 .unscrollable{
 	overflow:hidden;
 }
@@ -113,9 +129,7 @@ body{
 	cursor:default;
 }
 
-.expand-text{
-	color:inherit;
-}
+
 
 .dummy-lk{
 	text-decoration:none;
@@ -230,7 +244,7 @@ body{
 .post > .post-top > .post-tag-date{
 	position:absolute;
 	top:10px;
-	right:-74px;
+	right:-84px;
 }
 .post > .post-top > .post-tag-date > .date{
 	margin-left:10px;
@@ -254,6 +268,10 @@ body{
 	color:#080835;
 	font-weight:600;
 	font-size:16px;
+}
+
+.post > .post-top > .post-user-info > .post-head-line > .post-time{
+	margin-left:6px;
 }
 
 .post > .post-top > .post-user-info > .post-head-line > .head-additional-info{
@@ -280,17 +298,19 @@ body{
 }
 
 .post > .post-mid  > .post-image > .post-image-picture .post-attached-img-wrapper{
-	width:calc(50%);
+	/* width:50%; */
 	overflow:hidden;
-	display:inline-block;	
+	display:block;	
 }
+
 
 
 .post > .post-mid  > .post-image > .post-image-picture  .post-attached-img{
-	width:100%;
+	width:101%;
 	display: block;
 	border-radius:0px;
 }
+
 
 .post > .post-mid > post-image > .post-image-picture{
 	max-height:600px;
@@ -589,6 +609,192 @@ body{
 }
 
 
+
+/* starts the add scene dialog */
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > #attach-post-photo-banner{
+	width:100%;
+	overflow:hidden;
+	position:relative;
+	height:128px;
+	font-size:0px;
+	background-color: #000;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > #attach-post-photo-banner > #attach-post-photo-label{
+	width:100%;
+	height:100%;
+	position:absolute;
+	right:0px;
+	background-color: #1C3E5A;
+	text-align:center;
+	cursor:pointer;
+	display:inline-block;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > #attach-post-photo-banner > #attach-post-photo-label > #attach-photo-visible-text > .text{
+	font-size:16px;
+	font-weight:600;
+	color:#fff;
+	margin-top:4px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > #attach-post-photo-banner > #attach-post-photo-label > #attach-photo-visible-text > .text > .expand-text{
+	color:inherit;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > #post-text-input > .content-editable{
+	text-align:left;
+	min-height:48px;
+	cursor:text;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .text-list-wrapper > .navigator{
+	float:right; 
+	color: #B0B0B0;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .text-list-wrapper > .navigator > .navigator-label{
+	position:relative;
+	top:2px;
+	margin-left:2px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .text-list-wrapper > .text-list-seduo-placeholder{
+	background:inherit;
+	color: #9E9E9E;
+	font-size: 15px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .dialog-action > .dialog-action-inner > #cancel-scene-button{
+	padding:0px 20px;
+	margin-right:6px;
+}
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .dialog-action > .dialog-action-inner > #add-scene-button{
+	padding:0px 34px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue{
+	/* height:584px; */
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-display-banner{
+	background-color: #1C3E5A;
+	width:100%;
+	height:100px;
+	text-align:center;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-display-banner > #date-visible-text > .text{
+	font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body{
+	padding:16px 0px;
+	height: 360px;
+}
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #date-navigate-bar{
+	text-align:center;
+	display:flex;
+}
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #date-navigate-bar > .navigator{
+	opacity:0.4;
+	cursor:pointer;
+	flex:1;
+}
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #date-navigate-bar > .navigator:hover{
+	opacity:0.2;
+}
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #date-navigate-bar > .navigator:first-child{
+	float:left
+}
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #date-navigate-bar > .navigator:last-child{
+	float:right
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #date-navigate-bar > #current-active-month-year{
+	display:inline-block;
+	font-size:16px;
+	color:#939393;
+	font-weight:600;
+	flex:6;
+}
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content{
+	margin-top:20px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .row{
+	display:flex;
+	clear:both;
+	padding:8px 0px;
+}
+
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .row > .column{
+	flex:1;
+	text-align:center;
+	color:#A4A4A4;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days{
+	margin-top:6px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .day{
+	color:#727272;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .active{
+  
+    position:relative;  
+}
+
+/* 
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .active > div:first-child{
+	border-radius:50%;
+    width: 30px;
+    height:30px;
+    background-color: #1C3E5A;
+    position:absolute;
+    left:22px;
+    top:-6px;
+}
+
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .active > div:last-child{
+   font-weight:600;
+  	color:#fff;
+}
+ */
+
+
+
+
+
+#add-scene-dialog-wrapper #attach-post-photo-banner > #attach-post-photo-submit-form{
+	width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+
+#add-scene-dialog-wrapper #post-photo-layout-segue #layout-draggable{
+	background:#000;
+	overflow:hidden;
+	cursor:move;
+	height:512px;
+	width:512px;
+	font-size:0px;
+	position:relative
+}
 
 
 
