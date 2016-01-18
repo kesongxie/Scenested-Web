@@ -457,8 +457,6 @@ function addPostPhoto(fileInput){
 		setPostPhotoModified();
 	}
 
-
-
 function getIntValueFromCSSStyle(style){
 	return parseInt(style.replace('px',''));
 }
@@ -478,50 +476,228 @@ function getIntValueFromCSSStyle(style){
 	@param container_width
 		   the width of the container the fits these two images
 */
-function getWidthsPercentageWithEqualHeightOfTwoImages(width1, height1, width2, height2, container_width){
-	var resized_width1;
-	resized_width1 = (height2 * container_width )/width2
-	resized_width1 /= height1/width1 + height2/width2;
-	var resized_width1_percentage = resized_width1/container_width;
-	var resized_width2_percentage = 1 - resized_width1_percentage;
-	return {"resized_width1_percentage":resized_width1_percentage, "resized_width2_percentage":resized_width2_percentage}
+// function getWidthsPercentageWithEqualHeightOfTwoImages(width1, height1, width2, height2, container_width){
+// 	var resized_width1;
+// 	resized_width1 = (height2 * container_width )/width2
+// 	resized_width1 /= height1/width1 + height2/width2;
+// 	var resized_width1_percentage = resized_width1/container_width;
+// 	var resized_width2_percentage = 1 - resized_width1_percentage;
+// 	return {"resized_width1_percentage":resized_width1_percentage, "resized_width2_percentage":resized_width2_percentage}
+// 
+// }
+// 
 
+
+/* date picker */
+
+
+var DatePicker = function(){
+	//init
+	this.date = new Date();
+	this.activeMonth = null;
+	this.activeYear = null;
+	this.init();
+}
+
+DatePicker.prototype.init = function(){
+	this.paint();
+	this.selectActiveDay();
+	this.setHeadLineDisplayer();
+}
+
+
+DatePicker.prototype.paint = function(){
+	var start_from = this.getFirstDayOfMonthAsWeekday() - 1;
+	var daysCount = this.getDaysCountInMonthYear();
+	$('.picker-days .active .day-inner').unwrap();
+	$('.picker-days .day .day-inner').html('').removeAttr('data-numeric');
+	var inners_to_be_filled = (start_from >= 0)?$('.picker-days .day .day-inner:gt('+start_from+')'):$('.picker-days .day .day-inner');
+	inners_to_be_filled.each(function(index){
+		if(index  < daysCount){
+			$(this).attr('data-numeric', index+1);
+			$(this).text(index+1);
+		}else{
+			return false;
+		}
+	});
+	this.setNavigatingMonthYear();
+	
+	if(this.activeMonth == this.getMonth() && this.activeYear == this.getFullYear()){
+		this.selectActiveDay();
+		this.setHeadLineDisplayer();
+	}
+	
+}
+
+
+DatePicker.prototype.selectActiveDay = function(){
+	var edit_date_segue = $('#edit-date-segue');
+	edit_date_segue.find('.picker-days .active .day-inner').unwrap();
+	$('.picker-days .day .day-inner[data-numeric='+this.getDate()+']').wrap('<div class="active"></div>');
+	return this;
+}
+
+
+DatePicker.prototype.getFirstDayOfMonthAsWeekday = function(){
+	return new Date(this.getFullYear(), this.getMonth(), 1).getDay();
+}
+
+DatePicker.prototype.getWeekDayNumeric = function(){
+	return this.getDay();
+}
+
+DatePicker.prototype.getWeekDayString = function(){
+	var weekday = new Array(7);
+	weekday[0]=  "Sunday";
+	weekday[1] = "Monday";
+	weekday[2] = "Tuesday";
+	weekday[3] = "Wednesday";
+	weekday[4] = "Thursday";
+	weekday[5] = "Friday";
+	weekday[6] = "Saturday";
+	return weekday[this.getDay()];
+}
+
+DatePicker.prototype.getMonthFull = function(){
+	var month = new Array(12);
+	month[0]=  "January";
+	month[1] = "February";
+	month[2] = "March";
+	month[3] = "April";
+	month[4] = "May";
+	month[5] = "June";
+	month[6] = "July";
+	month[7] = "August";
+	month[8] = "September";
+	month[9] = "October";
+	month[10] = "November";
+	month[11] = "December";
+	return month[this.getMonth()];
+}
+
+DatePicker.prototype.getMonthAbbr = function(){
+	var month = new Array(12);
+	month[0]=  "Jan";
+	month[1] = "Feb";
+	month[2] = "Mar";
+	month[3] = "Apr";
+	month[4] = "May";
+	month[5] = "Jun";
+	month[6] = "Jul";
+	month[7] = "Aug";
+	month[8] = "Sep";
+	month[9] = "Oct";
+	month[10] = "Nov";
+	month[11] = "Dec";
+	return month[this.getMonth()];
+}
+
+
+DatePicker.prototype.getFullYear = function(){
+	return this.date.getFullYear();
+}
+
+DatePicker.prototype.setFullYear = function(year){
+	return this.date.setFullYear(year);
+}
+
+DatePicker.prototype.getDate = function(){
+	return this.date.getDate();
+}
+
+DatePicker.prototype.setDate = function(dayValue){
+	this.date.setDate(dayValue);
+	return this;
+}
+
+DatePicker.prototype.getDay = function(){
+	return this.date.getDay();
+}
+
+DatePicker.prototype.setDay = function(weekday){
+	this.date.setDay(weekday);
+	return this;
+}
+
+DatePicker.prototype.getMonth = function(){
+	return this.date.getMonth();
+}
+
+DatePicker.prototype.setMonth = function(month){
+	this.date.setMonth(month);
+	return this;
+}
+
+
+DatePicker.prototype.setPreviousMonth = function(){
+	var month = this.getMonth();
+	if(month == 0){
+		month = 11; 
+		var year = this.getFullYear();
+		year--;
+		this.setFullYear(year);
+	}else{
+		month--;
+	}
+	this.setMonth(month);
+	this.paint();
+	return this;
+}
+
+DatePicker.prototype.setNextMonth = function(){
+	var month = this.getMonth();
+	if(month == 11){
+		month = 0; 
+		var year = this.getFullYear();
+		year++;
+		this.setFullYear(year);
+	}else{
+		month++;
+	}
+	this.setMonth(month);
+	this.paint();
+	return this;
+}
+
+
+DatePicker.prototype.setHeadLineDisplayer = function(){
+	var activeMonth = this.getMonth();
+	var activeYear = this.getFullYear();
+	this.activeMonth = activeMonth;
+	this.activeYear = activeYear;
+	var head_text = this.getWeekDayString() + ', ' + this.getMonthAbbr() + ' ' +  this.getDate() + ', ' + activeYear;
+	$('#date-visible-text #date-headline-displayer').text(head_text);
+}
+
+DatePicker.prototype.getDaysCountInMonthYear = function(){
+	 return new Date(this.getFullYear(), this.getMonth()+1, 0).getDate();	
+}
+
+DatePicker.prototype.setNavigatingMonthYear = function(){
+	$('#current-active-month-year .month').text(this.getMonthFull());
+	$('#current-active-month-year .year').text(this.getFullYear());
+}
+
+DatePicker.prototype.selectDayButtonClicked = function(dayButton){
+	var day = $(dayButton).attr('data-numeric');
+	this.setDate(day).selectActiveDay().setHeadLineDisplayer();	
 }
 
 
 
 
+
+
+
+
+
+
+/*  ends date picker */
+
+
+
 $(document).ready(function(){
-	
-	// var pics = $('.post-image-picture');
-// 	var img_wrapper_1 = pics.find('.post-attached-img-wrapper').first();
-// 	var img_wrapper_2 = pics.find('.post-attached-img-wrapper').last()
-// 	
-// 	var width1, width2, height1, height2, container_width = 600;
-// 	var image_object1 = new Image();
-// 	var img_1 = img_wrapper_1.find('.post-attached-img');
-// 	
-// 	image_object1.src = img_1.attr("src");
-// 	image_object1.onload = function() {
-// 		width1 = this.width;
-// 		height1 = this.height;
-// 		
-// 		var img_2 = img_wrapper_2.find('.post-attached-img');
-// 		var image_object2 = new Image();
-// 		image_object2.src = img_2.attr("src");
-// 		image_object2.onload = function() {
-// 			width2 = this.width;
-// 			height2 = this.height;
-// 			
-// 			
-// 			
-// 			var percentages = getWidthsPercentageWithEqualHeightOfTwoImages(width1, height1, width2, height2, container_width);
-// 			img_wrapper_1.css('width',percentages['resized_width1_percentage']*100+'%' );
-// 			img_wrapper_2.css('width',percentages['resized_width2_percentage']*100+'%');
-// 		};
-// 	};
-// 	
-	
+	var datePicker = new DatePicker();
 	
 	$('#edit-dialog-wrapper-inner').click(function(){
 	//	return false;
@@ -530,10 +706,12 @@ $(document).ready(function(){
 		click:function(e){
 			var segue_wrapper = $(this).parents('.segue-wrapper');
 			var segue_main = segue_wrapper.find('.segue-main');
+			var detail_segue_id = $(this).attr('data-segue-detail-id');
+			var detail_segue = $('#'+detail_segue_id);
 			segue_wrapper.css('height',segue_main.height());
 			segue_main.addClass('hdn');
-			$('#add-scene-segue').css({'-webkit-animation':'segueSlideInLeft 0.3s','animation':'segueSlideInLeft 0.3s', 'right':'0px'});
-			var segue_height = $('#add-scene-segue').height();
+			detail_segue.css({'-webkit-animation':'segueSlideInLeft 0.3s','animation':'segueSlideInLeft 0.3s', 'right':'0px'});
+			var segue_height =detail_segue.height();
 			
 			setTimeout(function(){
 				segue_wrapper.animate({
@@ -543,7 +721,7 @@ $(document).ready(function(){
 			segue_wrapper.css('position','relative');
 			return false;
 		}
-	},'.text-list-wrapper#edit-scene-label');
+	},'.text-list-wrapper.segue-to-detail');
 	
 	$('body #edit-dialog-wrapper-inner').on({
 		click:function(e){
@@ -749,6 +927,32 @@ $(document).ready(function(){
 			closeEditDialog();
 		}
 	},'#edit-dialog-wrapper #cancel-scene-button');
+	
+	
+	
+	
+	$('#edit-dialog-wrapper').on({
+		click:function(){
+			datePicker.selectDayButtonClicked(this);
+		}
+	},'.picker-days .day-inner');
+	
+	$('#edit-dialog-wrapper').on({
+		click:function(){
+			datePicker.setPreviousMonth();
+		}
+	},'#date-navigate-bar .navigator.left');	
+	
+	$('#edit-dialog-wrapper').on({
+		click:function(){
+			datePicker.setNextMonth();
+		}
+	},'#date-navigate-bar .navigator.right');	
+	
+	
+	
+	
+	
 	
 	
 

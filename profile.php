@@ -1,5 +1,6 @@
 <?php
 	include_once 'php_inc/core.inc.php';
+	
 	$_SESSION['id'] = 1;
 	$user_profile_cover = new User_Profile_Cover();
 	$user_profile_cover_image = $user_profile_cover->getLatestProfileImageForUser($_SESSION['id']);

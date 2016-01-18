@@ -579,7 +579,7 @@ body{
 }
 
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #add-scene-segue{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-detail{
 	position:absolute;
 	right:-100%;
 	top:0px;
@@ -700,6 +700,7 @@ body{
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #date-navigate-bar{
 	text-align:center;
 	display:flex;
+	
 }
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #date-navigate-bar > .navigator{
 	opacity:0.4;
@@ -723,6 +724,11 @@ body{
 	font-weight:600;
 	flex:6;
 }
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #date-navigate-bar > #current-active-month-year > span{
+	color:inherit;
+}
+
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content{
 	margin-top:20px;
 }
@@ -730,7 +736,7 @@ body{
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .row{
 	display:flex;
 	clear:both;
-	padding:8px 0px;
+	padding:2px 0px;
 }
 
 
@@ -741,40 +747,33 @@ body{
 	color:#A4A4A4;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days{
-	margin-top:6px;
-}
-
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .day{
-	color:#727272;
+	color:#868686;
+	height:40px;
 }
 
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .active{
-  
-    position:relative;  
-}
-
-/* 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .active > div:first-child{
-	border-radius:50%;
-    width: 30px;
-    height:30px;
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .day > .active{
     background-color: #1C3E5A;
-    position:absolute;
-    left:22px;
-    top:-6px;
+    display:inline-block;
+    border-radius:50%;
+    width:40px;
+    height:100%;
+ }
+ 
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .day .day-inner{
+  	cursor:pointer;
+	color:inherit;  	
 }
-
-
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .active > div:last-child{
-   font-weight:600;
-  	color:#fff;
-}
- */
-
-
-
+ 
+ 
+ #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .day > .active > .day-inner{
+    color:#fff;
+    font-weight:600;
+ }
+ 
+ 
+ 
 
 
 #add-scene-dialog-wrapper #attach-post-photo-banner > #attach-post-photo-submit-form{
