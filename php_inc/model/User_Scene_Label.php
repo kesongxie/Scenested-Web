@@ -35,7 +35,16 @@
 		}
 		
 		
-		
+		// public function renderProfileAddSceneSegue($user_id){
+// 			
+// 			ob_start();
+// 			include(TEMPLATE_PATH_CHILD.'profile_add_scene_segue.phtml');
+// 			$segue = ob_get_clean();
+// 			return $segue;
+// 		}
+
+
+
 		
 		
 	}		

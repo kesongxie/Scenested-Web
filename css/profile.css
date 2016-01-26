@@ -125,7 +125,13 @@
 		height:150px;
 	}
 	
-	/* 
+	#trigger-add-scene-button{
+		padding:0px 34px;
+	}
+	
+	
+
+/* 
 .post > .post-mid  > .post-image > .post-image-picture  .post-attached-img{
 		width:101%;
 		-webkit-transition: -webkit-transform 0.4s;
@@ -156,6 +162,11 @@
 		width:140px;
 		height:140px;
 	}
+	
+	#trigger-add-scene-button{
+		padding:0px 30px;
+	}
+
 }
 
 
@@ -164,6 +175,10 @@
 @media (min-width: 520px) {
 	#profile-whole-container{
 		min-width:882px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > .user-cover > .inner{
+		min-height:300px;
 	}
 
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper{
@@ -223,12 +238,16 @@
 	}
 	
 	
-	
-	
 }
 /*profile css for mobile view*/
 
 @media (max-width: 520px) {
+	#profile-whole-container > #profile-body-whole-container > .user-cover > .inner{
+		min-height:120px;
+	}
+
+	
+	
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content{
 		text-align: center;
     	margin-left: 0px;
@@ -326,8 +345,6 @@
 		width:100%;
 	}
 	
-	
-
 	
 }
 

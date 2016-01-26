@@ -81,9 +81,9 @@
 							</div>
 						</div>
 	
-						<div id="profile-follow">
+						<div id="profile-under-action">
 							<div class="inline-blk"  style="margin:30px 0px;">
-								<button id="add-scene-button" class="animated-button blue-action-button">ADD SCENE</button>
+								<button id="trigger-add-scene-button" class="animated-button blue-action-button">ADD SCENE</button>
 							</div>
 						
 							<div class="inline-blk hdn"  style="margin:30px 0px;">
@@ -199,21 +199,23 @@
 							<div class="inline-blk post-image">
 								<div class="post-image-picture">
 											<?php 
- 												$url1 = DUMMY_MEDIA.'IMG_2851.JPG';
- 												$url2 =  DUMMY_MEDIA.'IMG_2856.JPG';
- 												list($width1, $height1) = getimagesize($url1);
-												list($width2, $height2) = getimagesize($url2);
-												$array = getWidthsPercentageWithEqualHeightOfTwoImages($width1, $height1, $width2, $height2, 600);
+ 												$url1 = DUMMY_MEDIA.'IMG_2856.JPG';
+ 												// $url2 =  DUMMY_MEDIA.'IMG_2856.JPG';
+ 												//list($width1, $height1) = getimagesize($url1);
+												//list($width2, $height2) = getimagesize($url2);
+												//$array = getWidthsPercentageWithEqualHeightOfTwoImages($width1, $height1, $width2, $height2, 600);
 											 ?>
 										
-											<div class="post-attached-img-wrapper" style="float:left;width:<?php echo $array['resized_width1_percentage'] ?>%;">
+											<div class="post-attached-img-wrapper" style="float:left;width:100%;">
 												<img class="post-attached-img" src="<?php echo $url1; ?>" >
 											</div>
 											
-											<div class="post-attached-img-wrapper"style="float:right;width:<?php echo $array['resized_width2_percentage'] ?>%;">
+											<!-- 
+<div class="post-attached-img-wrapper hdn"style="float:right;width:<?php echo $array['resized_width2_percentage'] ?>%;">
 												<img class="post-attached-img" src="<?php echo $url2; ?>">
 											</div>
 											
+ -->
 											
 											<?php 
 													$url1 = DUMMY_MEDIA.'IMG_2875.JPG';

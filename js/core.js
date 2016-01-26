@@ -45,8 +45,8 @@ var mouseViewPortX = 0;
 var mouseViewPortY = 0;
 var TWO_COLUMN_HORIZON_ANGLE_SLOPE = 5;
 var TWO_COLUMN_VERTICAL_ANGLE_SLOPE = 0.4;
-var ROOTDIR = 'http://localhost:8888/';
-var AJAXDIR = ROOTDIR+'ajax/';
+// var ROOTDIR = 'http://localhost:8888/';
+// var AJAXDIR = ROOTDIR+'ajax/';
 var DRAG_MODE =  {'verticalMode':'vertical','horizonMode':'horizon'};
 var LAYOUT_MODE = {'twoColumnHorizon':'two-column-horizon','twoColumnVertical':'two-column-vertical'};
 
@@ -399,9 +399,6 @@ function unsetPostPhotoModified(){
 	$('#attach-post-photo-banner').attr('data-modified','false');
 }
 
-
-
-
 function ImageValidator(fileInput, callback){
 	var data = new FormData();
 	data.append('file', fileInput.files[0]);
@@ -461,54 +458,24 @@ function getIntValueFromCSSStyle(style){
 	return parseInt(style.replace('px',''));
 }
 
-
-/*
-	resize two images to fit in a container with specific width, and 
-	resize two images with same height.
-	@param width1
-		   the width of the first image
-	@param height1
-		   the height of the first image
-	@param width2
-		   the width of the second image
-	@param height2
-		   the height of the second image
-	@param container_width
-		   the width of the container the fits these two images
-*/
-// function getWidthsPercentageWithEqualHeightOfTwoImages(width1, height1, width2, height2, container_width){
-// 	var resized_width1;
-// 	resized_width1 = (height2 * container_width )/width2
-// 	resized_width1 /= height1/width1 + height2/width2;
-// 	var resized_width1_percentage = resized_width1/container_width;
-// 	var resized_width2_percentage = 1 - resized_width1_percentage;
-// 	return {"resized_width1_percentage":resized_width1_percentage, "resized_width2_percentage":resized_width2_percentage}
-// 
-// }
-// 
-
-
 /* date picker */
-
-
 var DatePicker = function(){
 	//init
 	this.date = new Date();
-	this.activeMonth = null;
-	this.activeYear = null;
+	this.activeMonth = this.date.getMonth();
+	this.activeYear = this.date.getFullYear();
+	this.activeDay = this.date.getDate();
 	this.init();
 }
 
 DatePicker.prototype.init = function(){
 	this.paint();
-	this.selectActiveDay();
-	this.setHeadLineDisplayer();
 }
-
 
 DatePicker.prototype.paint = function(){
 	var start_from = this.getFirstDayOfMonthAsWeekday() - 1;
 	var daysCount = this.getDaysCountInMonthYear();
+
 	$('.picker-days .active .day-inner').unwrap();
 	$('.picker-days .day .day-inner').html('').removeAttr('data-numeric');
 	var inners_to_be_filled = (start_from >= 0)?$('.picker-days .day .day-inner:gt('+start_from+')'):$('.picker-days .day .day-inner');
@@ -520,20 +487,25 @@ DatePicker.prototype.paint = function(){
 			return false;
 		}
 	});
+
 	this.setNavigatingMonthYear();
-	
-	if(this.activeMonth == this.getMonth() && this.activeYear == this.getFullYear()){
+	if(this.isCurrentActiveMonthYear()){
 		this.selectActiveDay();
 		this.setHeadLineDisplayer();
 	}
 	
 }
 
+DatePicker.prototype.isCurrentActiveMonthYear = function(){
+	return this.activeMonth == this.getMonth() && this.activeYear == this.getFullYear();
+}
+
+
 
 DatePicker.prototype.selectActiveDay = function(){
 	var edit_date_segue = $('#edit-date-segue');
 	edit_date_segue.find('.picker-days .active .day-inner').unwrap();
-	$('.picker-days .day .day-inner[data-numeric='+this.getDate()+']').wrap('<div class="active"></div>');
+	$('.picker-days .day .day-inner[data-numeric='+this.activeDay+']').wrap('<div class="active"></div>');
 	return this;
 }
 
@@ -547,6 +519,7 @@ DatePicker.prototype.getWeekDayNumeric = function(){
 }
 
 DatePicker.prototype.getWeekDayString = function(){
+	var temp_date = new Date(this.activeYear, this.activeMonth, this.activeDay);
 	var weekday = new Array(7);
 	weekday[0]=  "Sunday";
 	weekday[1] = "Monday";
@@ -555,10 +528,10 @@ DatePicker.prototype.getWeekDayString = function(){
 	weekday[4] = "Thursday";
 	weekday[5] = "Friday";
 	weekday[6] = "Saturday";
-	return weekday[this.getDay()];
+	return weekday[temp_date.getDay()];
 }
 
-DatePicker.prototype.getMonthFull = function(){
+DatePicker.prototype.getMonthFull = function(month_numeric){
 	var month = new Array(12);
 	month[0]=  "January";
 	month[1] = "February";
@@ -572,10 +545,10 @@ DatePicker.prototype.getMonthFull = function(){
 	month[9] = "October";
 	month[10] = "November";
 	month[11] = "December";
-	return month[this.getMonth()];
+	return month[month_numeric];
 }
 
-DatePicker.prototype.getMonthAbbr = function(){
+DatePicker.prototype.getMonthAbbr = function(month_numeric){
 	var month = new Array(12);
 	month[0]=  "Jan";
 	month[1] = "Feb";
@@ -589,7 +562,7 @@ DatePicker.prototype.getMonthAbbr = function(){
 	month[9] = "Oct";
 	month[10] = "Nov";
 	month[11] = "Dec";
-	return month[this.getMonth()];
+	return month[month_numeric];
 }
 
 
@@ -625,27 +598,33 @@ DatePicker.prototype.getMonth = function(){
 
 DatePicker.prototype.setMonth = function(month){
 	this.date.setMonth(month);
-	return this;
 }
 
 
 DatePicker.prototype.setPreviousMonth = function(){
 	var month = this.getMonth();
+	if(!this.isCurrentActiveMonthYear()){
+		this.setDate(1);
+	}
 	if(month == 0){
 		month = 11; 
 		var year = this.getFullYear();
 		year--;
-		this.setFullYear(year);
+		this.setFullYear(year); 
 	}else{
 		month--;
 	}
 	this.setMonth(month);
 	this.paint();
+
 	return this;
 }
 
 DatePicker.prototype.setNextMonth = function(){
 	var month = this.getMonth();
+	if(!this.isCurrentActiveMonthYear()){
+		this.setDate(1);
+	}
 	if(month == 11){
 		month = 0; 
 		var year = this.getFullYear();
@@ -665,7 +644,7 @@ DatePicker.prototype.setHeadLineDisplayer = function(){
 	var activeYear = this.getFullYear();
 	this.activeMonth = activeMonth;
 	this.activeYear = activeYear;
-	var head_text = this.getWeekDayString() + ', ' + this.getMonthAbbr() + ' ' +  this.getDate() + ', ' + activeYear;
+	var head_text = this.getWeekDayString() + ', ' + this.getMonthAbbr(this.activeMonth) + ' ' +  this.activeDay + ', ' + this.activeYear;
 	$('#date-visible-text #date-headline-displayer').text(head_text);
 }
 
@@ -674,31 +653,53 @@ DatePicker.prototype.getDaysCountInMonthYear = function(){
 }
 
 DatePicker.prototype.setNavigatingMonthYear = function(){
-	$('#current-active-month-year .month').text(this.getMonthFull());
+	$('#current-active-month-year .month').text(this.getMonthFull(this.getMonth()));
 	$('#current-active-month-year .year').text(this.getFullYear());
 }
 
-DatePicker.prototype.selectDayButtonClicked = function(dayButton){
-	var day = $(dayButton).attr('data-numeric');
-	this.setDate(day).selectActiveDay().setHeadLineDisplayer();	
+
+DatePicker.prototype.setActiveDay = function(day){
+	this.activeDay = day;
+	return this;
+}
+
+DatePicker.prototype.addPrecedingZeroForMonthOrDay = function(value){
+	var stringValue = value + "";
+	if(stringValue.length < 2 ){
+		stringValue = '0' + stringValue;
+	}
+	return stringValue;
 }
 
 
 
-
-
-
-
-
-
+DatePicker.prototype.selectDayButtonClicked = function(dayButton){
+	var day = $(dayButton).attr('data-numeric');
+	this.setActiveDay(day).selectActiveDay().setHeadLineDisplayer();	
+	var edit_segue = $('#edit-date-segue');
+	edit_segue.find('#date-hidden-input').val(this.activeYear + "-" + this.addPrecedingZeroForMonthOrDay((this.activeMonth+1)) + "-" + this.addPrecedingZeroForMonthOrDay(this.activeDay));
+	$('#post-time-edit .text-list-seduo-placeholder .date').text(edit_segue.find('#date-headline-displayer').text());
+}
 
 /*  ends date picker */
 
 
+/* load the datepickersegue to given container*/
+function loadDatePickerSegue(container_id){
+	var target_path = AJAX_PHTML_DIR+'datepicker_segue.phtml';
+	$.get(target_path,function(resp){
+		var edit_date_segue = $(container_id).find('#edit-date-segue');
+		if(edit_date_segue.length < 1){
+			$(container_id).append(resp);	
+			datePicker = new DatePicker();
+		}
+	});
+	
+}
+
+
 
 $(document).ready(function(){
-	var datePicker = new DatePicker();
-	
 	$('#edit-dialog-wrapper-inner').click(function(){
 	//	return false;
 	});	
@@ -906,8 +907,14 @@ $(document).ready(function(){
 				});
 			}
 			formData.append('file_length',input_length);
+			var scene_date = $('#edit-date-segue #date-hidden-input').attr('val');
+			var date  = new Date(scene_date);
+			if(date == 'Invalid Date'){
+				return false;
+			}
+			formData.append('scene_date',scene_date);	
 			$.ajax({
-				url:AJAXDIR+'testCropImage.php',
+				url:AJAXDIR+'add_scene.php',
 				type:'post',
 				data:formData,
 				processData: false, //prevent the data to be transformed into string automatically

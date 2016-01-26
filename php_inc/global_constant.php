@@ -4,6 +4,8 @@
 	include_once 'server_cred.php';
 	define("IMGDIR",ROOTDIR."media/");
 	define("DUMMY_MEDIA",IMGDIR."dummy/");
+	define("E_LOGO",IMGDIR.'e/');
+	define("SYSTEM_IMAGE",IMGDIR.'si/');
 	define("U_IMGDIR",ROOTDIR."media_u/");
 	
 	
@@ -16,6 +18,7 @@
 	define("TEMPLATE_PATH_CHILD",TEMPLATE_PATH.'child/');
 	define("PHP_INC_PATH",SCRIPT_INCLUDE_BASE.'php_inc/');
 	define("U_MEDAI_FOLDER_DIR",DOCUMENT_ROOT.'media_u/');
+	
 
 	
 

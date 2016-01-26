@@ -1,7 +1,7 @@
 #prevent any content to be displayed, or preventing directory listing
 IndexIgnore *
 
-#ErrorDocument 404 http://www.higout.com
+#ErrorDocument 404 http://www.scenested.com
 
 
 

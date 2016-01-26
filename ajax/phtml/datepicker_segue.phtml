@@ -1,0 +1,96 @@
+<?php include_once $_SERVER['DOCUMENT_ROOT'].'/php_inc/global_constant.php'; ?>
+<div id="edit-date-segue" class="segue-detail segue">
+				<input id="date-hidden-input" type="hidden" val="<?php echo date('Y-m-d') ?>">
+				<div class="dialog-title">
+					<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Back</div>
+					<div class="dialog-title-text">Happened at</div>
+				</div>
+				<div id="date-display-banner">
+					<div id="date-visible-text" class="inline-blk vertical-center">
+						<div id="date-headline-displayer" class="text"></div>
+					</div>
+				</div>
+				<div id="date-select-body">
+					<div id="date-navigate-bar">
+						<div class="navigator left">
+							<img src="<?php echo IMGDIR ?>skinny-left-arrow.png" height="20" width="20" >
+						</div>
+						<div id="current-active-month-year">
+							<span class="month"></span>, <span class="year"></span>
+						</div>
+						<div class="navigator right">
+							<img src="<?php echo IMGDIR ?>skinny-right-arrow.png" height="20" width="20" >
+						</div>
+					</div>
+					<div id="day-picker-content" >
+						<div id="week-day" class="row">
+							<div class="column">Sun</div>
+							<div class="column">Mon</div>
+							<div class="column">Tue</div>
+							<div class="column">Wed</div>
+							<div class="column">Thu</div>
+							<div class="column">Fri</div>
+							<div class="column">Sat</div>
+						</div>	
+						<div class="picker-days row">
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+						</div>
+						<div class="picker-days row">
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+						</div>
+						<div class="picker-days row">
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+						</div>
+						<div class="picker-days row">
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+						</div>
+						<div class="picker-days row">
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+						</div>
+						<div class="picker-days row">
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+							<div class="column day"><div class="day-inner vertical-center"></div></div>
+						</div>
+					</div>	
+				</div>
+				<div class="dialog-action text-list-wrapper">
+					<div class="dialog-action-inner">
+						<button class="animated-button blue-action-button segue-to-main-action" style="padding:0px 30px;">DONE</button>
+					</div>
+				</div>
+			</div>

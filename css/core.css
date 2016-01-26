@@ -18,6 +18,8 @@ div{
 	border:none;
 }
 
+
+
 input,textarea, select{
 	outline:none;
 	font-family:Gill, Helvetica, sans-serif;
@@ -239,9 +241,7 @@ textarea{
 
 
 
-#add-scene-button{
-	padding:0px 30px;
-}
+
 #follow-button{
 	padding:0px 40px;
 }

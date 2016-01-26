@@ -17,6 +17,11 @@ body{
 	overflow-x:hidden;
 }
 
+button,input,textarea {
+   font-family:helvetica, arial, sans-serif;
+}
+
+
 .txt-overflow{
 	white-space: nowrap;
 	overflow:hidden;
@@ -118,8 +123,9 @@ body{
 
 .bb-list{
 	border-bottom:1px solid #eaeaea;
-	padding:10px 24px;
+	padding:12px 24px;
 	cursor:default;
+	font-size:16px;
 }
 
 
@@ -127,6 +133,10 @@ body{
 	border-top:1px solid #eaeaea;
 	padding:10px 24px;
 	cursor:default;
+}
+
+.empty-state{
+	color:#9E9E9E;
 }
 
 
@@ -150,7 +160,7 @@ body{
   	line-height: 30px;
  	font-weight:700;
  	cursor:pointer;
- 	font-size:13px;
+ 	font-size:14px;
 }
 
 .animated-button:hover{
@@ -215,7 +225,7 @@ body{
   content: attr(placeholder);
   display: block; /* For Firefox */
   color:#9E9E9E;
-  font-size:15px;
+  font-size:16px;
   cursor:text;
 }
 
@@ -521,14 +531,16 @@ body{
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue > .text-list-wrapper{
 	border-top:1px solid #eaeaea;
-	padding:10px 24px;
+	padding:12px 24px;
 	background-color:#fff;
 	text-align:left;
 	cursor:default;
+	font-size:16px;
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > #edit-short-bio{
 	min-height:48px;
+	font-size:16px;
 	cursor:text;
 }
 
@@ -551,9 +563,20 @@ body{
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner > .text-list{
 	color:inherit;
-	font-size:15px;
+	font-size:16px;
 	width:80%;	
-	display:inline-block;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner > .text-list .text{
+	color:inherit;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner > .text-list > .empty-state{
+	color:inherit;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper .segue > .dialog-action{
+	padding:14px 24px;
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper .segue > .dialog-action > .dialog-action-inner{
@@ -573,7 +596,7 @@ body{
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue > .dialog-title > .segue-to-main{
 	position:absolute;
 	left:20px;
-	font-size:15px;
+	font-size:16px;
 	cursor:default;
 	color:#B0B0B0;
 }
@@ -587,19 +610,24 @@ body{
 }
 
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #add-scene-segue > .dialog-body{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-detail > .dialog-body{
 	height:300px;
 	overflow:scroll;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #add-scene-segue > .dialog-body > #add-scene-label-input-wrapper{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #add-scene-segue > .dialog-body{
+	height:340px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-detail > .dialog-body > #add-scene-label-input-wrapper{
 	border-bottom:1px solid #eaeaea;
 	padding:10px 24px;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #add-scene-segue > .dialog-body > #add-scene-label-input-wrapper > #add-scene-label-input{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-detail > .dialog-body > #add-scene-label-input-wrapper > #add-scene-label-input{
 	width:100%;
 	border:0px;
+	font-size:16px;
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper .two-rows-box{
@@ -644,11 +672,14 @@ body{
 	color:inherit;
 }
 
-
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > #post-text-input{
+	padding:14px 24px;
+}
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > #post-text-input > .content-editable{
 	text-align:left;
 	min-height:48px;
 	cursor:text;
+	font-size:16px;
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .text-list-wrapper > .navigator{
@@ -665,7 +696,10 @@ body{
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .text-list-wrapper > .text-list-seduo-placeholder{
 	background:inherit;
 	color: #9E9E9E;
-	font-size: 15px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .text-list-wrapper > .text-list-seduo-placeholder > .date{
+	color:inherit;
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .dialog-action > .dialog-action-inner > #cancel-scene-button{
@@ -695,7 +729,7 @@ body{
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body{
 	padding:16px 0px;
-	height: 360px;
+	height: 286px;
 }
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #date-navigate-bar{
 	text-align:center;
@@ -749,7 +783,7 @@ body{
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .picker-days > .day{
 	color:#868686;
-	height:40px;
+	height:30px;
 }
 
 
@@ -757,7 +791,7 @@ body{
     background-color: #1C3E5A;
     display:inline-block;
     border-radius:50%;
-    width:40px;
+    width:30px;
     height:100%;
  }
  

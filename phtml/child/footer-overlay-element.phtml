@@ -38,13 +38,16 @@
 				<div id="edit-scene-label" class="text-list-wrapper segue-to-detail" data-segue-detail-id="add-scene-segue">
 					<div class="inner">
 						<span class="action-navigator">Edit<img src="<?php echo IMGDIR; ?>right_nxt.png" class="icon" /></span>
-						<div class="text-list txt-overflow">
+						<div class="text-list">
+							<div class="text txt-overflow">
 							<?php if($labels !== false): ?>
 								<?php $label_num = sizeof($labels); $counter = 1; ?>
-								<?php foreach($labels as $label): ?>
-									<?php echo htmlentities($label['name']) ?><?php echo ($counter++ != $label_num)?',':'' ?>
-								<?php endforeach; ?>
+									<?php foreach($labels as $label): ?>
+										<?php echo htmlentities($label['name']) ?><?php echo ($counter++ != $label_num)?',':'' ?>
+									<?php endforeach; ?>
 							<?php endif; ?>
+							</div>
+							<div class="empty-state<?php echo ($labels !== false)?' hdn':'' ?>" >You haven't added any scene labels yet.</div>
 						</div>
 					</div>
 				</div>
@@ -65,14 +68,22 @@
 							<input id="add-scene-label-input" placeholder="Enter a scene label name, such as music, travel etc"/>
 						</div>
 						<?php if($labels !== false): ?>
+							<?php $count = 0; ?>
 							<?php foreach($labels as $label): ?>
 								<div class="bb-list scene-label-wrapper">
 									<div>
-										<div class="scene-label"><?php echo $label['name']; ?></div>
+										<div class="scene-label inline-blk"><?php echo $label['name']; ?></div>
+										<?php  if($count++ == 0): ?>
+											<div class="inline-blk" style="color:#B9B9B9">(University)</div>
+										<?php endif; ?>
 									</div>
 								</div>
 							<?php endforeach; ?>
 						<?php endif; ?>
+						
+						<div class="bb-list empty-state<?php echo ($labels !== false)?' hdn':'' ?>">
+							You haven't added any scene labels yet.
+						</div>
 				</div>
 				<div class="dialog-action text-list-wrapper">
 					<div class="dialog-action-inner">
@@ -81,6 +92,7 @@
 				</div>
 			</div>
 		</div>
+		
 		<div id="add-scene-dialog-wrapper" class="segue-wrapper inline-blk hdn" >
 			<div class="segue-main segue act">
 				<div class="dialog-title">
@@ -88,14 +100,14 @@
 				</div>
 				<div id="attach-post-photo-banner" data-modified = "false">
 					<label for="attach-post-photo-1" id="attach-post-photo-label">
-							<div id="attach-photo-visible-text" class="inline-blk vertical-center"><img src="<?php echo IMGDIR; ?>camera.png" height="25" width="29">
-								<div class="text">Attach <span class="expand-text">Photos</span></div>
-							</div>
-							<input  class="attach-post-photo hdn first next" id="attach-post-photo-1"  type="file"  >
-							<input  class="attach-post-photo hdn" id="attach-post-photo-2"  type="file"  >
-							<input  class="attach-post-photo hdn" id="attach-post-photo-3"  type="file"  >
-							<input  class="attach-post-photo hdn last" id="attach-post-photo-4" type="file"   >
-							<input  class="attach-post-photo hdn seudo">
+						<div id="attach-photo-visible-text" class="inline-blk vertical-center"><img src="<?php echo IMGDIR; ?>camera.png" height="25" width="29">
+							<div class="text">Attach <span class="expand-text">Photos</span></div>
+						</div>
+						<input  class="attach-post-photo hdn first next" id="attach-post-photo-1"  type="file"  >
+						<input  class="attach-post-photo hdn" id="attach-post-photo-2"  type="file"  >
+						<input  class="attach-post-photo hdn" id="attach-post-photo-3"  type="file"  >
+						<input  class="attach-post-photo hdn last" id="attach-post-photo-4" type="file"   >
+						<input  class="attach-post-photo hdn seudo">
 					</label>
 				</div>
 				<div id="post-text-input" class="text-list-wrapper">
@@ -103,7 +115,7 @@
 				</div>
 				<div id="post-time-edit" class="text-list-wrapper  segue-to-detail" data-segue-detail-id="edit-date-segue">
 					<span class="navigator">Edit<img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" class="navigator-label" /></span>
-					<div class="text-list-seduo-placeholder">Happened on <?php echo date('l, M d, Y'); ?></div>
+					<div class="text-list-seduo-placeholder">Happened on <span class="date"><?php echo date('l, M d, Y'); ?></span></div>
 				</div>
 				<div id="post-scene-label-edit" class="text-list-wrapper">
 					<span class="navigator">Add<img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" class="navigator-label" /></span>
@@ -121,101 +133,12 @@
 				</div>
 			</div>
 			
-			<div id="edit-date-segue" class="segue-detail segue">
-				<div class="dialog-title">
-					<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Back</div>
-					<div class="dialog-title-text">Happened at</div>
-				</div>
-				<div id="date-display-banner">
-					<div id="date-visible-text" class="inline-blk vertical-center">
-						<div id="date-headline-displayer" class="text"></div>
-					</div>
-				</div>
-				<div id="date-select-body">
-					<div id="date-navigate-bar">
-						<div class="navigator left">
-							<img src="<?php echo IMGDIR ?>skinny-left-arrow.png" height="20" width="20" >
-						</div>
-						<div id="current-active-month-year">
-							<span class="month"></span>, <span class="year"></span>
-						</div>
-						<div class="navigator right">
-							<img src="<?php echo IMGDIR ?>skinny-right-arrow.png" height="20" width="20" >
-						</div>
-					</div>
-					<div id="day-picker-content" >
-						<div id="week-day" class="row">
-							<div class="column">Sun</div>
-							<div class="column">Mon</div>
-							<div class="column">Tue</div>
-							<div class="column">Wed</div>
-							<div class="column">Thu</div>
-							<div class="column">Fri</div>
-							<div class="column">Sat</div>
-						</div>	
-						<div class="picker-days row">
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-						</div>
-						<div class="picker-days row">
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-						</div>
-						<div class="picker-days row">
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-						</div>
-						<div class="picker-days row">
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-						</div>
-						<div class="picker-days row">
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-						</div>
-						<div class="picker-days row">
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-							<div class="column day"><div class="day-inner vertical-center"></div></div>
-						</div>
-					</div>	
-				</div>
-				<div class="dialog-action text-list-wrapper">
-					<div class="dialog-action-inner">
-						<button class="animated-button blue-action-button segue-to-main-action" style="padding:0px 30px;">DONE</button>
-					</div>
-				</div>
 			
-			</div>
+			
+			
+		
+			
+			
 			
 			
 			

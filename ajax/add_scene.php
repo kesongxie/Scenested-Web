@@ -85,7 +85,7 @@ foreach($_POST['ratio_0'] as $ratio_key => $ratio_value){
 	var_dump($_FILES);
 	var_dump($_POST);
 	
-	
+	var_dump(validateDate($_POST['scene_date']));
 
 	
 	

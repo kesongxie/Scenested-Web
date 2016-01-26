@@ -12,7 +12,6 @@ function openEditDialog(targetElementId){
 
 
 
-
 $(document).ready(function(){
 	$(window).resize(function(){
 		var dialog_wrapper = $('#edit-profile-dialog-wrapper');
@@ -61,9 +60,10 @@ $(document).ready(function(){
 		click:function(){
 			resetSegueDetail();
 			openEditDialog('#add-scene-dialog-wrapper');
+			loadDatePickerSegue('#add-scene-dialog-wrapper');
 			return false;
 		}
-	},'#add-scene-button');
+	},'#trigger-add-scene-button');
 	
 	
 	$('#profile-cover-image').draggable({
@@ -310,10 +310,25 @@ $(document).ready(function(){
 							alert('the given name has already exsited');
 						}else{
 							thisE.val('');
-							$('#add-scene-label-input-wrapper').after(resp);
+							var input_wrapper = $('#add-scene-label-input-wrapper');
+							var parent_body = input_wrapper.parents('body');
+							var empty_state = parent_body.find('.empty-state');
+							var empty_state_visible = true;
+							if(!empty_state.hasClass('hdn')){
+								empty_state.addClass('hdn');	
+							}else{
+								empty_state_visible = false;
+							}
+							input_wrapper.after(resp);
 							var respHtml = $.parseHTML(resp);
 							var label_text = $(respHtml).find('.scene-label').text();
-							$('#profile-scene-label-wrapper').find('.profile-bio').prepend('<a href="#" class="plain-lk scene-label">'+label_text+'</a>, ');
+							appendComma = (empty_state_visible)?'':', ';
+							$('#profile-scene-label-wrapper').find('.profile-bio').prepend('<a href="#" class="plain-lk scene-label">'+label_text+'</a>'+appendComma);
+							var text_list_text = $('#edit-scene-label .text-list .text');
+							var label_texts = text_list_text.text();
+							label_texts = label_text+appendComma + label_texts;
+							text_list_text.text(label_texts);
+						
 						}
 					}
 				});

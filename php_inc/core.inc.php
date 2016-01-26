@@ -21,10 +21,9 @@
 		return strtolower(pathinfo(basename($file["name"]),PATHINFO_EXTENSION));
 	}
 	
-	
-	
-	function validateDate($date, $format = 'Y-m-d H:i:s')
+	function validateDate($date, $format = 'Y-m-d')
 	{
+		echo $date;
 		$d = DateTime::createFromFormat($format, $date);
 		return $d && $d->format($format) == $date;
 	}
@@ -235,7 +234,13 @@
 		return array("resized_width1_percentage"=>$resized_width1_percentage*100, "resized_width2_percentage"=>$resized_width2_percentage*100);
 	}
 	
-	
+// 	function loadDatePickerSegue(){
+// 		ob_start();
+// 		include(TEMPLATE_PATH_CHILD.'datepicker_segue.phtml');
+// 		$datepicker= ob_get_clean();
+// 		return $datepicker;
+// 	}
+
 	
 	
 	
