@@ -45,8 +45,6 @@ var mouseViewPortX = 0;
 var mouseViewPortY = 0;
 var TWO_COLUMN_HORIZON_ANGLE_SLOPE = 5;
 var TWO_COLUMN_VERTICAL_ANGLE_SLOPE = 0.4;
-// var ROOTDIR = 'http://localhost:8888/';
-// var AJAXDIR = ROOTDIR+'ajax/';
 var DRAG_MODE =  {'verticalMode':'vertical','horizonMode':'horizon'};
 var LAYOUT_MODE = {'twoColumnHorizon':'two-column-horizon','twoColumnVertical':'two-column-vertical'};
 

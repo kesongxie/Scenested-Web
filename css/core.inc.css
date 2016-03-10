@@ -1,7 +1,8 @@
 *{
 	margin:0px;
 	padding:0px;
-	color:#5B5B5B;
+/* 	color:#5B5B5B; */
+	color:#272727;
 }
 
 body{
@@ -220,7 +221,6 @@ button,input,textarea {
 }
  
 
-
 [contenteditable=true]:empty:before{
   content: attr(placeholder);
   display: block; /* For Firefox */
@@ -236,7 +236,7 @@ button,input,textarea {
 	padding:6px 0px;
 	background:#fff;
 	border:1px solid #eaeaea;
-	margin-bottom:40px;
+	margin-bottom:20px;
 }
 
 .post > .post-top{
@@ -254,7 +254,7 @@ button,input,textarea {
 .post > .post-top > .post-tag-date{
 	position:absolute;
 	top:10px;
-	right:-84px;
+	right:-80px;
 }
 .post > .post-top > .post-tag-date > .date{
 	margin-left:10px;
@@ -535,12 +535,12 @@ button,input,textarea {
 	background-color:#fff;
 	text-align:left;
 	cursor:default;
-	font-size:16px;
+	font-size:15px;
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > #edit-short-bio{
 	min-height:48px;
-	font-size:16px;
+	font-size:15px;
 	cursor:text;
 }
 

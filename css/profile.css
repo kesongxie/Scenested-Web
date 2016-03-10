@@ -3,9 +3,8 @@
 	position:relative;
 	width:100%;
 /* 
-	min-height:300px;
+	max-height:240px;
  */
-	max-height:400px;
 	overflow:hidden;
 	background:#1C3E5A;
 	border-bottom: 1px solid
@@ -121,12 +120,12 @@
 	}
 	
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper > #profile-avator{
-		width:150px;
-		height:150px;
+		width:168px;
+		height:168px;
 	}
 	
 	#trigger-add-scene-button{
-		padding:0px 34px;
+		padding:0px 40px;
 	}
 	
 	
@@ -178,7 +177,7 @@
 	}
 	
 	#profile-whole-container > #profile-body-whole-container > .user-cover > .inner{
-		min-height:300px;
+		min-height:240px;
 	}
 
 	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper{
