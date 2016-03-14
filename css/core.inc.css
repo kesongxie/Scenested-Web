@@ -157,11 +157,11 @@ button,input,textarea {
 .animated-button{
 	padding: 0px 11px;
 	background: none;
-    border-radius: 3px;
+    border-radius: 4px;
   	line-height: 30px;
  	font-weight:700;
  	cursor:pointer;
- 	font-size:14px;
+ 	font-size:13px;
 }
 
 .animated-button:hover{
@@ -403,7 +403,7 @@ button,input,textarea {
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner{
-	border-radius:3px;
+	border-radius:8px;
 	overflow:hidden;
 }
 
@@ -429,7 +429,7 @@ button,input,textarea {
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue > .dialog-title > .dialog-title-text{
  	font-weight:600;
- 	font-size:16px;
+ 	font-size:15px;
  }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main{
@@ -529,7 +529,7 @@ button,input,textarea {
 }
 
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue > .text-list-wrapper{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue .text-list-wrapper{
 	border-top:1px solid #eaeaea;
 	padding:12px 24px;
 	background-color:#fff;
@@ -544,16 +544,16 @@ button,input,textarea {
 	cursor:text;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main  .text-list-wrapper > .inner{
 	color:#9E9E9E;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner > .action-navigator{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main  .text-list-wrapper > .inner > .action-navigator{
 	float:right;
 	color:#BDBDBD;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner > .action-navigator > .icon{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main .text-list-wrapper > .inner > .action-navigator > .icon{
 	position:relative;
 	top:2px;
 	margin-left:2px;
@@ -561,17 +561,17 @@ button,input,textarea {
 	width:16px;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner > .text-list{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main  .text-list-wrapper > .inner > .text-list{
 	color:inherit;
-	font-size:16px;
+	font-size:15px;
 	width:80%;	
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner > .text-list .text{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main .text-list-wrapper > .inner > .text-list .text{
 	color:inherit;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > .text-list-wrapper > .inner > .text-list > .empty-state{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main  .text-list-wrapper > .inner > .text-list > .empty-state{
 	color:inherit;
 }
 
@@ -586,7 +586,7 @@ button,input,textarea {
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper .segue > .dialog-action > .dialog-action-inner > #cancel-e-p-button{
 	padding:0px 20px;
-	margin-right:6px;
+	margin-right:8px;
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper .segue > .dialog-action > .dialog-action-inner > #save-e-p-button{
@@ -615,8 +615,8 @@ button,input,textarea {
 	overflow:scroll;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #add-scene-segue > .dialog-body{
-	height:340px;
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-detail > .dialog-body{
+	height:390px;
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-detail > .dialog-body > #add-scene-label-input-wrapper{
@@ -672,33 +672,34 @@ button,input,textarea {
 	color:inherit;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > #post-text-input{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main  #post-text-input{
 	padding:14px 24px;
 }
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > #post-text-input > .content-editable{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main  #post-text-input > .content-editable{
 	text-align:left;
-	min-height:48px;
+	min-height:68px;
 	cursor:text;
 	font-size:16px;
+	 word-wrap: break-word;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .text-list-wrapper > .navigator{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main .text-list-wrapper > .navigator{
 	float:right; 
 	color: #B0B0B0;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .text-list-wrapper > .navigator > .navigator-label{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main .text-list-wrapper > .navigator > .navigator-label{
 	position:relative;
 	top:2px;
 	margin-left:2px;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .text-list-wrapper > .text-list-seduo-placeholder{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main .text-list-wrapper > .text-list-seduo-placeholder{
 	background:inherit;
 	color: #9E9E9E;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main > .text-list-wrapper > .text-list-seduo-placeholder > .date{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main .text-list-wrapper > .text-list-seduo-placeholder > .date{
 	color:inherit;
 }
 
@@ -717,12 +718,13 @@ button,input,textarea {
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-display-banner{
 	background-color: #1C3E5A;
 	width:100%;
-	height:100px;
+	height:90px;
 	text-align:center;
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-display-banner > #date-visible-text > .text{
-	font-size: 18px;
+	/* font-size: 18px; */
+	font-size:16px;
     font-weight: 600;
     color: #fff;
 }
@@ -755,7 +757,6 @@ button,input,textarea {
 	display:inline-block;
 	font-size:16px;
 	color:#939393;
-	font-weight:600;
 	flex:6;
 }
 
@@ -818,6 +819,7 @@ button,input,textarea {
     left: 0px;
 }
 
+/* 
 
 #add-scene-dialog-wrapper #post-photo-layout-segue #layout-draggable{
 	background:#000;
@@ -828,6 +830,7 @@ button,input,textarea {
 	font-size:0px;
 	position:relative
 }
+ */
 
 
 

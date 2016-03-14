@@ -28,7 +28,7 @@
 #profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper{
  	display:inline-block;
 	border:6px solid #fff;
-	border-radius:3px;
+	border-radius:4px;
 	overflow:hidden;
 	position:relative;
 }
@@ -125,7 +125,7 @@
 	}
 	
 	#trigger-add-scene-button{
-		padding:0px 40px;
+		padding:0px 38px;
 	}
 	
 	
@@ -163,7 +163,7 @@
 	}
 	
 	#trigger-add-scene-button{
-		padding:0px 30px;
+		padding:0px 24px;
 	}
 
 }
@@ -280,7 +280,7 @@
 		border-top:1px solid #D6D6D6;
 		margin-bottom:10px;
 	}
-	.post .date, #add-scene-button{
+	.post .date{
 		display:none;
 	}
 	
@@ -342,6 +342,7 @@
 	
 	#edit-dialog-wrapper #edit-dialog-wrapper-inner{
 		width:100%;
+		border-radius:0px;
 	}
 	
 	

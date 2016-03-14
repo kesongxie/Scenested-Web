@@ -137,9 +137,9 @@ function richilizeText(thisE, e){
 	if(old_text != text){
 		$this.attr('data-val',text);
 		text = text.replace(/\n/,'');
-		text = text.replace(/ /g, '\u00a0'); //replace white space with &nbsp
+		//text = text.replace(/ /g, '\u00a0'); //replace white space with &nbsp
 		var rich_text = text.replace(/(.?)(#|@)(\w+)(\W?)/g, replacer);
-		
+			
 		if(isShiftKeyPressed(e)){
 			return false;
 		}
@@ -416,9 +416,26 @@ function ImageValidator(fileInput, callback){
 	});
 }
 	
+function showPostDetailsInputs(){
+	var parentsDiv = $('#add-scene-dialog-wrapper');
+	parentsDiv.css('height','');
+	var postInputDetails = parentsDiv.find('#post-detail-inputs');
+	postInputDetails.removeClass('hdn');
+	postInputDetails.find('.entry-focus').focus();
+}
+
+function hidePostDetailsInputs(){
+	var parentsDiv = $('#add-scene-dialog-wrapper');
+	parentsDiv.css('height','');
+	var postInputDetails = parentsDiv.find('#post-detail-inputs');
+	postInputDetails.addClass('hdn');
+}
+	
+		
 
 
 function addPostPhoto(fileInput){
+		showPostDetailsInputs();
 		var $this=  $(fileInput);
 		var add_scene_wrapper = $('#edit-dialog-wrapper #add-scene-dialog-wrapper');
 		var banner =  add_scene_wrapper.find('#attach-post-photo-banner');
@@ -435,6 +452,7 @@ function addPostPhoto(fileInput){
 					}
 				},
 				complete:function(){
+					
 					label.before('<div class="post-photo-thumbnail pending"><img class="photo-thumbnail" ><img class="remove-circle-icon" src="'+IMGDIR+'remove_icon.png" height="14" width="14"></div>');
 					var thumb_wrapper =  banner.find('.post-photo-thumbnail.pending');
 					var photo_thumb = thumb_wrapper.find('.photo-thumbnail');
@@ -447,6 +465,7 @@ function addPostPhoto(fileInput){
 						var next_id =next_input_will_load.attr('id');
 						label.attr('for',next_id);
 					}
+				
 				}
 		});
 		setPostPhotoModified();
@@ -798,7 +817,6 @@ $(document).ready(function(){
 		},
 		paste:function(e){
 		  	e.preventDefault();
-		  	console.log('fire');
   			var pasted_text = e.originalEvent.clipboardData.getData('Text');
 			var oldcaretPos = getCaretCharacterOffsetWithin(this);
 			var newCaretPos = oldcaretPos + pasted_text.length;
@@ -846,7 +864,7 @@ $(document).ready(function(){
 	
 	
 	
-	
+
 	$('body #edit-dialog-wrapper-inner').on({
 		change:function(){
 			ImageValidator(this, addPostPhoto);
@@ -885,6 +903,10 @@ $(document).ready(function(){
 					if( current_width >= 128){
 						expand_text.removeClass('hdn');
 					}
+					if( current_width >= 384){
+						hidePostDetailsInputs();
+					}
+					
 				}
 			});
 			setPostPhotoModified();	
