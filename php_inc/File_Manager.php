@@ -3,50 +3,52 @@
 	
 	class File_Manager{
 		/*
-			$dir is the folder directory for the user's media
+			@param user_media_prefix, the folder directory for the user's media, not the full path
+			@param dst_dimension, the dimension of the photos that need to be resized into 
 		*/
-		public function upload_File_To_Dir($file, $dir){
-			include_once 'ak_img_lib.php';
-			$fulldir = U_MEDAI_FOLDER_DIR.$dir;
-			$result = "";
+		public function upload_post_photo($file, $user_media_prefix, $dst_dimension){
+			$fulldir = U_MEDAI_FOLDER_DIR.$user_media_prefix;
+			$randomFolderName = "";
 			if(!file_exists($fulldir)){
 				//create media folder for the user if it hasn't existed yet
 				mkdir($fulldir);	
 			}
 			//each files is wrapped in a random folder
 			do{
-				$result = getRandomString(); //random wrapper folder for the media file
-				$randomFolderDir = $fulldir.'/'.$result;
+				$randomFolderName = getRandomString(); //random wrapper folder for the media file
+				$randomFolderDir = $fulldir.'/'.$randomFolderName;
 			}while(file_exists($randomFolderDir));
 			if(mkdir($randomFolderDir)){
 				//upload file here 
 				$extension = getMediaFileExtension($file);
 				$filename = getRandomString().'.'.$extension; //rename the file
 				$large_destination_path = $randomFolderDir.'/'.$filename;
-				$medium_destination_path = $randomFolderDir.'/'.MEDIA_MEDIUM_THUMBNAIL_PREFIX.$filename;
-				$min_destination_path = $randomFolderDir.'/'.MEDIA_THUMBNAIL_PREFIX.$filename;
-					$target_file = $file["tmp_name"];
-					//create a thumbnail image 
-					$resized_file = $medium_destination_path;
-					$wmax = 500;
-					$hmax = 400;
-					ak_img_resize($target_file, $resized_file, $wmax, $hmax, $extension);
-					
-					//create a medium image 
-					$resized_file = $large_destination_path;
-					$wmax = 1200;
-					$hmax = 960;
-					ak_img_resize($target_file, $resized_file, $wmax, $hmax, $extension);
-					
-					$resized_file = $min_destination_path;
-					$wmax = 100;
-					$hmax = 80;
-					ak_img_resize($target_file, $resized_file, $wmax, $hmax, $extension);
-					
-					return $result.'/'.MEDIA_THUMBNAIL_PREFIX.$filename;
+				$thumb_destination_path = $randomFolderDir.'/'.MEDIA_THUMBNAIL_PREFIX.$filename;
+				$target_file = $file["tmp_name"];
+				$this->resizePhotoToUpload($target_file, $large_destination_path, $dst_dimension['large']['width'], $dst_dimension['large']['height'], $extension);
+				$this->resizePhotoToUpload($target_file, $thumb_destination_path, $dst_dimension['thumb']['width'], $dst_dimension['thumb']['height'], $extension);
+				return $randomFolderName.'/'.MEDIA_THUMBNAIL_PREFIX.$filename;
 			}
 			return false;
 		}
+		
+		/*
+			@param target_file, the path to the original file that need to be uploaded, the $file["tmp_name"]
+			@param resized_file, which destination path the copy is stored into
+			@param wmax,  the max width of this given copy that allow to resize
+			@param hmax, the max height of this given copy that allow to resize
+			@param extension, the extension that this file will be stored as 
+		*/
+		
+		public function resizePhotoToUpload($target_file, $resized_file, $wmax, $hmax, $extension){
+			include_once 'ak_img_lib.php';
+			ak_img_resize($target_file, $resized_file, $wmax, $hmax, $extension);
+		}
+		
+		
+		
+		
+		
 		
 		
 		/* 

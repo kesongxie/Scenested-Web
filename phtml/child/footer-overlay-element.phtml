@@ -2,7 +2,7 @@
 <div id="edit-dialog-wrapper" class="vertical-center hdn">
 	<div id="edit-dialog-wrapper-inner" class="inline-blk">
 		<div id="edit-profile-dialog-wrapper" class="segue-wrapper inline-blk">
-			<div class="segue-main segue">
+			<div class="segue-main segue act">
 				<div class="dialog-title">
 					<div class="dialog-title-text">EDIT PROFILE</div>
 				</div>
@@ -72,8 +72,8 @@
 					<div class="dialog-title-text">ADD SCENE LABEL</div>
 				</div>
 				<div class="dialog-body">
-						<div id="add-scene-label-input-wrapper">
-							<input id="add-scene-label-input" placeholder="What's your interests?"/>
+						<div id="add-scene-label-input-wrapper" class="segue-detail-top-input-wrapper">
+							<input id="add-scene-label-input" class="segue-detail-top-input" placeholder="What interests you?"/>
 						</div>
 						<?php if($labels !== false): ?>
 							<?php $count = 0; ?>
@@ -104,8 +104,8 @@
 					<div class="dialog-title-text">ADD SCHOOL</div>
 				</div>
 				<div class="dialog-body">
-					<div id="add-scene-label-input-wrapper">
-						<input id="add-scene-label-input" placeholder="Enter your school name"/>
+					<div id="add-scene-label-input-wrapper" class="segue-detail-top-input-wrapper">
+						<input id="add-scene-label-input" class="segue-detail-top-input" placeholder="Enter your school name"/>
 					</div>
 				</div>
 				<div class="dialog-action text-list-wrapper">
@@ -134,21 +134,21 @@
 						<input  class="attach-post-photo hdn seudo">
 					</label>
 				</div>
-				<div id="post-detail-inputs" class="hdn">
-					<div id="post-text-input" class="text-list-wrapper">
-						<div  class="two-rows-box content-editable entry-focus" contenteditable="true" data-end = "true" placeholder="What's in the scene?" ></div>
+				<div id="post-detail-inputs" class="">
+					<div id="post-caption-input" class="text-list-wrapper">
+						<div  class="two-rows-box content-editable entry-focus" contenteditable="true" data-end = "true" placeholder="What's in your scene?" ></div>
 					</div>
-					<div id="post-time-edit" class="text-list-wrapper segue-to-detail" data-segue-detail-id="edit-date-segue">
-						<span class="navigator">Edit<img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" class="navigator-label" /></span>
+					<div id="post-time-edit" class="text-list-wrapper segue-to-detail" data-segue-detail-id="edit-date-segue" data-set="true">
+						<span class="navigator"><span class="text">Edit</span><img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" class="navigator-label" /></span>
 						<div class="text-list-seduo-placeholder">Happened at <span class="date"><?php echo date('l, M d, Y'); ?></span></div>
 					</div>
-					<div id="post-scene-label-edit" class="text-list-wrapper">
-						<span class="navigator">Add<img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" class="navigator-label" /></span>
-						<div class="text-list-seduo-placeholder">Scene label</div>
+					<div id="post-scene-label-edit" class="text-list-wrapper segue-to-detail" data-segue-detail-id="post-add-scene-label-segue" data-set="false">
+						<span class="navigator"><span class="text">Add</span><img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" class="navigator-label" /></span>
+						<div class="text-list-seduo-placeholder" data-default-placeholder="Scene label">Scene label</div>
 					</div>
-					<div id="post-location-edit" class="text-list-wrapper">
-						<span class="navigator">Add<img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" class="navigator-label" /></span>
-						<div class="text-list-seduo-placeholder">Location</div>
+					<div id="post-location-edit" class="text-list-wrapper segue-to-detail"   data-segue-detail-id="post-location-segue" data-set="false">
+						<span class="navigator"><span class="text">Add</span><img src="<?php echo IMGDIR; ?>right_nxt.png" height="16" width="16" class="navigator-label" /></span>
+						<div class="text-list-seduo-placeholder" data-default-placeholder="Location">Location</div>
 					</div>
 				</div>
 				
@@ -160,19 +160,11 @@
 				</div>
 			</div>
 			
-			
-			
-			
-		
-			
-			
-			
-			
-			
 		</div>
 	</div>
 </div>
 
 <div id="system-message" class="hdn vertical-center">
-	<div class="text">Saving Profile...</div>
+	<!-- <div class="text">Saving Profile...</div> -->
+	<div class="text"></div>
 </div>

@@ -158,7 +158,6 @@ textarea{
 
 .post-photo-thumbnail>.photo-thumbnail{
 	display: block;
-	cursor:pointer;
 }
 
 .post-photo-thumbnail>.remove-circle-icon{

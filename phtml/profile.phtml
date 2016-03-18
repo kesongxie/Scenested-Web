@@ -30,7 +30,6 @@
 				</div>
 			</div>	
 		</div>
-		
 		<div id="profile-body-whole-container">
 			<div class="user-cover">
 				<div class="inner">
@@ -55,7 +54,7 @@
 						<div id="profile-statistic-wrapper">
 								<div class="statistic-block inline-blk pointer">
 									<div class="profile-data-label" >Scenes</div>
-									<div class="profile-data">12</div>
+									<div class="profile-data"><?php echo $profile_scene_num; ?></div>
 								</div>
 								<div class="statistic-block inline-blk pointer">
 									<div class="profile-data-label" >Followers</div>
@@ -98,171 +97,9 @@
 					</div>
 				</div>
 				<div id="profile-right-content-wrapper">
-					<div class="post">
-						<div class="post-top">
-							<div class="inline-blk post-tag-date">
-								<div class="date">
-									<div><span class="day">13</span><span class="mon">SEP</span></div>
-									<div class="year" >2015</div>
-								</div>
-							</div>
-							<img class="post-avator inline-blk" src="<?php echo DUMMY_MEDIA ?>avator.jpg">
-							<div class="post-user-info inline-blk" style="margin-left:0px;">
-								<div class="post-head-line" style="margin-left: 59px;">
-									<span class="post-user-name pointer">Kesong Xie</span>
-<!-- 
-									<span class="post-time"> @kesongxie </span>
- -->
-									<span class="post-time"> 2h </span>
-									<div class="head-additional-info" style="margin-left:0px;"><a href="#" title="link to people with similar interest in your near location" class="plain-lk">
-										<span class="scene-label">Tennis</span></a> -
-										<span class="scene-location plain-lk" style="font-size:14px;color:#1D4D79;" >USTA Billie Jean King National Tennis Center</span>
-									</div>
-								</div>
-								<div class="post-content-text" style="margin-top:16px">
-									<span>Great to be able to experience this years' <a href="#"  class="plain-lk"><span class="hash-tag">#USOpen</span></a>, and was so lucky to see <span class="hash-tag">@RogerFederer</span> and <span class="hash-tag">@Novak</span> clash in the final.</span>
-								</div>
-							</div>
-						</div>
-						<div class="post-mid">
-							<div class="inline-blk post-image">
-								<div class="post-image-picture">
-											<?php 
-												$url1 = DUMMY_MEDIA.'IMG_4513.JPG';
- 												$url2 =  DUMMY_MEDIA.'IMG_4515.JPG';
- 												list($width1, $height1) = getimagesize($url1);
-												list($width2, $height2) = getimagesize($url2);
-												$array = getWidthsPercentageWithEqualHeightOfTwoImages($width1, $height1, $width2, $height2, 600);
-											 ?>
-										
-											<div class="post-attached-img-wrapper" style="float:left;width:<?php echo $array['resized_width1_percentage'] ?>%;">
-												<img class="post-attached-img" src="<?php echo $url1; ?>" >
-											</div>
-											
-											<div class="post-attached-img-wrapper"style="float:right;width:<?php echo $array['resized_width2_percentage'] ?>%;">
-												<img class="post-attached-img" src="<?php echo $url2; ?>">
-											</div>
-											
-											<?php 
- 												$url1 = DUMMY_MEDIA.'IMG_4510.JPG';
- 												$url2 =  DUMMY_MEDIA.'IMG_4525.JPG';
- 												list($width1, $height1) = getimagesize($url1);
-												list($width2, $height2) = getimagesize($url2);
-												$array = getWidthsPercentageWithEqualHeightOfTwoImages($width1, $height1, $width2, $height2, 600);
-											 ?>
-										
-											<div class="post-attached-img-wrapper" style="float:left;width:<?php echo $array['resized_width1_percentage'] ?>%;">
-												<img class="post-attached-img" src="<?php echo $url1; ?>" >
-											</div>
-											
-											<div class="post-attached-img-wrapper"style="float:right;width:<?php echo $array['resized_width2_percentage'] ?>%;">
-												<img class="post-attached-img" src="<?php echo $url2; ?>">
-											</div>
-								</div>
-							</div>
-						</div>
-						<div class="post-bottom">
-							<div class="post-user-interact" style="text-align:left">
-								<div class="post-action-label inline-blk toggle-comment pointer" >
-									<img class="post-operation-icon" src="<?php echo IMGDIR ?>ci.png" title="Comment" height="16" width="16">
-									<div class="cmt-num action-num">0</div>
-								</div>
-								<div class="post-action-label inline-blk">
-									<img class="post-operation-icon undo-favor-activity" src="<?php echo IMGDIR ?>like_action.png" title="Undo Favor" height="17" width="19">
-									<div class="favor-num action-num">3</div>
-								</div>
-								<div class="post-action-label inline-blk pointer" style="float:right;" >
-									<img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>dot_icon.png" title="More" height="24" width="24" style="margin-top:-3px;">
-								</div>
-							</div>	
-						</div>
-					</div>
-					
-					<div class="post">
-						<div class="post-top">
-							<div class="inline-blk post-tag-date">
-								<div class="date">
-									<div><span class="day">03</span><span class="mon">AUG</span></div>
-									<div class="year" >2014</div>
-								</div>
-							</div>
-							<img class="post-avator inline-blk" src="<?php echo DUMMY_MEDIA ?>avator.jpg">
-							<div class="post-user-info inline-blk" style="margin-left:0px;">
-								<div class="post-head-line" style="margin-left: 59px;">
-									<span class="post-user-name pointer">Kesong Xie</span>
-<!-- 
-									<span class="post-time"> @kesongxie </span>
- -->
-									<span class="post-time"> 3d </span>
-									<div class="head-additional-info" style="margin-left:0px;"><a href="#" title="link to people with similar interest in your near location" class="plain-lk">
-										<span class="scene-label">Tennis</span></a> -
-										<span class="scene-location plain-lk" style="font-size:14px;color:#1D4D79;" >Pier 40, Huston River Park</span>
-									</div>
-								</div>
-								<div class="post-content-text" style="margin-top:16px">
-									<span>I always enjoy playing tennis near this beautiful river, and the <a href="#"  class="plain-lk"><span class="hash-tag">#Sunset</span></a> here is truly stunning.
-								</div>
-							</div>
-						</div>
-						<div class="post-mid">
-							<div class="inline-blk post-image">
-								<div class="post-image-picture">
-											<?php 
- 												$url1 = DUMMY_MEDIA.'IMG_2856.JPG';
- 												// $url2 =  DUMMY_MEDIA.'IMG_2856.JPG';
- 												//list($width1, $height1) = getimagesize($url1);
-												//list($width2, $height2) = getimagesize($url2);
-												//$array = getWidthsPercentageWithEqualHeightOfTwoImages($width1, $height1, $width2, $height2, 600);
-											 ?>
-										
-											<div class="post-attached-img-wrapper" style="float:left;width:100%;">
-												<img class="post-attached-img" src="<?php echo $url1; ?>" >
-											</div>
-											
-											<!-- 
-<div class="post-attached-img-wrapper hdn"style="float:right;width:<?php echo $array['resized_width2_percentage'] ?>%;">
-												<img class="post-attached-img" src="<?php echo $url2; ?>">
-											</div>
-											
- -->
-											
-											<?php 
-													$url1 = DUMMY_MEDIA.'IMG_2875.JPG';
-													$url2 =  DUMMY_MEDIA.'IMG_2838.JPG';
-													list($width1, $height1) = getimagesize($url1);
-												list($width2, $height2) = getimagesize($url2);
-												$array = getWidthsPercentageWithEqualHeightOfTwoImages($width1, $height1, $width2, $height2, 600);
-											 ?>
-										
-											<div class="post-attached-img-wrapper" style="float:left;width:<?php echo $array['resized_width1_percentage'] ?>%;">
-												<img class="post-attached-img" src="<?php echo $url1; ?>" >
-											</div>
-											
-											<div class="post-attached-img-wrapper"style="float:right;width:<?php echo $array['resized_width2_percentage'] ?>%;">
-												<img class="post-attached-img" src="<?php echo $url2; ?>">
-											</div>
-								</div>
-							</div>
-						</div>
-						<div class="post-bottom">
-							<div class="post-user-interact" style="text-align:left">
-								<div class="post-action-label inline-blk toggle-comment pointer" >
-									<img class="post-operation-icon" src="<?php echo IMGDIR ?>ci.png" title="Comment" height="16" width="16">
-									<div class="cmt-num action-num">0</div>
-								</div>
-								<div class="post-action-label inline-blk">
-									<img class="post-operation-icon undo-favor-activity" src="<?php echo IMGDIR ?>like_action.png" title="Undo Favor" height="17" width="19">
-									<div class="favor-num action-num">3</div>
-								</div>
-								<div class="post-action-label inline-blk pointer" style="float:right;" >
-									<img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>dot_icon.png" title="More" height="24" width="24" style="margin-top:-3px;">
-								</div>
-							</div>	
-						</div>
-					</div>
+					<?php echo $sceneBlock; ?>	
 				
-					
-					
+			
 				</div>
 			</div>
 		</div>

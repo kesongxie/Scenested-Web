@@ -1,11 +1,12 @@
 <?php
-	include_once PHP_INC_PATH.'core.inc.php';
+	// include_once PHP_INC_PATH.'core.inc.php';
 	
 	class User_Bio extends Core_Table{
-		private $table_name = "User_Bio";
+		private $table_name = "user_bio";
+		private $primary_key = "user_bio_id";
 	
 		public function __construct(){
-			parent::__construct($this->table_name);
+			parent::__construct($this->table_name, $this->primary_key);
 		}
 		
 		

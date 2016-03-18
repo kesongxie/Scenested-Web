@@ -3,9 +3,10 @@
 	
 	class User_Scene_Label extends Core_Table{
 		private $table_name = "user_scene_label";
+		private $primary_key = "user_scene_label_id";
 	
 		public function __construct(){
-			parent::__construct($this->table_name);
+			parent::__construct($this->table_name, $this->primary_key);
 		}
 		
 		

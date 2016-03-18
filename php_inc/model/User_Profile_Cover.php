@@ -1,11 +1,11 @@
 <?php
-	include_once PHP_INC_PATH.'core.inc.php';
+	// include_once PHP_INC_PATH.'core.inc.php';
 
 	class User_Profile_Cover extends User_Media_Base{
 		private $table_name = "user_profile_cover";
 		private $primary_key = "user_profile_cover_id";
 		public function __construct(){
-			parent::__construct($this->table_name);
+			parent::__construct($this->table_name,$this->primary_key);
 		}
 		
 		public function getLatestProfileImageForUser($user_id){
@@ -40,7 +40,7 @@
 				"large" => array("width" => COVER_PHOTO_MAX_WIDTH, "height" => COVER_PHOTO_MAX_HEIGHT ),
 				"thumb" => array("width" => COVER_PHOTO_THUMB_WIDTH,"height" => COVER_PHOTO_THUMB_HEIGHT )
 				);
-			$upload = $this->uploadMediaForUser($file, $user_id, $ratio_scale_assoc, false, true, $dst_dimension);
+			$upload = $this->uploadProfileMediaForUser($file, $user_id, $ratio_scale_assoc, $dst_dimension, false);
 
 			if($upload === false){
 				return false;

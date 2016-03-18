@@ -1,6 +1,5 @@
-<?php include_once $_SERVER['DOCUMENT_ROOT'].'/php_inc/global_constant.php'; ?>
 <div id="edit-date-segue" class="segue-detail segue">
-				<input id="date-hidden-input" type="hidden" val="<?php echo date('Y-m-d') ?>">
+				<input id="date-hidden-input" type="hidden" value="<?php echo date('Y-m-d') ?>">
 				<div class="dialog-title">
 					<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Back</div>
 					<div class="dialog-title-text">HAPPENED AT</div>
@@ -94,3 +93,55 @@
 					</div>
 				</div>
 			</div>
+			
+		
+<div id="post-add-scene-label-segue" class="segue-detail segue">
+		<div class="dialog-title"  >
+			<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Back</div>
+			<div class="dialog-title-text">ADD SCENE LABEL</div>
+		</div>
+		<div class="dialog-body">
+				<div id="post-add-scene-label-input-wrapper" class="segue-detail-top-input-wrapper">
+					<input id="post-add-scene-label-input" class="segue-detail-top-input entry-focus" placeholder="Enter a label for your scene"/>
+				</div>
+				<?php if($labels !== false): ?>
+					<?php $count = 0; ?>
+					<?php foreach($labels as $label): ?>
+						<div class="bb-list scene-label-wrapper segue-to-main-action">
+							<div class="inner">
+								<div class="scene-label inline-blk"><?php echo $label['name']; ?></div>
+							</div>
+						</div>
+					<?php endforeach; ?>
+				<?php endif; ?>
+				
+				<div class="bb-list empty-state<?php echo ($labels !== false)?' hdn':'' ?>">
+					You haven't added any scene labels yet.
+				</div>
+		</div>
+		<div class="dialog-action text-list-wrapper">
+			<div class="dialog-action-inner">
+				<button class="animated-button blue-action-button segue-to-main-action" style="padding:0px 30px;">DONE</button>
+			</div>
+		</div>
+</div>
+
+
+
+<div id="post-location-segue" class="segue-detail segue">
+	<div class="dialog-title"  >
+		<div class="segue-to-main segue-to-main-action"><img src="<?php echo IMGDIR; ?>left_nxt.png" height="16" width="16" style="position: relative;top: 2px;margin-right:3px;"/>Back</div>
+		<div class="dialog-title-text">LOCATION</div>
+	</div>
+	<div class="dialog-body">
+			<div id="post-location-input-wrapper" class="segue-detail-top-input-wrapper">
+				<input id="post-location-input" class="segue-detail-top-input entry-focus" placeholder="Enter a location for your scene"/>
+			</div>
+	</div>
+	<div class="dialog-action text-list-wrapper">
+		<div class="dialog-action-inner">
+			<button class="animated-button blue-action-button segue-to-main-action" style="padding:0px 30px;">DONE</button>
+		</div>
+	</div>
+</div>
+

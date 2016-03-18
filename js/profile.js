@@ -1,17 +1,3 @@
-function openEditDialog(targetElementId){
-	$('.overlay, #edit-dialog-wrapper').removeClass('hdn');
-	var parent_wrapper = $('#edit-dialog-wrapper');
-	parent_wrapper.find('.segue-wrapper').addClass('hdn');
-	var edit_wrapper = parent_wrapper.find(targetElementId);
-	edit_wrapper.removeClass('hdn');
-	edit_wrapper.css('height', edit_wrapper.find('.segue.act').height());
-	edit_wrapper.css('position','relative');
-	parent_wrapper.find('.entry-focus').focus();
-	$('body').addClass('unscrollable');
-}
-
-
-
 $(document).ready(function(){
 	$(window).resize(function(){
 		var dialog_wrapper = $('#edit-profile-dialog-wrapper');
@@ -60,7 +46,7 @@ $(document).ready(function(){
 		click:function(){
 			resetSegueDetail();
 			openEditDialog('#add-scene-dialog-wrapper');
-			loadDatePickerSegue('#add-scene-dialog-wrapper');
+			loadDetailsSegue('#add-scene-dialog-wrapper');
 			return false;
 		}
 	},'#trigger-add-scene-button');
@@ -287,6 +273,7 @@ $(document).ready(function(){
 	
 			dialog_wrapper.addClass('hdn');
 			var systemMessage = $('#system-message');
+			systemMessage.find('.text').text('Saving Profile...');
 			systemMessage.removeClass('hdn');
 			
 			var intIdM = new intervalIdManager(systemMessage);

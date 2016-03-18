@@ -3,12 +3,12 @@
 	/*************** page render ******************/
 	include_once 'server_cred.php';
 	define("IMGDIR",ROOTDIR."media/");
+	define("U_IMGDIR",ROOTDIR."media_u/");
 	define("DUMMY_MEDIA",IMGDIR."dummy/");
 	define("E_LOGO",IMGDIR.'e/');
 	define("SYSTEM_IMAGE",IMGDIR.'si/');
-	define("U_IMGDIR",ROOTDIR."media_u/");
-	
-	
+
+
 	
 	/*************** file path ******************/
 	define("DOCUMENT_ROOT",$_SERVER['DOCUMENT_ROOT'].'/');
@@ -37,8 +37,19 @@
 	define("AVATOR_PHOTO_ASPECT_RATIO", 1);
 	define("AVATOR_PHOTO_MAX_WIDTH", 640);
 	define("AVATOR_PHOTO_MAX_HEIGHT", AVATOR_PHOTO_MAX_WIDTH / AVATOR_PHOTO_ASPECT_RATIO);
-	define("AVATOR_PHOTO_THUMB_WIDTH", 160 );
+	define("AVATOR_PHOTO_THUMB_WIDTH", 260 );
 	define("AVATOR_PHOTO_THUMB_HEIGHT", AVATOR_PHOTO_THUMB_WIDTH / AVATOR_PHOTO_ASPECT_RATIO );
+	
+	//SCENE PHOTO MAX SIZE FOR LARGE AND THUMB, NO NEEP FOR ASPECT RATIO, BECAUSE THEY DON'T NEED TO BE CROPPED
+	define("SCENE_PHOTO_MAX_WIDTH", 1600);
+	define("SCENE_PHOTO_MAX_HEIGHT", SCENE_PHOTO_MAX_WIDTH / 1);
+	define("SCENE_PHOTO_THUMB_WIDTH", 800 );
+	define("SCENE_PHOTO_THUMB_HEIGHT", SCENE_PHOTO_THUMB_WIDTH / 1 );
+	
+	
+	
+	
+	
 	
 	define("MAXIMUM_UPLOAD_IMAGE_SIZE",5000000);
 	define("MEDIA_THUMBNAIL_PREFIX","thumb_");
@@ -49,6 +60,8 @@
 	
 	/*define("DEFAULT_IMAGE",IMGDIR.'default_image/');
 	
+		define("DEFAULT_IMAGE_PATH",IMGDIR.'default_image/');
+	define("DEFAULT_PROFILE_IMAGE",DEFAULT_IMAGE_PATH."default_profile_100pl.png");
 	
 	define("SEARCH_PEOPLE_PATH",ROOTDIR.'search.php?q=');
 	define("SEARCH_SIMILAR_PEOPLE_PATH",ROOTDIR.'search.php?r=mine');

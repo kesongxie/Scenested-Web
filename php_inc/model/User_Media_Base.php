@@ -1,15 +1,16 @@
 <?php
-	include_once PHP_INC_PATH.'core.inc.php';
-
+	// include_once PHP_INC_PATH.'core.inc.php';
 
 	class User_Media_Base extends Core_Table{
 		public $file_m = null;
-		private $photo_stream_template_path = TEMPLATE_PATH_CHILD."photo_stream.phtml";
+// 		private $photo_stream_template_path = TEMPLATE_PATH_CHILD."photo_stream.phtml";
 		private $table_name;
+		private $primary_key;
 		
-		public function __construct($table_name = null){
-			parent::__construct($table_name);
+		public function __construct($table_name = null, $primary_key = null){
+			parent::__construct($table_name, $primary_key);
 			$this->table_name = $table_name;
+			$this->primary_key = $primary_key;
 			$this->file_m = new File_Manager();
 		}
 		
@@ -23,19 +24,55 @@
 				destination
 		*/
 		
-		public function uploadMediaForUser($file, $user_id, $ratio_scale_assoc, $thumb_return = true, $cropped = false, $dst_dimension = NULL){
+		// public function uploadMediaForUser($file, $user_id, $ratio_scale_assoc, $thumb_return = true, $cropped = false, $dst_dimension = NULL){
+// 			$user_media_prefix = new User_Media_Prefix();
+// 			$hash = $this->generateUniqueHash();
+// 			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
+// 			if($prefix === false){
+// 				$prefix = $user_media_prefix->createMediaPrefixForUser($user_id);
+// 			}
+// 			if($prefix !== false){
+// 				if($cropped && $dst_dimension !== NULL){
+// 					$picture_url = $this->uploadProfileMedia($file, $prefix, $ratio_scale_assoc, $dst_dimension);
+// 				}else{
+// 					$picture_url = $this->uploadPostMedia($file, $prefix);
+// 				}
+// 				if($picture_url !== false){
+// 					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`picture_url`,`upload_time`,`hash`) VALUES(?, ?, ?,?)");
+// 					$time = date("Y-m-d H:i:s");
+// 					$stmt->bind_param('isss',$user_id, $picture_url, $time,$hash);
+// 					if($stmt->execute()){
+// 						$stmt->close();
+// 						if($thumb_return === false){
+// 							$picture_url = convertThumbPathToOriginPath($picture_url);
+// 						}
+// 						return U_IMGDIR.$prefix.'/'.$picture_url;
+// 					}
+// 				}
+// 			}
+// 			return false;	
+// 		}
+// 		
+
+
+		/*
+			return the user media prefix if existed, generated a new one otherwise. 
+		*/
+
+		public function getUserMediaPrefixForUpload($user_id){
 			$user_media_prefix = new User_Media_Prefix();
-			$hash = $this->generateUniqueHash();
 			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
 			if($prefix === false){
 				$prefix = $user_media_prefix->createMediaPrefixForUser($user_id);
 			}
-			if($prefix !== false){
-				if($cropped && $dst_dimension !== NULL){
-					$picture_url = $this->uploadProfileMedia($file, $prefix, $ratio_scale_assoc, $dst_dimension);
-				}else{
-					$picture_url = $this->uploadPostMedia($file, $prefix);
-				}
+			return $prefix;
+		}
+	
+		public function uploadProfileMediaForUser($file, $user_id, $ratio_scale_assoc,$dst_dimension, $thumb_return = true){
+			$prefix = $this->getUserMediaPrefixForUpload($user_id);
+			if($prefix !== false && $dst_dimension !== NULL){
+				$hash = $this->generateUniqueHash();
+				$picture_url = $this->uploadProfileMedia($file, $prefix, $ratio_scale_assoc, $dst_dimension);
 				if($picture_url !== false){
 					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`picture_url`,`upload_time`,`hash`) VALUES(?, ?, ?,?)");
 					$time = date("Y-m-d H:i:s");
@@ -52,8 +89,37 @@
 			return false;	
 		}
 		
-		public function uploadPostMedia($file, $prefix){
-			return $this->file_m->upload_File_To_Dir($file, $prefix);
+		
+		
+		public function uploadPostPhotoForUser($photoFile, $user_id, $user_scene_id, $dst_dimension, $thumb_return = true){
+			$prefix = $this->getUserMediaPrefixForUpload($user_id);
+			if($prefix !== false && $dst_dimension !== NULL){
+				$hash = $this->generateUniqueHash();
+				$picture_url = $this->uploadPostPhotos($photoFile, $prefix, $dst_dimension);
+				if($picture_url !== false){
+					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`scene_id`, `picture_url`,`upload_time`,`hash`) VALUES(?, ?, ?, ?,?)");
+					$time = date("Y-m-d H:i:s");
+					$stmt->bind_param('iisss',$user_id,$user_scene_id, $picture_url, $time, $hash);
+					if($stmt->execute()){
+						$stmt->close();
+						if($thumb_return === false){
+							$picture_url = convertThumbPathToOriginPath($picture_url);
+						}
+						return U_IMGDIR.$prefix.'/'.$picture_url;
+					}
+				}
+			}
+			return false;	
+			
+		}
+		
+		
+		
+
+
+
+		public function uploadPostPhotos($photoFile, $user_media_prefix, $dst_dimension){
+			return $this->file_m->upload_post_photo($photoFile, $user_media_prefix, $dst_dimension);
 		}		
 		
 		public function uploadProfileMedia($file, $prefix, $ratio_scale_assoc, $dst_dimension){

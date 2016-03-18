@@ -1,0 +1,57 @@
+<div class="post">
+	<div class="post-top">
+		<div class="inline-blk post-tag-date">
+			<div class="date">
+				<div><span class="day"><?php echo $scene['day'];?></span><span class="mon"><?php echo $scene['month'];?></span></div>
+				<div class="year" ><?php echo $scene['year'];?></div>
+			</div>
+
+		</div>
+		<img class="post-avator inline-blk" src="<?php echo $scene['post_user_avator_url']; ?>">
+		<div class="post-user-info inline-blk" style="margin-left:0px;">
+			<div class="post-head-line" style="margin-left: 59px;">
+				<span class="post-user-name pointer"><?php echo htmlentities($scene['user_full_name']) ?></span>
+				<span class="post-time"> <?php echo $scene['post_time']; ?> </span>
+				<div class="head-additional-info" style="margin-left:0px;"><a href="#" title="link to people with similar interest in your near location" class="plain-lk">
+					<span class="scene-label"><?php echo htmlentities($scene['label']) ?></span></a>
+					<?php if($scene['location'] !== NULL): ?>
+						<span class="scene-location-container" >
+							<a class="scene-location plain-lk" href="#"><?php echo htmlentities($scene['location']) ?></a>
+						</span>
+					<?php endif; ?>
+				</div>
+			</div>
+			<div class="post-content-text" style="margin-top:16px">
+				<?php 
+					if($scene['caption'] !== NULL){
+						echo enRichText($scene['caption']);
+					}
+				?>
+			</div>
+		</div>
+	</div>
+	<div class="post-mid">
+		<div class="inline-blk post-image">
+			<div class="post-image-picture">
+				<?php
+					echo $photoBlock;
+				?>
+			</div>
+		</div>
+	</div>
+	<div class="post-bottom">
+		<div class="post-user-interact" style="text-align:left">
+			<div class="post-action-label inline-blk toggle-comment pointer" >
+				<img class="post-operation-icon" src="<?php echo IMGDIR ?>ci.png" title="Comment" height="16" width="16">
+				<div class="cmt-num action-num">0</div>
+			</div>
+			<div class="post-action-label inline-blk">
+				<img class="post-operation-icon undo-favor-activity" src="<?php echo IMGDIR ?>like_action.png" title="Undo Favor" height="17" width="19">
+				<div class="favor-num action-num">3</div>
+			</div>
+			<div class="post-action-label inline-blk pointer" style="float:right;" >
+				<img class="post-operation-icon pointer" src="<?php echo IMGDIR ?>dot_icon.png" title="More" height="24" width="24" style="margin-top:-3px;">
+			</div>
+		</div>	
+	</div>
+</div>

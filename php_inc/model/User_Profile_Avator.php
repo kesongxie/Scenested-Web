@@ -1,12 +1,12 @@
 <?php
-	include_once PHP_INC_PATH.'core.inc.php';
+	// include_once PHP_INC_PATH.'core.inc.php';
 
 	class User_Profile_Avator extends User_Media_Base{
 		private $table_name = "user_profile_avator";
 		private $primary_key = "user_profile_avator_id";
 	
 		public function __construct(){
-			parent::__construct($this->table_name);
+			parent::__construct($this->table_name, $this->primary_key);
 		}
 		
 		public function getLatestProfileImageForUser($user_id){
@@ -66,7 +66,9 @@
 							"thumb" => array("width" => AVATOR_PHOTO_THUMB_WIDTH,"height" => AVATOR_PHOTO_THUMB_HEIGHT )
 							);
 	
-			$upload = $this->uploadMediaForUser($file, $user_id, $ratio_scale_assoc, true, true, $dst_dimension);
+	
+	
+			$upload = $this->uploadProfileMediaForUser($file, $user_id, $ratio_scale_assoc, $dst_dimension);
 			if($upload === false){
 				return false;
 			}

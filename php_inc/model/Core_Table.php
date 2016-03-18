@@ -1,19 +1,194 @@
 <?php
-	require_once  $_SERVER['DOCUMENT_ROOT'].'/php_inc/model/Database_Connection.php';
-	require_once  $_SERVER['DOCUMENT_ROOT'].'/php_inc/global_constant.php';
+	// require_once  $_SERVER['DOCUMENT_ROOT'].'/php_inc/model/Database_Connection.php';
+// 	require_once  $_SERVER['DOCUMENT_ROOT'].'/php_inc/global_constant.php';
 
 	/*
 		core_table is the base class for other table class
 	*/
 	class Core_Table{
 		private $table_name;
+		private $primary_key;
 		public $connection;
 		
-		public function __construct($t){
+		public function __construct($t, $p){
 			$this->table_name = $t;
+			$this->primary_key = $p;
 			$database_connection = new Database_Connection();
 			$this->connection = $database_connection->getConnection();
 		}
+		
+		public function getColumnById($column,$id){
+			$column = $this->connection->escape_string($column);
+			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$this->primary_key` = ? LIMIT 1 ");
+			$stmt->bind_param('i',$id);
+			if($stmt->execute()){
+				 $result = $stmt->get_result();
+				 if($result !== false && $result->num_rows == 1){
+				 	$row = $result->fetch_assoc();
+				 	$stmt->close();
+					return $row[$column];
+				 }
+			}
+			return false;
+		}
+		
+		public function getAllColumnsById($id){
+			$stmt = $this->connection->prepare("SELECT * FROM `$this->table_name` WHERE `$this->primary_key` = ? LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('i', $id);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row[0];
+					 }
+				}
+			}
+			return false;
+		}
+		
+		public function getMultipleColumnsById($column_array, $id){
+			$columns = implode('`,`',$column_array);
+			$columns = '`'.$columns.'`';
+			$stmt = $this->connection->prepare("SELECT $columns FROM `$this->table_name` WHERE `$this->primary_key` = ? LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('i', $id);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row[0];
+					 }
+				}
+			}
+			return false;
+		}
+		
+		
+		public function getAllRowsColumnBySelector($column, $selector_column, $selector_value, $asc = false){
+				$column = $this->connection->escape_string($column);
+				$selector_column = $this->connection->escape_string($selector_column);
+				$query = "SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ";
+				if(!$asc){
+					$query.="ORDER BY `$this->primary_key` DESC";
+				}
+				$stmt = $this->connection->prepare($query);
+				if($stmt){
+					$stmt->bind_param('s', $selector_value);
+					if($stmt->execute()){
+						 $result = $stmt->get_result();
+						 if($result !== false && $result->num_rows >= 1){
+							$row = $result->fetch_all(MYSQLI_ASSOC);
+							$stmt->close();
+							return $row;
+						 }
+					}
+				}
+				echo $this->connection->error;
+				return false;
+		}
+		
+		public function getAllRowsMultipleColumnsBySelector($column_array, $selector_column, $selector_value, $asc = false){
+			$selector_column = $this->connection->escape_string($selector_column);
+			$columns = implode('`,`',$column_array);
+			$columns = '`'.$columns.'`';
+			
+			$query = "SELECT $columns FROM `$this->table_name` WHERE `$selector_column` = ? ";
+			if(!$asc){
+				$query.="ORDER BY `$this->primary_key` DESC";
+			}
+			$stmt = $this->connection->prepare($query);
+			if($stmt){
+				$stmt->bind_param('s', $selector_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $rows;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		public function getRowsNumberForNumericColumn($column, $column_value){
+			$column = $this->connection->escape_string($column);
+			$stmt = $this->connection->prepare("SELECT `$this->primary_key` FROM `$this->table_name` WHERE `$column` = ? ");
+			if($stmt){
+				$stmt->bind_param('i', $column_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false){
+					 	$stmt->close();
+						return $result->num_rows;
+					 }
+				}
+			}
+			return false;
+		}
+		
+		
+		public function deleteRowById($id){
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$this->primary_key` = ? LIMIT 1");
+			$stmt->bind_param('i', $id);
+			if($stmt->execute()){
+				$stmt->close();
+				return true;
+			}
+			return false;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		public function deleteRowByUserId($id){
@@ -29,7 +204,6 @@
 		}
 		
 		public function deleteRowForUserById($user_id, $id){
-			$primary_key = $this->table_name.'_id';
 			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$primary_key` = ?  AND `user_id`=? LIMIT 1");
 			$stmt->bind_param('ii', $id, $user_id);
 			if($stmt->execute()){
@@ -41,16 +215,7 @@
 		
 	
 		
-		public function deleteRowById($id){
-			$primary_key = $this->table_name.'_id';
-			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$primary_key` = ? LIMIT 1");
-			$stmt->bind_param('i', $id);
-			if($stmt->execute()){
-				$stmt->close();
-				return true;
-			}
-			return false;
-		}
+	
 		
 		/*	$selector_column is the unique identifier that is in each row
 			$selector_value is the value of the unique identifier
@@ -85,8 +250,7 @@
 			}
 			return false;
 		}
-		
-		
+			
 		
 		public function deleteRowByNumericSelector($selector_column, $selector_value){
 			$selector_column = $this->connection->escape_string($selector_column);
@@ -105,21 +269,7 @@
 		
 		
 		
-		public function getColumnById($column,$id){
-			$column = $this->connection->escape_string($column);
-			$primary_key = $this->table_name.'_id';
-			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$primary_key` = ? LIMIT 1 ");
-			$stmt->bind_param('i',$id);
-			if($stmt->execute()){
-				 $result = $stmt->get_result();
-				 if($result !== false && $result->num_rows == 1){
-				 	$row = $result->fetch_assoc();
-				 	$stmt->close();
-					return $row[$column];
-				 }
-			}
-			return false;
-		}
+		
 		
 		
 		public function getColumnByUserId($column,$user_id){
@@ -186,12 +336,6 @@
 				return false;
 		}
 		
-		
-		
-		
-	
-		
-		
 		/*
 			result order by id ascend if $ascend is set to true
 		*/
@@ -217,30 +361,6 @@
 			return false;
 		}
 		
-		
-		public function getAllRowsColumnBySelector($column, $selector_column, $selector_value, $asc = false){
-				$column = $this->connection->escape_string($column);
-				$selector_column = $this->connection->escape_string($selector_column);
-				$primary_key = $this->table_name.'_id';
-				if($asc){
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ");
-				}else{
-					$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `$primary_key` DESC");
-				}
-				if($stmt){
-					$stmt->bind_param('s', $selector_value);
-					if($stmt->execute()){
-						 $result = $stmt->get_result();
-						 if($result !== false && $result->num_rows >= 1){
-							$row = $result->fetch_all(MYSQLI_ASSOC);
-							$stmt->close();
-							return $row;
-						 }
-					}
-				}
-				echo $this->connection->error;
-				return false;
-		}
 		
 		
 		public function getRowsColumnBySelector($column, $selector_column, $selector_value, $limit_num = 1, $offset = 0, $asc = false){
@@ -304,28 +424,7 @@
 			return false;
 		}
 		
-		public function getAllRowsMultipleColumnsBySelector($column_array, $selector_column, $selector_value, $asc = false){
-			$selector_column = $this->connection->escape_string($selector_column);
-			$targets = implode('`,`',$column_array);
-			$targets = '`'.$targets.'`';
-				if($asc){
-					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? ");
-				}else{
-					$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? ORDER BY `$primary_key` DESC");
-				}if($stmt){
-				$stmt->bind_param('s', $selector_value);
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows >= 1){
-						$rows = $result->fetch_all(MYSQLI_ASSOC);
-						$stmt->close();
-						return $rows;
-					 }
-				}
-			}
-			echo $this->connection->error;
-			return false;
-		}
+		
 		
 		
 		public function getColumnBySelector($column, $selector_column, $selector_value){
@@ -449,25 +548,7 @@
 		
 		
 		
-		public function getMultipleColumnsById($column_array, $id){
-			$targets = implode('`,`',$column_array);
-			$targets = '`'.$targets.'`';
-			$primary_key = $this->table_name.'_id';
-			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$primary_key` = ? LIMIT 1");
-			if($stmt){
-				$stmt->bind_param('i', $id);
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows == 1){
-						$row = $result->fetch_all(MYSQLI_ASSOC);
-						$stmt->close();
-						return $row[0];
-					 }
-				}
-			}
-			return false;
-		}
-		
+	
 		
 		
 		
@@ -544,22 +625,7 @@
 		}
 		
 		
-		public function getRowsNumberForNumericColumn($column, $column_value){
-			$column = $this->connection->escape_string($column);
-			$primary_key = $this->table_name.'_id';
-			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? ");
-			if($stmt){
-				$stmt->bind_param('i', $column_value);
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false){
-					 	$stmt->close();
-						return $result->num_rows;
-					 }
-				}
-			}
-			return false;
-		}
+		
 		
 		public function getRowsNumberForStringColumn($column, $column_value){
 			$column = $this->connection->escape_string($column);

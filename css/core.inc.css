@@ -29,6 +29,10 @@ button,input,textarea {
 	text-overflow:ellipsis
 }
 
+.scene-location-container:before {
+    content: "\00b7";
+}
+
 /* starts global header css  */
 
 #gl-header{
@@ -229,14 +233,18 @@ button,input,textarea {
   cursor:text;
 }
 
+
 /* global css */
+
+
+
 
 /* starts post css*/
 .post{
 	padding:6px 0px;
 	background:#fff;
 	border:1px solid #eaeaea;
-	margin-bottom:20px;
+	margin-bottom:40px;
 }
 
 .post > .post-top{
@@ -278,22 +286,26 @@ button,input,textarea {
 	color:#080835;
 	font-weight:600;
 	font-size:16px;
+	line-height:1.6;
 }
 
 .post > .post-top > .post-user-info > .post-head-line > .post-time{
 	margin-left:6px;
+	color:#818181;
 }
 
 .post > .post-top > .post-user-info > .post-head-line > .head-additional-info{
 	margin-left:10px;
 	font-size:15px;
 }
-
+.post > .post-top > .post-user-info > .post-head-line > .head-additional-info > .scene-location-container > .scene-location{
+	font-size:14px;
+	color:#1D4D79;
+}
 
 
 .post > .post-top > .post-user-info > .post-content-text{
 	margin-top: 4px;
-	line-height:1.4;
 	font-size:16px;
 }
 
@@ -328,7 +340,7 @@ button,input,textarea {
 }
 
 .post > .post-bottom{
-	padding:16px 20px 10px 20px;
+	padding:20px 20px 14px 20px;
 	clear:both;
 }
 
@@ -364,6 +376,7 @@ button,input,textarea {
 
 
 
+
 /*  ends post css */
 
 
@@ -389,6 +402,8 @@ button,input,textarea {
 	.post > .post-top > .post-user-info > .post-content-text{
 		margin-top:18px;
 	}
+	
+	
 }
 /* desktop view*/
 
@@ -619,12 +634,20 @@ button,input,textarea {
 	height:390px;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-detail > .dialog-body > #add-scene-label-input-wrapper{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #post-add-scene-label-segue > .dialog-body{
+	height:360px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > #post-location-segue > .dialog-body{
+	height:360px;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-detail > .dialog-body > .segue-detail-top-input-wrapper{
 	border-bottom:1px solid #eaeaea;
 	padding:10px 24px;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-detail > .dialog-body > #add-scene-label-input-wrapper > #add-scene-label-input{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-detail > .dialog-body > .segue-detail-top-input-wrapper > .segue-detail-top-input{
 	width:100%;
 	border:0px;
 	font-size:16px;
@@ -672,10 +695,10 @@ button,input,textarea {
 	color:inherit;
 }
 
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main  #post-text-input{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main  #post-caption-input{
 	padding:14px 24px;
 }
-#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main  #post-text-input > .content-editable{
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main  #post-caption-input > .content-editable{
 	text-align:left;
 	min-height:68px;
 	cursor:text;
@@ -686,6 +709,10 @@ button,input,textarea {
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main .text-list-wrapper > .navigator{
 	float:right; 
 	color: #B0B0B0;
+}
+
+#edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main .text-list-wrapper > .navigator > .text{
+	color: inherit;
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > .segue-main .text-list-wrapper > .navigator > .navigator-label{
@@ -730,7 +757,7 @@ button,input,textarea {
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body{
-	padding:16px 0px;
+	padding:16px 0px 10px 0px;
 	height: 286px;
 }
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #date-navigate-bar{
@@ -765,7 +792,7 @@ button,input,textarea {
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content{
-	margin-top:20px;
+	margin-top:14px;
 }
 
 #edit-dialog-wrapper > #edit-dialog-wrapper-inner > #add-scene-dialog-wrapper > #edit-date-segue > #date-select-body > #day-picker-content > .row{

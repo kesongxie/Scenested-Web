@@ -288,6 +288,9 @@ function closeEditDialog(reset){
 		edit_dialog.find('.segue-main').addClass('act').removeClass('hdn');
 		edit_dialog.find('.segue-detail').removeClass('act');
 	}
+	var systemMessage = $('#system-message');
+	systemMessage.find('.text').text('');
+	systemMessage.addClass('hdn');
 }
 
 
@@ -474,6 +477,64 @@ function addPostPhoto(fileInput){
 function getIntValueFromCSSStyle(style){
 	return parseInt(style.replace('px',''));
 }
+
+/* change the action label status, if the input is set change "add" to "edit", in reverse, otherwise
+	the status will be changed after segueing back to main if modified
+*/
+function updateSegueInputStatus(){
+	$('#post-detail-inputs .segue-to-detail').each(function(){
+		var thisE = $(this);
+		if(thisE.attr('data-set') == 'true'){
+			thisE.find('.text').text('Edit');
+		}else{
+			thisE.find('.text').text('Add');
+		}
+	});
+}
+
+
+/* segue_to_main_action_element has a parent called for class segue-wrapper, under which contains a main segue
+	segue_to_main_action_element has a parents called for class segue-detail, under which contains the current action element
+*/
+function segueToMain(segue_to_main_action_element){
+	toggleDialogVerticalVerticalCenterPos();
+	var segue_wrapper = segue_to_main_action_element.parents('.segue-wrapper');
+	var segue_main = segue_wrapper.find('.segue-main');
+	segue_main.removeClass('hdn');
+	var segue_detail = segue_to_main_action_element.parents('.segue-detail');
+	segue_detail.css({'-webkit-animation':'segueSlideOutRight 0.3s','animation':'segueSlideOutRight 0.3s','right':'-100%'});
+	var segue_height = segue_main.height();
+	segue_wrapper.find('.segue').removeClass('act');
+	segue_main.addClass('act')
+	setTimeout(function(){
+		segue_wrapper.animate({
+			'height': segue_height
+		},100, function(){
+			segue_wrapper.css('position','');
+			segue_main.find('.entry-focus').focus();
+		});
+	},400);
+	return false;
+}
+
+function openEditDialog(targetElementId){
+	$('.overlay, #edit-dialog-wrapper').removeClass('hdn');
+	var parent_wrapper = $('#edit-dialog-wrapper');
+	parent_wrapper.find('.segue-wrapper').addClass('hdn');
+	var edit_wrapper = parent_wrapper.find(targetElementId);
+	edit_wrapper.removeClass('hdn');
+// 	edit_wrapper.css('height', edit_wrapper.find('.segue.act').height());
+	edit_wrapper.css('position','relative');
+	parent_wrapper.find('.segue.act').find('.entry-focus').focus();
+	$('body').addClass('unscrollable');
+}
+
+// function setTargetSegueAsActive(segue){
+// 	segue.parents('.segue-wrapper').find('.segue').removeClass('act');
+// 	segue.addClass('act');
+// }
+
+
 
 /* date picker */
 var DatePicker = function(){
@@ -702,8 +763,8 @@ DatePicker.prototype.selectDayButtonClicked = function(dayButton){
 
 
 /* load the datepickersegue to given container*/
-function loadDatePickerSegue(container_id){
-	var target_path = AJAX_PHTML_DIR+'datepicker_segue.phtml';
+function loadDetailsSegue(container_id){
+	var target_path = AJAXDIR+'include_segues.php';
 	$.get(target_path,function(resp){
 		var edit_date_segue = $(container_id).find('#edit-date-segue');
 		if(edit_date_segue.length < 1){
@@ -711,12 +772,44 @@ function loadDatePickerSegue(container_id){
 			datePicker = new DatePicker();
 		}
 	});
-	
+}
+
+
+function setPostSceneLabelText(label_text){
+	var parentWrapper = $('#add-scene-dialog-wrapper');	
+	var label_edit = parentWrapper.find('#post-scene-label-edit');
+	label_text = label_text.trim();
+	var placeholder = label_edit.find('.text-list-seduo-placeholder');
+	if(label_text.length > 0){
+		placeholder.text(label_text);
+		label_edit.attr('data-set','true');	
+	}else{
+		placeholder.text(placeholder.attr('data-default-placeholder'));
+		label_edit.attr('data-set','false');	
+	}
+	updateSegueInputStatus();
+}
+
+function setPostLocationText(location_text){
+	var parentWrapper = $('#add-scene-dialog-wrapper');	
+	var  location_edit = parentWrapper.find('#post-location-edit');
+	location_text = location_text.trim();
+	var placeholder = location_edit.find('.text-list-seduo-placeholder');
+	if(location_text.length > 0){
+		placeholder.text(location_text);
+		location_edit.attr('data-set','true');
+	}else{
+		placeholder.text(placeholder.attr('data-default-placeholder'));
+		location_edit.attr('data-set','false');	
+	}
+	updateSegueInputStatus();
 }
 
 
 
 $(document).ready(function(){
+	$('.post-attached-img').on('dragstart', function(event) { event.preventDefault(); });
+
 	$('#edit-dialog-wrapper-inner').click(function(){
 	//	return false;
 	});	
@@ -730,37 +823,26 @@ $(document).ready(function(){
 			segue_main.addClass('hdn');
 			detail_segue.css({'-webkit-animation':'segueSlideInLeft 0.3s','animation':'segueSlideInLeft 0.3s', 'right':'0px'});
 			var segue_height =detail_segue.height();
-			
-			setTimeout(function(){
-				segue_wrapper.animate({
-					'height': segue_height
-				},100);
-			},400);
-			segue_wrapper.css('position','relative');
-			return false;
-		}
-	},'.text-list-wrapper.segue-to-detail');
-	
-	$('body #edit-dialog-wrapper-inner').on({
-		click:function(e){
-			toggleDialogVerticalVerticalCenterPos();
-			var segue_wrapper = $(this).parents('.segue-wrapper');
-			var segue_main = segue_wrapper.find('.segue-main');
-			segue_main.removeClass('hdn');
-			var segue_detail = $(this).parents('.segue-detail');
-			segue_detail.css({'-webkit-animation':'segueSlideOutRight 0.3s','animation':'segueSlideOutRight 0.3s','right':'-100%'});
-			var segue_height = segue_main.height();
+			segue_wrapper.find('.segue').removeClass('act');
 			setTimeout(function(){
 				segue_wrapper.animate({
 					'height': segue_height
 				},100, function(){
-					segue_wrapper.css('position','');
+					detail_segue.addClass('act').find('.entry-focus').focus();	
 				});
 			},400);
+			segue_wrapper.css('position','relative');
 			
- 			return false;
+			return false;
 		}
+	},'.text-list-wrapper.segue-to-detail');
 	
+	
+	
+	$('body #edit-dialog-wrapper-inner').on({
+		click:function(){
+			segueToMain($(this));
+		}
 	},'.segue-to-main-action');
 	
 	
@@ -872,12 +954,6 @@ $(document).ready(function(){
 	},'.attach-post-photo.next');
 	
 	
-	
-	
-	
-	
-	
-	
 	$('body #edit-dialog-wrapper-inner').on({
 		click:function(){
 			var $this = $(this);
@@ -916,8 +992,10 @@ $(document).ready(function(){
 	
 	$('#add-scene-dialog-wrapper').on({
 		click:function(){
+			var parentDialogWrapper = $(this).parents('#add-scene-dialog-wrapper');
+			var main_segue = parentDialogWrapper.find('.segue-main');
 			var formData = new FormData();
-			var input_set = $('#attach-post-photo-label .attach-post-photo.set');
+			var input_set = main_segue.find('#attach-post-photo-label .attach-post-photo.set');
 			var input_length = input_set.length;
 			if(input_length > 0 && input_length < 5){
 				input_set.each(function(index){
@@ -925,14 +1003,36 @@ $(document).ready(function(){
 						formData.append('file_'+index, this.files[0]);
 					}
 				});
+			}else{
+				//return false;
 			}
 			formData.append('file_length',input_length);
-			var scene_date = $('#edit-date-segue #date-hidden-input').attr('val');
+			
+			var detailsInput = main_segue.find('#post-detail-inputs');
+			//scene caption
+			var scene_caption = detailsInput.find('#post-caption-input').text().trim();
+			formData.append('scene_caption',scene_caption);	
+			
+			//scene date
+			var scene_date = parentDialogWrapper.find('#edit-date-segue #date-hidden-input').attr('value');
 			var date  = new Date(scene_date);
 			if(date == 'Invalid Date'){
 				return false;
 			}
 			formData.append('scene_date',scene_date);	
+			
+			//label	
+			var scene_label = detailsInput.find('#post-scene-label-edit .text-list-seduo-placeholder').text().trim();
+			formData.append('scene_label',scene_label);	
+			
+			var scene_location = detailsInput.find('#post-location-edit .text-list-seduo-placeholder').text().trim();
+			formData.append('scene_location',scene_location);	
+		
+			$('#edit-dialog-wrapper').addClass('hdn');
+			var systemMessage = $('#system-message');
+			systemMessage.find('.text').text('Sharing Scene...');
+			systemMessage.removeClass('hdn');
+			
 			$.ajax({
 				url:AJAXDIR+'add_scene.php',
 				type:'post',
@@ -940,7 +1040,10 @@ $(document).ready(function(){
 				processData: false, //prevent the data to be transformed into string automatically
  				contentType: false, //false, tell jquery not to send any content type header
 				success:function(resp){
-					console.log(resp);
+					if(resp != '1'){
+						$('#profile-right-content-wrapper').prepend(resp);
+						closeEditDialog(true);
+					}
 				}
 			});
 			return false;
@@ -977,11 +1080,83 @@ $(document).ready(function(){
 	},'#date-navigate-bar .navigator.right');	
 	
 	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var label_text = thisE.find('.scene-label').text();
+			var parentSegue = thisE.parents('#post-add-scene-label-segue');
+			var post_add_scene_label_input_wrapper = parentSegue.find('#post-add-scene-label-input-wrapper');
+			post_add_scene_label_input_wrapper.find('#post-add-scene-label-input').val('');
+			setPostSceneLabelText(label_text);
+			parentSegue.find('.label-check-mark').remove();
+			setTimeout(function(){
+				thisE.find('.inner').append('<div class="inline-blk label-check-mark" style="float: right;"><img src="'+IMGDIR+'checked.png" style="height: 10px;"></div>');
+				post_add_scene_label_input_wrapper.after(thisE);
+			},500);
+		}
+	
+	},'#post-add-scene-label-segue .scene-label-wrapper');
 	
 	
+	function segueToMainFromAddSceneLabelSegue(thisE, label_text){
+		var parentSegue = thisE.parents('#post-add-scene-label-segue');
+		var label_checked = parentSegue.find('.label-check-mark').length > 0;
+		if(label_checked){
+			if(label_text.trim().length > 0){
+				setPostSceneLabelText(label_text);
+				parentSegue.find('.label-check-mark').remove();
+			}
+		}else{
+			setPostSceneLabelText(label_text);
+		}
+		updateSegueInputStatus();
+		segueToMain(thisE);
+	}
+	
+	function segueToMainFromLocationSegue(thisE, location_text){
+		setPostLocationText(location_text);
+		segueToMain(thisE);
+	}
 	
 	
+	$('body').on({
+		keyup:function(evt){
+			if(evt.keyCode == 13){
+				var thisE = $(this);
+				var label_text = thisE.val().trim();
+				segueToMainFromAddSceneLabelSegue(thisE, label_text);
+			}
+		}
+	},'#post-add-scene-label-segue #post-add-scene-label-input');
 	
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var label_text = thisE.parents('#post-add-scene-label-segue').find('#post-add-scene-label-input').val();
+			segueToMainFromAddSceneLabelSegue(thisE, label_text);
+		}
+	},'#post-add-scene-label-segue .blue-action-button');
+	
+	
+	$('body').on({
+		keyup:function(evt){
+			if(evt.keyCode == 13){
+				var thisE = $(this);
+				var location_text = thisE.val().trim();
+				segueToMainFromLocationSegue(thisE, location_text);
+			}	
+		}
+	},'#post-location-segue #post-location-input');
+	
+
+	$('body').on({
+		click:function(){
+			var thisE = $(this);
+			var location_text = thisE.parents('#post-location-segue').find('#post-location-input').val();
+			segueToMainFromLocationSegue(thisE, location_text);
+		}
+	},'#post-location-segue .blue-action-button');
+
 
 });
 

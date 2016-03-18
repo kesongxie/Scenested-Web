@@ -1,11 +1,12 @@
 <?php
-	include_once PHP_INC_PATH.'core.inc.php';
+	// include_once PHP_INC_PATH.'core.inc.php';
 	
 	class User_Media_Prefix extends Core_Table{
 		private $table_name = "user_media_prefix";
-	
+		private $primary_key = "user_media_prefix_id";
+		
 		public function __construct(){
-			parent::__construct($this->table_name);
+			parent::__construct($this->table_name, $this->primary_key);
 		}
 		
 		public function getUserMediaPrefix($user_id){

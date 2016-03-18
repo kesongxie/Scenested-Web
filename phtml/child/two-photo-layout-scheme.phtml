@@ -1,0 +1,14 @@
+<?php 
+	list($width1, $height1) = getimagesize($photoCollection[0]['picture_url']);
+	list($width2, $height2) = getimagesize($photoCollection[1]['picture_url']);
+	$array = getWidthsPercentageWithEqualHeightOfTwoImages($width1, $height1, $width2, $height2, 600);
+ ?>
+
+<div class="post-attached-img-wrapper" style="float:left;width:<?php echo $array['resized_width1_percentage'] ?>%;">
+	<img class="post-attached-img" src="<?php echo $photoCollection[0]['picture_url']; ?>" >
+</div>
+
+<div class="post-attached-img-wrapper"style="float:right;width:<?php echo $array['resized_width2_percentage'] ?>%;">
+	<img class="post-attached-img" src="<?php echo $photoCollection[1]['picture_url']; ?>">
+</div>
+

@@ -15,6 +15,12 @@
 	
 	$user_scene_label = new User_Scene_Label();
 	$labels = $user_scene_label->getSceneLabelsForUser($_SESSION['id']);
+	
+	
+	$user = new User($_SESSION['id']);
+	$sceneBlock = $user->loadUserProfileScene();
 
+	$profile_scene_num = $user->getSceneNumberForUser();
+	
 	include_once TEMPLATE_PATH.'profile.phtml';
 ?>
