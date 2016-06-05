@@ -20,9 +20,15 @@ class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         let  containerView = transitionContext.containerView()!
         let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)!
         let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
-        
+//        
         containerView.addSubview(toView)
-        containerView.bringSubviewToFront(toView)
+      //containerView.bringSubviewToFront(toView)
+        toView.hidden = true
+        
+        
+        
+        
+        
         transitionContext.completeTransition(true)
         
         

@@ -22,7 +22,7 @@ class PostTableViewCell: UITableViewCell {
     var postCollectionViewDelegate: PostCollectionViewProtocol?
     
     
-    var weekScenes =  [Scene]()
+    var weekScenes:WeekScenes?
     
     /* define the style constant for the each post slide  */
     private struct horizontalsliderConstant{
@@ -50,6 +50,8 @@ class PostTableViewCell: UITableViewCell {
         super.awakeFromNib()
         postCollectionView.delegate = self
         postCollectionView.dataSource = self
+        postCollectionView.alwaysBounceHorizontal = true
+        
         setupPostSlideCollectionView()
     }
 
@@ -73,16 +75,15 @@ extension PostTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
     
     //the number of post in each week
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(weekScenes.count)
-        return weekScenes.count
+        return (weekScenes != nil ? (weekScenes!.numberOfScenes()) : 0)
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let postCell = collectionView.dequeueReusableCellWithReuseIdentifier("postInnerCell", forIndexPath: indexPath) as! PostCollectionViewCell
         postCell.layer.cornerRadius = StyleSchemeConstant.horizontalSlider.horizontalSliderCornerRadius
-        postCell.imageView.image = UIImage(named: weekScenes[indexPath.row].imageUrl)
+        postCell.imageView.image = UIImage(named: weekScenes!.scenes[indexPath.row].imageUrl)
         postCell.imageViewSize = postImageSize
-        postCell.postText.text = weekScenes[indexPath.row].postText
+        postCell.postText.text = weekScenes!.scenes[indexPath.row].postText
         postCell.layoutIfNeeded() //re-layout
         return postCell
     }
@@ -104,7 +105,9 @@ extension PostTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath){
-        self.postCollectionViewDelegate?.didTapCell(collectionView, indexPath: indexPath)
+        if let scene = weekScenes?.scenes[indexPath.row]{
+            self.postCollectionViewDelegate?.didTapCell(collectionView, indexPath: indexPath, scene: scene)
+        }
     }
     
     

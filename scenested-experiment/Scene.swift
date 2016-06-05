@@ -22,5 +22,7 @@ class Scene{
         self.postText = postText
         self.postDate = postDate
     }
+    
+    
 
 }

@@ -10,12 +10,16 @@ import UIKit
 
 class SceneDetailViewController: UIViewController, UIViewControllerTransitioningDelegate {
 
-    @IBOutlet weak var SceneImageView: UIImageView!
-    
+    @IBOutlet weak var sceneImageView: UIImageView!
+    var scene: Scene?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        if scene != nil{
+            sceneImageView?.image = UIImage(named: scene!.imageUrl)
+        }
+
         // Do any additional setup after loading the view.
     }
 

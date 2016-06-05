@@ -44,9 +44,6 @@ class ProfileViewController: UIViewController {
     private let closeUpTransition = CloseUpAnimator()
     
     
-    
-    
-    
     /* define the style constant for the theme slide  */
     private struct themeSlideConstant{
         struct sectionEdgeInset{
@@ -68,32 +65,22 @@ class ProfileViewController: UIViewController {
     //themes data source
     //let themeNames: [String] = ["This is my first coustic fingerstyle guitar concert in New York", "Glad to see this year US Open Final", "My first hackathon ever!"]
     let themeNames: [String] = ["GUITAR", "TENNIS", "PROGRAMMING"]
-
-    
     let themeImages: [String] = ["theme1", "theme2", "thumb_2"]
     
-    
-    
- 
-    static let post1 = Scene(id: 1, imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able to experience this year's #USOpen", postDate: "Sep 4, 2015")
-    static let post2 = Scene(id: 3, imageUrl: "thumb_2", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postDate: "May 02, 2015")
+    static let scene1 = Scene(id: 1, imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able to experience this year's #USOpen", postDate: "Sep 4, 2015")
+    static let scene2 = Scene(id: 3, imageUrl: "thumb_2", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postDate: "May 02, 2015")
 
-    static let post3 = Scene(id: 2, imageUrl: "thumb_1", themeName: "GUITAR", postText: "This is my first time to see a live acoustic guitar concert since I picked up guitar about five years ago. #TraceBundy", postDate: "May 17, 2014")
+    static let scene3 = Scene(id: 2, imageUrl: "thumb_1", themeName: "GUITAR", postText: "This is my first time to see a live acoustic guitar concert since I picked up guitar about five years ago. #TraceBundy", postDate: "May 17, 2014")
 
-    
-  
-    
-
-    
-    
-    
-    
     //post data source
     //each element in posts is posts from the same week, for example, post1 and post2 are from week 1, Jan 2015, post3 is from week 3, Jan, 2016
     
-    var profileScenes:[[Scene]] = [
-                    [post1, post2],
-                    [post3]
+    static let  weekScene1: WeekScenes = WeekScenes(scenes: [scene1, scene2], weekDisplayInfo: "WEEK 4TH, JAN · 2016")
+    static let weekScene2: WeekScenes = WeekScenes(scenes: [scene3], weekDisplayInfo: "WEEK 2ND, JAN · 2015")
+    
+    var profileScenes:[WeekScenes] = [
+                    weekScene1,
+                    weekScene2
                 ]
     
     
@@ -116,22 +103,8 @@ class ProfileViewController: UIViewController {
         
         postTableView.estimatedRowHeight = postTableView.rowHeight
         postTableView.rowHeight = UITableViewAutomaticDimension
-        
-  
-           }
-    
-    
-//    override func viewDidAppear(animated: Bool) {
-//        if let sceneDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("SceneDetailViewController"){
-//            sceneDetailViewController.model
-//            sceneDetailViewController.transitioningDelegate = self
-//            
-//            presentViewController(sceneDetailViewController, animated: true, completion: nil)
-//        }
-//        
-//
-//    }
-//    
+    }
+
     //additional setup
     override func viewDidLayoutSubviews() {
         //change the constraint programmatically here
@@ -150,11 +123,6 @@ class ProfileViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    //    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-    //        return .LightContent
-    //    }
-    
     
     override func prefersStatusBarHidden() -> Bool {
         return true
@@ -198,15 +166,6 @@ class ProfileViewController: UIViewController {
         //the height for the themeCollectionView
         themeSlideHeightConstraint.constant = themeImageSize.height + themeSlideConstant.sectionEdgeInset.top + themeSlideConstant.sectionEdgeInset.bottom + themeSlideConstant.precicitionOffset
     }
-    
-    
-    
-    
-
-    
-    
-    
-    
 }
 
 extension ProfileViewController: UIScrollViewDelegate{
@@ -267,21 +226,20 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCellWithIdentifier("postCell") as! PostTableViewCell
         cell.postCollectionViewDelegate = self
-        cell.weekScenes = profileScenes[indexPath.row]
+        cell.weekScenes = profileScenes[indexPath.section]
         return cell
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let sectionHeaderView = UIView()
-
         //border view
         let borderView = UIView()
         borderView.backgroundColor = UIColor(red: 239 / 255.0, green: 239 / 255.0, blue: 244 / 255.0, alpha: 1)
         borderView.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 1)
-
+       
         //date view
         let sectionLabel = UILabel()
-        sectionLabel.text = "WEEK 4TH, JAN · 2016"
+        sectionLabel.text = profileScenes[section].weekDisplayInfo
         sectionLabel.frame = CGRect(x: 18, y: 12, width: 180, height: 20)
         sectionLabel.font = UIFont.systemFontOfSize(13, weight: UIFontWeightMedium)
         sectionLabel.textColor = UIColor(red: 20 / 255.0, green:  20 / 255.0, blue:  20 / 255.0, alpha: 1)
@@ -301,9 +259,11 @@ extension ProfileViewController: UIViewControllerTransitioningDelegate{
 }
 
 extension ProfileViewController: PostCollectionViewProtocol{
-    func didTapCell(collectionViewCell: UICollectionView, indexPath: NSIndexPath) {
-        print(indexPath)
-        print("Tapped from the viewcontroller")
+    func didTapCell(collectionViewCell: UICollectionView, indexPath: NSIndexPath, scene: Scene) {
+        let sceneDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("sceneDetailViewControllerIden") as! SceneDetailViewController
+        sceneDetailViewController.scene = scene
+        sceneDetailViewController.transitioningDelegate = self
+        self.presentViewController(sceneDetailViewController, animated: true, completion: nil)
     }
 }
 

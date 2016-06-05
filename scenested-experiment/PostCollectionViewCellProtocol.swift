@@ -10,5 +10,5 @@ import Foundation
 import UIKit
 
 protocol PostCollectionViewProtocol {
-    func didTapCell(collectionView: UICollectionView, indexPath: NSIndexPath)
+    func didTapCell(collectionView: UICollectionView, indexPath: NSIndexPath, scene: Scene)
 }
