@@ -15,6 +15,4 @@ class CloseUpCustomSegue: UIStoryboardSegue {
         sceneDetailViewController.transitioningDelegate = profileViewController
         profileViewController.presentViewController(sceneDetailViewController, animated: true, completion: nil)
     }
-
-
 }

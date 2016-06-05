@@ -14,6 +14,7 @@ class PostCollectionViewCell: UICollectionViewCell {
    
     @IBOutlet weak var postText: UILabel!
     
+    
     var isGradientLayerAdded: Bool = false
     
     var imageViewSize: CGSize = CGSizeZero{

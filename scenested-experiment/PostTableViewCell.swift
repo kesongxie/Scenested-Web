@@ -19,6 +19,11 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var horizontalSliderHeightConstraint: NSLayoutConstraint!
 
     
+    var postCollectionViewDelegate: PostCollectionViewProtocol?
+    
+    
+    var weekScenes =  [Scene]()
+    
     /* define the style constant for the each post slide  */
     private struct horizontalsliderConstant{
         struct sectionEdgeInset{
@@ -36,9 +41,9 @@ class PostTableViewCell: UITableViewCell {
         static let cellReuseIdentifier: String = "postInnerCell"
     }
     
-    let postImages: [String] = ["cover3", "cover", "cover4"]
-
-    let postTexts: [String] = ["This is my first coustic fingerstyle guitar concert in New York", "Glad to see this year US Open Final", "My first hackathon ever!"]
+//    let postImages: [String] = ["cover3", "cover", "cover4"]
+//
+//    let postTexts: [String] = ["This is my first coustic fingerstyle guitar concert in New York", "Glad to see this year US Open Final", "My first hackathon ever!"]
     
     
     override func awakeFromNib() {
@@ -64,20 +69,20 @@ class PostTableViewCell: UITableViewCell {
 }
 
 
-
-
-
 extension PostTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    
+    //the number of post in each week
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return postImages.count //this would be the number of post in each week
+        print(weekScenes.count)
+        return weekScenes.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let postCell = collectionView.dequeueReusableCellWithReuseIdentifier("postInnerCell", forIndexPath: indexPath) as! PostCollectionViewCell
         postCell.layer.cornerRadius = StyleSchemeConstant.horizontalSlider.horizontalSliderCornerRadius
-        postCell.imageView.image = UIImage(named: postImages[indexPath.row])
+        postCell.imageView.image = UIImage(named: weekScenes[indexPath.row].imageUrl)
         postCell.imageViewSize = postImageSize
-        postCell.postText.text = postTexts[indexPath.row]
+        postCell.postText.text = weekScenes[indexPath.row].postText
         postCell.layoutIfNeeded() //re-layout
         return postCell
     }
@@ -98,10 +103,8 @@ extension PostTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
         return postImageSize
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        //present a scene close-up
-        
-        
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath){
+        self.postCollectionViewDelegate?.didTapCell(collectionView, indexPath: indexPath)
     }
     
     

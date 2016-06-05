@@ -74,18 +74,11 @@ class ProfileViewController: UIViewController {
     
     
     
-    struct Posts{
-        let id: Int
-        let imageUrl: String
-        let themeName: String
-        let postText: String
-        let postDate: String
-    }
-    
-    static let post1 = Posts(id: 1, imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able to experience this year's #USOpen", postDate: "Sep 4, 2015")
-    static let post2 = Posts(id: 3, imageUrl: "thumb_2", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postDate: "May 02, 2015")
+ 
+    static let post1 = Scene(id: 1, imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able to experience this year's #USOpen", postDate: "Sep 4, 2015")
+    static let post2 = Scene(id: 3, imageUrl: "thumb_2", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postDate: "May 02, 2015")
 
-    static let post3 = Posts(id: 2, imageUrl: "thumb_1", themeName: "GUITAR", postText: "This is my first time to see a live acoustic guitar concert since I picked up guitar about five years ago. #TraceBundy", postDate: "May 17, 2014")
+    static let post3 = Scene(id: 2, imageUrl: "thumb_1", themeName: "GUITAR", postText: "This is my first time to see a live acoustic guitar concert since I picked up guitar about five years ago. #TraceBundy", postDate: "May 17, 2014")
 
     
   
@@ -96,14 +89,12 @@ class ProfileViewController: UIViewController {
     
     
     //post data source
+    //each element in posts is posts from the same week, for example, post1 and post2 are from week 1, Jan 2015, post3 is from week 3, Jan, 2016
     
-    var posts = [post1, post2, post3]
-    //var posts = [post1, post2, post3, post1, post2, post3, post1, post2, post3, post1, post2, post3, post1, post2, post3, post1, post2, post3, post1, post2, post3, post1, post2, post3]
-    
-    
-    
-    
-    
+    var profileScenes:[[Scene]] = [
+                    [post1, post2],
+                    [post3]
+                ]
     
     
     override func viewDidLoad() {
@@ -262,16 +253,21 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
 
 // MARK:: Post Rows, Extension for UITableViewDelegate and UITableViewDataSource protocol
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
+    //defines how many weeks the profile user has
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return profileScenes.count
+    }
+    
+    //each section is a collection of the same week
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1//posts.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    //define the data source for a specific week
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCellWithIdentifier("postCell") as! PostTableViewCell
+        cell.postCollectionViewDelegate = self
+        cell.weekScenes = profileScenes[indexPath.row]
         return cell
     }
     
@@ -299,12 +295,17 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
 
 extension ProfileViewController: UIViewControllerTransitioningDelegate{
     func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        print("hello, i'm ")
         return closeUpTransition
     }
     
 }
 
+extension ProfileViewController: PostCollectionViewProtocol{
+    func didTapCell(collectionViewCell: UICollectionView, indexPath: NSIndexPath) {
+        print(indexPath)
+        print("Tapped from the viewcontroller")
+    }
+}
 
 
 

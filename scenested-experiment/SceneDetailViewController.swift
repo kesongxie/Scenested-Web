@@ -15,7 +15,6 @@ class SceneDetailViewController: UIViewController, UIViewControllerTransitioning
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("hello, i did appear")
         
         // Do any additional setup after loading the view.
     }
@@ -26,10 +25,9 @@ class SceneDetailViewController: UIViewController, UIViewControllerTransitioning
     }
     
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
-
     /*
     // MARK: - Navigation
 

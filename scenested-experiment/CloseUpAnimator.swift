@@ -18,13 +18,12 @@ class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         let  containerView = transitionContext.containerView()!
-        if let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey){
-            print("true")
-
-        }else{
-            print("false")
-            transitionContext.completeTransition(true)
-        }
+        let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)!
+        let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
+        
+        containerView.addSubview(toView)
+        containerView.bringSubviewToFront(toView)
+        transitionContext.completeTransition(true)
         
         
         
