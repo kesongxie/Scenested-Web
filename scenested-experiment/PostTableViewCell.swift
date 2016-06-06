@@ -24,6 +24,7 @@ class PostTableViewCell: UITableViewCell {
     
     var weekScenes:WeekScenes?
     
+    
     /* define the style constant for the each post slide  */
     private struct horizontalsliderConstant{
         struct sectionEdgeInset{
@@ -106,7 +107,9 @@ extension PostTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath){
         if let scene = weekScenes?.scenes[indexPath.row]{
-            self.postCollectionViewDelegate?.didTapCell(collectionView, indexPath: indexPath, scene: scene)
+            let cell = collectionView.cellForItemAtIndexPath(indexPath)!
+            let thumbnailFrame = cell.superview?.convertRect(cell.frame, toView: nil)
+            self.postCollectionViewDelegate?.didTapCell(collectionView, indexPath: indexPath, scene: scene, selectedThumbnailFrame: thumbnailFrame!)
         }
     }
     

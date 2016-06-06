@@ -11,15 +11,16 @@ import UIKit
 class SceneDetailViewController: UIViewController, UIViewControllerTransitioningDelegate {
 
     @IBOutlet weak var sceneImageView: UIImageView!
+   
+    @IBOutlet weak var sceneImageViewHeightConstraint: NSLayoutConstraint!
+   
     var scene: Scene?
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if scene != nil{
-            sceneImageView?.image = UIImage(named: scene!.imageUrl)
-        }
-
+        renderSceneImage()
+      
         // Do any additional setup after loading the view.
     }
 
@@ -32,6 +33,25 @@ class SceneDetailViewController: UIViewController, UIViewControllerTransitioning
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
+    
+    func renderSceneImage() -> Void{
+        if scene != nil{
+            sceneImageView?.image = UIImage(named: scene!.imageUrl)
+            if let sceneImage = sceneImageView?.image?.size{
+                let sceneImageAspectRatio: CGFloat = sceneImage.width / sceneImage.height
+                sceneImageView.frame.size.width = view.bounds.width
+                sceneImageView.frame.size.height = sceneImageView.frame.size.width / sceneImageAspectRatio
+                sceneImageViewHeightConstraint.constant = sceneImageView.frame.size.height
+            }
+        }
+    }
+
+    
+    @IBAction func dismissDetailView(sender: UITapGestureRecognizer) {
+        presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    
     /*
     // MARK: - Navigation
 

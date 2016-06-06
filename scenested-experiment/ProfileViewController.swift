@@ -35,13 +35,12 @@ class ProfileViewController: UIViewController {
     private var headerHeightOffset: CGFloat = 34 // make the cover's height little bit larger than the original screen height
     private var profileCoverOriginalScreenHeight: CGFloat = 0
     
-
-    
     private var themeImageSize: CGSize = CGSizeZero //the size of the individual theme UIImageView
     
-    
-    
     private let closeUpTransition = CloseUpAnimator()
+    
+    
+    private var selectedThumbnailFrame = CGRectZero //the thumbnail frame(such as sceneThumbnail or themeThumbnail) on which was tapped
     
     
     /* define the style constant for the theme slide  */
@@ -253,16 +252,25 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
 
 extension ProfileViewController: UIViewControllerTransitioningDelegate{
     func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        closeUpTransition.thumbnailFrame = selectedThumbnailFrame
+        
+        return closeUpTransition
+    }
+    
+    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        closeUpTransition.presenting = true
         return closeUpTransition
     }
     
 }
 
 extension ProfileViewController: PostCollectionViewProtocol{
-    func didTapCell(collectionViewCell: UICollectionView, indexPath: NSIndexPath, scene: Scene) {
+    func didTapCell(collectionViewCell: UICollectionView, indexPath: NSIndexPath, scene: Scene, selectedThumbnailFrame: CGRect) {
         let sceneDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("sceneDetailViewControllerIden") as! SceneDetailViewController
+        
         sceneDetailViewController.scene = scene
         sceneDetailViewController.transitioningDelegate = self
+        self.selectedThumbnailFrame = selectedThumbnailFrame
         self.presentViewController(sceneDetailViewController, animated: true, completion: nil)
     }
 }
