@@ -15,6 +15,8 @@
 		987BA7CF1D049BC20080F4DF /* PostCollectionViewCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA7CE1D049BC20080F4DF /* PostCollectionViewCellProtocol.swift */; };
 		987BA7D31D04A4C30080F4DF /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA7D21D04A4C30080F4DF /* Scene.swift */; };
 		987BA7D51D04A9170080F4DF /* WeekScenes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA7D41D04A9170080F4DF /* WeekScenes.swift */; };
+		987BA7D71D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA7D61D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift */; };
+		987BA7DA1D05AC010080F4DF /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA7D91D05AC010080F4DF /* UtilityFunctions.swift */; };
 		9895F8E61CBB440D00D7DA62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9895F8E51CBB440D00D7DA62 /* AppDelegate.swift */; };
 		9895F8E81CBB440D00D7DA62 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9895F8E71CBB440D00D7DA62 /* ProfileViewController.swift */; };
 		9895F8ED1CBB440D00D7DA62 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9895F8EC1CBB440D00D7DA62 /* Assets.xcassets */; };
@@ -36,6 +38,8 @@
 		987BA7CE1D049BC20080F4DF /* PostCollectionViewCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionViewCellProtocol.swift; sourceTree = "<group>"; };
 		987BA7D21D04A4C30080F4DF /* Scene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		987BA7D41D04A9170080F4DF /* WeekScenes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeekScenes.swift; sourceTree = "<group>"; };
+		987BA7D61D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseUpEffectSelectedItemInfo.swift; sourceTree = "<group>"; };
+		987BA7D91D05AC010080F4DF /* UtilityFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityFunctions.swift; sourceTree = "<group>"; };
 		9895F8E21CBB440D00D7DA62 /* scenested-experiment.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "scenested-experiment.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9895F8E51CBB440D00D7DA62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9895F8E71CBB440D00D7DA62 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -70,6 +74,14 @@
 			name = "Scene Model";
 			sourceTree = "<group>";
 		};
+		987BA7D81D05ABB80080F4DF /* Global */ = {
+			isa = PBXGroup;
+			children = (
+				987BA7D91D05AC010080F4DF /* UtilityFunctions.swift */,
+			);
+			name = Global;
+			sourceTree = "<group>";
+		};
 		9895F8D91CBB440C00D7DA62 = {
 			isa = PBXGroup;
 			children = (
@@ -90,9 +102,11 @@
 			isa = PBXGroup;
 			children = (
 				9895F8E51CBB440D00D7DA62 /* AppDelegate.swift */,
+				987BA7D81D05ABB80080F4DF /* Global */,
 				98AA1D0A1CBB5931002CF7E2 /* StyleSchemeConstant.swift */,
 				98AA1D0E1CBB5BE0002CF7E2 /* UIButtonExtension.swift */,
 				98AA1D0C1CBB5950002CF7E2 /* TabBarController.swift */,
+				987BA7D61D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift */,
 				987BA7D01D04A4950080F4DF /* Scene Model */,
 				98EE27A51CCAC4B500FC9864 /* Profile Page */,
 				9895F8EC1CBB440D00D7DA62 /* Assets.xcassets */,
@@ -217,7 +231,9 @@
 				98AA1D0D1CBB5950002CF7E2 /* TabBarController.swift in Sources */,
 				98E3942C1D04403800EB158C /* CloseUpCustomSegue.swift in Sources */,
 				9895F8E61CBB440D00D7DA62 /* AppDelegate.swift in Sources */,
+				987BA7D71D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift in Sources */,
 				987BA7D51D04A9170080F4DF /* WeekScenes.swift in Sources */,
+				987BA7DA1D05AC010080F4DF /* UtilityFunctions.swift in Sources */,
 				98AA1D0B1CBB5931002CF7E2 /* StyleSchemeConstant.swift in Sources */,
 				98E394291D03C5B900EB158C /* SceneDetailViewController.swift in Sources */,
 				986ED6091CD44BFE00101FEE /* ThemeCollectionViewCell.swift in Sources */,

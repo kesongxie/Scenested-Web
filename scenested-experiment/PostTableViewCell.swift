@@ -107,9 +107,18 @@ extension PostTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath){
         if let scene = weekScenes?.scenes[indexPath.row]{
-            let cell = collectionView.cellForItemAtIndexPath(indexPath)!
+            let cell = collectionView.cellForItemAtIndexPath(indexPath) as! PostCollectionViewCell
             let thumbnailFrame = cell.superview?.convertRect(cell.frame, toView: nil)
-            self.postCollectionViewDelegate?.didTapCell(collectionView, indexPath: indexPath, scene: scene, selectedThumbnailFrame: thumbnailFrame!)
+            
+            let thumbnailImageView = cell.imageView
+            let tImageSize = cell.imageView.image?.size
+            let aspectRatio = getAspectRatioFromSize(tImageSize!)
+            var selectedItemInfo = CloseUpEffectSelectedItemInfo()
+            selectedItemInfo.thumbnailFrame = thumbnailFrame!
+            selectedItemInfo.thumbnailImageAspectRatio = aspectRatio
+            selectedItemInfo.thumbnailImageView = thumbnailImageView
+            
+            self.postCollectionViewDelegate?.didTapCell(collectionView, indexPath: indexPath, scene: scene, selectedItemInfo: selectedItemInfo)
         }
     }
     

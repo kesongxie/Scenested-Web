@@ -8,24 +8,32 @@
 
 import UIKit
 
+enum pinnedDirection{
+    case rightEdge
+    case leftEdge
+    case middle
+}
+
 class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     let duration = 0.35
     var presenting: Bool = false
-    var thumbnailFrame: CGRect = CGRectZero
+    var selectedItemInfo =  CloseUpEffectSelectedItemInfo()
     
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
         return duration
     }
     
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
-        let  containerView = transitionContext.containerView()!
+        let containerView = transitionContext.containerView()!
+        
         let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)!
+        
         let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
         
         containerView.addSubview(fromView)
         containerView.addSubview(toView)
         containerView.bringSubviewToFront(toView)
-        toView.hidden = true
+        toView.alpha = 0
         
         
         if presenting{
@@ -34,47 +42,64 @@ class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             UIView.animateWithDuration(duration, animations: {
                 toView.transform = scaleTransform
                 toView.alpha = 1
+                fromView.alpha = 0
+
                 toView.frame = CGRect(x: 0 , y: 0, width: toView.frame.size.width, height: toView.frame.size.height)
 
                 }, completion: { (finished) -> Void in
                     self.presenting = false
-                    fromView.removeFromSuperview()
+//                    fromView.removeFromSuperview()
                     transitionContext.completeTransition(true)
             })
 
         }else{
-            let transformScaleX: CGFloat = toView.frame.size.width / thumbnailFrame.size.width
-            let transformScaleY: CGFloat = toView.frame.size.height / thumbnailFrame.size.height
             
-            let scaleTransform = CGAffineTransformMakeScale(transformScaleX, transformScaleY)
+            //scale transform for from view
+            let fromViewTransformScaleX: CGFloat = toView.frame.size.width / selectedItemInfo.thumbnailFrame.size.width
+            let fromViewTransformScaleY: CGFloat = toView.frame.size.height / selectedItemInfo.thumbnailFrame.size.height
             
-            UIView.animateWithDuration(duration, animations: {
-                    fromView.transform = scaleTransform
+            let fromViewScaleTransform = CGAffineTransformMakeScale(fromViewTransformScaleX, fromViewTransformScaleY) // enlarge the from view
+           
+            let fromViewOriginalSize = fromView.frame.size
+            var fromViewAdjustX: CGFloat = 0
+            var fromViewAdjustY: CGFloat = 0
+
+            
+            var xPinnedTo: pinnedDirection
+            
+            if selectedItemInfo.thumbnailFrame.origin.x < 0 {
+                //fromView pinned to the left, because the thumbnail is left off the screen
+                xPinnedTo = .leftEdge
+                
+            }else if selectedItemInfo.thumbnailFrame.origin.x + selectedItemInfo.thumbnailFrame.size.width > UIScreen.mainScreen().bounds.width{
+                //fromView pinned to the right, because the thumbnail is right off the screen
+                xPinnedTo = .rightEdge
+            }else{
+                //the whole thumbnail is on the screen
+                xPinnedTo = .middle
+            }
+
+            
+            
+            
+            UIView.animateWithDuration(1.3, animations: {
+                    fromView.transform = fromViewScaleTransform
                     fromView.alpha = 0
-                    fromView.frame = CGRect(x: -self.thumbnailFrame.origin.x * transformScaleX , y: -self.thumbnailFrame.origin.y * transformScaleY, width: fromView.frame.size.width, height: 120)
+                    switch xPinnedTo{
+                        case .leftEdge:
+                            fromViewAdjustX = 0
+                        case .rightEdge:
+                            fromViewAdjustX = -(fromView.frame.size.width - fromViewOriginalSize.width)
+                        case .middle:
+                            fromViewAdjustX = -self.selectedItemInfo.thumbnailFrame.origin.x * fromViewTransformScaleX
+                        }
+                        fromView.frame = CGRect(x: fromViewAdjustX, y: -self.selectedItemInfo.thumbnailFrame.origin.y * fromViewTransformScaleY, width: fromView.frame.size.width, height: fromView.frame.size.height )
+                
+                        toView.alpha = 1
                 }, completion: { (finished) -> Void in
                     self.presenting = true
-                    toView.hidden = false
                     transitionContext.completeTransition(true)
             })
-           
-
-
         }
-        
-        
-        
-        
-//        let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)!
-//        let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
-//        
-//        if !presenting{
-//            containerView.addSubview(toView)
-//            toView.hidden = true
-//        }
-        
-        
     }
-    
-    
 }

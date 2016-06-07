@@ -25,7 +25,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var themesCollectionView: UICollectionView!
     
     
-    @IBOutlet weak var postTableView: UITableView!
+    @IBOutlet weak var globalView: UITableView!
     
     @IBOutlet weak var tableHeaderView: UIView!
 
@@ -40,7 +40,7 @@ class ProfileViewController: UIViewController {
     private let closeUpTransition = CloseUpAnimator()
     
     
-    private var selectedThumbnailFrame = CGRectZero //the thumbnail frame(such as sceneThumbnail or themeThumbnail) on which was tapped
+    private var selectedThumbnailItemInfo = CloseUpEffectSelectedItemInfo() //the thumbnail frame(such as sceneThumbnail or themeThumbnail) on which was tapped
     
     
     /* define the style constant for the theme slide  */
@@ -74,10 +74,12 @@ class ProfileViewController: UIViewController {
     //post data source
     //each element in posts is posts from the same week, for example, post1 and post2 are from week 1, Jan 2015, post3 is from week 3, Jan, 2016
     
-    static let  weekScene1: WeekScenes = WeekScenes(scenes: [scene1, scene2], weekDisplayInfo: "WEEK 4TH, JAN · 2016")
+    static let  weekScene1: WeekScenes = WeekScenes(scenes: [scene1, scene2, scene3], weekDisplayInfo: "WEEK 4TH, JAN · 2016")
     static let weekScene2: WeekScenes = WeekScenes(scenes: [scene3], weekDisplayInfo: "WEEK 2ND, JAN · 2015")
     
     var profileScenes:[WeekScenes] = [
+                    weekScene1,
+                    weekScene2,
                     weekScene1,
                     weekScene2
                 ]
@@ -87,11 +89,12 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         themesCollectionView.delegate = self
         themesCollectionView.dataSource = self
-        postTableView.delegate = self
-        postTableView.dataSource = self
+        globalView.delegate = self
+        globalView.dataSource = self
+        self.tabBarController?.tabBar.hidden = true
+
         
-        
-        postTableView.alwaysBounceVertical = true
+        globalView.alwaysBounceVertical = true
         //        self.automaticallyAdjustsScrollViewInsets = false
         
         profileCover.image = UIImage(named: "cover3")
@@ -100,8 +103,8 @@ class ProfileViewController: UIViewController {
             profileCoverHeight = profileCoverOriginalScreenHeight + headerHeightOffset
         }
         
-        postTableView.estimatedRowHeight = postTableView.rowHeight
-        postTableView.rowHeight = UITableViewAutomaticDimension
+        globalView.estimatedRowHeight = globalView.rowHeight
+        globalView.rowHeight = UITableViewAutomaticDimension
     }
 
     //additional setup
@@ -130,8 +133,8 @@ class ProfileViewController: UIViewController {
     
     func strechProfileCover(){
         var coverHeaderRect = CGRect(x: 0, y: 0, width: profileCover.bounds.width, height: profileCoverHeight)
-        var caculatedHeight = profileCoverHeight - postTableView.contentOffset.y
-        var caculatedOrigin = postTableView.contentOffset.y
+        var caculatedHeight = profileCoverHeight - globalView.contentOffset.y
+        var caculatedOrigin = globalView.contentOffset.y
         
         if caculatedHeight < profileCoverOriginalScreenHeight {
             //minimize the picture until its originalScreenHeight
@@ -245,6 +248,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
         
         sectionHeaderView.addSubview(borderView)
         sectionHeaderView.addSubview(sectionLabel)
+//        sectionHeaderView.backgroundColor = UIColor.whiteColor()
         
         return sectionHeaderView
     }
@@ -252,8 +256,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
 
 extension ProfileViewController: UIViewControllerTransitioningDelegate{
     func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        closeUpTransition.thumbnailFrame = selectedThumbnailFrame
-        
+        closeUpTransition.selectedItemInfo = selectedThumbnailItemInfo
         return closeUpTransition
     }
     
@@ -265,12 +268,11 @@ extension ProfileViewController: UIViewControllerTransitioningDelegate{
 }
 
 extension ProfileViewController: PostCollectionViewProtocol{
-    func didTapCell(collectionViewCell: UICollectionView, indexPath: NSIndexPath, scene: Scene, selectedThumbnailFrame: CGRect) {
+    func didTapCell(collectionViewCell: UICollectionView, indexPath: NSIndexPath, scene: Scene, selectedItemInfo: CloseUpEffectSelectedItemInfo) {
         let sceneDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("sceneDetailViewControllerIden") as! SceneDetailViewController
-        
         sceneDetailViewController.scene = scene
         sceneDetailViewController.transitioningDelegate = self
-        self.selectedThumbnailFrame = selectedThumbnailFrame
+        self.selectedThumbnailItemInfo = selectedItemInfo
         self.presentViewController(sceneDetailViewController, animated: true, completion: nil)
     }
 }

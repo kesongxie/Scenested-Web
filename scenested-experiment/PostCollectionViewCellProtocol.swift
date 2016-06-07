@@ -10,5 +10,5 @@ import Foundation
 import UIKit
 
 protocol PostCollectionViewProtocol {
-    func didTapCell(collectionView: UICollectionView, indexPath: NSIndexPath, scene: Scene, selectedThumbnailFrame: CGRect)
+    func didTapCell(collectionView: UICollectionView, indexPath: NSIndexPath, scene: Scene, selectedItemInfo: CloseUpEffectSelectedItemInfo)
 }
