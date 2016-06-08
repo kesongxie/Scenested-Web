@@ -14,4 +14,5 @@ struct CloseUpEffectSelectedItemInfo{
     var thumbnailFrame: CGRect = CGRectZero
     var thumbnailImageAspectRatio: CGFloat = 1
     var thumbnailImageView: UIImageView = UIImageView()
+    var thumbnailIndexPath: NSIndexPath = NSIndexPath()
 }

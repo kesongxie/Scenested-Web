@@ -15,7 +15,7 @@ enum pinnedDirection{
 }
 
 class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
-    let duration = 0.35
+    let duration = 0.3
     var presenting: Bool = false
     var selectedItemInfo =  CloseUpEffectSelectedItemInfo()
     
@@ -25,15 +25,14 @@ class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView()!
-        
-        let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)!
-        
+        var fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)!
         let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
         
-        containerView.addSubview(fromView)
         containerView.addSubview(toView)
         containerView.bringSubviewToFront(toView)
         toView.alpha = 0
+        
+        
         
         
         if presenting{
@@ -53,6 +52,12 @@ class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             })
 
         }else{
+            
+            let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as! TabBarController
+            
+//            (fromViewController.selectedViewController as! ProfileViewController).globalView.scrollRectToVisible(selectedItemInfo.thumbnailFrame, animated: true)
+            containerView.addSubview(fromView)
+
             
             //scale transform for from view
             let fromViewTransformScaleX: CGFloat = toView.frame.size.width / selectedItemInfo.thumbnailFrame.size.width
@@ -82,7 +87,7 @@ class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             
             
             
-            UIView.animateWithDuration(1.3, animations: {
+            UIView.animateWithDuration(duration, animations: {
                     fromView.transform = fromViewScaleTransform
                     fromView.alpha = 0
                     switch xPinnedTo{
@@ -98,6 +103,7 @@ class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                         toView.alpha = 1
                 }, completion: { (finished) -> Void in
                     self.presenting = true
+
                     transitionContext.completeTransition(true)
             })
         }

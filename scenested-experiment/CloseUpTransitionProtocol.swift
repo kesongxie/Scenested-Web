@@ -11,4 +11,9 @@ import UIKit
 
 protocol PostCollectionViewProtocol {
     func didTapCell(collectionView: UICollectionView, indexPath: NSIndexPath, scene: Scene, selectedItemInfo: CloseUpEffectSelectedItemInfo)
+//    func didTapCollectionViewParent(collectionViewParent)
+}
+
+protocol CloseUpMainProtocol{
+    func closeUpTransitionScrollView() -> UIScrollView
 }

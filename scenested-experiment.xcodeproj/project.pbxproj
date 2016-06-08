@@ -12,7 +12,7 @@
 		986EB8121CC9B81B0012A198 /* ProfileNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986EB8111CC9B81B0012A198 /* ProfileNavigationController.swift */; };
 		986ED6091CD44BFE00101FEE /* ThemeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986ED6081CD44BFE00101FEE /* ThemeCollectionViewCell.swift */; };
 		987BA7CB1D046DCF0080F4DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 987BA7C91D046DCF0080F4DF /* Main.storyboard */; };
-		987BA7CF1D049BC20080F4DF /* PostCollectionViewCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA7CE1D049BC20080F4DF /* PostCollectionViewCellProtocol.swift */; };
+		987BA7CF1D049BC20080F4DF /* CloseUpTransitionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA7CE1D049BC20080F4DF /* CloseUpTransitionProtocol.swift */; };
 		987BA7D31D04A4C30080F4DF /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA7D21D04A4C30080F4DF /* Scene.swift */; };
 		987BA7D51D04A9170080F4DF /* WeekScenes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA7D41D04A9170080F4DF /* WeekScenes.swift */; };
 		987BA7D71D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BA7D61D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift */; };
@@ -35,7 +35,7 @@
 		986EB8111CC9B81B0012A198 /* ProfileNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileNavigationController.swift; sourceTree = "<group>"; };
 		986ED6081CD44BFE00101FEE /* ThemeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeCollectionViewCell.swift; sourceTree = "<group>"; };
 		987BA7CA1D046DCF0080F4DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		987BA7CE1D049BC20080F4DF /* PostCollectionViewCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionViewCellProtocol.swift; sourceTree = "<group>"; };
+		987BA7CE1D049BC20080F4DF /* CloseUpTransitionProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseUpTransitionProtocol.swift; sourceTree = "<group>"; };
 		987BA7D21D04A4C30080F4DF /* Scene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		987BA7D41D04A9170080F4DF /* WeekScenes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeekScenes.swift; sourceTree = "<group>"; };
 		987BA7D61D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseUpEffectSelectedItemInfo.swift; sourceTree = "<group>"; };
@@ -130,7 +130,7 @@
 		98E3942A1D03CCE500EB158C /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
-				987BA7CE1D049BC20080F4DF /* PostCollectionViewCellProtocol.swift */,
+				987BA7CE1D049BC20080F4DF /* CloseUpTransitionProtocol.swift */,
 			);
 			name = Protocol;
 			sourceTree = "<group>";
@@ -223,7 +223,7 @@
 			files = (
 				98108A0C1CFE3EFB0093E878 /* PostCollectionViewCell.swift in Sources */,
 				9895F8E81CBB440D00D7DA62 /* ProfileViewController.swift in Sources */,
-				987BA7CF1D049BC20080F4DF /* PostCollectionViewCellProtocol.swift in Sources */,
+				987BA7CF1D049BC20080F4DF /* CloseUpTransitionProtocol.swift in Sources */,
 				986EB8121CC9B81B0012A198 /* ProfileNavigationController.swift in Sources */,
 				987BA7D31D04A4C30080F4DF /* Scene.swift in Sources */,
 				98AA1D0F1CBB5BE0002CF7E2 /* UIButtonExtension.swift in Sources */,

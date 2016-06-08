@@ -42,13 +42,61 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "scenested-experiment/SceneDetailViewController.swift"
-            timestampString = "486851922.329288"
+            timestampString = "487010444.241567"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
             landmarkName = "renderSceneImage()"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "scenested-experiment/PostTableViewCell.swift"
+            timestampString = "487049270.622271"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
+            landmarkName = "collectionView(_:didSelectItemAtIndexPath:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "scenested_experiment.PostTableViewCell.collectionView (__ObjC.UICollectionView, didSelectItemAtIndexPath : __ObjC.NSIndexPath) -&gt; ()"
+                  moduleName = "scenested-experiment"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/KesongXie/Developer/scenested-experiment/scenested-experiment/PostTableViewCell.swift"
+                  timestampString = "487044176.974276"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "111"
+                  endingLineNumber = "111"
+                  offsetFromSymbolStart = "224">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "scenested_experiment.PostTableViewCell.collectionView (__ObjC.UICollectionView, didSelectItemAtIndexPath : __ObjC.NSIndexPath) -&gt; ()"
+                  moduleName = "scenested-experiment"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/KesongXie/Developer/scenested-experiment/scenested-experiment/PostTableViewCell.swift"
+                  timestampString = "487044176.974407"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "111"
+                  endingLineNumber = "111"
+                  offsetFromSymbolStart = "512">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

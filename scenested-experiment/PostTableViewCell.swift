@@ -28,9 +28,9 @@ class PostTableViewCell: UITableViewCell {
     /* define the style constant for the each post slide  */
     private struct horizontalsliderConstant{
         struct sectionEdgeInset{
-            static let top:CGFloat = 4
+            static let top:CGFloat = 0
             static let left:CGFloat = 16
-            static let bottom:CGFloat = 4
+            static let bottom:CGFloat = 0
             static let right:CGFloat = 16
         }
         
@@ -69,6 +69,15 @@ class PostTableViewCell: UITableViewCell {
         //the height for the themeCollectionView
         horizontalSliderHeightConstraint.constant = postImageSize.height + horizontalsliderConstant.sectionEdgeInset.top + horizontalsliderConstant.sectionEdgeInset.bottom + horizontalsliderConstant.precicitionOffset
     }
+    
+    
+    /*
+        reset the postCollectionView before the UITbaleViewCell deque and reuse, otherwise, the cell may use the content(collectionView) of the previous cell
+     */
+    override func prepareForReuse() {
+        //reset the collectionView
+        postCollectionView.reloadData()
+    }
 }
 
 
@@ -106,6 +115,8 @@ extension PostTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath){
+        print(indexPath.row)
+        
         if let scene = weekScenes?.scenes[indexPath.row]{
             let cell = collectionView.cellForItemAtIndexPath(indexPath) as! PostCollectionViewCell
             let thumbnailFrame = cell.superview?.convertRect(cell.frame, toView: nil)
@@ -118,9 +129,18 @@ extension PostTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
             selectedItemInfo.thumbnailImageAspectRatio = aspectRatio
             selectedItemInfo.thumbnailImageView = thumbnailImageView
             
+            
+            
+//           let tableViewCell = collectionView.superview?.superview as! PostTableViewCell
+//           tableViewCell.index
+            
+           // self.collectionView(collectionView, cellForItemAtIndexPath: indexPath)
+            
             self.postCollectionViewDelegate?.didTapCell(collectionView, indexPath: indexPath, scene: scene, selectedItemInfo: selectedItemInfo)
         }
     }
+    
+    
     
     
 }

@@ -42,13 +42,20 @@ class ProfileViewController: UIViewController {
     
     private var selectedThumbnailItemInfo = CloseUpEffectSelectedItemInfo() //the thumbnail frame(such as sceneThumbnail or themeThumbnail) on which was tapped
     
+//    private var interactingCollectionView: UICollectionView?
+    
+    private var selectedThumbnailScene: Scene?
+    
+    private let sectionHeaderHeight:CGFloat = 46
+    
+    
     
     /* define the style constant for the theme slide  */
     private struct themeSlideConstant{
         struct sectionEdgeInset{
-            static let top:CGFloat = 4
+            static let top:CGFloat = 0
             static let left:CGFloat = 16
-            static let bottom:CGFloat = 4
+            static let bottom:CGFloat = 0
             static let right:CGFloat = 16
         }
         
@@ -74,14 +81,17 @@ class ProfileViewController: UIViewController {
     //post data source
     //each element in posts is posts from the same week, for example, post1 and post2 are from week 1, Jan 2015, post3 is from week 3, Jan, 2016
     
-    static let  weekScene1: WeekScenes = WeekScenes(scenes: [scene1, scene2, scene3], weekDisplayInfo: "WEEK 4TH, JAN · 2016")
+    static let  weekScene1: WeekScenes = WeekScenes(scenes: [scene1, scene2], weekDisplayInfo: "WEEK 4TH, JAN · 2016")
     static let weekScene2: WeekScenes = WeekScenes(scenes: [scene3], weekDisplayInfo: "WEEK 2ND, JAN · 2015")
     
     var profileScenes:[WeekScenes] = [
                     weekScene1,
                     weekScene2,
                     weekScene1,
+                    weekScene1,
+                    weekScene1,
                     weekScene2
+                   
                 ]
     
     
@@ -91,8 +101,8 @@ class ProfileViewController: UIViewController {
         themesCollectionView.dataSource = self
         globalView.delegate = self
         globalView.dataSource = self
-        self.tabBarController?.tabBar.hidden = true
-
+//        self.tabBarController?.tabBar.hidden = true
+        self.navigationController?.navigationBarHidden = true
         
         globalView.alwaysBounceVertical = true
         //        self.automaticallyAdjustsScrollViewInsets = false
@@ -131,6 +141,11 @@ class ProfileViewController: UIViewController {
     }
     
     
+    
+    
+    
+    
+    
     func strechProfileCover(){
         var coverHeaderRect = CGRect(x: 0, y: 0, width: profileCover.bounds.width, height: profileCoverHeight)
         var caculatedHeight = profileCoverHeight - globalView.contentOffset.y
@@ -164,15 +179,50 @@ class ProfileViewController: UIViewController {
         //the size for the theme image
         themeImageSize.width = (UIScreen.mainScreen().bounds.size.width - themeSlideConstant.sectionEdgeInset.left - 2*themeSlideConstant.lineSpace) / themeSlideConstant.maxVisibleThemeCount
         themeImageSize.height = themeImageSize.width / themeSlideConstant.themeImageAspectRatio
-        
         //the height for the themeCollectionView
         themeSlideHeightConstraint.constant = themeImageSize.height + themeSlideConstant.sectionEdgeInset.top + themeSlideConstant.sectionEdgeInset.bottom + themeSlideConstant.precicitionOffset
+        
     }
+    
+    //set data for the SceneDetailViewController
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if  segue.identifier == "showSceneDetail"{
+            if let detaileViewController = segue.destinationViewController as? SceneDetailViewController{
+//               print( self.selectedThumbnailScene)
+            
+            }
+        }
+    }
+    
 }
 
 extension ProfileViewController: UIScrollViewDelegate{
     func scrollViewDidScroll(scrollView: UIScrollView) {
         strechProfileCover()
+        
+        
+        //reset all other visible rows section header view to white color
+        if let visiableIndexPathForCell = globalView.indexPathsForVisibleRows{
+            for indexPath in visiableIndexPathForCell{
+                globalView.headerViewForSection(indexPath.section)?.contentView.backgroundColor = UIColor.whiteColor()
+            }
+            
+            if let firstVisiableIndexPathForCell = visiableIndexPathForCell.first{
+                if let firstVisibleCell = globalView.cellForRowAtIndexPath(firstVisiableIndexPathForCell){
+                    //print(firstVisibleCell)
+                    if firstVisibleCell.frame.origin.y < sectionHeaderHeight + globalView.contentOffset.y{
+                        if let headerView = globalView.headerViewForSection(firstVisiableIndexPathForCell.section){
+                            headerView.contentView.backgroundColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 0.1)
+                            headerView.frame.offsetInPlace(dx: 0, dy: -1)
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+        
+        
     }
 }
 
@@ -233,7 +283,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let sectionHeaderView = UIView()
+        let sectionHeaderView = UITableViewHeaderFooterView()
         //border view
         let borderView = UIView()
         borderView.backgroundColor = UIColor(red: 239 / 255.0, green: 239 / 255.0, blue: 244 / 255.0, alpha: 1)
@@ -242,16 +292,24 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
         //date view
         let sectionLabel = UILabel()
         sectionLabel.text = profileScenes[section].weekDisplayInfo
-        sectionLabel.frame = CGRect(x: 18, y: 12, width: 180, height: 20)
+        sectionLabel.frame = CGRect(x: 18, y: 14, width: 180, height: 18)
         sectionLabel.font = UIFont.systemFontOfSize(13, weight: UIFontWeightMedium)
         sectionLabel.textColor = UIColor(red: 20 / 255.0, green:  20 / 255.0, blue:  20 / 255.0, alpha: 1)
         
         sectionHeaderView.addSubview(borderView)
         sectionHeaderView.addSubview(sectionLabel)
-//        sectionHeaderView.backgroundColor = UIColor.whiteColor()
-        
+        sectionHeaderView.contentView.backgroundColor = UIColor.whiteColor()
+
         return sectionHeaderView
     }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return sectionHeaderHeight
+    }
+    
+   
+    
+
 }
 
 extension ProfileViewController: UIViewControllerTransitioningDelegate{
@@ -268,14 +326,26 @@ extension ProfileViewController: UIViewControllerTransitioningDelegate{
 }
 
 extension ProfileViewController: PostCollectionViewProtocol{
-    func didTapCell(collectionViewCell: UICollectionView, indexPath: NSIndexPath, scene: Scene, selectedItemInfo: CloseUpEffectSelectedItemInfo) {
-        let sceneDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("sceneDetailViewControllerIden") as! SceneDetailViewController
+    func didTapCell(collectionView: UICollectionView, indexPath: NSIndexPath, scene: Scene, selectedItemInfo: CloseUpEffectSelectedItemInfo) {
+//        self.interactingCollectionView = collectionView
+        //present the sceneDetailViewController
+     let sceneDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("sceneDetailViewControllerIden") as! SceneDetailViewController
         sceneDetailViewController.scene = scene
         sceneDetailViewController.transitioningDelegate = self
+        self.selectedThumbnailScene = scene
         self.selectedThumbnailItemInfo = selectedItemInfo
         self.presentViewController(sceneDetailViewController, animated: true, completion: nil)
     }
 }
 
+
+
+
+
+//extension ProfileViewController: CloseUpMainProtocol{
+//    func closeUpTransitionCollectionView() -> UIScrollView {
+//        return interactingCollectionView!
+//    }
+//}
 
 
