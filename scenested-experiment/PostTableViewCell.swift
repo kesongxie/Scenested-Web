@@ -18,6 +18,7 @@ class PostTableViewCell: UITableViewCell {
     
     @IBOutlet weak var horizontalSliderHeightConstraint: NSLayoutConstraint!
 
+//    var parentTableView: UITableView?
     
     var postCollectionViewDelegate: PostCollectionViewProtocol?
     
@@ -37,14 +38,10 @@ class PostTableViewCell: UITableViewCell {
         //the space between each item
         static let lineSpace: CGFloat = 6
         static let maxVisibleThemeCount: CGFloat = 2.2 //the max number of theme that is allowed to display at the screen
-        static let themeImageAspectRatio:CGFloat = 3 / 4
+        static let themeImageAspectRatio:CGFloat = 4 / 5
         static let precicitionOffset: CGFloat = 1 //prevent the height of the collectionView from less than the total of the cell height and inset during the calculation
         static let cellReuseIdentifier: String = "postInnerCell"
     }
-    
-//    let postImages: [String] = ["cover3", "cover", "cover4"]
-//
-//    let postTexts: [String] = ["This is my first coustic fingerstyle guitar concert in New York", "Glad to see this year US Open Final", "My first hackathon ever!"]
     
     
     override func awakeFromNib() {
@@ -115,8 +112,6 @@ extension PostTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath){
-        print(indexPath.row)
-        
         if let scene = weekScenes?.scenes[indexPath.row]{
             let cell = collectionView.cellForItemAtIndexPath(indexPath) as! PostCollectionViewCell
             let thumbnailFrame = cell.superview?.convertRect(cell.frame, toView: nil)
@@ -128,10 +123,9 @@ extension PostTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
             selectedItemInfo.thumbnailFrame = thumbnailFrame!
             selectedItemInfo.thumbnailImageAspectRatio = aspectRatio
             selectedItemInfo.thumbnailImageView = thumbnailImageView
-            
-            
-            
-//           let tableViewCell = collectionView.superview?.superview as! PostTableViewCell
+//            selectedItemInfo.selectedItemParentGlobalView = self.parentTableView!
+            //            selectedItemInfo.selectedItemParentGlobalView = self.superview
+            //           let tableViewCell = collectionView.superview?.superview as! PostTableViewCell
 //           tableViewCell.index
             
            // self.collectionView(collectionView, cellForItemAtIndexPath: indexPath)

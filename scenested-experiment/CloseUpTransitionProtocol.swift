@@ -15,5 +15,5 @@ protocol PostCollectionViewProtocol {
 }
 
 protocol CloseUpMainProtocol{
-    func closeUpTransitionScrollView() -> UIScrollView
+    func closeUpTransitionGlobalScrollView() -> UIScrollView
 }

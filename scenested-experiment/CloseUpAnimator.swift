@@ -15,7 +15,7 @@ enum pinnedDirection{
 }
 
 class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
-    let duration = 0.3
+    let duration = 0.35
     var presenting: Bool = false
     var selectedItemInfo =  CloseUpEffectSelectedItemInfo()
     
@@ -53,11 +53,28 @@ class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
         }else{
             
-            let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as! TabBarController
+           // let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as! TabBarController
+//            let globalScrollView = selectedItemInfo.selectedItemParentGlobalView
             
-//            (fromViewController.selectedViewController as! ProfileViewController).globalView.scrollRectToVisible(selectedItemInfo.thumbnailFrame, animated: true)
-            containerView.addSubview(fromView)
-
+            
+            
+            
+//            print(globalScrollView.contentOffset.y)
+//
+//            let verticalScrollOffset = globalScrollView.contentOffset.y + selectedItemInfo.thumbnailFrame.origin.y + selectedItemInfo.thumbnailFrame.size.height - UIScreen.mainScreen().bounds.height + fromViewController.tabBar.frame.size.height
+//            
+//            
+//            
+//            print(verticalScrollOffset)
+//            
+//            let pointToScroll = CGPoint(x: 0 , y:  verticalScrollOffset)
+//            
+//            
+//            globalScrollView.setContentOffset(pointToScroll, animated: false)
+//            
+            
+            
+            
             
             //scale transform for from view
             let fromViewTransformScaleX: CGFloat = toView.frame.size.width / selectedItemInfo.thumbnailFrame.size.width

@@ -16,6 +16,11 @@ class SceneDetailViewController: UIViewController, UIViewControllerTransitioning
    
     var scene: Scene?
 
+    @IBOutlet weak var postUserImageView: UIImageView!{
+        didSet{
+            postUserImageView.layer.cornerRadius = 30
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

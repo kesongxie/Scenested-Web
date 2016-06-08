@@ -32,7 +32,7 @@ class ProfileViewController: UIViewController {
     
     
     private var profileCoverHeight: CGFloat = 0
-    private var headerHeightOffset: CGFloat = 34 // make the cover's height little bit larger than the original screen height
+    private var headerHeightOffset: CGFloat = 30 // make the cover's height little bit larger than the original screen height
     private var profileCoverOriginalScreenHeight: CGFloat = 0
     
     private var themeImageSize: CGSize = CGSizeZero //the size of the individual theme UIImageView
@@ -62,7 +62,7 @@ class ProfileViewController: UIViewController {
         //the space between each item
         static let lineSpace: CGFloat = 6
         static let maxVisibleThemeCount: CGFloat = 2.2 //the max number of theme that is allowed to display at the screen
-        static let themeImageAspectRatio:CGFloat = 3 / 4
+        static let themeImageAspectRatio:CGFloat = 4/5
         static let precicitionOffset: CGFloat = 1 //prevent the height of the collectionView from less than the total of the cell height and inset during the calculation
         static let themeCellReuseIdentifier: String = "themeCell"
     }
@@ -77,21 +77,32 @@ class ProfileViewController: UIViewController {
     static let scene2 = Scene(id: 3, imageUrl: "thumb_2", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postDate: "May 02, 2015")
 
     static let scene3 = Scene(id: 2, imageUrl: "thumb_1", themeName: "GUITAR", postText: "This is my first time to see a live acoustic guitar concert since I picked up guitar about five years ago. #TraceBundy", postDate: "May 17, 2014")
+    static let scene4 = Scene(id: 4, imageUrl: "canada", themeName: "TRAVEL", postText: "A nice trip with my family to Canada, see the great Fall", postDate: "May 17, 2014")
+
+    static let scene5 = Scene(id: 5, imageUrl: "libarary", themeName: "PROGRAMMING", postText: "A beautiful sunset near the company where I was interned in during my freshman summer", postDate: "May 17, 2014")
+    
+    static let scene6 = Scene(id: 6, imageUrl: "beach", themeName: "TENNIS", postText: "A friend of mine showed the a tennis park near the huston river, truly stunning", postDate: "May 17, 2014")
+    
+    static let scene7 = Scene(id: 7, imageUrl: "garden", themeName: "TENNIS", postText: "Roger and Dimitrov played an exihibition match in Madision Sqaure Garden",postDate: "May 17, 2014")
+
+ 
 
     //post data source
     //each element in posts is posts from the same week, for example, post1 and post2 are from week 1, Jan 2015, post3 is from week 3, Jan, 2016
     
     static let  weekScene1: WeekScenes = WeekScenes(scenes: [scene1, scene2], weekDisplayInfo: "WEEK 4TH, JAN · 2016")
     static let weekScene2: WeekScenes = WeekScenes(scenes: [scene3], weekDisplayInfo: "WEEK 2ND, JAN · 2015")
+    static let weekScene3: WeekScenes = WeekScenes(scenes: [scene5, scene6, scene7], weekDisplayInfo: "WEEK 3RD, MAR · 2014")
+    static let weekScene4: WeekScenes = WeekScenes(scenes: [scene4], weekDisplayInfo: "WEEK 1ST, SEP · 2013")
+    
+
+
     
     var profileScenes:[WeekScenes] = [
                     weekScene1,
                     weekScene2,
-                    weekScene1,
-                    weekScene1,
-                    weekScene1,
-                    weekScene2
-                   
+                    weekScene3,
+                    weekScene4
                 ]
     
     
@@ -204,16 +215,20 @@ extension ProfileViewController: UIScrollViewDelegate{
         //reset all other visible rows section header view to white color
         if let visiableIndexPathForCell = globalView.indexPathsForVisibleRows{
             for indexPath in visiableIndexPathForCell{
-                globalView.headerViewForSection(indexPath.section)?.contentView.backgroundColor = UIColor.whiteColor()
+                if let otherHeaderView = globalView.headerViewForSection(indexPath.section){
+                    otherHeaderView.contentView.backgroundColor = UIColor.whiteColor()
+                    otherHeaderView.layer.borderColor = .None
+                    otherHeaderView.layer.borderWidth = 0
+                }
             }
             
             if let firstVisiableIndexPathForCell = visiableIndexPathForCell.first{
                 if let firstVisibleCell = globalView.cellForRowAtIndexPath(firstVisiableIndexPathForCell){
-                    //print(firstVisibleCell)
                     if firstVisibleCell.frame.origin.y < sectionHeaderHeight + globalView.contentOffset.y{
                         if let headerView = globalView.headerViewForSection(firstVisiableIndexPathForCell.section){
-                            headerView.contentView.backgroundColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 0.1)
-                            headerView.frame.offsetInPlace(dx: 0, dy: -1)
+                            headerView.contentView.backgroundColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 0.05)
+                            headerView.layer.borderColor = UIColor(red: 220/255.0, green: 220/255.0, blue: 220/255.0, alpha: 0.5).CGColor
+                            headerView.layer.borderWidth = 1
                         }
                     }
                 }
@@ -279,6 +294,8 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
         let cell = tableView.dequeueReusableCellWithIdentifier("postCell") as! PostTableViewCell
         cell.postCollectionViewDelegate = self
         cell.weekScenes = profileScenes[indexPath.section]
+//        cell.parentTableView = globalView
+        
         return cell
     }
     
@@ -342,10 +359,10 @@ extension ProfileViewController: PostCollectionViewProtocol{
 
 
 
-//extension ProfileViewController: CloseUpMainProtocol{
-//    func closeUpTransitionCollectionView() -> UIScrollView {
-//        return interactingCollectionView!
-//    }
-//}
+extension ProfileViewController: CloseUpMainProtocol{
+    func closeUpTransitionGlobalScrollView() -> UIScrollView {
+        return globalView
+    }
+}
 
 
