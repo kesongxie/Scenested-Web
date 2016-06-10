@@ -30,13 +30,13 @@ class PostTableViewCell: UITableViewCell {
     private struct horizontalsliderConstant{
         struct sectionEdgeInset{
             static let top:CGFloat = 0
-            static let left:CGFloat = 16
+            static let left:CGFloat = 14
             static let bottom:CGFloat = 0
-            static let right:CGFloat = 16
+            static let right:CGFloat = 14
         }
         
         //the space between each item
-        static let lineSpace: CGFloat = 6
+        static let lineSpace: CGFloat = 7
         static let maxVisibleThemeCount: CGFloat = 2.2 //the max number of theme that is allowed to display at the screen
         static let themeImageAspectRatio:CGFloat = 4 / 5
         static let precicitionOffset: CGFloat = 1 //prevent the height of the collectionView from less than the total of the cell height and inset during the calculation

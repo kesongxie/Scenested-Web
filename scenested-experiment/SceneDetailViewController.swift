@@ -18,14 +18,14 @@ class SceneDetailViewController: UIViewController, UIViewControllerTransitioning
 
     @IBOutlet weak var postUserImageView: UIImageView!{
         didSet{
-            postUserImageView.layer.cornerRadius = 30
+            postUserImageView.layer.cornerRadius = 24
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         renderSceneImage()
-        self.navigationController?.navigationBarHidden = false
+//        self.navigationController?.navigationBarHidden = false
 
         //self.navigationController?.baritem
         // Do any additional setup after loading the view.
@@ -41,9 +41,9 @@ class SceneDetailViewController: UIViewController, UIViewControllerTransitioning
         return true
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        self.navigationController?.navigationBarHidden = true
-    }
+//    override func viewWillDisappear(animated: Bool) {
+//        self.navigationController?.navigationBarHidden = true
+//    }
     
     func renderSceneImage() -> Void{
         if scene != nil{

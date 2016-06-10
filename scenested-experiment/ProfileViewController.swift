@@ -54,13 +54,13 @@ class ProfileViewController: UIViewController {
     private struct themeSlideConstant{
         struct sectionEdgeInset{
             static let top:CGFloat = 0
-            static let left:CGFloat = 16
+            static let left:CGFloat = 14
             static let bottom:CGFloat = 0
-            static let right:CGFloat = 16
+            static let right:CGFloat = 14
         }
         
         //the space between each item
-        static let lineSpace: CGFloat = 6
+        static let lineSpace: CGFloat = 7
         static let maxVisibleThemeCount: CGFloat = 2.2 //the max number of theme that is allowed to display at the screen
         static let themeImageAspectRatio:CGFloat = 4/5
         static let precicitionOffset: CGFloat = 1 //prevent the height of the collectionView from less than the total of the cell height and inset during the calculation
@@ -81,7 +81,7 @@ class ProfileViewController: UIViewController {
 
     static let scene5 = Scene(id: 5, imageUrl: "libarary", themeName: "PROGRAMMING", postText: "A beautiful sunset near the company where I was interned in during my freshman summer", postDate: "May 17, 2014")
     
-    static let scene6 = Scene(id: 6, imageUrl: "beach", themeName: "TENNIS", postText: "A friend of mine showed the a tennis park near the huston river, truly stunning", postDate: "May 17, 2014")
+    static let scene6 = Scene(id: 6, imageUrl: "cover", themeName: "TENNIS", postText: "A friend of mine showed the a tennis park near the huston river, truly stunning", postDate: "May 17, 2014")
     
     static let scene7 = Scene(id: 7, imageUrl: "garden", themeName: "TENNIS", postText: "Roger and Dimitrov played an exihibition match in Madision Sqaure Garden",postDate: "May 17, 2014")
 
@@ -153,7 +153,10 @@ class ProfileViewController: UIViewController {
     
     
     
-    
+//    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+//        return .LightContent
+//    }
+//    
     
     
     
@@ -219,6 +222,7 @@ extension ProfileViewController: UIScrollViewDelegate{
                     otherHeaderView.contentView.backgroundColor = UIColor.whiteColor()
                     otherHeaderView.layer.borderColor = .None
                     otherHeaderView.layer.borderWidth = 0
+                    otherHeaderView.alpha = 1.0
                 }
             }
             
@@ -226,18 +230,16 @@ extension ProfileViewController: UIScrollViewDelegate{
                 if let firstVisibleCell = globalView.cellForRowAtIndexPath(firstVisiableIndexPathForCell){
                     if firstVisibleCell.frame.origin.y < sectionHeaderHeight + globalView.contentOffset.y{
                         if let headerView = globalView.headerViewForSection(firstVisiableIndexPathForCell.section){
-                            headerView.contentView.backgroundColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 0.05)
-                            headerView.layer.borderColor = UIColor(red: 220/255.0, green: 220/255.0, blue: 220/255.0, alpha: 0.5).CGColor
-                            headerView.layer.borderWidth = 1
+                            
+                            headerView.contentView.backgroundColor = UIColor(red: 246/255.0, green: 246/255.0, blue: 246/255.0, alpha: 1)
+//                            headerView.alpha = 0.97
+                            headerView.layer.borderColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1).CGColor
+                            headerView.layer.borderWidth = 0.8
                         }
                     }
                 }
             }
         }
-        
-        
-        
-        
     }
 }
 
@@ -309,7 +311,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
         //date view
         let sectionLabel = UILabel()
         sectionLabel.text = profileScenes[section].weekDisplayInfo
-        sectionLabel.frame = CGRect(x: 18, y: 14, width: 180, height: 18)
+        sectionLabel.frame = CGRect(x: 16, y: 14, width: 180, height: 18)
         sectionLabel.font = UIFont.systemFontOfSize(13, weight: UIFontWeightMedium)
         sectionLabel.textColor = UIColor(red: 20 / 255.0, green:  20 / 255.0, blue:  20 / 255.0, alpha: 1)
         
@@ -323,6 +325,16 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return sectionHeaderHeight
     }
+    
+//     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+//        let header: UITableViewHeaderFooterView = view as! UITableViewHeaderFooterView //recast your view as a UITableViewHeaderFooterView
+//        header.contentView.backgroundColor = UIColor(red: 0/255, green: 181/255, blue: 229/255, alpha: 1.0) //make the background color light blue
+//        header.textLabel!.textColor = UIColor.whiteColor() //make the text white
+//        header.alpha = 0.5 //make the header transparent
+//    }
+//    
+    
+
     
    
     
