@@ -32,7 +32,7 @@ struct StyleSchemeConstant{
     
     struct navigationBarStyle{
         static let translucent = false
-        static let MiddleItemTintColor = ThemeColor
+        static let MiddleItemTintColor = UIColor.whiteColor()
         
         static let titleTextAttributes = [NSForegroundColorAttributeName: ThemeColor]
     }

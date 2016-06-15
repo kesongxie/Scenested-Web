@@ -14,6 +14,9 @@ class ProfileNavigationController: UINavigationController {
         super.viewDidLoad()
         self.navigationBar.titleTextAttributes = StyleSchemeConstant.navigationBarStyle.titleTextAttributes
         self.navigationBar.translucent = StyleSchemeConstant.navigationBarStyle.translucent
+        
+        
+//        self.navigationBar.barTintColor = UIColor(red: 60 / 255.0, green: 60 / 255.0, blue: 60 / 255.0, alpha: 1)
         // Do any additional setup after loading the view.
     }
 
@@ -22,6 +25,10 @@ class ProfileNavigationController: UINavigationController {
         // Dispose of any resources that can be recreated.
     }
     
+    
+//    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+//        return .LightContent
+//    }
 
     /*
     // MARK: - Navigation

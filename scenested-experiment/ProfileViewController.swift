@@ -49,6 +49,8 @@ class ProfileViewController: UIViewController {
     private let sectionHeaderHeight:CGFloat = 46
     
     
+
+    
     
     /* define the style constant for the theme slide  */
     private struct themeSlideConstant{
@@ -113,7 +115,7 @@ class ProfileViewController: UIViewController {
         globalView.delegate = self
         globalView.dataSource = self
 //        self.tabBarController?.tabBar.hidden = true
-        self.navigationController?.navigationBarHidden = true
+      //  self.navigationController?.navigationBarHidden = true
         
         globalView.alwaysBounceVertical = true
         //        self.automaticallyAdjustsScrollViewInsets = false
@@ -153,10 +155,8 @@ class ProfileViewController: UIViewController {
     
     
     
-//    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-//        return .LightContent
-//    }
-//    
+  
+    
     
     
     
@@ -358,12 +358,18 @@ extension ProfileViewController: PostCollectionViewProtocol{
     func didTapCell(collectionView: UICollectionView, indexPath: NSIndexPath, scene: Scene, selectedItemInfo: CloseUpEffectSelectedItemInfo) {
 //        self.interactingCollectionView = collectionView
         //present the sceneDetailViewController
-     let sceneDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("sceneDetailViewControllerIden") as! SceneDetailViewController
+     let sceneDetailNavigationController = storyboard?.instantiateViewControllerWithIdentifier("NavigationSceneDetailViewControllerIden") as! SceneDetailNavigationController
+          let sceneDetailViewController = sceneDetailNavigationController.viewControllers[0] as! SceneDetailViewController
+        
+        
+        
+        
+        
         sceneDetailViewController.scene = scene
-        sceneDetailViewController.transitioningDelegate = self
+        sceneDetailNavigationController.transitioningDelegate = self
         self.selectedThumbnailScene = scene
         self.selectedThumbnailItemInfo = selectedItemInfo
-        self.presentViewController(sceneDetailViewController, animated: true, completion: nil)
+        self.presentViewController(sceneDetailNavigationController, animated: true, completion: nil)
     }
 }
 

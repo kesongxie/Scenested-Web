@@ -33,6 +33,11 @@ class CloseUpAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         toView.alpha = 0
         
         
+        let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)!
+
+        
+        
+        UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: .Fade)
         
         
         if presenting{

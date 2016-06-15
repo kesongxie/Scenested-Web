@@ -37,9 +37,9 @@ class SceneDetailViewController: UIViewController, UIViewControllerTransitioning
     }
     
     
-    override func prefersStatusBarHidden() -> Bool {
-        return true
-    }
+//    override func prefersStatusBarHidden() -> Bool {
+//        return true
+//    }
     
 //    override func viewWillDisappear(animated: Bool) {
 //        self.navigationController?.navigationBarHidden = true
