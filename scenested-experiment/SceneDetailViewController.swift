@@ -16,12 +16,12 @@ class SceneDetailViewController: UIViewController, UIViewControllerTransitioning
    
     var scene: Scene?
 
-    @IBOutlet weak var postUserImageView: UIImageView!{
-        didSet{
-            postUserImageView.layer.cornerRadius = 24
-        }
-    }
-    
+//    @IBOutlet weak var postUserImageView: UIImageView!{
+//        didSet{
+//            postUserImageView.layer.cornerRadius = 24
+//        }
+//    }
+//    
     override func viewDidLoad() {
         super.viewDidLoad()
         renderSceneImage()
@@ -37,9 +37,9 @@ class SceneDetailViewController: UIViewController, UIViewControllerTransitioning
     }
     
     
-//    override func prefersStatusBarHidden() -> Bool {
-//        return true
-//    }
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
     
 //    override func viewWillDisappear(animated: Bool) {
 //        self.navigationController?.navigationBarHidden = true
@@ -48,12 +48,12 @@ class SceneDetailViewController: UIViewController, UIViewControllerTransitioning
     func renderSceneImage() -> Void{
         if scene != nil{
             sceneImageView?.image = UIImage(named: scene!.imageUrl)
-            if let sceneImage = sceneImageView?.image?.size{
-                let sceneImageAspectRatio: CGFloat = sceneImage.width / sceneImage.height
-                sceneImageView.frame.size.width = view.bounds.width
-                sceneImageView.frame.size.height = sceneImageView.frame.size.width / sceneImageAspectRatio
-                sceneImageViewHeightConstraint.constant = sceneImageView.frame.size.height
-            }
+//            if let sceneImage = sceneImageView?.image?.size{
+//                let sceneImageAspectRatio: CGFloat = sceneImage.width / sceneImage.height
+//                sceneImageView.frame.size.width = view.bounds.width
+//                sceneImageView.frame.size.height = sceneImageView.frame.size.width / sceneImageAspectRatio
+//                sceneImageViewHeightConstraint.constant = sceneImageView.frame.size.height
+//            }
         }
     }
 

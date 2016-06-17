@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		98108A0C1CFE3EFB0093E878 /* PostCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98108A0B1CFE3EFB0093E878 /* PostCollectionViewCell.swift */; };
 		982D5F871D09E67E00D2DB72 /* SceneDetailNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5F861D09E67E00D2DB72 /* SceneDetailNavigationController.swift */; };
+		982D5F891D1388AE00D2DB72 /* EditProfileNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5F881D1388AE00D2DB72 /* EditProfileNavigationController.swift */; };
+		982D5F8B1D1389A600D2DB72 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5F8A1D1389A600D2DB72 /* EditProfileViewController.swift */; };
+		982D5F8E1D13903600D2DB72 /* UIImgeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5F8D1D13903600D2DB72 /* UIImgeExtension.swift */; };
+		982D5F901D13B4D100D2DB72 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5F8F1D13B4D100D2DB72 /* UIViewControllerExtension.swift */; };
 		984B77E51CD929CA00623F7D /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984B77E41CD929CA00623F7D /* PostTableViewCell.swift */; };
 		986EB8121CC9B81B0012A198 /* ProfileNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986EB8111CC9B81B0012A198 /* ProfileNavigationController.swift */; };
 		986ED6091CD44BFE00101FEE /* ThemeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986ED6081CD44BFE00101FEE /* ThemeCollectionViewCell.swift */; };
@@ -33,6 +37,10 @@
 /* Begin PBXFileReference section */
 		98108A0B1CFE3EFB0093E878 /* PostCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionViewCell.swift; sourceTree = "<group>"; };
 		982D5F861D09E67E00D2DB72 /* SceneDetailNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDetailNavigationController.swift; sourceTree = "<group>"; };
+		982D5F881D1388AE00D2DB72 /* EditProfileNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileNavigationController.swift; sourceTree = "<group>"; };
+		982D5F8A1D1389A600D2DB72 /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		982D5F8D1D13903600D2DB72 /* UIImgeExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImgeExtension.swift; sourceTree = "<group>"; };
+		982D5F8F1D13B4D100D2DB72 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 		984B77E41CD929CA00623F7D /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		986EB8111CC9B81B0012A198 /* ProfileNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileNavigationController.swift; sourceTree = "<group>"; };
 		986ED6081CD44BFE00101FEE /* ThemeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -67,6 +75,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		982D5F8C1D138FD600D2DB72 /* Profile Utility */ = {
+			isa = PBXGroup;
+			children = (
+				982D5F8D1D13903600D2DB72 /* UIImgeExtension.swift */,
+			);
+			name = "Profile Utility";
+			sourceTree = "<group>";
+		};
 		987BA7D01D04A4950080F4DF /* Scene Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -107,8 +123,10 @@
 				987BA7D81D05ABB80080F4DF /* Global */,
 				98AA1D0A1CBB5931002CF7E2 /* StyleSchemeConstant.swift */,
 				98AA1D0E1CBB5BE0002CF7E2 /* UIButtonExtension.swift */,
+				982D5F8F1D13B4D100D2DB72 /* UIViewControllerExtension.swift */,
 				98AA1D0C1CBB5950002CF7E2 /* TabBarController.swift */,
 				987BA7D61D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift */,
+				982D5F8C1D138FD600D2DB72 /* Profile Utility */,
 				987BA7D01D04A4950080F4DF /* Scene Model */,
 				98EE27A51CCAC4B500FC9864 /* Profile Page */,
 				9895F8EC1CBB440D00D7DA62 /* Assets.xcassets */,
@@ -147,6 +165,8 @@
 				984B77E41CD929CA00623F7D /* PostTableViewCell.swift */,
 				98E394251D03C24500EB158C /* CloseUpAnimator.swift */,
 				98108A0B1CFE3EFB0093E878 /* PostCollectionViewCell.swift */,
+				982D5F881D1388AE00D2DB72 /* EditProfileNavigationController.swift */,
+				982D5F8A1D1389A600D2DB72 /* EditProfileViewController.swift */,
 				98E394271D03C58300EB158C /* Scene Detail */,
 			);
 			name = "Profile Page";
@@ -232,15 +252,19 @@
 				98AA1D0F1CBB5BE0002CF7E2 /* UIButtonExtension.swift in Sources */,
 				98E394261D03C24500EB158C /* CloseUpAnimator.swift in Sources */,
 				98AA1D0D1CBB5950002CF7E2 /* TabBarController.swift in Sources */,
+				982D5F8B1D1389A600D2DB72 /* EditProfileViewController.swift in Sources */,
 				98E3942C1D04403800EB158C /* CloseUpCustomSegue.swift in Sources */,
 				9895F8E61CBB440D00D7DA62 /* AppDelegate.swift in Sources */,
 				987BA7D71D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift in Sources */,
+				982D5F891D1388AE00D2DB72 /* EditProfileNavigationController.swift in Sources */,
 				987BA7D51D04A9170080F4DF /* WeekScenes.swift in Sources */,
+				982D5F8E1D13903600D2DB72 /* UIImgeExtension.swift in Sources */,
 				987BA7DA1D05AC010080F4DF /* UtilityFunctions.swift in Sources */,
 				98AA1D0B1CBB5931002CF7E2 /* StyleSchemeConstant.swift in Sources */,
 				98E394291D03C5B900EB158C /* SceneDetailViewController.swift in Sources */,
 				986ED6091CD44BFE00101FEE /* ThemeCollectionViewCell.swift in Sources */,
 				984B77E51CD929CA00623F7D /* PostTableViewCell.swift in Sources */,
+				982D5F901D13B4D100D2DB72 /* UIViewControllerExtension.swift in Sources */,
 				982D5F871D09E67E00D2DB72 /* SceneDetailNavigationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

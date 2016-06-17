@@ -32,7 +32,7 @@ class ProfileViewController: UIViewController {
     
     
     private var profileCoverHeight: CGFloat = 0
-    private var headerHeightOffset: CGFloat = 30 // make the cover's height little bit larger than the original screen height
+    private var headerHeightOffset: CGFloat = 10 // make the cover's height little bit larger than the original screen height
     private var profileCoverOriginalScreenHeight: CGFloat = 0
     
     private var themeImageSize: CGSize = CGSizeZero //the size of the individual theme UIImageView
@@ -56,14 +56,15 @@ class ProfileViewController: UIViewController {
     private struct themeSlideConstant{
         struct sectionEdgeInset{
             static let top:CGFloat = 0
-            static let left:CGFloat = 14
-            static let bottom:CGFloat = 0
+            static let left:CGFloat = 12
+            static let bottom:CGFloat = 14
             static let right:CGFloat = 14
         }
         
         //the space between each item
         static let lineSpace: CGFloat = 7
-        static let maxVisibleThemeCount: CGFloat = 2.2 //the max number of theme that is allowed to display at the screen
+        static let maxVisibleThemeCount: CGFloat = 2.2
+        //the max number of theme that is allowed to display at the screen
         static let themeImageAspectRatio:CGFloat = 4/5
         static let precicitionOffset: CGFloat = 1 //prevent the height of the collectionView from less than the total of the cell height and inset during the calculation
         static let themeCellReuseIdentifier: String = "themeCell"
@@ -76,7 +77,7 @@ class ProfileViewController: UIViewController {
     let themeImages: [String] = ["theme1", "theme2", "thumb_2"]
     
     static let scene1 = Scene(id: 1, imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able to experience this year's #USOpen", postDate: "Sep 4, 2015")
-    static let scene2 = Scene(id: 3, imageUrl: "thumb_2", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postDate: "May 02, 2015")
+    static let scene2 = Scene(id: 3, imageUrl: "100_1288", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postDate: "May 02, 2015")
 
     static let scene3 = Scene(id: 2, imageUrl: "thumb_1", themeName: "GUITAR", postText: "This is my first time to see a live acoustic guitar concert since I picked up guitar about five years ago. #TraceBundy", postDate: "May 17, 2014")
     static let scene4 = Scene(id: 4, imageUrl: "canada", themeName: "TRAVEL", postText: "A nice trip with my family to Canada, see the great Fall", postDate: "May 17, 2014")
@@ -114,11 +115,11 @@ class ProfileViewController: UIViewController {
         themesCollectionView.dataSource = self
         globalView.delegate = self
         globalView.dataSource = self
-//        self.tabBarController?.tabBar.hidden = true
-      //  self.navigationController?.navigationBarHidden = true
+       self.navigationController?.navigationBarHidden = true
         
+        
+        //self.tabBarController?.tabBar.hidden = true
         globalView.alwaysBounceVertical = true
-        //        self.automaticallyAdjustsScrollViewInsets = false
         
         profileCover.image = UIImage(named: "cover3")
         if let coverImageSize = profileCover.image?.size{
@@ -154,12 +155,6 @@ class ProfileViewController: UIViewController {
     }
     
     
-    
-  
-    
-    
-    
-    
     func strechProfileCover(){
         var coverHeaderRect = CGRect(x: 0, y: 0, width: profileCover.bounds.width, height: profileCoverHeight)
         var caculatedHeight = profileCoverHeight - globalView.contentOffset.y
@@ -176,11 +171,7 @@ class ProfileViewController: UIViewController {
     }
     
     func updateAvator(){
-        profileAvator.layer.cornerRadius = profileAvator.frame.size.width / 2;
-        profileAvator.clipsToBounds = true
-        profileAvator.layer.borderColor = UIColor.whiteColor().CGColor
-        profileAvator.layer.borderWidth = 3
-        //profileAvator.layer.cornerRadius = 6.0;
+        profileAvator.becomeCircleAvator()
     }
     
     
@@ -358,18 +349,18 @@ extension ProfileViewController: PostCollectionViewProtocol{
     func didTapCell(collectionView: UICollectionView, indexPath: NSIndexPath, scene: Scene, selectedItemInfo: CloseUpEffectSelectedItemInfo) {
 //        self.interactingCollectionView = collectionView
         //present the sceneDetailViewController
-     let sceneDetailNavigationController = storyboard?.instantiateViewControllerWithIdentifier("NavigationSceneDetailViewControllerIden") as! SceneDetailNavigationController
-          let sceneDetailViewController = sceneDetailNavigationController.viewControllers[0] as! SceneDetailViewController
-        
+     let sceneDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("sceneDetailViewControllerIden") as! SceneDetailViewController
+//          let sceneDetailViewController = sceneDetailNavigationController.viewControllers[0] as! SceneDetailViewController
+//        
         
         
         
         
         sceneDetailViewController.scene = scene
-        sceneDetailNavigationController.transitioningDelegate = self
+        sceneDetailViewController.transitioningDelegate = self
         self.selectedThumbnailScene = scene
         self.selectedThumbnailItemInfo = selectedItemInfo
-        self.presentViewController(sceneDetailNavigationController, animated: true, completion: nil)
+        self.presentViewController(sceneDetailViewController, animated: true, completion: nil)
     }
 }
 

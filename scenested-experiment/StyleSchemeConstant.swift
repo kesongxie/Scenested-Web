@@ -34,7 +34,9 @@ struct StyleSchemeConstant{
         static let translucent = false
         static let MiddleItemTintColor = UIColor.whiteColor()
         
-        static let titleTextAttributes = [NSForegroundColorAttributeName: ThemeColor]
+        static let titleTextAttributes = [NSForegroundColorAttributeName:  UIColor(red: 20/255.0, green: 20/255.0, blue: 20/255.0, alpha: 1)]
+        static let backgroundColor = UIColor.redColor()
+        
     }
     
     struct tabBarStyle{
