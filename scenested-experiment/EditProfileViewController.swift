@@ -10,6 +10,7 @@ import UIKit
 
 class EditProfileViewController: UIViewController {
    
+
     
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -23,6 +24,10 @@ class EditProfileViewController: UIViewController {
     
     
     @IBOutlet weak var bioTextView: UITextView!
+    
+   
+
+
     
     
     private var profileCoverHeight: CGFloat = 0
@@ -39,6 +44,8 @@ class EditProfileViewController: UIViewController {
         
         self.navigationController?.navigationBar.backgroundColor = StyleSchemeConstant.navigationBarStyle.backgroundColor
         self.navigationController?.navigationBar.translucent = StyleSchemeConstant.navigationBarStyle.translucent
+        
+//        self.navigationController?.foregr
         scrollView.alwaysBounceVertical = true
         updateAvator()
         updateCover()
@@ -50,6 +57,8 @@ class EditProfileViewController: UIViewController {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EditProfileViewController.keyBoardWillHide), name: UIKeyboardWillHideNotification, object: nil)
     }
+    
+    
     
     
     func updateAvator(){

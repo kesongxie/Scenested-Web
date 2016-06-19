@@ -30,6 +30,9 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var tableHeaderView: UIView!
 
     
+    @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue){
+    }
+    
     
     private var profileCoverHeight: CGFloat = 0
     private var headerHeightOffset: CGFloat = 10 // make the cover's height little bit larger than the original screen height
@@ -48,7 +51,7 @@ class ProfileViewController: UIViewController {
     
     private let sectionHeaderHeight:CGFloat = 46
     
-    
+    private let initialContentOffset: CGFloat = 64.0
 
     
     
@@ -73,7 +76,7 @@ class ProfileViewController: UIViewController {
     
     //themes data source
     //let themeNames: [String] = ["This is my first coustic fingerstyle guitar concert in New York", "Glad to see this year US Open Final", "My first hackathon ever!"]
-    let themeNames: [String] = ["GUITAR", "TENNIS", "PROGRAMMING"]
+    let themeNames: [String] = [] // ["GUITAR", "TENNIS", "PROGRAMMING"]
     let themeImages: [String] = ["theme1", "theme2", "thumb_2"]
     
     static let scene1 = Scene(id: 1, imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able to experience this year's #USOpen", postDate: "Sep 4, 2015")
@@ -101,12 +104,14 @@ class ProfileViewController: UIViewController {
 
 
     
-    var profileScenes:[WeekScenes] = [
-                    weekScene1,
-                    weekScene2,
-                    weekScene3,
-                    weekScene4
-                ]
+//    var profileScenes:[WeekScenes] = [
+//                    weekScene1,
+//                    weekScene2,
+//                    weekScene3,
+//                    weekScene4
+//                ]
+    
+    var profileScenes:[WeekScenes] = []
     
     
     override func viewDidLoad() {
@@ -115,7 +120,7 @@ class ProfileViewController: UIViewController {
         themesCollectionView.dataSource = self
         globalView.delegate = self
         globalView.dataSource = self
-       self.navigationController?.navigationBarHidden = true
+//        self.navigationController?.navigationBarHidden = true
         
         
         //self.tabBarController?.tabBar.hidden = true
@@ -125,6 +130,9 @@ class ProfileViewController: UIViewController {
         if let coverImageSize = profileCover.image?.size{
             profileCoverOriginalScreenHeight =  UIScreen.mainScreen().bounds.size.width * coverImageSize.height / coverImageSize.width
             profileCoverHeight = profileCoverOriginalScreenHeight + headerHeightOffset
+            profileCoverHeightConstraint.constant = profileCoverHeight
+            
+            
         }
         
         globalView.estimatedRowHeight = globalView.rowHeight
@@ -135,8 +143,7 @@ class ProfileViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         //change the constraint programmatically here
         updateAvator()
-        profileCoverHeightConstraint.constant = profileCoverHeight
-        setButton()
+              setButton()
         setupThemeSlideCollectionView()
         
         
@@ -150,15 +157,15 @@ class ProfileViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func prefersStatusBarHidden() -> Bool {
-        return true
-    }
+//    override func prefersStatusBarHidden() -> Bool {
+//        return true
+//    }
     
     
     func strechProfileCover(){
-        var coverHeaderRect = CGRect(x: 0, y: 0, width: profileCover.bounds.width, height: profileCoverHeight)
-        var caculatedHeight = profileCoverHeight - globalView.contentOffset.y
-        var caculatedOrigin = globalView.contentOffset.y
+        var coverHeaderRect = CGRect(x: 0, y: 0, width: UIScreen.mainScreen().bounds.width, height: profileCoverHeight)
+        var caculatedHeight = profileCoverHeight - globalView.contentOffset.y - initialContentOffset
+        var caculatedOrigin = globalView.contentOffset.y + initialContentOffset
         
         if caculatedHeight < profileCoverOriginalScreenHeight {
             //minimize the picture until its originalScreenHeight
