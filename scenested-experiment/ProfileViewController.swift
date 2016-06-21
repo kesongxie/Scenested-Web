@@ -35,7 +35,7 @@ class ProfileViewController: UIViewController {
     
     
     private var profileCoverHeight: CGFloat = 0
-    private var headerHeightOffset: CGFloat = 10 // make the cover's height little bit larger than the original screen height
+    private var headerHeightOffset: CGFloat = 0 // make the cover's height little bit larger than the original screen height
     private var profileCoverOriginalScreenHeight: CGFloat = 0
     
     private var themeImageSize: CGSize = CGSizeZero //the size of the individual theme UIImageView
@@ -111,13 +111,13 @@ class ProfileViewController: UIViewController {
 //                    weekScene4
 //                ]
     
-    var profileScenes:[WeekScenes] = []
+   var profileScenes:[WeekScenes] = []
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        themesCollectionView.delegate = self
-        themesCollectionView.dataSource = self
+//        themesCollectionView.delegate = self
+//        themesCollectionView.dataSource = self
         globalView.delegate = self
         globalView.dataSource = self
 //        self.navigationController?.navigationBarHidden = true
@@ -144,7 +144,7 @@ class ProfileViewController: UIViewController {
         //change the constraint programmatically here
         updateAvator()
               setButton()
-        setupThemeSlideCollectionView()
+        //setupThemeSlideCollectionView()
         
         
         tableHeaderView.frame.size.height = tableHeaderView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize).height

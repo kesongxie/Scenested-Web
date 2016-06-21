@@ -77,7 +77,7 @@
                                                     <constraint firstAttribute="height" constant="44" id="0jC-XZ-buv"/>
                                                 </constraints>
                                                 <color key="textColor" red="0.078431372549019607" green="0.078431372549019607" blue="0.078431372549019607" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Tm-1X-szv" userLabel="Separator View">
@@ -107,7 +107,7 @@
                                                     <constraint firstAttribute="height" constant="96" id="CaG-Vl-fjQ"/>
                                                 </constraints>
                                                 <color key="textColor" red="0.078431372550000003" green="0.078431372550000003" blue="0.078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                             </textView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JOA-Kv-bxs" userLabel="Separator View">
@@ -382,13 +382,13 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rzr-H2-W9D">
-                                            <rect key="frame" x="16" y="301" width="0.0" height="30"/>
-                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
+                                            <rect key="frame" x="145" y="341" width="0.0" height="0.0"/>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
                                             <color key="textColor" red="0.078431372550000003" green="0.078431372550000003" blue="0.078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="agh-xF-6Do">
-                                            <rect key="frame" x="0.0" y="345" width="602" height="128"/>
+                                        <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="agh-xF-6Do">
+                                            <rect key="frame" x="0.0" y="367" width="602" height="128"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="128" id="0rB-ri-nbW"/>
@@ -442,7 +442,7 @@
                                             </cells>
                                         </collectionView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Yy-Lw-3CO" userLabel="Separator View">
-                                            <rect key="frame" x="2" y="324" width="600" height="1"/>
+                                            <rect key="frame" x="2" y="326" width="600" height="1"/>
                                             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="Qz4-dQ-Le3"/>
@@ -456,6 +456,7 @@
                                         <constraint firstAttribute="trailing" secondItem="55D-o5-Za7" secondAttribute="trailing" id="2PG-2b-pqJ"/>
                                         <constraint firstItem="VYF-yd-N7T" firstAttribute="baseline" secondItem="yW8-4D-7Sf" secondAttribute="baseline" id="3KY-3a-rZe"/>
                                         <constraint firstItem="NKd-kj-1hW" firstAttribute="top" secondItem="eD5-at-QXW" secondAttribute="bottom" id="6ai-MG-T5Y"/>
+                                        <constraint firstItem="Rzr-H2-W9D" firstAttribute="top" secondItem="4Yy-Lw-3CO" secondAttribute="bottom" constant="14" id="8fD-zE-wxh"/>
                                         <constraint firstItem="pZS-oG-Hmj" firstAttribute="baseline" secondItem="7ZA-qy-Upt" secondAttribute="baseline" id="CHH-te-RWY"/>
                                         <constraint firstItem="NKd-kj-1hW" firstAttribute="leading" secondItem="pVM-0S-Gbp" secondAttribute="leading" constant="16" id="CZc-sE-tJZ"/>
                                         <constraint firstAttribute="trailing" secondItem="agh-xF-6Do" secondAttribute="trailing" constant="-2" id="EY4-NG-Abv"/>
@@ -488,7 +489,7 @@
                                         <constraint firstItem="pZS-oG-Hmj" firstAttribute="width" secondItem="VYF-yd-N7T" secondAttribute="width" id="cUP-hM-16i"/>
                                         <constraint firstItem="yW8-4D-7Sf" firstAttribute="baseline" secondItem="UIW-Ca-OJY" secondAttribute="baseline" id="gqk-Tx-HRS"/>
                                         <constraint firstAttribute="trailing" secondItem="eD5-at-QXW" secondAttribute="trailing" constant="18" id="kUX-SW-N1O"/>
-                                        <constraint firstItem="4Yy-Lw-3CO" firstAttribute="top" secondItem="NKd-kj-1hW" secondAttribute="bottom" constant="12" id="mFc-Nt-MPi"/>
+                                        <constraint firstItem="4Yy-Lw-3CO" firstAttribute="top" secondItem="NKd-kj-1hW" secondAttribute="bottom" constant="14" id="mFc-Nt-MPi"/>
                                         <constraint firstAttribute="trailing" secondItem="Cei-RS-UTs" secondAttribute="trailing" constant="10" id="nSG-J2-nJ3"/>
                                         <constraint firstItem="NKd-kj-1hW" firstAttribute="top" secondItem="HxG-ZI-1pA" secondAttribute="bottom" constant="15" id="oBy-bl-iV0"/>
                                         <constraint firstItem="HxG-ZI-1pA" firstAttribute="width" secondItem="UIW-Ca-OJY" secondAttribute="width" id="oov-MW-Kj6"/>
@@ -505,6 +506,7 @@
                                             <exclude reference="2BA-iB-Qva"/>
                                             <exclude reference="6ai-MG-T5Y"/>
                                             <exclude reference="JJy-a8-YYQ"/>
+                                            <exclude reference="K3Z-7O-7o2"/>
                                             <exclude reference="YYl-3P-qzI"/>
                                             <exclude reference="r4V-Ds-MRF"/>
                                             <exclude reference="s3r-oZ-LMb"/>
