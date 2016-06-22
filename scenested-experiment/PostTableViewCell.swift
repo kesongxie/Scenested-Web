@@ -37,8 +37,8 @@ class PostTableViewCell: UITableViewCell {
         
         //the space between each item
         static let lineSpace: CGFloat = 7
-        static let maxVisibleThemeCount: CGFloat = 2.2 //the max number of theme that is allowed to display at the screen
-        static let themeImageAspectRatio:CGFloat = 4 / 5
+        static let maxVisibleThemeCount: CGFloat = 3 //the max number of theme that is allowed to display at the screen
+        static let themeImageAspectRatio:CGFloat = 1
         static let precicitionOffset: CGFloat = 1 //prevent the height of the collectionView from less than the total of the cell height and inset during the calculation
         static let cellReuseIdentifier: String = "postInnerCell"
     }
@@ -89,8 +89,8 @@ extension PostTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
         let postCell = collectionView.dequeueReusableCellWithReuseIdentifier("postInnerCell", forIndexPath: indexPath) as! PostCollectionViewCell
         postCell.layer.cornerRadius = StyleSchemeConstant.horizontalSlider.horizontalSliderCornerRadius
         postCell.imageView.image = UIImage(named: weekScenes!.scenes[indexPath.row].imageUrl)
-        postCell.imageViewSize = postImageSize
-        postCell.postText.text = weekScenes!.scenes[indexPath.row].postText
+//        postCell.imageViewSize = postImageSize
+//        postCell.postText.text = weekScenes!.scenes[indexPath.row].postText
         postCell.layoutIfNeeded() //re-layout
         return postCell
     }

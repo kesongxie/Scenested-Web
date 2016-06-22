@@ -20,15 +20,32 @@ struct StyleSchemeConstant{
         }
     }
     
-    static let ThemeColor = UIColor(red: 127/255.0, green: 27/255.0, blue: 27/255.0, alpha: 1)
-        
-        //UIColor(red: 37/255.0, green: 111/255.0, blue: 180/255.0, alpha: 1)
-        //UIColor(red: 127/255.0, green: 27/255.0, blue: 27/255.0, alpha: 1)
+    static let themeColor = UIColor(red: 127/255.0, green: 27/255.0, blue: 27/255.0, alpha: 1)
+    static let themeMainTextColor = UIColor(red: 20 / 255.0, green: 20 / 255.0, blue: 20 / 255.0, alpha: 1)
+    
+    struct editProfileBtn{
+        static let borderWidth = buttonStyle.borderWidth
+        static let cornerRadius = buttonStyle.cornerRadius
+        static let borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).CGColor
+        static let backgroundColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1)
+        static let font = UIFont.systemFontOfSize(13, weight: UIFontWeightSemibold)
+        static let titleColor = themeMainTextColor
+    }
+    
+    struct followBtn{
+        static let borderWidth = buttonStyle.borderWidth
+        static let cornerRadius = buttonStyle.cornerRadius
+        static let borderColor = themeColor.CGColor
+        static let backgroundColor = UIColor(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1)
+        static let font = UIFont.systemFontOfSize(11, weight: UIFontWeightBold)
+        static let titleColor = themeColor
+        static let shadowColor = themeColor
+    }
 
-        //UIColor(red: 0/255.0, green: 89/255.0, blue: 160/255.0, alpha: 1)
-        //UIColor(red: 19/255.0, green: 89/255.0, blue: 155/255.0, alpha: 1)
-       // UIColor(red: 183/255.0, green: 0, blue: 65/255.0, alpha: 1)
-    //UIColor(red: 37/255.0, green: 111/255.0, blue: 180/255.0, alpha: 1)
+    
+    
+    
+    
     
     struct navigationBarStyle{
         static let translucent = false
@@ -47,7 +64,7 @@ struct StyleSchemeConstant{
     
     
     struct buttonStyle{
-        static let buttonCornerRadius:CGFloat = 5.0
+        static let cornerRadius:CGFloat = 5.0
         static let borderWidth: CGFloat = 1.0
     }
     

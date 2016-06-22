@@ -8,86 +8,57 @@
 
 import UIKit
 
-class EditProfileViewController: UIViewController {
-   
-
-    
+class EditProfileViewController: StrechableHeaderViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     
     @IBOutlet weak var avatorImageView: UIImageView!
     
-    @IBOutlet weak var coverImageView: UIImageView!
+    @IBOutlet weak var profileCoverImageView: UIImageView!
     
     @IBOutlet weak var coverHeightConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var nameTextField: UITextField!
     
-    
     @IBOutlet weak var bioTextView: UITextView!
-    
-   
-
-
-    
-    
-    private var profileCoverHeight: CGFloat = 0
 
     private var isKeyBoardActive = false
     
-    
-    
-    
+    private let bottomInsetWhenKeyboardShows:CGFloat = 120
     
     override func viewDidLoad() {
-        scrollView.delegate = self
         self.dismissKeyBoardWhenTapped()
-        
         self.navigationController?.navigationBar.backgroundColor = StyleSchemeConstant.navigationBarStyle.backgroundColor
         self.navigationController?.navigationBar.translucent = StyleSchemeConstant.navigationBarStyle.translucent
-        
-//        self.navigationController?.foregr
-        scrollView.alwaysBounceVertical = true
         updateAvator()
         updateCover()
     }
     
     
     override func viewDidAppear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EditProfileViewController.keyboardDidShow), name: UIKeyboardDidShowNotification, object: nil)
+        //strechy header set up
+        self.globalScrollView = scrollView
+        self.coverImageView = profileCoverImageView
+        self.coverHeight = profileCoverImageView.bounds.size.height
+        self.stretchWhenContentOffsetLessThanZero = true
         
+        //keyboard set up
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EditProfileViewController.keyboardDidShow), name: UIKeyboardDidShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EditProfileViewController.keyBoardWillHide), name: UIKeyboardWillHideNotification, object: nil)
     }
-    
-    
-    
     
     func updateAvator(){
         avatorImageView.becomeCircleAvator()
     }
     
-    
     func updateCover(){
-        if let coverImageSize = coverImageView.image?.size{
-            profileCoverHeight =  UIScreen.mainScreen().bounds.size.width * coverImageSize.height / coverImageSize.width
-            coverHeightConstraint.constant = profileCoverHeight
+        if let coverImageSize = profileCoverImageView.image?.size{
+            coverHeightConstraint.constant =  UIScreen.mainScreen().bounds.size.width * coverImageSize.height / coverImageSize.width
         }
     }
-    
-    func strechCover(){
-        if scrollView.contentOffset.y < 0 {
-            var coverHeaderRect = CGRect(x: 0, y: 0, width: coverImageView.bounds.width, height: profileCoverHeight)
-            let caculatedHeight = profileCoverHeight - scrollView.contentOffset.y
-            let caculatedOrigin = scrollView.contentOffset.y
-            coverHeaderRect.size.height = caculatedHeight
-            coverHeaderRect.origin.y  = caculatedOrigin
-            coverImageView.frame = coverHeaderRect
-        }
-    }
-    
-    
+
     func keyboardDidShow(notification: NSNotification){
-        if let keyboardSize = (notification.userInfo?["UIKeyboardFrameBeginUserInfoKey"] as? NSValue)?.CGRectValue(){
-                scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 120, right: 0)
+//        if let keyboardSize = (notification.userInfo?["UIKeyboardFrameBeginUserInfoKey"] as? NSValue)?.CGRectValue(){
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bottomInsetWhenKeyboardShows, right: 0)
             
             UIView.animateWithDuration(0.3, animations: {
                 self.scrollView.contentOffset.y = 120
@@ -95,7 +66,7 @@ class EditProfileViewController: UIViewController {
                     self.isKeyBoardActive = true
                 })
             
-        }
+       // }
     }
     
     func keyBoardWillHide(notification: NSNotification){
@@ -103,19 +74,10 @@ class EditProfileViewController: UIViewController {
          isKeyBoardActive = false
     }
     
-    
-    
-    
-    
-}
-
-extension EditProfileViewController: UIScrollViewDelegate{
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        strechCover()
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        super.scrollViewDidScroll(scrollView)
         if isKeyBoardActive{
             view.endEditing(true)
         }
     }
 }
-
-

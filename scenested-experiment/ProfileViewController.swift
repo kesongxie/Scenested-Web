@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: StrechableHeaderViewController {
 
     
     @IBOutlet weak var profileCover: UIImageView!
@@ -19,7 +19,7 @@ class ProfileViewController: UIViewController {
     
     @IBOutlet weak var profileAvator: UIImageView!
     
-    @IBOutlet weak var profileFollowButton: UIButton!
+    @IBOutlet weak var profileButtonBelowCover: UIButton!
     
     
     @IBOutlet weak var themesCollectionView: UICollectionView!
@@ -28,10 +28,18 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var globalView: UITableView!
     
     @IBOutlet weak var tableHeaderView: UIView!
+    
+    
+    @IBOutlet weak var profileButtonBelowCoverWidthConstaint: NSLayoutConstraint!
 
     
-    @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue){
+    @IBAction func closeEditProfile(unwindSegue: UIStoryboardSegue){
     }
+    
+    
+    @IBAction func closeAddTheme(unwindSegue: UIStoryboardSegue){
+    }
+    
     
     
     private var profileCoverHeight: CGFloat = 0
@@ -51,8 +59,14 @@ class ProfileViewController: UIViewController {
     
     private let sectionHeaderHeight:CGFloat = 46
     
-    private let initialContentOffset: CGFloat = 64.0
+    private let initialContentOffsetTop: CGFloat = 64.0
 
+    
+    private let isUserOwnProfile = true
+    
+    
+    
+    
     
     
     /* define the style constant for the theme slide  */
@@ -65,10 +79,10 @@ class ProfileViewController: UIViewController {
         }
         
         //the space between each item
-        static let lineSpace: CGFloat = 7
-        static let maxVisibleThemeCount: CGFloat = 2.2
+        static let lineSpace: CGFloat = 6
+        static let maxVisibleThemeCount: CGFloat = 2.6
         //the max number of theme that is allowed to display at the screen
-        static let themeImageAspectRatio:CGFloat = 4/5
+        static let themeImageAspectRatio:CGFloat = 5 / 6
         static let precicitionOffset: CGFloat = 1 //prevent the height of the collectionView from less than the total of the cell height and inset during the calculation
         static let themeCellReuseIdentifier: String = "themeCell"
     }
@@ -76,7 +90,7 @@ class ProfileViewController: UIViewController {
     
     //themes data source
     //let themeNames: [String] = ["This is my first coustic fingerstyle guitar concert in New York", "Glad to see this year US Open Final", "My first hackathon ever!"]
-    let themeNames: [String] = [] // ["GUITAR", "TENNIS", "PROGRAMMING"]
+    let themeNames: [String] =  ["GUITAR", "TENNIS", "PROGRAMMING"]
     let themeImages: [String] = ["theme1", "theme2", "thumb_2"]
     
     static let scene1 = Scene(id: 1, imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able to experience this year's #USOpen", postDate: "Sep 4, 2015")
@@ -111,20 +125,20 @@ class ProfileViewController: UIViewController {
 //                    weekScene4
 //                ]
     
-   var profileScenes:[WeekScenes] = []
+    var profileScenes:[WeekScenes] = []
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        themesCollectionView.delegate = self
-//        themesCollectionView.dataSource = self
-        globalView.delegate = self
-        globalView.dataSource = self
+        themesCollectionView.delegate = self
+        themesCollectionView.dataSource = self
+//        globalView.delegate = self
+//        globalView.dataSource = self
 //        self.navigationController?.navigationBarHidden = true
         
         
         //self.tabBarController?.tabBar.hidden = true
-        globalView.alwaysBounceVertical = true
+//        globalView.alwaysBounceVertical = true
         
         profileCover.image = UIImage(named: "cover3")
         if let coverImageSize = profileCover.image?.size{
@@ -137,20 +151,43 @@ class ProfileViewController: UIViewController {
         
         globalView.estimatedRowHeight = globalView.rowHeight
         globalView.rowHeight = UITableViewAutomaticDimension
+        
+        
+        
+        
+        
+        
+//        let cameraPostBtn = UIButton()
+//        cameraPostBtn.setImage(UIImage(named: "camera-icon-1"), forState: .Normal)
+//        cameraPostBtn.frame = CGRectMake(0, 0, 20, 20)
+//        //btnName.addTarget(self, action: Selector("action"), forControlEvents: .TouchUpInside)
+//        
+//        //.... Set Right/Left Bar Button item
+//        let rightBarButton = UIBarButtonItem(customView: cameraPostBtn)
+//        self.navigationItem.rightBarButtonItem = rightBarButton
+        
+        
+        
     }
 
     //additional setup
     override func viewDidLayoutSubviews() {
         //change the constraint programmatically here
         updateAvator()
-              setButton()
-        //setupThemeSlideCollectionView()
-        
-        
-        tableHeaderView.frame.size.height = tableHeaderView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize).height
+        setButton()
+        setupThemeSlideCollectionView()
+       // tableHeaderView.frame.size.height = tableHeaderView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize).height
         //make sure the header view contans the exact necessary height given it's dynamic content
     }
     
+    override func viewDidAppear(animated: Bool) {
+        //stretchy header set up
+        self.globalScrollView = globalView
+        self.coverImageView = profileCover
+        self.coverHeight = profileCover.bounds.size.height
+        self.defaultInitialContentOffsetTop = initialContentOffsetTop
+        self.stretchWhenContentOffsetLessThanZero = true
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -162,21 +199,6 @@ class ProfileViewController: UIViewController {
 //    }
     
     
-    func strechProfileCover(){
-        var coverHeaderRect = CGRect(x: 0, y: 0, width: UIScreen.mainScreen().bounds.width, height: profileCoverHeight)
-        var caculatedHeight = profileCoverHeight - globalView.contentOffset.y - initialContentOffset
-        var caculatedOrigin = globalView.contentOffset.y + initialContentOffset
-        
-        if caculatedHeight < profileCoverOriginalScreenHeight {
-            //minimize the picture until its originalScreenHeight
-            caculatedHeight = profileCoverOriginalScreenHeight
-            caculatedOrigin = headerHeightOffset
-        }
-        coverHeaderRect.size.height = caculatedHeight
-        coverHeaderRect.origin.y  = caculatedOrigin
-        profileCover.frame = coverHeaderRect
-    }
-    
     func updateAvator(){
         profileAvator.becomeCircleAvator()
     }
@@ -184,7 +206,13 @@ class ProfileViewController: UIViewController {
     
     //additional set up for action button below the avator
     func setButton(){
-        profileFollowButton?.becomeMagentaButton()
+        if isUserOwnProfile{
+            profileButtonBelowCover?.becomeEditProfileButton()
+//            profileButtonBelowCover?.setTitle("Edit Profile", forState: .Normal)
+        }else{
+            profileButtonBelowCover?.becomeFollowButton()
+
+        }
     }
     
     func setupThemeSlideCollectionView(){
@@ -197,49 +225,84 @@ class ProfileViewController: UIViewController {
     }
     
     //set data for the SceneDetailViewController
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if  segue.identifier == "showSceneDetail"{
-            if let detaileViewController = segue.destinationViewController as? SceneDetailViewController{
-//               print( self.selectedThumbnailScene)
-            
-            }
-        }
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        if  segue.identifier == "showSceneDetail"{
+//            if let detaileViewController = segue.destinationViewController as? SceneDetailViewController{
+////               print( self.selectedThumbnailScene)
+//            
+//            }
+//        }
+//    }
+//    
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        super.scrollViewDidScroll(scrollView)
+        
+        //reset all other visible rows section header view to white color
+//        if let visiableIndexPathForCell = globalView.indexPathsForVisibleRows{
+//            for indexPath in visiableIndexPathForCell{
+//                if let otherHeaderView = globalView.headerViewForSection(indexPath.section){
+//                    otherHeaderView.contentView.backgroundColor = UIColor.whiteColor()
+//                    otherHeaderView.layer.borderColor = .None
+//                    otherHeaderView.layer.borderWidth = 0
+//                    otherHeaderView.alpha = 1.0
+//                }
+//            }
+//            
+//            if let firstVisiableIndexPathForCell = visiableIndexPathForCell.first{
+//                if let firstVisibleCell = globalView.cellForRowAtIndexPath(firstVisiableIndexPathForCell){
+//                    if firstVisibleCell.frame.origin.y < sectionHeaderHeight + globalView.contentOffset.y{
+//                        if let headerView = globalView.headerViewForSection(firstVisiableIndexPathForCell.section){
+//                            
+//                            headerView.contentView.backgroundColor = UIColor(red: 246/255.0, green: 246/255.0, blue: 246/255.0, alpha: 1)
+//                            //                            headerView.alpha = 0.97
+//                            headerView.layer.borderColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1).CGColor
+//                            headerView.layer.borderWidth = 0.8
+//                        }
+//                    }
+//                }
+//            }
+//        }
+        
+
     }
+    
+    
     
 }
 
-extension ProfileViewController: UIScrollViewDelegate{
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        strechProfileCover()
-        
-        
-        //reset all other visible rows section header view to white color
-        if let visiableIndexPathForCell = globalView.indexPathsForVisibleRows{
-            for indexPath in visiableIndexPathForCell{
-                if let otherHeaderView = globalView.headerViewForSection(indexPath.section){
-                    otherHeaderView.contentView.backgroundColor = UIColor.whiteColor()
-                    otherHeaderView.layer.borderColor = .None
-                    otherHeaderView.layer.borderWidth = 0
-                    otherHeaderView.alpha = 1.0
-                }
-            }
-            
-            if let firstVisiableIndexPathForCell = visiableIndexPathForCell.first{
-                if let firstVisibleCell = globalView.cellForRowAtIndexPath(firstVisiableIndexPathForCell){
-                    if firstVisibleCell.frame.origin.y < sectionHeaderHeight + globalView.contentOffset.y{
-                        if let headerView = globalView.headerViewForSection(firstVisiableIndexPathForCell.section){
-                            
-                            headerView.contentView.backgroundColor = UIColor(red: 246/255.0, green: 246/255.0, blue: 246/255.0, alpha: 1)
-//                            headerView.alpha = 0.97
-                            headerView.layer.borderColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1).CGColor
-                            headerView.layer.borderWidth = 0.8
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+//extension ProfileViewController: UIScrollViewDelegate{
+//    func scrollViewDidScroll(scrollView: UIScrollView) {
+//        strechProfileCover()
+//        
+//        
+//        //reset all other visible rows section header view to white color
+//        if let visiableIndexPathForCell = globalView.indexPathsForVisibleRows{
+//            for indexPath in visiableIndexPathForCell{
+//                if let otherHeaderView = globalView.headerViewForSection(indexPath.section){
+//                    otherHeaderView.contentView.backgroundColor = UIColor.whiteColor()
+//                    otherHeaderView.layer.borderColor = .None
+//                    otherHeaderView.layer.borderWidth = 0
+//                    otherHeaderView.alpha = 1.0
+//                }
+//            }
+//            
+//            if let firstVisiableIndexPathForCell = visiableIndexPathForCell.first{
+//                if let firstVisibleCell = globalView.cellForRowAtIndexPath(firstVisiableIndexPathForCell){
+//                    if firstVisibleCell.frame.origin.y < sectionHeaderHeight + globalView.contentOffset.y{
+//                        if let headerView = globalView.headerViewForSection(firstVisiableIndexPathForCell.section){
+//                            
+//                            headerView.contentView.backgroundColor = UIColor(red: 246/255.0, green: 246/255.0, blue: 246/255.0, alpha: 1)
+////                            headerView.alpha = 0.97
+//                            headerView.layer.borderColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1).CGColor
+//                            headerView.layer.borderWidth = 0.8
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 
 // MARK:: horizontal theme slider, Extension for UICollectionViewDelegate, UICollectionViewDataSource and UICollectionViewDelegateFlowLayout protocol
