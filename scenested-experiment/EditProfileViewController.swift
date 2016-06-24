@@ -26,6 +26,8 @@ class EditProfileViewController: StrechableHeaderViewController {
     private let bottomInsetWhenKeyboardShows:CGFloat = 120
     
     override func viewDidLoad() {
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(17, weight: UIFontWeightMedium) ] , forState: .Normal)
+        
         self.dismissKeyBoardWhenTapped()
         self.navigationController?.navigationBar.backgroundColor = StyleSchemeConstant.navigationBarStyle.backgroundColor
         self.navigationController?.navigationBar.translucent = StyleSchemeConstant.navigationBarStyle.translucent

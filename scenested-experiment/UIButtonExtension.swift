@@ -24,7 +24,7 @@ extension UIButton{
         self.layer.borderColor = StyleSchemeConstant.editProfileBtn.borderColor
         self.layer.borderWidth = StyleSchemeConstant.editProfileBtn.borderWidth
         self.layer.cornerRadius = StyleSchemeConstant.editProfileBtn.cornerRadius
-        self.backgroundColor = StyleSchemeConstant.editProfileBtn.backgroundColor
+        self.backgroundColor = UIColor.whiteColor()
         self.setTitleColor(StyleSchemeConstant.editProfileBtn.titleColor, forState: .Normal)
         self.titleLabel?.font = StyleSchemeConstant.editProfileBtn.font
         self.setTitle("Edit Profile", forState: .Normal)

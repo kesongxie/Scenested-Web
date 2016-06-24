@@ -26,7 +26,7 @@ struct StyleSchemeConstant{
     struct editProfileBtn{
         static let borderWidth = buttonStyle.borderWidth
         static let cornerRadius = buttonStyle.cornerRadius
-        static let borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).CGColor
+        static let borderColor = UIColor(red: 200/255.0, green: 200/255.0, blue: 200/255.0, alpha: 1).CGColor
         static let backgroundColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1)
         static let font = UIFont.systemFontOfSize(13, weight: UIFontWeightSemibold)
         static let titleColor = themeMainTextColor

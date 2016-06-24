@@ -7,10 +7,10 @@
 //
 
 import UIKit
+import Photos
 
 class ProfileViewController: StrechableHeaderViewController {
 
-    
     @IBOutlet weak var profileCover: UIImageView!
     
     @IBOutlet weak var profileCoverHeightConstraint: NSLayoutConstraint!
@@ -41,6 +41,22 @@ class ProfileViewController: StrechableHeaderViewController {
     }
     
     
+     // MARK:: Avator tap gesture configuration
+    @IBAction func tapAvator(sender: UITapGestureRecognizer) {
+        let alert = UIAlertController(title: "Change Profile Picture", message: nil, preferredStyle: .ActionSheet)
+        let chooseExistingAction = UIAlertAction(title: "Choose from Library", style: .Default, handler: { (action) -> Void in
+            self.chooseFromLibarary()
+        })
+        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: nil)
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+
+        alert.addAction(takePhotoAction)
+        alert.addAction(chooseExistingAction)
+        alert.addAction(cancelAction)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
     
     private var profileCoverHeight: CGFloat = 0
     private var headerHeightOffset: CGFloat = 0 // make the cover's height little bit larger than the original screen height
@@ -64,7 +80,7 @@ class ProfileViewController: StrechableHeaderViewController {
     
     private let isUserOwnProfile = true
     
-    
+//    private let myImagePicker = UIImagePickerController()
     
     
     
@@ -105,9 +121,7 @@ class ProfileViewController: StrechableHeaderViewController {
     
     static let scene7 = Scene(id: 7, imageUrl: "garden", themeName: "TENNIS", postText: "Roger and Dimitrov played an exihibition match in Madision Sqaure Garden",postDate: "May 17, 2014")
 
- 
-
-    //post data source
+     //post data source
     //each element in posts is posts from the same week, for example, post1 and post2 are from week 1, Jan 2015, post3 is from week 3, Jan, 2016
     
     static let  weekScene1: WeekScenes = WeekScenes(scenes: [scene1, scene2], weekDisplayInfo: "WEEK 4TH, JAN · 2016")
@@ -130,6 +144,11 @@ class ProfileViewController: StrechableHeaderViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        
+//        myImagePicker.delegate = self
+        
         themesCollectionView.delegate = self
         themesCollectionView.dataSource = self
 //        globalView.delegate = self
@@ -145,15 +164,17 @@ class ProfileViewController: StrechableHeaderViewController {
             profileCoverOriginalScreenHeight =  UIScreen.mainScreen().bounds.size.width * coverImageSize.height / coverImageSize.width
             profileCoverHeight = profileCoverOriginalScreenHeight + headerHeightOffset
             profileCoverHeightConstraint.constant = profileCoverHeight
-            
-            
         }
         
         globalView.estimatedRowHeight = globalView.rowHeight
         globalView.rowHeight = UITableViewAutomaticDimension
         
         
-        
+        if isUserOwnProfile{
+           addPostSceneBtn()
+        }else{
+            self.navigationItem.rightBarButtonItem = nil
+        }
         
         
         
@@ -165,10 +186,9 @@ class ProfileViewController: StrechableHeaderViewController {
 //        //.... Set Right/Left Bar Button item
 //        let rightBarButton = UIBarButtonItem(customView: cameraPostBtn)
 //        self.navigationItem.rightBarButtonItem = rightBarButton
-        
-        
-        
     }
+    
+    
 
     //additional setup
     override func viewDidLayoutSubviews() {
@@ -208,7 +228,6 @@ class ProfileViewController: StrechableHeaderViewController {
     func setButton(){
         if isUserOwnProfile{
             profileButtonBelowCover?.becomeEditProfileButton()
-//            profileButtonBelowCover?.setTitle("Edit Profile", forState: .Normal)
         }else{
             profileButtonBelowCover?.becomeFollowButton()
 
@@ -224,16 +243,71 @@ class ProfileViewController: StrechableHeaderViewController {
         
     }
     
-    //set data for the SceneDetailViewController
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if  segue.identifier == "showSceneDetail"{
-//            if let detaileViewController = segue.destinationViewController as? SceneDetailViewController{
-////               print( self.selectedThumbnailScene)
-//            
-//            }
-//        }
-//    }
-//    
+    func addPostSceneBtn(){
+        let barBtnItem = UIBarButtonItem()
+        barBtnItem.title =  "＋Post"
+        barBtnItem.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(17, weight: UIFontWeightMedium), NSForegroundColorAttributeName: StyleSchemeConstant.themeColor ] , forState: .Normal)
+        
+        self.navigationItem.rightBarButtonItem = barBtnItem
+    }
+    
+    
+    func chooseFromLibarary(){
+        if isAvailabeToPickFromLibaray(){
+            let savedAlbumSource = UIImagePickerControllerSourceType.SavedPhotosAlbum
+            if !UIImagePickerController.isSourceTypeAvailable(savedAlbumSource){
+                //the given source type is not availabe
+                return
+            }
+            //once given source type is available, check which media type is available
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            if let mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(savedAlbumSource){
+                imagePicker.mediaTypes = mediaTypes
+                self.presentViewController(imagePicker, animated: true, completion: nil)
+            }
+            
+            
+        }else{
+            print("not available")
+        }
+    }
+    
+    
+    
+    
+    
+    
+    //check whether the App is allowed to get access to the user's photo libarary, ask for authorization, otherwise
+    func isAvailabeToPickFromLibaray() -> Bool{
+        let status = PHPhotoLibrary.authorizationStatus()
+        switch status {
+        case .Authorized:
+            return true
+        case .NotDetermined:
+            PHPhotoLibrary.requestAuthorization(){PHAuthorizationStatus -> Void  in}
+            return false
+        case .Restricted:
+            return false
+        case .Denied:
+            let alert = UIAlertController(title: "Authorization Needed", message: "Authorization needed in order to choose photo from libarary", preferredStyle: .Alert)
+            let dontAllowAction = UIAlertAction(title: "Don't Allow", style: .Default, handler: nil)
+            let goToSettingAction = UIAlertAction(title: "Ok", style: .Default, handler: {
+                _ in
+                if let url = NSURL(string: UIApplicationOpenSettingsURLString){
+                     UIApplication.sharedApplication().openURL(url)
+                }
+            })
+            alert.addAction(dontAllowAction)
+            alert.addAction(goToSettingAction)
+            self.presentViewController(alert, animated: true, completion: nil)
+            return false
+        }
+    }
+    
+   
+    
+
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         super.scrollViewDidScroll(scrollView)
@@ -304,6 +378,9 @@ class ProfileViewController: StrechableHeaderViewController {
 //    }
 //}
 
+
+
+// MARK:: built in protocol
 
 // MARK:: horizontal theme slider, Extension for UICollectionViewDelegate, UICollectionViewDataSource and UICollectionViewDelegateFlowLayout protocol
 extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
@@ -412,9 +489,29 @@ extension ProfileViewController: UIViewControllerTransitioningDelegate{
         closeUpTransition.presenting = true
         return closeUpTransition
     }
+}
+
+//MARK:: UIImagePickerControllerDelegate and UINavigationControllerDelegate protocol
+
+extension ProfileViewController: UIImagePickerControllerDelegate{
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+
+        print(info[UIImagePickerControllerOriginalImage])
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+       self.dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+
+extension ProfileViewController: UINavigationControllerDelegate{
     
 }
 
+
+
+
+// MARK:: custom protocol
 extension ProfileViewController: PostCollectionViewProtocol{
     func didTapCell(collectionView: UICollectionView, indexPath: NSIndexPath, scene: Scene, selectedItemInfo: CloseUpEffectSelectedItemInfo) {
 //        self.interactingCollectionView = collectionView
@@ -422,10 +519,6 @@ extension ProfileViewController: PostCollectionViewProtocol{
      let sceneDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("sceneDetailViewControllerIden") as! SceneDetailViewController
 //          let sceneDetailViewController = sceneDetailNavigationController.viewControllers[0] as! SceneDetailViewController
 //        
-        
-        
-        
-        
         sceneDetailViewController.scene = scene
         sceneDetailViewController.transitioningDelegate = self
         self.selectedThumbnailScene = scene

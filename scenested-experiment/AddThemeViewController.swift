@@ -24,6 +24,10 @@ class AddThemeViewController: StrechableHeaderViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(17, weight: UIFontWeightMedium) ] , forState: .Normal)
+
         self.automaticallyAdjustsScrollViewInsets = false
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AddThemeViewController.keyboardDidShow), name: UIKeyboardDidShowNotification, object: nil)
         
