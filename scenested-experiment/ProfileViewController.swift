@@ -496,7 +496,11 @@ extension ProfileViewController: UIViewControllerTransitioningDelegate{
 extension ProfileViewController: UIImagePickerControllerDelegate{
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
 
-        print(info[UIImagePickerControllerOriginalImage])
+        let selectedImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        if let cropAvatorViewController = storyboard?.instantiateViewControllerWithIdentifier("CropAvatorPhotoViewControllerIden") as? CropAvatorPhotoViewController{
+            cropAvatorViewController.image = selectedImage
+            picker.presentViewController(cropAvatorViewController, animated: true, completion: nil)
+        }
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {

@@ -24,8 +24,6 @@ class AddThemeViewController: StrechableHeaderViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(17, weight: UIFontWeightMedium) ] , forState: .Normal)
 
         self.automaticallyAdjustsScrollViewInsets = false
@@ -58,9 +56,6 @@ class AddThemeViewController: StrechableHeaderViewController {
     }
     
     func keyBoardDidHide(notifcation: NSNotification){
-        
-//        print(scrollView.contentOffset)
-
         UIView.animateWithDuration(0.3, animations: {
             self.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             }, completion: { finished in

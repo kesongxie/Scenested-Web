@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="hBk-2P-whO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="FZO-Ug-Phr">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -404,7 +404,7 @@
         <!--Crop Avator Photo View Controller-->
         <scene sceneID="Rzg-lB-XVj">
             <objects>
-                <viewController id="hBk-2P-whO" customClass="CropAvatorPhotoViewController" customModule="scenested_experiment" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CropAvatorPhotoViewControllerIden" id="hBk-2P-whO" customClass="CropAvatorPhotoViewController" customModule="scenested_experiment" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="nyO-8m-5ee"/>
                         <viewControllerLayoutGuide type="bottom" id="Spq-rg-bMf"/>
@@ -415,32 +415,31 @@
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hxy-9V-51a">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="theme1" translatesAutoresizingMaskIntoConstraints="NO" id="V8Z-Mu-mxs">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                    </imageView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="V8Z-Mu-mxs" secondAttribute="bottom" id="L9Y-FC-1gk"/>
-                                    <constraint firstItem="V8Z-Mu-mxs" firstAttribute="top" secondItem="Hxy-9V-51a" secondAttribute="top" id="Tdv-tZ-TI8"/>
-                                    <constraint firstAttribute="trailing" secondItem="V8Z-Mu-mxs" secondAttribute="trailing" id="bdq-ue-zFY"/>
-                                    <constraint firstItem="V8Z-Mu-mxs" firstAttribute="width" secondItem="Hxy-9V-51a" secondAttribute="width" id="jBf-9Q-2Sq"/>
-                                    <constraint firstItem="V8Z-Mu-mxs" firstAttribute="leading" secondItem="Hxy-9V-51a" secondAttribute="leading" id="sii-V4-21i"/>
-                                    <constraint firstItem="V8Z-Mu-mxs" firstAttribute="height" secondItem="Hxy-9V-51a" secondAttribute="height" priority="250" id="xY4-P6-dao"/>
-                                </constraints>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Hxy-9V-51a" secondAttribute="trailing" id="AFZ-Py-o0i"/>
+                            <constraint firstItem="Hxy-9V-51a" firstAttribute="leading" secondItem="LZW-Kn-l0R" secondAttribute="leading" id="JeY-84-d6A"/>
                             <constraint firstItem="Spq-rg-bMf" firstAttribute="top" secondItem="Hxy-9V-51a" secondAttribute="bottom" id="T99-wb-Hcb"/>
+                            <constraint firstItem="Hxy-9V-51a" firstAttribute="top" secondItem="LZW-Kn-l0R" secondAttribute="top" id="eHi-vb-bCQ"/>
                             <constraint firstItem="Hxy-9V-51a" firstAttribute="leading" secondItem="LZW-Kn-l0R" secondAttribute="leading" id="fzE-bw-0CU"/>
+                            <constraint firstItem="Spq-rg-bMf" firstAttribute="top" secondItem="Hxy-9V-51a" secondAttribute="bottom" id="lru-n6-n9W"/>
                             <constraint firstItem="Hxy-9V-51a" firstAttribute="top" secondItem="LZW-Kn-l0R" secondAttribute="top" id="uTn-ml-YxB"/>
+                            <constraint firstAttribute="trailing" secondItem="Hxy-9V-51a" secondAttribute="trailing" id="x1t-AO-jyA"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="AFZ-Py-o0i"/>
+                                <exclude reference="fzE-bw-0CU"/>
+                                <exclude reference="uTn-ml-YxB"/>
+                                <exclude reference="T99-wb-Hcb"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
-                        <outlet property="imageToBeCropped" destination="V8Z-Mu-mxs" id="pzb-rb-aMe"/>
-                        <outlet property="scrollView" destination="Hxy-9V-51a" id="D5q-z6-Mri"/>
+                        <outlet property="scrollView" destination="Hxy-9V-51a" id="yUV-oJ-XcZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4V4-fd-SSz" userLabel="First Responder" sceneMemberID="firstResponder"/>

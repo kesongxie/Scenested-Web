@@ -10,6 +10,7 @@ import UIKit
 
 class CropAvatorView: UIView {
 
+    
     /*
     // Only override drawRect: if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -17,6 +18,10 @@ class CropAvatorView: UIView {
         // Drawing code
     }
     */
+    var cancelBtn = UIButton()
+    var doneBtn = UIButton()
+    
+    
 
     
     override func drawRect(rect: CGRect) {
@@ -37,7 +42,7 @@ class CropAvatorView: UIView {
         //define top layer
         let topPath = UIBezierPath()
         
-        let layerFillColor = UIColor(red: 255 / 255.0, green: 255 / 255.0, blue: 255 / 255.0, alpha: 0.2).CGColor
+        let layerFillColor = UIColor(red: 0 / 255.0, green: 0 / 255.0, blue: 0 / 255.0, alpha: 0.8).CGColor
         
         //origin
         topPath.moveToPoint(leftTopCornerPoint)
@@ -68,6 +73,38 @@ class CropAvatorView: UIView {
         //add sub-layers
         self.layer.addSublayer(topShapeLayer)
         self.layer.addSublayer(bottomShapeLayer)
+        addActionView()
+        
     }
+    
+    func addActionView(){
+        let viewWidth = self.frame.size.width
+        let topActionView = UIView(frame: CGRect(x: 0, y: 0, width: viewWidth, height: 64))
+        topActionView.backgroundColor = UIColor.whiteColor()
+        
+        //cancel btn
+        cancelBtn.frame = CGRect(x: 0, y: 29, width: 90, height: 30)
+        topActionView.addSubview(cancelBtn)
+        cancelBtn.setTitle("Cancel", forState: .Normal)
+        cancelBtn.setTitleColor(StyleSchemeConstant.themeMainTextColor, forState: .Normal)
+        cancelBtn.setTitleColor(StyleSchemeConstant.themeMainTextColor.colorWithAlphaComponent(0.6), forState: .Highlighted)
+        cancelBtn.titleLabel?.font = UIFont.systemFontOfSize(17, weight: UIFontWeightRegular)
+        
+        
+        //Done btn
+        doneBtn.frame = CGRect(x: viewWidth - 90, y: 29, width: 90, height: 30)
+        topActionView.addSubview(doneBtn)
+        doneBtn.setTitle("Done", forState: .Normal)
+        doneBtn.setTitleColor(StyleSchemeConstant.themeColor, forState: .Normal)
+        doneBtn.setTitleColor(StyleSchemeConstant.themeColor.colorWithAlphaComponent(0.6), forState: .Highlighted)
+        
+        doneBtn.titleLabel?.font = UIFont.systemFontOfSize(17, weight: UIFontWeightMedium)
+        self.addSubview(topActionView)
+    }
+    
+    
+    
+    
+    
     
 }
