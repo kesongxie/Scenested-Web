@@ -511,7 +511,7 @@
                                             <color key="textColor" red="0.43137254901960786" green="0.43137254901960786" blue="0.43137254901960786" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="avator" translatesAutoresizingMaskIntoConstraints="NO" id="D5f-No-bDV">
+                                        <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IMG_7787_s" translatesAutoresizingMaskIntoConstraints="NO" id="D5f-No-bDV">
                                             <rect key="frame" x="10" y="103" width="90" height="90"/>
                                             <gestureRecognizers/>
                                             <constraints>
@@ -719,7 +719,7 @@
                                         <rect key="frame" x="0.0" y="660" width="600" height="222"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3Wo-NQ-xGw" id="qt1-8s-704">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="222"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="222"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="xQJ-wu-naK">
@@ -996,6 +996,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="IMG_7787_s" width="1200" height="1280"/>
         <image name="avator" width="324" height="286"/>
         <image name="cover3" width="1280" height="400"/>
         <image name="profile-icon" width="24" height="24"/>

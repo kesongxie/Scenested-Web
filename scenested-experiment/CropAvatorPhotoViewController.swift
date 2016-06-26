@@ -9,7 +9,7 @@
 import UIKit
 
 class CropAvatorPhotoViewController: UIViewController {
-    private enum sizeMode{
+    private enum SizeMode{
         case landscape
         case portrait
         case square
@@ -19,12 +19,6 @@ class CropAvatorPhotoViewController: UIViewController {
         var offSetX: CGFloat = 0
         var offSetY: CGFloat = 0
     }
-    
-    private struct originalImageInfo{
-        var imageoOrientation: UIImageOrientation = .Up
-        var scale: CGFloat = 0
-    }
-
     
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -38,10 +32,8 @@ class CropAvatorPhotoViewController: UIViewController {
     
     private var imageOffsetInMinScale = cropImageOffset()
     
-    //store the orientation and scale information before the image being cropped so that the corresponding info is preserved even after cropped
-    private var imageInfomationBeforeCrop = originalImageInfo()
 
-    private var imageSizeMode: sizeMode?
+    private var imageSizeMode: SizeMode?
     
     private var imageOffsetInWholeScale: cropImageOffset {
         get{
@@ -53,11 +45,6 @@ class CropAvatorPhotoViewController: UIViewController {
             return offsetInWholeScale
         }
     }
-    
-    
-    
-    
-    
     
     
     override func viewDidLoad() {
@@ -72,7 +59,7 @@ class CropAvatorPhotoViewController: UIViewController {
             
             if imageSize.width > imageSize.height{
                 //landscape
-                imageSizeMode = sizeMode.landscape
+                imageSizeMode = SizeMode.landscape
                 let viewWidth = view.bounds.size.width
                 let viewHeight = view.bounds.size.height
                 let scaleHeight = view.bounds.size.width
@@ -81,10 +68,11 @@ class CropAvatorPhotoViewController: UIViewController {
                 imageViewToBeCropped.frame = CGRect(x: frameOriginX, y: ( viewHeight - viewWidth ) / 2, width: scaleWidth, height: scaleHeight)
                 scrollView.contentInset = UIEdgeInsets(top: 0, left: (scaleWidth - scaleHeight) / 2, bottom: 0, right: (scaleWidth - scaleHeight) / 2)
                 scrollView.contentSize = CGSize(width: viewWidth, height: scaleHeight)
+                scrollView.contentOffset.x = 0
                 
             }else if imageSize.width <  imageSize.height{
                 //portrait
-                imageSizeMode = sizeMode.portrait
+                imageSizeMode = SizeMode.portrait
                 let viewHeight = view.bounds.size.height
                 let scaleWidth = view.bounds.size.width
                 let scaleHeight = scaleWidth * imageSize.height / imageSize.width
@@ -93,11 +81,18 @@ class CropAvatorPhotoViewController: UIViewController {
                 scrollView.contentInset = UIEdgeInsets(top: (scaleHeight - scaleWidth) / 2, left: 0, bottom: (scaleHeight - scaleWidth) / 2, right: 0)
                 
                 scrollView.contentSize = CGSize(width: scaleWidth, height: viewHeight)
-                scrollView.contentOffset.y += (scaleHeight - scaleWidth) / 2
+                scrollView.contentOffset.y = 0
             }else{
                 //square 
-                imageSizeMode = sizeMode.square
+                imageSizeMode = SizeMode.square
+                let viewHeight = view.bounds.size.height
+                let scaleWidth = view.bounds.size.width
+                let scaleHeight = scaleWidth
+                let frameOriginY = ( viewHeight - scaleHeight ) / 2
+                imageViewToBeCropped.frame = CGRect(x: 0, y: frameOriginY, width: scaleWidth, height: scaleHeight)
             }
+            
+            
             view.addSubview(imageViewToBeCropped)
             scrollView.addSubview(imageViewToBeCropped)
             if let cropAvatorView = view as? CropAvatorView{
@@ -131,11 +126,6 @@ class CropAvatorPhotoViewController: UIViewController {
         if let profileNaviVC = ((self.presentingViewController as! UIImagePickerController).presentingViewController as! TabBarController).selectedViewController as? ProfileNavigationController{
             if let profileVC = profileNaviVC.viewControllers.first as? ProfileViewController{
                 profileVC.dismissViewControllerAnimated(true, completion: nil)
-                
-                if let orientation = image?.imageOrientation{
-                    imageInfomationBeforeCrop.imageoOrientation = orientation
-                }
-                
                 if let imageAfterCropped = cropSquareImage(image!){
                     profileVC.profileAvator.image = imageAfterCropped
                     print(profileVC.profileAvator.image)
@@ -147,22 +137,46 @@ class CropAvatorPhotoViewController: UIViewController {
     }
     
     
+    
+    
     private func cropSquareImage(image: UIImage) -> UIImage?{
         var clipRect: CGRect = CGRectZero
-        let clipSquareWidth = image.size.width
+        var clipSquareWidth: CGFloat
         if let mode = imageSizeMode{
             switch mode{
             case .portrait:
-                clipRect = CGRect(x: 0, y: imageOffsetInWholeScale.offSetY , width: clipSquareWidth, height: clipSquareWidth)
-            default:break
+                clipSquareWidth = image.size.width
+
+                if image.imageOrientation == .Right{
+                    clipRect = CGRect(x: imageOffsetInWholeScale.offSetY , y: 0, width: clipSquareWidth, height: clipSquareWidth)
+                }else if image.imageOrientation == .Left{
+                     clipRect = CGRect(x: image.size.height - clipSquareWidth - imageOffsetInWholeScale.offSetY , y: 0, width: clipSquareWidth, height: clipSquareWidth)
+                }else if image.imageOrientation == .Down{
+                    clipRect = CGRect(x: 0, y: image.size.height - clipSquareWidth - imageOffsetInWholeScale.offSetY , width: clipSquareWidth, height: clipSquareWidth)
+                }else{
+                     clipRect = CGRect(x: 0 , y: imageOffsetInWholeScale.offSetY , width: clipSquareWidth, height: clipSquareWidth)
+                }
+            case .square:
+                clipSquareWidth = image.size.width
+                clipRect = CGRect(x: 0 , y: 0 , width: clipSquareWidth, height: clipSquareWidth)
+            case .landscape:
+                clipSquareWidth = image.size.height
+                if image.imageOrientation == .Right{
+                    clipRect = CGRect(x: 0, y: image.size.width - clipSquareWidth - imageOffsetInWholeScale.offSetX, width: clipSquareWidth, height: clipSquareWidth)
+                }else if image.imageOrientation == .Left{
+                    clipRect = CGRect(x: 0, y: imageOffsetInWholeScale.offSetX, width: clipSquareWidth, height: clipSquareWidth)
+                }else if image.imageOrientation == .Down{
+                    print( image.size.width - clipSquareWidth - imageOffsetInWholeScale.offSetX)
+                    clipRect = CGRect(x: image.size.width - clipSquareWidth - imageOffsetInWholeScale.offSetX, y: 0, width: clipSquareWidth, height: clipSquareWidth)
+                }else{
+                    clipRect = CGRect(x: imageOffsetInWholeScale.offSetX, y: 0, width: clipSquareWidth, height: clipSquareWidth)
+                }
             }
         }
-        
         if let cgImageAfterCropped = CGImageCreateWithImageInRect(image.CGImage, clipRect){
-            return UIImage.init(CGImage: cgImageAfterCropped, scale: imageInfomationBeforeCrop.scale, orientation: imageInfomationBeforeCrop.imageoOrientation)
+            return UIImage.init(CGImage: cgImageAfterCropped, scale: image.scale, orientation: image.imageOrientation)
         }
         return nil
-        
     }
     
     
@@ -183,7 +197,14 @@ extension CropAvatorPhotoViewController: UIScrollViewDelegate{
     func scrollViewDidScroll(scrollView: UIScrollView) {
        // imageViewToBeCropped.frame
         //portraint
-       imageOffsetInMinScale.offSetY = (view.bounds.size.height - view.bounds.size.width) / 2 - scrollView.convertRect(imageViewToBeCropped.frame, toView: nil).origin.y
+        if imageSizeMode == SizeMode.portrait{
+             imageOffsetInMinScale.offSetY = (view.bounds.size.height - view.bounds.size.width) / 2 - scrollView.convertRect(imageViewToBeCropped.frame, toView: nil).origin.y
+        }else if imageSizeMode == SizeMode.landscape{
+            imageOffsetInMinScale.offSetX = -scrollView.convertRect(imageViewToBeCropped.frame, toView: nil).origin.x
+            
+        }
+        
+       
     }
 }
 

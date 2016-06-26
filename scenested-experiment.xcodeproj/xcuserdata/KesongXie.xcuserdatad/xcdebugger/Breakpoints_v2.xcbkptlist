@@ -106,27 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "scenested-experiment/CropAvatorPhotoViewController.swift"
-            timestampString = "488521666.949884"
+            timestampString = "488620495.061373"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
-            landmarkName = "doneBtnTapped()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "scenested-experiment/CropAvatorPhotoViewController.swift"
-            timestampString = "488521666.949884"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "159"
-            endingLineNumber = "159"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
             landmarkName = "cropSquareImage(_:)"
             landmarkType = "5">
          </BreakpointContent>
