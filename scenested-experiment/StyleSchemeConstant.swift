@@ -68,6 +68,11 @@ struct StyleSchemeConstant{
         static let borderWidth: CGFloat = 1.0
     }
     
+    struct profileCoverPhotoInfo{
+        static let width: CGFloat = 1280
+        static let height: CGFloat = 400
+        static let aspectRatio: CGFloat = 3.2
+    }
     
     
     

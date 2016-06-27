@@ -57,60 +57,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "scenested-experiment/ProfileViewController.swift"
-            timestampString = "488368034.200456"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "264"
-            endingLineNumber = "264"
-            landmarkName = "chooseFromLibarary()"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "scenested_experiment.ProfileViewController.chooseFromLibarary () -&gt; ()"
-                  moduleName = "scenested-experiment"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/KesongXie/Developer/scenested-experiment/scenested-experiment/ProfileViewController.swift"
-                  timestampString = "488367796.830957"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "260"
-                  endingLineNumber = "260"
-                  offsetFromSymbolStart = "184">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "scenested_experiment.ProfileViewController.chooseFromLibarary () -&gt; ()"
-                  moduleName = "scenested-experiment"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/KesongXie/Developer/scenested-experiment/scenested-experiment/ProfileViewController.swift"
-                  timestampString = "488367796.831893"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "260"
-                  endingLineNumber = "260"
-                  offsetFromSymbolStart = "388">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "scenested-experiment/CropAvatorPhotoViewController.swift"
-            timestampString = "488620495.061373"
+            timestampString = "488728598.907144"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "181"
-            endingLineNumber = "181"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
             landmarkName = "cropSquareImage(_:)"
             landmarkType = "5">
          </BreakpointContent>

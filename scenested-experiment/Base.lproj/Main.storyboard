@@ -401,6 +401,39 @@
             </objects>
             <point key="canvasLocation" x="2993" y="-19"/>
         </scene>
+        <!--Crop Cover Photo View Controller-->
+        <scene sceneID="VRf-jH-8za">
+            <objects>
+                <viewController storyboardIdentifier="CropCoverPhotoViewControllerIden" id="TcX-Jd-CbY" customClass="CropCoverPhotoViewController" customModule="scenested_experiment" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="oJc-hy-RVq"/>
+                        <viewControllerLayoutGuide type="bottom" id="Sec-nm-ZFb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Kqd-C7-Ku2" customClass="CropCoverView" customModule="scenested_experiment" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j9a-rM-hyE">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="j9a-rM-hyE" firstAttribute="leading" secondItem="Kqd-C7-Ku2" secondAttribute="leading" id="C3w-GB-ZmG"/>
+                            <constraint firstItem="j9a-rM-hyE" firstAttribute="top" secondItem="Kqd-C7-Ku2" secondAttribute="top" id="H43-43-BU1"/>
+                            <constraint firstItem="Sec-nm-ZFb" firstAttribute="top" secondItem="j9a-rM-hyE" secondAttribute="bottom" id="VW0-BM-q6T"/>
+                            <constraint firstAttribute="trailing" secondItem="j9a-rM-hyE" secondAttribute="trailing" id="fXn-nu-QYq"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="scrollView" destination="j9a-rM-hyE" id="M5b-kA-hVE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hCd-Qf-mrP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="983" y="-1026"/>
+        </scene>
         <!--Crop Avator Photo View Controller-->
         <scene sceneID="Rzg-lB-XVj">
             <objects>
@@ -467,9 +500,13 @@
                                     <subviews>
                                         <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="55D-o5-Za7">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="148"/>
+                                            <gestureRecognizers/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="148" id="z8i-vl-MUF"/>
                                             </constraints>
+                                            <connections>
+                                                <outletCollection property="gestureRecognizers" destination="Plj-oX-LkE" appends="YES" id="zMm-JV-24e"/>
+                                            </connections>
                                         </imageView>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cei-RS-UTs">
                                             <rect key="frame" x="470" y="158" width="120" height="30"/>
@@ -852,6 +889,11 @@
                 <tapGestureRecognizer id="0Jw-3c-w37">
                     <connections>
                         <action selector="tapAvator:" destination="Dk2-52-7zb" id="PoI-Kv-8Wg"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="Plj-oX-LkE">
+                    <connections>
+                        <action selector="tapCover:" destination="Dk2-52-7zb" id="Eit-eX-FYs"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

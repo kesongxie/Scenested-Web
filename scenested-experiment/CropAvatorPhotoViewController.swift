@@ -15,10 +15,7 @@ class CropAvatorPhotoViewController: UIViewController {
         case square
     }
     
-    private struct cropImageOffset{
-        var offSetX: CGFloat = 0
-        var offSetY: CGFloat = 0
-    }
+    
     
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -93,19 +90,13 @@ class CropAvatorPhotoViewController: UIViewController {
             }
             
             
-            view.addSubview(imageViewToBeCropped)
             scrollView.addSubview(imageViewToBeCropped)
             if let cropAvatorView = view as? CropAvatorView{
                 cropAvatorView.cancelBtn.addTarget(self, action: #selector(CropAvatorPhotoViewController.cancelBtnTapped), forControlEvents: .TouchUpInside)
                 cropAvatorView.doneBtn.addTarget(self, action: #selector(CropAvatorPhotoViewController.doneBtnTapped), forControlEvents: .TouchUpInside)
                 
             }
-            
-            
         }
-        
-
-        
     }
     
   
@@ -128,7 +119,7 @@ class CropAvatorPhotoViewController: UIViewController {
                 profileVC.dismissViewControllerAnimated(true, completion: nil)
                 if let imageAfterCropped = cropSquareImage(image!){
                     profileVC.profileAvator.image = imageAfterCropped
-                    print(profileVC.profileAvator.image)
+                    //save imageAfterCropped to the server
                 }
             }
             
