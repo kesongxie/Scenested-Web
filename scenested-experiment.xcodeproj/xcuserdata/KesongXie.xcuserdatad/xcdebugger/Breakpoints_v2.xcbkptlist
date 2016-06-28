@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "scenested-experiment/CropAvatorPhotoViewController.swift"
-            timestampString = "488728598.907144"
+            timestampString = "488772149.479596"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
+            startingLineNumber = "169"
+            endingLineNumber = "169"
             landmarkName = "cropSquareImage(_:)"
             landmarkType = "5">
          </BreakpointContent>

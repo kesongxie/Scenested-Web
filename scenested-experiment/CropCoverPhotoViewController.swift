@@ -28,7 +28,7 @@ class CropCoverPhotoViewController: UIViewController {
         }
     }
     
-    
+    private var initialScrollOffsetX: CGFloat = 0
 
     
     
@@ -40,38 +40,43 @@ class CropCoverPhotoViewController: UIViewController {
         if let imageToBeCropped = image{
             let viewWidth = self.view.bounds.size.width
             let viewHeight = self.view.bounds.size.height
-            
+            let croppingAreaHeight = viewWidth / StyleSchemeConstant.profileCoverPhotoInfo.aspectRatio
+            let clipRectAspectRatio = StyleSchemeConstant.profileCoverPhotoInfo.aspectRatio
+
             imageViewToBeCropped.image = imageToBeCropped
-            if imageToBeCropped.aspectRatio < StyleSchemeConstant.profileCoverPhotoInfo.aspectRatio{
+            if imageToBeCropped.aspectRatio < clipRectAspectRatio{
                 //the image is vertical, so need to scroll vertically to adjust the visible portion of the cover to be cropped
                 let scaleWidth = viewWidth
                 let scaleHeight = viewWidth / imageToBeCropped.aspectRatio
-                let croppingAreaHeight = viewWidth / StyleSchemeConstant.profileCoverPhotoInfo.aspectRatio
                 let contentOffSetY = ( scaleHeight - croppingAreaHeight) / 2
                 imageViewToBeCropped.frame = CGRect(x: 0, y: 0, width: scaleWidth, height: scaleHeight)
                 
                 scrollView.contentInset = UIEdgeInsets(top: (viewHeight - croppingAreaHeight) / 2, left: 0, bottom: (viewHeight - croppingAreaHeight) / 2, right: 0)
                 scrollView.contentOffset.y += contentOffSetY
                 scrollView.contentSize = CGSize(width: scaleWidth, height: scaleHeight)
-                imageOffsetInMinScale.offSetY = (view.bounds.size.height - view.bounds.size.width / StyleSchemeConstant.profileCoverPhotoInfo.aspectRatio) / 2 - (viewHeight - scaleHeight) / 2
+                imageOffsetInMinScale.offSetY = (view.bounds.size.height - view.bounds.size.width / clipRectAspectRatio) / 2 - (viewHeight - scaleHeight) / 2
             }else{
-                print("horizon")
+                let scaleHeight = croppingAreaHeight
+                let scaleWidth = scaleHeight * imageToBeCropped.aspectRatio
+                
+                let imageViewFrameOffsetY = (viewHeight - croppingAreaHeight) / 2
+                imageViewToBeCropped.frame = CGRect(x: 0, y: imageViewFrameOffsetY, width: scaleWidth, height: scaleHeight)
+                initialScrollOffsetX = (scaleWidth - viewWidth ) / 2
+                scrollView.contentSize =  CGSize(width: scaleWidth, height: scaleHeight)
             }
             
             scrollView.addSubview(imageViewToBeCropped)
-
-            
             if let cropCoverView = view as? CropCoverView{
                 cropCoverView.cancelBtn.addTarget(self, action: #selector(CropCoverPhotoViewController.cancelBtnTapped), forControlEvents: .TouchUpInside)
                 cropCoverView.doneBtn.addTarget(self, action: #selector(CropCoverPhotoViewController.doneBtnTapped), forControlEvents: .TouchUpInside)
                 
             }
-
-            
-        }
-        
-        
-        
+      }
+    }
+    
+    
+    override func viewWillAppear(animated: Bool) {
+        scrollView.contentOffset.x = initialScrollOffsetX //horizontally centers the cover imageview frame in clipping rect
     }
 
     override func didReceiveMemoryWarning() {
@@ -90,9 +95,9 @@ class CropCoverPhotoViewController: UIViewController {
             if let profileVC = profileNaviVC.viewControllers.first as? ProfileViewController{
                 profileVC.dismissViewControllerAnimated(true, completion: nil)
                 if let imageAfterCropped = cropCoverImage(image!){
-                   
                     print(imageAfterCropped)
                     profileVC.profileCover.image = imageAfterCropped
+                    profileVC.finishImagePicker()
                     //save imageAfterCropped to the server
                 }
             }
@@ -105,39 +110,36 @@ class CropCoverPhotoViewController: UIViewController {
     func cropCoverImage(image: UIImage) -> UIImage?{
         var clipRect: CGRect = CGRectZero
         let clipRectAspectRatio = StyleSchemeConstant.profileCoverPhotoInfo.aspectRatio
-        
-        
         if image.aspectRatio < clipRectAspectRatio{
             //portrait refer to the visible rect
-            
-            
             switch image.imageOrientation{
-            case .Up:
-                clipRect = CGRect(x: 0, y: imageOffsetInWholeScale.offSetY, width: image.size.width, height: image.size.width / clipRectAspectRatio)
-           
             case .Right:
                  clipRect = CGRect(x: imageOffsetInWholeScale.offSetY , y: 0, width: image.size.width / clipRectAspectRatio , height: image.size.width)
-            
             case .Left:
-                clipRect = CGRect(x: image.size.height - image.size.width / clipRectAspectRatio + imageOffsetInWholeScale.offSetY , y: 0, width: image.size.width / clipRectAspectRatio , height: image.size.width)
+                clipRect = CGRect(x: image.size.height - image.size.width / clipRectAspectRatio - imageOffsetInWholeScale.offSetY , y: 0, width: image.size.width / clipRectAspectRatio , height: image.size.width)
             case .Down:
-                 clipRect = CGRect(x: 0 , y: image.size.height - image.size.width / clipRectAspectRatio + imageOffsetInWholeScale.offSetY  , width: image.size.width , height: image.size.width / clipRectAspectRatio)
-                
+                 clipRect = CGRect(x: 0 , y: image.size.height - image.size.width / clipRectAspectRatio - imageOffsetInWholeScale.offSetY  , width: image.size.width , height: image.size.width / clipRectAspectRatio)
             default:
-                break
-                
-                
-
-                
+                clipRect = CGRect(x: 0, y: imageOffsetInWholeScale.offSetY, width: image.size.width, height: image.size.width / clipRectAspectRatio)
             }
-           
-        }
+        }else{
+            switch image.imageOrientation{
+            case .Right:
+                clipRect = CGRect(x: 0 , y: image.size.width - image.size.height * clipRectAspectRatio - imageOffsetInWholeScale.offSetX, width: image.size.height , height: image.size.height * clipRectAspectRatio)
+            case .Left:
+                clipRect = CGRect(x: 0, y: imageOffsetInWholeScale.offSetX, width: image.size.height , height: image.size.height * clipRectAspectRatio)
+            case .Down:
+                clipRect = CGRect(x: image.size.width - image.size.height * clipRectAspectRatio - imageOffsetInWholeScale.offSetX , y: 0 , width: image.size.height , height: image.size.height * clipRectAspectRatio)
+            default:
+                clipRect = CGRect(x: imageOffsetInWholeScale.offSetX, y: 0, width: image.size.height *  clipRectAspectRatio, height: image.size.height )
+            }
+
         
+        }
         if let cgImageAfterCropped = CGImageCreateWithImageInRect(image.CGImage, clipRect){
             return UIImage.init(CGImage: cgImageAfterCropped, scale: image.scale, orientation: image.imageOrientation)
         }
         return nil
-
     }
     
     
@@ -159,8 +161,16 @@ class CropCoverPhotoViewController: UIViewController {
 
 extension CropCoverPhotoViewController: UIScrollViewDelegate{
     func scrollViewDidScroll(scrollView: UIScrollView) {
+        if image != nil{
+            let clipRectAspectRatio = StyleSchemeConstant.profileCoverPhotoInfo.aspectRatio
+            if image!.aspectRatio < clipRectAspectRatio{
+                imageOffsetInMinScale.offSetY = (view.bounds.size.height - view.bounds.size.width / StyleSchemeConstant.profileCoverPhotoInfo.aspectRatio) / 2 - scrollView.convertRect(imageViewToBeCropped.frame, toView: nil).origin.y
+            }else{
+                 imageOffsetInMinScale.offSetX = scrollView.contentOffset.x
+            }
+        }
         
-        //portrait
-        imageOffsetInMinScale.offSetY = (view.bounds.size.height - view.bounds.size.width / StyleSchemeConstant.profileCoverPhotoInfo.aspectRatio) / 2 - scrollView.convertRect(imageViewToBeCropped.frame, toView: nil).origin.y
+        
+        
     }
 }

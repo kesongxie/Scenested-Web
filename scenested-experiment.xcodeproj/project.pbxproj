@@ -107,6 +107,24 @@
 			name = "Crop Photo";
 			sourceTree = "<group>";
 		};
+		986A03B01D22245000BA45E7 /* Edit Profile */ = {
+			isa = PBXGroup;
+			children = (
+				982D5F881D1388AE00D2DB72 /* EditProfileNavigationController.swift */,
+				982D5F8A1D1389A600D2DB72 /* EditProfileViewController.swift */,
+			);
+			name = "Edit Profile";
+			sourceTree = "<group>";
+		};
+		986A03B11D22246700BA45E7 /* Add Theme */ = {
+			isa = PBXGroup;
+			children = (
+				982D5F911D19397E00D2DB72 /* AddThemeViewController.swift */,
+				982D5F931D193ECE00D2DB72 /* AddThemeNavigationController.swift */,
+			);
+			name = "Add Theme";
+			sourceTree = "<group>";
+		};
 		987BA7D01D04A4950080F4DF /* Scene Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -192,10 +210,8 @@
 				984B77E41CD929CA00623F7D /* PostTableViewCell.swift */,
 				98E394251D03C24500EB158C /* CloseUpAnimator.swift */,
 				98108A0B1CFE3EFB0093E878 /* PostCollectionViewCell.swift */,
-				982D5F881D1388AE00D2DB72 /* EditProfileNavigationController.swift */,
-				982D5F8A1D1389A600D2DB72 /* EditProfileViewController.swift */,
-				982D5F911D19397E00D2DB72 /* AddThemeViewController.swift */,
-				982D5F931D193ECE00D2DB72 /* AddThemeNavigationController.swift */,
+				986A03B01D22245000BA45E7 /* Edit Profile */,
+				986A03B11D22246700BA45E7 /* Add Theme */,
 				986A03A51D2117D500BA45E7 /* Crop Photo */,
 				98E394271D03C58300EB158C /* Scene Detail */,
 			);

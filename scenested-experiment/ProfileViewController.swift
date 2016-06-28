@@ -55,7 +55,7 @@ class ProfileViewController: StrechableHeaderViewController {
 
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: {
             (action) -> Void in
-            self.cancelImagePicker()
+            self.finishImagePicker()
         })
 
         alert.addAction(takePhotoAction)
@@ -73,7 +73,10 @@ class ProfileViewController: StrechableHeaderViewController {
         let chooseExistingAction = UIAlertAction(title: "Choose from Library", style: .Default, handler: { (action) -> Void in
             self.chooseFromLibarary()
         })
-        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: nil)
+        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: {
+            (action) -> Void in
+             self.takePhoto()
+        })
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         
         alert.addAction(takePhotoAction)
@@ -178,7 +181,11 @@ class ProfileViewController: StrechableHeaderViewController {
         case none
     }
     
-   private var imagePickerUploadPhotoFor: UploadPhotoFor = .none
+    private var imagePickerUploadPhotoFor: UploadPhotoFor = .none{
+        didSet{
+            print(imagePickerUploadPhotoFor)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -309,35 +316,6 @@ class ProfileViewController: StrechableHeaderViewController {
         }
     }
     
-    func takePhoto(){
-        if isAvailableToUseCamera(){
-            let camera = UIImagePickerControllerSourceType.Camera
-            if !UIImagePickerController.isSourceTypeAvailable(camera){
-                return
-            }
-            //the camera is available
-            if UIImagePickerController.availableMediaTypesForSourceType(camera) != nil{
-                let imagePicker = UIImagePickerController()
-                imagePicker.sourceType = .Camera
-                imagePicker.delegate = self
-                imagePicker.mediaTypes = ["public.image"]
-                self.presentViewController(imagePicker, animated: true, completion: nil)
-                
-            }
-            
-            
-            
-            
-        }else{
-            //make sure the setting is good
-        }
-    }
-    
-    
-    
-    
-    
-    
     
     
     //check whether the App is allowed to get access to the user's photo libarary, ask for authorization, otherwise
@@ -369,6 +347,28 @@ class ProfileViewController: StrechableHeaderViewController {
     
     
     
+    func takePhoto(){
+        if isAvailableToUseCamera(){
+            let camera = UIImagePickerControllerSourceType.Camera
+            if !UIImagePickerController.isSourceTypeAvailable(camera){
+                return
+            }
+            //the camera is available
+            if UIImagePickerController.availableMediaTypesForSourceType(camera) != nil{
+                let imagePicker = UIImagePickerController()
+                imagePicker.sourceType = .Camera
+                imagePicker.delegate = self
+                imagePicker.mediaTypes = ["public.image"]
+                self.presentViewController(imagePicker, animated: true, completion: nil)
+                
+            }
+        }else{
+            //make sure the setting is good
+        }
+    }
+    
+
+    
     //check whether the App is allowed to get access to the user's camera
     func isAvailableToUseCamera() -> Bool{
         let status = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
@@ -399,9 +399,8 @@ class ProfileViewController: StrechableHeaderViewController {
     }
     
     
-    func cancelImagePicker(){
+    func finishImagePicker(){
         imagePickerUploadPhotoFor = UploadPhotoFor.none
-        print("called")
     }
     
     
@@ -603,6 +602,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate{
         
         //depends on which type the image is, crop avator or cover
 
+        
         switch imagePickerUploadPhotoFor{
         case .profileAvator:
             if let cropAvatorViewController = storyboard?.instantiateViewControllerWithIdentifier("CropAvatorPhotoViewControllerIden") as? CropAvatorPhotoViewController
@@ -611,7 +611,6 @@ extension ProfileViewController: UIImagePickerControllerDelegate{
             {
                 cropAvatorViewController.image = selectedImage
                 picker.presentViewController(cropAvatorViewController, animated: true, completion: {
-                    self.imagePickerUploadPhotoFor = UploadPhotoFor.none
                 })
             }
         case .profileCover:
@@ -619,7 +618,6 @@ extension ProfileViewController: UIImagePickerControllerDelegate{
             {
                 cropCoverViewController.image = selectedImage
                 picker.presentViewController(cropCoverViewController, animated: true, completion: {
-                    self.imagePickerUploadPhotoFor = UploadPhotoFor.none
                 })
             }
         default:
@@ -637,7 +635,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate{
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         self.dismissViewControllerAnimated(true, completion: {
-            self.cancelImagePicker()
+            self.finishImagePicker()
         })
         
     }

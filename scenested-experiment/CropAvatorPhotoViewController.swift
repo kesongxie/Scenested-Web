@@ -119,6 +119,7 @@ class CropAvatorPhotoViewController: UIViewController {
                 profileVC.dismissViewControllerAnimated(true, completion: nil)
                 if let imageAfterCropped = cropSquareImage(image!){
                     profileVC.profileAvator.image = imageAfterCropped
+                    profileVC.finishImagePicker()
                     //save imageAfterCropped to the server
                 }
             }
