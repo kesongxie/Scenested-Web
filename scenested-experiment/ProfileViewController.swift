@@ -7,10 +7,8 @@
 //
 
 import UIKit
-import Photos
-import AVFoundation
 
-class ProfileViewController: StrechableHeaderViewController {
+class ProfileViewController: EditableProfileViewController {
 
     @IBOutlet weak var profileCover: UIImageView!
     
@@ -40,53 +38,6 @@ class ProfileViewController: StrechableHeaderViewController {
     
     @IBAction func closeAddTheme(unwindSegue: UIStoryboardSegue){
     }
-    
-    
-     // MARK:: Avator tap gesture configuration
-    @IBAction func tapAvator(sender: UITapGestureRecognizer) {
-        let alert = UIAlertController(title: "Change Profile Picture", message: nil, preferredStyle: .ActionSheet)
-        let chooseExistingAction = UIAlertAction(title: "Choose from Library", style: .Default, handler: { (action) -> Void in
-            self.chooseFromLibarary()
-        })
-        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler:
-            {(action) -> Void in
-            self.takePhoto()
-        })
-
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: {
-            (action) -> Void in
-            self.finishImagePicker()
-        })
-
-        alert.addAction(takePhotoAction)
-        alert.addAction(chooseExistingAction)
-        alert.addAction(cancelAction)
-        imagePickerUploadPhotoFor = UploadPhotoFor.profileAvator
-        self.presentViewController(alert, animated: true, completion: nil)
-
-    }
-    
-    
-    
-    @IBAction func tapCover(sender: UITapGestureRecognizer) {
-       let alert = UIAlertController(title: "Change Profile Cover", message: nil, preferredStyle: .ActionSheet)
-        let chooseExistingAction = UIAlertAction(title: "Choose from Library", style: .Default, handler: { (action) -> Void in
-            self.chooseFromLibarary()
-        })
-        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: {
-            (action) -> Void in
-             self.takePhoto()
-        })
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        
-        alert.addAction(takePhotoAction)
-        alert.addAction(chooseExistingAction)
-        alert.addAction(cancelAction)
-        imagePickerUploadPhotoFor = UploadPhotoFor.profileCover
-        self.presentViewController(alert, animated: true, completion: nil)
-    }
-    
-    
     
     
     private var profileCoverHeight: CGFloat = 0
@@ -174,33 +125,13 @@ class ProfileViewController: StrechableHeaderViewController {
     
     
     
-    private enum UploadPhotoFor{
-        case profileAvator
-        case profileCover
-        case profilePost
-        case none
-    }
-    
-    private var imagePickerUploadPhotoFor: UploadPhotoFor = .none{
-        didSet{
-            print(imagePickerUploadPhotoFor)
-        }
-    }
-    
-    override func viewDidLoad() {
+        override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
-//        myImagePicker.delegate = self
-        
         themesCollectionView.delegate = self
         themesCollectionView.dataSource = self
 //        globalView.delegate = self
 //        globalView.dataSource = self
 //        self.navigationController?.navigationBarHidden = true
-        
-        
         //self.tabBarController?.tabBar.hidden = true
 //        globalView.alwaysBounceVertical = true
         
@@ -216,23 +147,26 @@ class ProfileViewController: StrechableHeaderViewController {
         
         
         if isUserOwnProfile{
-           addPostSceneBtn()
+            addPostSceneBtn()
+            addTapGestureForAvator()
+            addTapGestureForCover()
         }else{
             self.navigationItem.rightBarButtonItem = nil
         }
-        
-        
-        
-//        let cameraPostBtn = UIButton()
-//        cameraPostBtn.setImage(UIImage(named: "camera-icon-1"), forState: .Normal)
-//        cameraPostBtn.frame = CGRectMake(0, 0, 20, 20)
-//        //btnName.addTarget(self, action: Selector("action"), forControlEvents: .TouchUpInside)
-//        
-//        //.... Set Right/Left Bar Button item
-//        let rightBarButton = UIBarButtonItem(customView: cameraPostBtn)
-//        self.navigationItem.rightBarButtonItem = rightBarButton
     }
     
+    
+    
+    func addTapGestureForAvator(){
+        let tap = UITapGestureRecognizer(target: self, action: #selector(ProfileViewController.tapAvator))
+        profileAvator.addGestureRecognizer(tap)
+    }
+    
+    func addTapGestureForCover(){
+        let tap = UITapGestureRecognizer(target: self, action: #selector(ProfileViewController.tapCover))
+        profileCover.addGestureRecognizer(tap)
+    }
+
     
 
     //additional setup
@@ -295,120 +229,7 @@ class ProfileViewController: StrechableHeaderViewController {
         
         self.navigationItem.rightBarButtonItem = barBtnItem
     }
-    
-    
-    func chooseFromLibarary(){
-        if isAvailabeToPickFromLibrary(){
-            let savedAlbumSource = UIImagePickerControllerSourceType.SavedPhotosAlbum
-            if !UIImagePickerController.isSourceTypeAvailable(savedAlbumSource){
-                //the given source type is not availabe
-                return
-            }
-            //once given source type is available, check which media type is available
-            if UIImagePickerController.availableMediaTypesForSourceType(savedAlbumSource) != nil{
-                let imagePicker = UIImagePickerController()
-                imagePicker.delegate = self
-                imagePicker.mediaTypes = ["public.image"] //only supports static image
-                self.presentViewController(imagePicker, animated: true, completion: nil)
-            }
-        }else{
-            //make sure the setting is good
-        }
-    }
-    
-    
-    
-    //check whether the App is allowed to get access to the user's photo libarary, ask for authorization, otherwise
-    func isAvailabeToPickFromLibrary() -> Bool{
-        let status = PHPhotoLibrary.authorizationStatus()
-        switch status {
-        case .Authorized:
-            return true
-        case .NotDetermined:
-            PHPhotoLibrary.requestAuthorization(){PHAuthorizationStatus -> Void  in}
-            return false
-        case .Restricted:
-            return false
-        case .Denied:
-            let alert = UIAlertController(title: "Authorization Needed", message: "Authorization needed in order to choose photo from libarary", preferredStyle: .Alert)
-            let dontAllowAction = UIAlertAction(title: "Don't Allow", style: .Default, handler: nil)
-            let goToSettingAction = UIAlertAction(title: "Ok", style: .Default, handler: {
-                _ in
-                if let url = NSURL(string: UIApplicationOpenSettingsURLString){
-                     UIApplication.sharedApplication().openURL(url)
-                }
-            })
-            alert.addAction(dontAllowAction)
-            alert.addAction(goToSettingAction)
-            self.presentViewController(alert, animated: true, completion: nil)
-            return false
-        }
-    }
-    
-    
-    
-    func takePhoto(){
-        if isAvailableToUseCamera(){
-            let camera = UIImagePickerControllerSourceType.Camera
-            if !UIImagePickerController.isSourceTypeAvailable(camera){
-                return
-            }
-            //the camera is available
-            if UIImagePickerController.availableMediaTypesForSourceType(camera) != nil{
-                let imagePicker = UIImagePickerController()
-                imagePicker.sourceType = .Camera
-                imagePicker.delegate = self
-                imagePicker.mediaTypes = ["public.image"]
-                self.presentViewController(imagePicker, animated: true, completion: nil)
-                
-            }
-        }else{
-            //make sure the setting is good
-        }
-    }
-    
-
-    
-    //check whether the App is allowed to get access to the user's camera
-    func isAvailableToUseCamera() -> Bool{
-        let status = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
-        print(status)
-        switch status {
-        case .Authorized:
-            return true
-        case .NotDetermined:
-            AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo, completionHandler: nil)
-            return false
-        case .Restricted:
-            return false
-        case .Denied:
-            let alert = UIAlertController(title: "Authorization Needed", message: "Authorization needed in order to use the camera to capture a picture", preferredStyle: .Alert)
-            
-            let dontAllowAction = UIAlertAction(title: "Don't Allow", style: .Default, handler: nil)
-            let goToSettingAction = UIAlertAction(title: "Ok", style: .Default, handler: {
-                _ in
-                if let url = NSURL(string: UIApplicationOpenSettingsURLString){
-                    UIApplication.sharedApplication().openURL(url)
-                }
-            })
-            alert.addAction(dontAllowAction)
-            alert.addAction(goToSettingAction)
-            self.presentViewController(alert, animated: true, completion: nil)
-            return false
-        }
-    }
-    
-    
-    func finishImagePicker(){
-        imagePickerUploadPhotoFor = UploadPhotoFor.none
-    }
-    
-    
-   
-    
-
-    
-    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        override func scrollViewDidScroll(scrollView: UIScrollView) {
         super.scrollViewDidScroll(scrollView)
         
         //reset all other visible rows section header view to white color
@@ -591,58 +412,6 @@ extension ProfileViewController: UIViewControllerTransitioningDelegate{
         closeUpTransition.presenting = true
         return closeUpTransition
     }
-}
-
-//MARK:: UIImagePickerControllerDelegate and UINavigationControllerDelegate protocol
-
-extension ProfileViewController: UIImagePickerControllerDelegate{
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-
-        let selectedImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-        
-        //depends on which type the image is, crop avator or cover
-
-        
-        switch imagePickerUploadPhotoFor{
-        case .profileAvator:
-            if let cropAvatorViewController = storyboard?.instantiateViewControllerWithIdentifier("CropAvatorPhotoViewControllerIden") as? CropAvatorPhotoViewController
-            
-            
-            {
-                cropAvatorViewController.image = selectedImage
-                picker.presentViewController(cropAvatorViewController, animated: true, completion: {
-                })
-            }
-        case .profileCover:
-            if let cropCoverViewController = storyboard?.instantiateViewControllerWithIdentifier("CropCoverPhotoViewControllerIden") as? CropCoverPhotoViewController
-            {
-                cropCoverViewController.image = selectedImage
-                picker.presentViewController(cropCoverViewController, animated: true, completion: {
-                })
-            }
-        default:
-            break
-        }
-        
-        
-        
-        
-        
-        
-        
-        
-    }
-    
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        self.dismissViewControllerAnimated(true, completion: {
-            self.finishImagePicker()
-        })
-        
-    }
-}
-
-extension ProfileViewController: UINavigationControllerDelegate{
-    
 }
 
 

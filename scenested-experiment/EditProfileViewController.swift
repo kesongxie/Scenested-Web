@@ -8,12 +8,12 @@
 
 import UIKit
 
-class EditProfileViewController: StrechableHeaderViewController {
+class EditProfileViewController: EditableProfileViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     
-    @IBOutlet weak var avatorImageView: UIImageView!
+    @IBOutlet weak var profileAvator: UIImageView!
     
-    @IBOutlet weak var profileCoverImageView: UIImageView!
+    @IBOutlet weak var profileCover: UIImageView!
     
     @IBOutlet weak var coverHeightConstraint: NSLayoutConstraint!
     
@@ -33,14 +33,18 @@ class EditProfileViewController: StrechableHeaderViewController {
         self.navigationController?.navigationBar.translucent = StyleSchemeConstant.navigationBarStyle.translucent
         updateAvator()
         updateCover()
+        addTapGestureForAvator()
+        addTapGestureForCover()
     }
+    
+    
     
     
     override func viewDidAppear(animated: Bool) {
         //strechy header set up
         self.globalScrollView = scrollView
-        self.coverImageView = profileCoverImageView
-        self.coverHeight = profileCoverImageView.bounds.size.height
+        self.coverImageView = profileCover
+        self.coverHeight = profileCover.bounds.size.height
         self.stretchWhenContentOffsetLessThanZero = true
         
         //keyboard set up
@@ -49,14 +53,31 @@ class EditProfileViewController: StrechableHeaderViewController {
     }
     
     func updateAvator(){
-        avatorImageView.becomeCircleAvator()
+        profileAvator.becomeCircleAvator()
     }
     
     func updateCover(){
-        if let coverImageSize = profileCoverImageView.image?.size{
+        if let coverImageSize = profileCover.image?.size{
             coverHeightConstraint.constant =  UIScreen.mainScreen().bounds.size.width * coverImageSize.height / coverImageSize.width
         }
     }
+    
+    func addTapGestureForAvator(){
+        let tap = UITapGestureRecognizer(target: self, action: #selector(EditProfileViewController.tapAvator))
+        profileAvator.addGestureRecognizer(tap)
+    }
+    
+    func addTapGestureForCover(){
+        let tap = UITapGestureRecognizer(target: self, action: #selector(EditProfileViewController.tapCover))
+        profileCover.addGestureRecognizer(tap)
+    }
+    
+    
+    
+    
+    
+    
+
 
     func keyboardDidShow(notification: NSNotification){
 //        if let keyboardSize = (notification.userInfo?["UIKeyboardFrameBeginUserInfoKey"] as? NSValue)?.CGRectValue(){

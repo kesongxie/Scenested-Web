@@ -30,7 +30,8 @@ class CropCoverPhotoViewController: UIViewController {
     
     private var initialScrollOffsetX: CGFloat = 0
 
-    
+    var cropPhotoForViewController: EditableProfileViewController?
+
     
     
     override func viewDidLoad() {
@@ -91,21 +92,22 @@ class CropCoverPhotoViewController: UIViewController {
     }
     
     func doneBtnTapped(){
-        if let profileNaviVC = ((self.presentingViewController as! UIImagePickerController).presentingViewController as! TabBarController).selectedViewController as? ProfileNavigationController{
-            if let profileVC = profileNaviVC.viewControllers.first as? ProfileViewController{
-                profileVC.dismissViewControllerAnimated(true, completion: nil)
-                if let imageAfterCropped = cropCoverImage(image!){
-                    print(imageAfterCropped)
-                    profileVC.profileCover.image = imageAfterCropped
-                    profileVC.finishImagePicker()
-                    //save imageAfterCropped to the server
-                }
+        if let EDVC = cropPhotoForViewController as? EditProfileViewController{
+            EDVC.dismissViewControllerAnimated(true, completion: nil)
+            if let imageAfterCropped = cropCoverImage(image!){
+                EDVC.profileCover.image = imageAfterCropped
+                EDVC.finishImagePicker()
+                //Doent save imageAfterCropped to the server yet, wait until the user hit the saveBtn on the Edit Profile scene
             }
-            
+        }else if let PVC = cropPhotoForViewController as? ProfileViewController{
+            PVC.dismissViewControllerAnimated(true, completion: nil)
+            if let imageAfterCropped = cropCoverImage(image!){
+                PVC.profileCover.image = imageAfterCropped
+                PVC.finishImagePicker()
+                //save imageAfterCropped to the server
+            }
         }
-        
     }
-    
     
     func cropCoverImage(image: UIImage) -> UIImage?{
         var clipRect: CGRect = CGRectZero
@@ -133,19 +135,12 @@ class CropCoverPhotoViewController: UIViewController {
             default:
                 clipRect = CGRect(x: imageOffsetInWholeScale.offSetX, y: 0, width: image.size.height *  clipRectAspectRatio, height: image.size.height )
             }
-
-        
         }
         if let cgImageAfterCropped = CGImageCreateWithImageInRect(image.CGImage, clipRect){
             return UIImage.init(CGImage: cgImageAfterCropped, scale: image.scale, orientation: image.imageOrientation)
         }
         return nil
     }
-    
-    
-
-    
-    
     
     /*
     // MARK: - Navigation

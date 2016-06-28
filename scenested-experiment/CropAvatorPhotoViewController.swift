@@ -15,21 +15,14 @@ class CropAvatorPhotoViewController: UIViewController {
         case square
     }
     
-    
-    
     @IBOutlet weak var scrollView: UIScrollView!
-    
-    
     
     var imageViewToBeCropped = UIImageView()
     
     var image: UIImage?
     
-    
-    
     private var imageOffsetInMinScale = cropImageOffset()
     
-
     private var imageSizeMode: SizeMode?
     
     private var imageOffsetInWholeScale: cropImageOffset {
@@ -43,6 +36,8 @@ class CropAvatorPhotoViewController: UIViewController {
         }
     }
     
+    //the ViewController that contains the ImageView that need to be updated
+    var cropPhotoForViewController: EditableProfileViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,8 +83,6 @@ class CropAvatorPhotoViewController: UIViewController {
                 let frameOriginY = ( viewHeight - scaleHeight ) / 2
                 imageViewToBeCropped.frame = CGRect(x: 0, y: frameOriginY, width: scaleWidth, height: scaleHeight)
             }
-            
-            
             scrollView.addSubview(imageViewToBeCropped)
             if let cropAvatorView = view as? CropAvatorView{
                 cropAvatorView.cancelBtn.addTarget(self, action: #selector(CropAvatorPhotoViewController.cancelBtnTapped), forControlEvents: .TouchUpInside)
@@ -98,12 +91,7 @@ class CropAvatorPhotoViewController: UIViewController {
             }
         }
     }
-    
-  
-    
- 
-    
-    
+   
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -111,21 +99,27 @@ class CropAvatorPhotoViewController: UIViewController {
     
     func cancelBtnTapped(){
         self.dismissViewControllerAnimated(true, completion: nil)
+        
+        
     }
     
     func doneBtnTapped(){
-        if let profileNaviVC = ((self.presentingViewController as! UIImagePickerController).presentingViewController as! TabBarController).selectedViewController as? ProfileNavigationController{
-            if let profileVC = profileNaviVC.viewControllers.first as? ProfileViewController{
-                profileVC.dismissViewControllerAnimated(true, completion: nil)
-                if let imageAfterCropped = cropSquareImage(image!){
-                    profileVC.profileAvator.image = imageAfterCropped
-                    profileVC.finishImagePicker()
-                    //save imageAfterCropped to the server
-                }
+        if let EDVC = cropPhotoForViewController as? EditProfileViewController{
+            EDVC.dismissViewControllerAnimated(true, completion: nil)
+            if let imageAfterCropped = cropSquareImage(image!){
+                EDVC.profileAvator.image = imageAfterCropped
+                EDVC.finishImagePicker()
+                //Doent save imageAfterCropped to the server yet, wait until the user hit the saveBtn on the Edit Profile scene
             }
-            
-        }
+        }else if let PVC = cropPhotoForViewController as? ProfileViewController{
+            PVC.dismissViewControllerAnimated(true, completion: nil)
+            if let imageAfterCropped = cropSquareImage(image!){
+                PVC.profileAvator.image = imageAfterCropped
+                PVC.finishImagePicker()
+                //save imageAfterCropped to the server
+            }
 
+        }
     }
     
     
