@@ -73,9 +73,11 @@ class ProfileViewController: EditableProfileViewController {
             static let top:CGFloat = 0
             static let left:CGFloat = 12
             static let bottom:CGFloat = 14
-            static let right:CGFloat = 14
+            static let right:CGFloat = 12
         }
         
+        static let contentInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 14, bottom: 0, right: -14)
+            
         //the space between each item
         static let lineSpace: CGFloat = 6
         static let maxVisibleThemeCount: CGFloat = 2.6
@@ -89,7 +91,7 @@ class ProfileViewController: EditableProfileViewController {
     //themes data source
     //let themeNames: [String] = ["This is my first coustic fingerstyle guitar concert in New York", "Glad to see this year US Open Final", "My first hackathon ever!"]
     let themeNames: [String] =  ["GUITAR", "TENNIS", "PROGRAMMING"]
-    let themeImages: [String] = ["theme1", "theme2", "thumb_2"]
+    let themeImages: [String] = ["theme1", "theme2", "thumb_2" ]
     
     static let scene1 = Scene(id: 1, imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able to experience this year's #USOpen", postDate: "Sep 4, 2015")
     static let scene2 = Scene(id: 3, imageUrl: "100_1288", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postDate: "May 02, 2015")
@@ -124,17 +126,13 @@ class ProfileViewController: EditableProfileViewController {
     var profileScenes:[WeekScenes] = []
     
     
+    private var addThemeBoxOpen:Bool = false
+    private var themeSliderFrameSet:Bool = false
     
-        override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         themesCollectionView.delegate = self
         themesCollectionView.dataSource = self
-//        globalView.delegate = self
-//        globalView.dataSource = self
-//        self.navigationController?.navigationBarHidden = true
-        //self.tabBarController?.tabBar.hidden = true
-//        globalView.alwaysBounceVertical = true
-        
         profileCover.image = UIImage(named: "cover3")
         if let coverImageSize = profileCover.image?.size{
             profileCoverOriginalScreenHeight =  UIScreen.mainScreen().bounds.size.width * coverImageSize.height / coverImageSize.width
@@ -144,7 +142,6 @@ class ProfileViewController: EditableProfileViewController {
         
         globalView.estimatedRowHeight = globalView.rowHeight
         globalView.rowHeight = UITableViewAutomaticDimension
-        
         
         if isUserOwnProfile{
             addPostSceneBtn()
@@ -186,17 +183,24 @@ class ProfileViewController: EditableProfileViewController {
         self.coverHeight = profileCover.bounds.size.height
         self.defaultInitialContentOffsetTop = initialContentOffsetTop
         self.stretchWhenContentOffsetLessThanZero = true
+        
+        //print(themesCollectionView.frame = )
+
+        
+        if !themeSliderFrameSet{
+            themesCollectionView.frame.origin.x = -themeImageSize.width - themeSlideConstant.contentInset.left
+            themesCollectionView.frame.size.width += themeImageSize.width
+            themeSliderFrameSet = true
+        }
+        
+        
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-//    override func prefersStatusBarHidden() -> Bool {
-//        return true
-//    }
-    
     
     func updateAvator(){
         profileAvator.becomeCircleAvator()
@@ -209,7 +213,6 @@ class ProfileViewController: EditableProfileViewController {
             profileButtonBelowCover?.becomeEditProfileButton()
         }else{
             profileButtonBelowCover?.becomeFollowButton()
-
         }
     }
     
@@ -219,18 +222,40 @@ class ProfileViewController: EditableProfileViewController {
         themeImageSize.height = themeImageSize.width / themeSlideConstant.themeImageAspectRatio
         //the height for the themeCollectionView
         themeSlideHeightConstraint.constant = themeImageSize.height + themeSlideConstant.sectionEdgeInset.top + themeSlideConstant.sectionEdgeInset.bottom + themeSlideConstant.precicitionOffset
-        
+        themesCollectionView.contentInset = themeSlideConstant.contentInset
     }
     
     func addPostSceneBtn(){
         let barBtnItem = UIBarButtonItem()
         barBtnItem.title =  "＋Post"
         barBtnItem.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(17, weight: UIFontWeightMedium), NSForegroundColorAttributeName: StyleSchemeConstant.themeColor ] , forState: .Normal)
-        
         self.navigationItem.rightBarButtonItem = barBtnItem
     }
-        override func scrollViewDidScroll(scrollView: UIScrollView) {
-        super.scrollViewDidScroll(scrollView)
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        if scrollView.isKindOfClass(UITableView){
+            //scrolling the global table View
+            super.scrollViewDidScroll(scrollView)
+
+        }else if scrollView.isKindOfClass(UICollectionView){
+            //scrolling the horizontal theme slider
+
+//            print( themesCollectionView.contentOffset)
+            
+        }
+        
+        
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         //reset all other visible rows section header view to white color
 //        if let visiableIndexPathForCell = globalView.indexPathsForVisibleRows{
@@ -260,46 +285,7 @@ class ProfileViewController: EditableProfileViewController {
         
 
     }
-    
-    
-    
-    
-    
-    
 }
-
-//extension ProfileViewController: UIScrollViewDelegate{
-//    func scrollViewDidScroll(scrollView: UIScrollView) {
-//        strechProfileCover()
-//        
-//        
-//        //reset all other visible rows section header view to white color
-//        if let visiableIndexPathForCell = globalView.indexPathsForVisibleRows{
-//            for indexPath in visiableIndexPathForCell{
-//                if let otherHeaderView = globalView.headerViewForSection(indexPath.section){
-//                    otherHeaderView.contentView.backgroundColor = UIColor.whiteColor()
-//                    otherHeaderView.layer.borderColor = .None
-//                    otherHeaderView.layer.borderWidth = 0
-//                    otherHeaderView.alpha = 1.0
-//                }
-//            }
-//            
-//            if let firstVisiableIndexPathForCell = visiableIndexPathForCell.first{
-//                if let firstVisibleCell = globalView.cellForRowAtIndexPath(firstVisiableIndexPathForCell){
-//                    if firstVisibleCell.frame.origin.y < sectionHeaderHeight + globalView.contentOffset.y{
-//                        if let headerView = globalView.headerViewForSection(firstVisiableIndexPathForCell.section){
-//                            
-//                            headerView.contentView.backgroundColor = UIColor(red: 246/255.0, green: 246/255.0, blue: 246/255.0, alpha: 1)
-////                            headerView.alpha = 0.97
-//                            headerView.layer.borderColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1).CGColor
-//                            headerView.layer.borderWidth = 0.8
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
 
 
 
@@ -307,6 +293,69 @@ class ProfileViewController: EditableProfileViewController {
 
 // MARK:: horizontal theme slider, Extension for UICollectionViewDelegate, UICollectionViewDataSource and UICollectionViewDelegateFlowLayout protocol
 extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    
+//    func dragging(recognizer: UIPanGestureRecognizer){
+//        let translation: CGPoint = recognizer.translationInView(self.view)
+//        
+//        print(recognizer.velocityInView(self.view))
+//        
+//        if themesCollectionView.frame.origin.x + translation.x / 20
+//            > -self.themeImageSize.width - themeSlideConstant.contentInset.left{
+//         themesCollectionView.frame.origin.x += translation.x / 20
+//        }
+//        
+//        
+//        
+//        
+//       
+//    
+//    }
+    
+    func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+        let headerView = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: "AddThemeBoxIden", forIndexPath: indexPath)
+        headerView.frame.size = themeImageSize
+        headerView.layer.cornerRadius = StyleSchemeConstant.horizontalSlider.horizontalSliderCornerRadius
+        return headerView
+    }
+    
+    
+   
+    
+    func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if scrollView.isKindOfClass(UICollectionView){
+            if addThemeBoxOpen{
+               
+                if scrollView.contentOffset.x < 0{
+                    addThemeBoxOpen = false
+                    UIView.animateWithDuration(0.2, animations: {
+                        scrollView.frame.origin.x =  -self.themeImageSize.width - themeSlideConstant.contentInset.left
+                        
+                        }, completion: {
+                            (finished) -> Void in
+                            UIView.animateWithDuration(0.2, animations: {
+                                scrollView.contentOffset.x = -themeSlideConstant.contentInset.left
+                            })
+                            
+                    })
+                }
+            }
+            else{
+                if scrollView.contentOffset.x < -50{
+                    addThemeBoxOpen = true
+                    //scrollView.scrollEnabled = false
+//                    let pan = UIPanGestureRecognizer(target: self, action: #selector(ProfileViewController.dragging))
+//                    scrollView.addGestureRecognizer(pan)
+//                    
+//                    
+                    
+                    UIView.animateWithDuration(0.2, animations: {
+                        scrollView.frame.origin.x = 0
+                    })
+                }
+            }
+        }
+    }
+    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return themeNames.count
     }
@@ -334,8 +383,16 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: themeImageSize.width, height: themeImageSize.height)
+        return themeImageSize
     }
+    
+    
+    //only the height width is used for horizontal slider
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+       print(themeImageSize)
+        return themeImageSize
+    }
+    
 }
 
 
@@ -442,5 +499,6 @@ extension ProfileViewController: CloseUpMainProtocol{
         return globalView
     }
 }
+
 
 
