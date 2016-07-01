@@ -9,6 +9,14 @@
 import Foundation
 import UIKit
 
+enum UploadPhotoFor{
+    case profileAvator
+    case profileCover
+    case themeCover
+    case profilePost
+    case none
+}
+
 
 func getAspectRatioFromSize(size: CGSize) -> CGFloat{
     return size.width / size.height

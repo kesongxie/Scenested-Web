@@ -30,7 +30,7 @@ class CropCoverPhotoViewController: UIViewController {
     
     private var initialScrollOffsetX: CGFloat = 0
 
-    var cropPhotoForViewController: EditableProfileViewController?
+    var cropPhotoForViewController: MediaResponseViewController?
 
     
     

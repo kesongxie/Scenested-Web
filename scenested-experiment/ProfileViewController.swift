@@ -31,12 +31,45 @@ class ProfileViewController: EditableProfileViewController {
     
     @IBOutlet weak var profileButtonBelowCoverWidthConstaint: NSLayoutConstraint!
 
-    
+    @IBOutlet weak var addThemePlusIcon: UIButton!
     @IBAction func closeEditProfile(unwindSegue: UIStoryboardSegue){
     }
     
     
     @IBAction func closeAddTheme(unwindSegue: UIStoryboardSegue){
+    }
+    
+    
+    @IBAction func profileBelowBtnTriggered(sender: UIButton) {
+        if isUserOwnProfile{
+            //present edit profile
+            if let editProfileNavi = storyboard?.instantiateViewControllerWithIdentifier("EditProfileNaviIden"){
+                self.presentViewController(editProfileNavi, animated: true, completion: nil)
+            }
+        }else{
+            //add follow
+            
+        }
+    }
+    
+    
+    @IBAction func addThemeBoxTapped(sender: UITapGestureRecognizer) {
+        let alert = UIAlertController(title: "Add Cover for Theme", message: nil, preferredStyle: .ActionSheet)
+        
+        let chooseExistingAction = UIAlertAction(title: "Choose from Library", style: .Default, handler: { (action) -> Void in
+            self.chooseFromLibarary()
+        })
+        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: {
+            (action) -> Void in
+            self.takePhoto()
+        })
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        
+        alert.addAction(takePhotoAction)
+        alert.addAction(chooseExistingAction)
+        alert.addAction(cancelAction)
+        imagePickerUploadPhotoFor = UploadPhotoFor.themeCover
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
     
@@ -51,7 +84,6 @@ class ProfileViewController: EditableProfileViewController {
     
     private var selectedThumbnailItemInfo = CloseUpEffectSelectedItemInfo() //the thumbnail frame(such as sceneThumbnail or themeThumbnail) on which was tapped
     
-//    private var interactingCollectionView: UICollectionView?
     
     private var selectedThumbnailScene: Scene?
     
@@ -62,22 +94,19 @@ class ProfileViewController: EditableProfileViewController {
     
     private let isUserOwnProfile = true
     
-//    private let myImagePicker = UIImagePickerController()
-    
-    
-    
-    
     /* define the style constant for the theme slide  */
     private struct themeSlideConstant{
         struct sectionEdgeInset{
             static let top:CGFloat = 0
             static let left:CGFloat = 12
             static let bottom:CGFloat = 14
-            static let right:CGFloat = 12
+            static let right:CGFloat = 0
         }
         
-        static let contentInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 14, bottom: 0, right: -14)
-            
+        static let contentInsetWithAddThemeBox: UIEdgeInsets = UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
+        static let contentInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+
+        
         //the space between each item
         static let lineSpace: CGFloat = 6
         static let maxVisibleThemeCount: CGFloat = 2.6
@@ -90,8 +119,8 @@ class ProfileViewController: EditableProfileViewController {
     
     //themes data source
     //let themeNames: [String] = ["This is my first coustic fingerstyle guitar concert in New York", "Glad to see this year US Open Final", "My first hackathon ever!"]
-    let themeNames: [String] =  ["GUITAR", "TENNIS", "PROGRAMMING"]
-    let themeImages: [String] = ["theme1", "theme2", "thumb_2" ]
+    let themeNames: [String] =  ["GUITAR", "TENNIS", "PROGRAMMING", "GUITAR"]
+    let themeImages: [String] = ["theme1", "theme2", "thumb_2", "theme1" ]
     
     static let scene1 = Scene(id: 1, imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able to experience this year's #USOpen", postDate: "Sep 4, 2015")
     static let scene2 = Scene(id: 3, imageUrl: "100_1288", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postDate: "May 02, 2015")
@@ -148,6 +177,7 @@ class ProfileViewController: EditableProfileViewController {
             addTapGestureForAvator()
             addTapGestureForCover()
         }else{
+            addThemePlusIcon.hidden = true
             self.navigationItem.rightBarButtonItem = nil
         }
     }
@@ -184,15 +214,11 @@ class ProfileViewController: EditableProfileViewController {
         self.defaultInitialContentOffsetTop = initialContentOffsetTop
         self.stretchWhenContentOffsetLessThanZero = true
         
-        //print(themesCollectionView.frame = )
-
-        
-        if !themeSliderFrameSet{
-            themesCollectionView.frame.origin.x = -themeImageSize.width - themeSlideConstant.contentInset.left
-            themesCollectionView.frame.size.width += themeImageSize.width
+        if isUserOwnProfile && !themeSliderFrameSet{
+            themesCollectionView.contentInset.left = -themeImageSize.width
             themeSliderFrameSet = true
         }
-        
+    
         
     }
     
@@ -207,7 +233,7 @@ class ProfileViewController: EditableProfileViewController {
     }
     
     
-    //additional set up for action button below the avator
+    //additional set up for ction button below the avator
     func setButton(){
         if isUserOwnProfile{
             profileButtonBelowCover?.becomeEditProfileButton()
@@ -222,7 +248,13 @@ class ProfileViewController: EditableProfileViewController {
         themeImageSize.height = themeImageSize.width / themeSlideConstant.themeImageAspectRatio
         //the height for the themeCollectionView
         themeSlideHeightConstraint.constant = themeImageSize.height + themeSlideConstant.sectionEdgeInset.top + themeSlideConstant.sectionEdgeInset.bottom + themeSlideConstant.precicitionOffset
-        themesCollectionView.contentInset = themeSlideConstant.contentInset
+        
+        
+        if isUserOwnProfile{
+            themesCollectionView.contentInset = themeSlideConstant.contentInsetWithAddThemeBox
+        }else{
+            themesCollectionView.contentInset = themeSlideConstant.contentInset
+        }
     }
     
     func addPostSceneBtn(){
@@ -239,8 +271,8 @@ class ProfileViewController: EditableProfileViewController {
 
         }else if scrollView.isKindOfClass(UICollectionView){
             //scrolling the horizontal theme slider
+            print(scrollView.contentOffset)
 
-//            print( themesCollectionView.contentOffset)
             
         }
         
@@ -293,23 +325,7 @@ class ProfileViewController: EditableProfileViewController {
 
 // MARK:: horizontal theme slider, Extension for UICollectionViewDelegate, UICollectionViewDataSource and UICollectionViewDelegateFlowLayout protocol
 extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
-    
-//    func dragging(recognizer: UIPanGestureRecognizer){
-//        let translation: CGPoint = recognizer.translationInView(self.view)
-//        
-//        print(recognizer.velocityInView(self.view))
-//        
-//        if themesCollectionView.frame.origin.x + translation.x / 20
-//            > -self.themeImageSize.width - themeSlideConstant.contentInset.left{
-//         themesCollectionView.frame.origin.x += translation.x / 20
-//        }
-//        
-//        
-//        
-//        
-//       
-//    
-//    }
+
     
     func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: "AddThemeBoxIden", forIndexPath: indexPath)
@@ -322,35 +338,23 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
    
     
     func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if scrollView.isKindOfClass(UICollectionView){
-            if addThemeBoxOpen{
-               
-                if scrollView.contentOffset.x < 0{
-                    addThemeBoxOpen = false
-                    UIView.animateWithDuration(0.2, animations: {
-                        scrollView.frame.origin.x =  -self.themeImageSize.width - themeSlideConstant.contentInset.left
-                        
-                        }, completion: {
-                            (finished) -> Void in
-                            UIView.animateWithDuration(0.2, animations: {
-                                scrollView.contentOffset.x = -themeSlideConstant.contentInset.left
-                            })
-                            
-                    })
+        if isUserOwnProfile{
+            if scrollView.isKindOfClass(UICollectionView){
+                if addThemeBoxOpen{
+                    if scrollView.contentOffset.x > 0{
+                        addThemeBoxOpen = false
+                        UIView.animateWithDuration(0.2, animations: {
+                            scrollView.contentInset.left = -self.themeImageSize.width
+                        })
+                    }
                 }
-            }
-            else{
-                if scrollView.contentOffset.x < -50{
-                    addThemeBoxOpen = true
-                    //scrollView.scrollEnabled = false
-//                    let pan = UIPanGestureRecognizer(target: self, action: #selector(ProfileViewController.dragging))
-//                    scrollView.addGestureRecognizer(pan)
-//                    
-//                    
-                    
-                    UIView.animateWithDuration(0.2, animations: {
-                        scrollView.frame.origin.x = 0
-                    })
+                else{
+                    if scrollView.contentOffset.x < 70{
+                        addThemeBoxOpen = true
+                        UIView.animateWithDuration(0.2, animations: {
+                            scrollView.contentInset.left = themeSlideConstant.contentInsetWithAddThemeBox.left
+                        })
+                    }
                 }
             }
         }
@@ -389,8 +393,11 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     //only the height width is used for horizontal slider
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-       print(themeImageSize)
-        return themeImageSize
+        if isUserOwnProfile{
+            return themeImageSize
+        }else{
+            return CGSizeZero
+        }
     }
     
 }
@@ -451,12 +458,6 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
 //        header.alpha = 0.5 //make the header transparent
 //    }
 //    
-    
-
-    
-   
-    
-
 }
 
 extension ProfileViewController: UIViewControllerTransitioningDelegate{

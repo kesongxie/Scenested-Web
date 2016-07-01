@@ -25,6 +25,7 @@
 		986A03AB1D2127B500BA45E7 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A03AA1D2127B500BA45E7 /* UIImageExtension.swift */; };
 		986A03AF1D215A5900BA45E7 /* CropImageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A03AE1D215A5900BA45E7 /* CropImageUtil.swift */; };
 		986A03B31D223DA900BA45E7 /* EditableProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A03B21D223DA900BA45E7 /* EditableProfileViewController.swift */; };
+		986A03B91D2618E900BA45E7 /* MediaResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A03B81D2618E900BA45E7 /* MediaResponseViewController.swift */; };
 		986EB8121CC9B81B0012A198 /* ProfileNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986EB8111CC9B81B0012A198 /* ProfileNavigationController.swift */; };
 		986ED6091CD44BFE00101FEE /* ThemeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986ED6081CD44BFE00101FEE /* ThemeCollectionViewCell.swift */; };
 		987BA7CB1D046DCF0080F4DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 987BA7C91D046DCF0080F4DF /* Main.storyboard */; };
@@ -64,6 +65,7 @@
 		986A03AA1D2127B500BA45E7 /* UIImageExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		986A03AE1D215A5900BA45E7 /* CropImageUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CropImageUtil.swift; sourceTree = "<group>"; };
 		986A03B21D223DA900BA45E7 /* EditableProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableProfileViewController.swift; sourceTree = "<group>"; };
+		986A03B81D2618E900BA45E7 /* MediaResponseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaResponseViewController.swift; sourceTree = "<group>"; };
 		986EB8111CC9B81B0012A198 /* ProfileNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileNavigationController.swift; sourceTree = "<group>"; };
 		986ED6081CD44BFE00101FEE /* ThemeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeCollectionViewCell.swift; sourceTree = "<group>"; };
 		987BA7CA1D046DCF0080F4DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -137,12 +139,12 @@
 			name = "Scene Model";
 			sourceTree = "<group>";
 		};
-		987BA7D81D05ABB80080F4DF /* Global */ = {
+		987BA7D81D05ABB80080F4DF /* Macro */ = {
 			isa = PBXGroup;
 			children = (
 				987BA7D91D05AC010080F4DF /* UtilityFunctions.swift */,
 			);
-			name = Global;
+			name = Macro;
 			sourceTree = "<group>";
 		};
 		9895F8D91CBB440C00D7DA62 = {
@@ -165,7 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				9895F8E51CBB440D00D7DA62 /* AppDelegate.swift */,
-				987BA7D81D05ABB80080F4DF /* Global */,
+				987BA7D81D05ABB80080F4DF /* Macro */,
 				98AA1D0A1CBB5931002CF7E2 /* StyleSchemeConstant.swift */,
 				982D5F8F1D13B4D100D2DB72 /* UIViewControllerExtension.swift */,
 				98AA1D0C1CBB5950002CF7E2 /* TabBarController.swift */,
@@ -173,6 +175,7 @@
 				987BA7D61D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift */,
 				982D5F951D1A236C00D2DB72 /* StrechableHeaderViewController.swift */,
 				982D5F971D1A347A00D2DB72 /* KeyboardInteration.swift */,
+				986A03B81D2618E900BA45E7 /* MediaResponseViewController.swift */,
 				982D5F8D1D13903600D2DB72 /* UIImgeViewExtension.swift */,
 				986A03AA1D2127B500BA45E7 /* UIImageExtension.swift */,
 				987BA7D01D04A4950080F4DF /* Scene Model */,
@@ -305,6 +308,7 @@
 				986A03B31D223DA900BA45E7 /* EditableProfileViewController.swift in Sources */,
 				982D5F981D1A347A00D2DB72 /* KeyboardInteration.swift in Sources */,
 				98E394261D03C24500EB158C /* CloseUpAnimator.swift in Sources */,
+				986A03B91D2618E900BA45E7 /* MediaResponseViewController.swift in Sources */,
 				98AA1D0D1CBB5950002CF7E2 /* TabBarController.swift in Sources */,
 				982D5F8B1D1389A600D2DB72 /* EditProfileViewController.swift in Sources */,
 				98E3942C1D04403800EB158C /* CloseUpCustomSegue.swift in Sources */,

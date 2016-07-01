@@ -67,5 +67,83 @@
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "scenested-experiment/ProfileViewController.swift"
+            timestampString = "489033046.336528"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
+            landmarkName = "addThemeBoxTapped(_:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "scenested_experiment.ProfileViewController.(selectedThumbnailScene in _C2F4BB2588BC8F640214D9D49C908C11).getter : Swift.Optional&lt;scenested_experiment.Scene&gt;"
+                  moduleName = "scenested-experiment"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/KesongXie/Developer/scenested-experiment/scenested-experiment/ProfileViewController.swift"
+                  timestampString = "489033046.824214"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "73"
+                  endingLineNumber = "73"
+                  offsetFromSymbolStart = "48">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "scenested_experiment.ProfileViewController.(selectedThumbnailScene in _C2F4BB2588BC8F640214D9D49C908C11).setter : Swift.Optional&lt;scenested_experiment.Scene&gt;"
+                  moduleName = "scenested-experiment"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/KesongXie/Developer/scenested-experiment/scenested-experiment/ProfileViewController.swift"
+                  timestampString = "489033046.824681"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "73"
+                  endingLineNumber = "73"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "scenested_experiment.ProfileViewController.init (nibName : Swift.Optional&lt;Swift.String&gt;, bundle : Swift.Optional&lt;__ObjC.NSBundle&gt;) -&gt; scenested_experiment.ProfileViewController"
+                  moduleName = "scenested-experiment"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/KesongXie/Developer/scenested-experiment/scenested-experiment/ProfileViewController.swift"
+                  timestampString = "489033046.824907"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "73"
+                  endingLineNumber = "73"
+                  offsetFromSymbolStart = "1236">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "scenested_experiment.ProfileViewController.init (coder : __ObjC.NSCoder) -&gt; Swift.Optional&lt;scenested_experiment.ProfileViewController&gt;"
+                  moduleName = "scenested-experiment"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/KesongXie/Developer/scenested-experiment/scenested-experiment/ProfileViewController.swift"
+                  timestampString = "489033046.825079"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "73"
+                  endingLineNumber = "73"
+                  offsetFromSymbolStart = "1180">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

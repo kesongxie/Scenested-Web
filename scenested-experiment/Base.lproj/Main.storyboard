@@ -46,18 +46,16 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gnP-fG-M62" userLabel="Content View">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="720"/>
                                         <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fn6-cS-1pF">
+                                            <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fn6-cS-1pF">
                                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                                 <color key="backgroundColor" red="0.82352941176470584" green="0.82352941176470584" blue="0.82352941176470584" alpha="1" colorSpace="calibratedRGB"/>
+                                                <gestureRecognizers/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="fn6-cS-1pF" secondAttribute="height" multiplier="1:1" id="6L5-Ef-DId"/>
-                                                    <constraint firstAttribute="height" constant="128" id="Z8d-GT-LMg"/>
+                                                    <constraint firstAttribute="height" constant="600" id="aOV-D4-vMW"/>
                                                 </constraints>
-                                                <variation key="default">
-                                                    <mask key="constraints">
-                                                        <exclude reference="Z8d-GT-LMg"/>
-                                                    </mask>
-                                                </variation>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="Bsg-5Y-QEL" appends="YES" id="cb6-P7-UG8"/>
+                                                </connections>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WwK-8a-np5">
                                                 <rect key="frame" x="14" y="620" width="47" height="20.5"/>
@@ -160,13 +158,20 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="cameraIcon" destination="g1D-Gr-VlH" id="agK-KV-fRG"/>
                         <outlet property="scrollView" destination="Tni-5q-EJB" id="oSV-Sl-OKH"/>
+                        <outlet property="themeCoverHeightConstraint" destination="aOV-D4-vMW" id="GCC-5s-IJj"/>
                         <outlet property="themeCoverImageView" destination="fn6-cS-1pF" id="lOl-s2-DaE"/>
                         <outlet property="themeNameTextField" destination="st9-kG-jke" id="tej-cn-1ah"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8kf-N6-caB" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="rDb-X4-u8Z" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer id="Bsg-5Y-QEL">
+                    <connections>
+                        <action selector="themeCoverTapped:" destination="ZRA-Ja-VlY" id="Pwz-eS-AUh"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2993" y="-709"/>
         </scene>
@@ -524,7 +529,7 @@
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
                                             <connections>
-                                                <segue destination="Zls-1r-xeR" kind="presentation" id="a2w-KV-ZFg"/>
+                                                <action selector="profileBelowBtnTriggered:" destination="Dk2-52-7zb" eventType="touchUpInside" id="9Ac-6X-0Kh"/>
                                             </connections>
                                         </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NKd-kj-1hW">
@@ -683,10 +688,14 @@
                                                             </imageView>
                                                         </subviews>
                                                         <color key="backgroundColor" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <gestureRecognizers/>
                                                         <constraints>
                                                             <constraint firstItem="mzK-YP-XUL" firstAttribute="centerX" secondItem="CMY-2D-FEG" secondAttribute="centerX" id="DDw-AK-vzp"/>
                                                             <constraint firstItem="mzK-YP-XUL" firstAttribute="centerY" secondItem="CMY-2D-FEG" secondAttribute="centerY" id="azj-sf-8dC"/>
                                                         </constraints>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="ikd-LM-kXr" appends="YES" id="SJn-oG-GK7"/>
+                                                        </connections>
                                                     </view>
                                                 </subviews>
                                                 <constraints>
@@ -907,6 +916,7 @@
                         <barButtonItem key="leftBarButtonItem" id="vDx-Tz-WpW"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="addThemePlusIcon" destination="mpd-LV-VqL" id="1q3-JG-tBT"/>
                         <outlet property="globalView" destination="mXD-Ln-Q39" id="acm-4B-gQ5"/>
                         <outlet property="profileAvator" destination="D5f-No-bDV" id="KTf-PZ-LsM"/>
                         <outlet property="profileButtonBelowCover" destination="Cei-RS-UTs" id="WzU-ae-IzJ"/>
@@ -919,6 +929,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jiF-U2-Brq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="ikd-LM-kXr">
+                    <connections>
+                        <action selector="addThemeBoxTapped:" destination="Dk2-52-7zb" id="4Ll-wj-hWn"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1632" y="-357"/>
         </scene>
@@ -1026,7 +1041,7 @@
         <!--Edit Profile Navigation Controller-->
         <scene sceneID="k6K-dO-0oK">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Zls-1r-xeR" customClass="EditProfileNavigationController" customModule="scenested_experiment" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="EditProfileNaviIden" automaticallyAdjustsScrollViewInsets="NO" id="Zls-1r-xeR" customClass="EditProfileNavigationController" customModule="scenested_experiment" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Sro-vE-CRh">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1044,7 +1059,7 @@
         <!--Add Theme Navigation Controller-->
         <scene sceneID="Tcd-Ry-E3F">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ba9-E0-EZt" customClass="AddThemeNavigationController" customModule="scenested_experiment" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="AddThemeNaviIden" automaticallyAdjustsScrollViewInsets="NO" id="Ba9-E0-EZt" customClass="AddThemeNavigationController" customModule="scenested_experiment" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Q68-Cd-j4Y">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

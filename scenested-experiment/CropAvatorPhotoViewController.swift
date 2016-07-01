@@ -37,7 +37,7 @@ class CropAvatorPhotoViewController: UIViewController {
     }
     
     //the ViewController that contains the ImageView that need to be updated
-    var cropPhotoForViewController: EditableProfileViewController?
+    var cropPhotoForViewController: MediaResponseViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()

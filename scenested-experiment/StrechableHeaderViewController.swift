@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StrechableHeaderViewController: UIViewController {
+class StrechableHeaderViewController: MediaResponseViewController {
     
     // MARK:: required properties when this class is inherited by other sub class
    
@@ -43,6 +43,7 @@ class StrechableHeaderViewController: UIViewController {
     func strechCover(){
         if let scrollView = globalScrollView {
             if  !stretchWhenContentOffsetLessThanZero || scrollView.contentOffset.y + defaultInitialContentOffsetTop < 0 {
+            print(scrollView.contentOffset.y )
                 if let coverImageView = coverImageView{
                     var coverHeaderRect = CGRect(x: 0, y: 0, width: coverImageView.bounds.width, height: coverHeight)
                     let caculatedHeight = coverHeight - scrollView.contentOffset.y - defaultInitialContentOffsetTop
