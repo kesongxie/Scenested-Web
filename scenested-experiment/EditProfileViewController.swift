@@ -38,7 +38,9 @@ class EditProfileViewController: EditableProfileViewController {
     }
     
     
-    
+    override func viewWillDisappear(animated: Bool) {
+        view.endEditing(true)
+    }
     
     override func viewDidAppear(animated: Bool) {
         //strechy header set up
@@ -84,7 +86,7 @@ class EditProfileViewController: EditableProfileViewController {
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bottomInsetWhenKeyboardShows, right: 0)
             
             UIView.animateWithDuration(0.3, animations: {
-                self.scrollView.contentOffset.y = 120
+                self.scrollView.contentOffset.y = self.bottomInsetWhenKeyboardShows
                 }, completion: { finished in
                     self.isKeyBoardActive = true
                 })

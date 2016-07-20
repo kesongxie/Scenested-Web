@@ -14,5 +14,18 @@ extension UIImage{
             return getAspectRatioFromSize(self.size)
         }
     }
+    
+    func normalizedImage()-> UIImage?{
+        if self.imageOrientation == .Up{
+            return self
+        }else{
+            UIGraphicsBeginImageContextWithOptions(self.size, true, self.scale)
+            self.drawInRect(CGRect(origin: CGPoint(x: 0,y: 0), size: self.size))
+            let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
+
+            UIGraphicsEndImageContext()
+            return normalizedImage
+        }
+    }
 }
 

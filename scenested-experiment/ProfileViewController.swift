@@ -36,7 +36,16 @@ class ProfileViewController: EditableProfileViewController {
     }
     
     
-    @IBAction func closeAddTheme(unwindSegue: UIStoryboardSegue){
+    @IBAction func cancelAddTheme(unwindSegue: UIStoryboardSegue){
+    }
+    
+    @IBAction func saveAddTheme(unwindSegue: UIStoryboardSegue){
+        if let addThemeVC = unwindSegue.sourceViewController as? AddThemeViewController{
+            let themeCover = addThemeVC.themeCoverImage
+            let themeName = addThemeVC.themeNameTextField.text
+            let newTheme = Theme(id: 0, imageUrl: "cover4", themeName: themeName!, createdDate: "")
+            profileThemes.insert(newTheme, atIndex: 0)
+        }
     }
     
     
@@ -54,14 +63,16 @@ class ProfileViewController: EditableProfileViewController {
     
     
     @IBAction func addThemeBoxTapped(sender: UITapGestureRecognizer) {
-        let alert = UIAlertController(title: "Add Cover for Theme", message: nil, preferredStyle: .ActionSheet)
+        let alert = UIAlertController(title: "Add Cover for New Theme", message: nil, preferredStyle: .ActionSheet)
         
         let chooseExistingAction = UIAlertAction(title: "Choose from Library", style: .Default, handler: { (action) -> Void in
             self.chooseFromLibarary()
+            self.hideAddThemeBox()
         })
         let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: {
             (action) -> Void in
             self.takePhoto()
+            self.hideAddThemeBox()
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         
@@ -119,8 +130,16 @@ class ProfileViewController: EditableProfileViewController {
     
     //themes data source
     //let themeNames: [String] = ["This is my first coustic fingerstyle guitar concert in New York", "Glad to see this year US Open Final", "My first hackathon ever!"]
-    let themeNames: [String] =  ["GUITAR", "TENNIS", "PROGRAMMING", "GUITAR"]
-    let themeImages: [String] = ["theme1", "theme2", "thumb_2", "theme1" ]
+    let themeNames: [String] =  ["GUITAR", "TENNIS", "PROGRAMMING"]
+    let themeImages: [String] = ["theme1", "theme2", "thumb_2"]
+    
+    let themes = [
+        Theme(id: 3, imageUrl: "thumb_2", themeName: "PROGRAMMING", createdDate: ""),
+        Theme(id: 2, imageUrl: "theme2", themeName: "TENNIS", createdDate: ""),
+        Theme(id: 1, imageUrl: "theme1", themeName: "GUITAR", createdDate: "")
+    ]
+
+    
     
     static let scene1 = Scene(id: 1, imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able to experience this year's #USOpen", postDate: "Sep 4, 2015")
     static let scene2 = Scene(id: 3, imageUrl: "100_1288", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postDate: "May 02, 2015")
@@ -145,23 +164,38 @@ class ProfileViewController: EditableProfileViewController {
 
 
     
-//    var profileScenes:[WeekScenes] = [
-//                    weekScene1,
-//                    weekScene2,
-//                    weekScene3,
-//                    weekScene4
-//                ]
+    var profileScenes:[WeekScenes] = [
+                    weekScene1,
+                    weekScene2,
+                    weekScene3,
+                    weekScene4
+                ]
     
-    var profileScenes:[WeekScenes] = []
+//    var profileScenes:[WeekScenes] = []
+    
+    var profileThemes:[Theme] = []
+    {
+        didSet{
+            themesCollectionView.reloadData()
+        }
+    }
     
     
     private var addThemeBoxOpen:Bool = false
     private var themeSliderFrameSet:Bool = false
     
+    private var isThemeActionSheetActive = false
+    
+    private var minTableHeaderHeight:CGFloat = 0
+    
+       
     override func viewDidLoad() {
         super.viewDidLoad()
         themesCollectionView.delegate = self
         themesCollectionView.dataSource = self
+        globalView.delegate = self
+        globalView.dataSource = self
+        
         profileCover.image = UIImage(named: "cover3")
         if let coverImageSize = profileCover.image?.size{
             profileCoverOriginalScreenHeight =  UIScreen.mainScreen().bounds.size.width * coverImageSize.height / coverImageSize.width
@@ -172,6 +206,9 @@ class ProfileViewController: EditableProfileViewController {
         globalView.estimatedRowHeight = globalView.rowHeight
         globalView.rowHeight = UITableViewAutomaticDimension
         
+        setUpTheme()
+      
+        
         if isUserOwnProfile{
             addPostSceneBtn()
             addTapGestureForAvator()
@@ -179,6 +216,14 @@ class ProfileViewController: EditableProfileViewController {
         }else{
             addThemePlusIcon.hidden = true
             self.navigationItem.rightBarButtonItem = nil
+        }
+        
+        minTableHeaderHeight = (tableHeaderView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)).height
+    }
+    
+    func setUpTheme(){
+        for theme in themes{
+            profileThemes.insert(theme, atIndex: 0)
         }
     }
     
@@ -204,6 +249,7 @@ class ProfileViewController: EditableProfileViewController {
         setupThemeSlideCollectionView()
        // tableHeaderView.frame.size.height = tableHeaderView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize).height
         //make sure the header view contans the exact necessary height given it's dynamic content
+
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -219,6 +265,8 @@ class ProfileViewController: EditableProfileViewController {
             themeSliderFrameSet = true
         }
     
+        tableHeaderView.frame.size.height = minTableHeaderHeight//the minimum height for the tableheader view
+
         
     }
     
@@ -264,6 +312,78 @@ class ProfileViewController: EditableProfileViewController {
         self.navigationItem.rightBarButtonItem = barBtnItem
     }
     
+    func hideAddThemeBox(){
+        addThemeBoxOpen = false
+        UIView.animateWithDuration(0.2, animations: {
+            self.themesCollectionView.contentInset.left = -self.themeImageSize.width
+        })
+    }
+    
+    func openAddThemeBox(){
+        addThemeBoxOpen = true
+        UIView.animateWithDuration(0.2, animations: {
+            self.themesCollectionView.contentInset.left = themeSlideConstant.contentInsetWithAddThemeBox.left
+        })
+    }
+    
+    
+    func themeLongPressed(gesture: UIGestureRecognizer){
+        if !isThemeActionSheetActive{
+            let actionSheet = UIAlertController(title: "\n\n\n\n\n", message: "", preferredStyle: .ActionSheet)
+            
+            
+            let themeImageView = (gesture.view as! ThemeImageView)
+            let thumbImage = themeImageView.image
+            
+            let margin: CGFloat = 10.0
+            let thumbImageViewWidth: CGFloat = 100.0
+            
+            //construct the thumbnail on the action sheet title
+            let thumbImageView = UIImageView(frame: CGRectMake(margin, margin, thumbImageViewWidth, thumbImageViewWidth))
+            thumbImageView.image = thumbImage
+            thumbImageView.clipsToBounds = true
+            thumbImageView.contentMode = .ScaleAspectFill
+            thumbImageView.layer.cornerRadius = 8.0
+            actionSheet.view.addSubview(thumbImageView)
+            
+            //construct the label on the action sheet title
+            let nameLabel = UILabel(frame: CGRectMake(thumbImageViewWidth + 2 * margin, margin, actionSheet.view.bounds.size.width - 5 * margin - thumbImageViewWidth, 30.0))
+            nameLabel.text = themeImageView.themeName
+            nameLabel.textColor = StyleSchemeConstant.themeMainTextColor
+            nameLabel.font = UIFont.systemFontOfSize(15, weight: UIFontWeightSemibold)
+            actionSheet.view.addSubview(nameLabel)
+
+            
+            
+           
+            let addSceneAction = UIAlertAction(title: "Add Scene", style: .Default, handler: nil)
+            let deleteThemeAction = UIAlertAction(title: "Delete Theme", style: .Default, handler: nil)
+            let doneAction = UIAlertAction(title: "Done", style: .Cancel, handler: {
+             _ -> Void in
+              self.isThemeActionSheetActive = false
+            })
+            actionSheet.addAction(addSceneAction)
+            actionSheet.addAction(deleteThemeAction)
+            actionSheet.addAction(doneAction)
+            self.presentViewController(actionSheet, animated: true, completion: nil)
+            isThemeActionSheetActive = true
+        }
+        
+    }
+    
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let themeVC = segue.destinationViewController as? ThemeViewController{
+            
+            if let selectedThemeIndexPath = themesCollectionView.indexPathsForSelectedItems()?.first{
+                let selectedCell = themesCollectionView.cellForItemAtIndexPath(selectedThemeIndexPath) as! ThemeCollectionViewCell
+                themeVC.themeImage = selectedCell.themeImage.image
+                themeVC.themeName = selectedCell.themeName.text
+            }
+        }
+    }
+    
+    
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         if scrollView.isKindOfClass(UITableView){
             //scrolling the global table View
@@ -271,23 +391,9 @@ class ProfileViewController: EditableProfileViewController {
 
         }else if scrollView.isKindOfClass(UICollectionView){
             //scrolling the horizontal theme slider
-            print(scrollView.contentOffset)
 
             
         }
-        
-        
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         //reset all other visible rows section header view to white color
 //        if let visiableIndexPathForCell = globalView.indexPathsForVisibleRows{
@@ -335,25 +441,17 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     
-   
-    
     func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if isUserOwnProfile{
             if scrollView.isKindOfClass(UICollectionView){
                 if addThemeBoxOpen{
                     if scrollView.contentOffset.x > 0{
-                        addThemeBoxOpen = false
-                        UIView.animateWithDuration(0.2, animations: {
-                            scrollView.contentInset.left = -self.themeImageSize.width
-                        })
+                        hideAddThemeBox()
                     }
                 }
                 else{
                     if scrollView.contentOffset.x < 70{
-                        addThemeBoxOpen = true
-                        UIView.animateWithDuration(0.2, animations: {
-                            scrollView.contentInset.left = themeSlideConstant.contentInsetWithAddThemeBox.left
-                        })
+                        openAddThemeBox()
                     }
                 }
             }
@@ -361,18 +459,24 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return themeNames.count
+        return profileThemes.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let themeCell = collectionView.dequeueReusableCellWithReuseIdentifier(themeSlideConstant.themeCellReuseIdentifier, forIndexPath: indexPath) as! ThemeCollectionViewCell
         themeCell.layer.cornerRadius = StyleSchemeConstant.horizontalSlider.horizontalSliderCornerRadius
-        themeCell.themeImage.image = UIImage(named: themeImages[indexPath.row])
+        themeCell.themeImage.image = UIImage(named: profileThemes[indexPath.row].imageUrl)
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(ProfileViewController.themeLongPressed ))
+        themeCell.themeImage.addGestureRecognizer(longPressGesture)
         themeCell.imageViewSize = themeImageSize
-        themeCell.themeName.text = themeNames[indexPath.row]
+        themeCell.themeName.text = profileThemes[indexPath.row].themeName.uppercaseString
+        themeCell.themeImage.themeName = themeCell.themeName.text
         themeCell.layoutIfNeeded()
         return themeCell
     }
+    
+    
+
     
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
@@ -408,7 +512,7 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
     //defines how many weeks the profile user has
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return profileScenes.count
+        return 0 //1 //profileScenes.count
     }
     
     //each section is a collection of the same week
@@ -419,36 +523,36 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
     //define the data source for a specific week
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCellWithIdentifier("postCell") as! PostTableViewCell
-        cell.postCollectionViewDelegate = self
-        cell.weekScenes = profileScenes[indexPath.section]
+       // cell.postCollectionViewDelegate = self
+       // cell.weekScenes = profileScenes[indexPath.section]
 //        cell.parentTableView = globalView
         
         return cell
     }
     
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let sectionHeaderView = UITableViewHeaderFooterView()
-        //border view
-        let borderView = UIView()
-        borderView.backgroundColor = UIColor(red: 239 / 255.0, green: 239 / 255.0, blue: 244 / 255.0, alpha: 1)
-        borderView.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 1)
-       
-        //date view
-        let sectionLabel = UILabel()
-        sectionLabel.text = profileScenes[section].weekDisplayInfo
-        sectionLabel.frame = CGRect(x: 16, y: 14, width: 180, height: 18)
-        sectionLabel.font = UIFont.systemFontOfSize(13, weight: UIFontWeightMedium)
-        sectionLabel.textColor = UIColor(red: 20 / 255.0, green:  20 / 255.0, blue:  20 / 255.0, alpha: 1)
-        
-        sectionHeaderView.addSubview(borderView)
-        sectionHeaderView.addSubview(sectionLabel)
-        sectionHeaderView.contentView.backgroundColor = UIColor.whiteColor()
-
-        return sectionHeaderView
-    }
+//    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let sectionHeaderView = UITableViewHeaderFooterView()
+//        //border view
+//        let borderView = UIView()
+//        borderView.backgroundColor = UIColor(red: 239 / 255.0, green: 239 / 255.0, blue: 244 / 255.0, alpha: 1)
+//        borderView.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 1)
+//       
+//        //date view
+//        let sectionLabel = UILabel()
+//        sectionLabel.text = profileScenes[section].weekDisplayInfo
+//        sectionLabel.frame = CGRect(x: 16, y: 14, width: 180, height: 18)
+//        sectionLabel.font = UIFont.systemFontOfSize(13, weight: UIFontWeightMedium)
+//        sectionLabel.textColor = UIColor(red: 20 / 255.0, green:  20 / 255.0, blue:  20 / 255.0, alpha: 1)
+//        
+//        sectionHeaderView.addSubview(borderView)
+//        sectionHeaderView.addSubview(sectionLabel)
+//        sectionHeaderView.contentView.backgroundColor = UIColor.whiteColor()
+//
+//        return sectionHeaderView
+//    }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return sectionHeaderHeight
+        return 0
     }
     
 //     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -460,18 +564,18 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
 //    
 }
 
-extension ProfileViewController: UIViewControllerTransitioningDelegate{
-    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        closeUpTransition.selectedItemInfo = selectedThumbnailItemInfo
-        return closeUpTransition
-    }
-    
-    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        closeUpTransition.presenting = true
-        return closeUpTransition
-    }
-}
-
+//extension ProfileViewController: UIViewControllerTransitioningDelegate{
+//    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        closeUpTransition.selectedItemInfo = selectedThumbnailItemInfo
+//        return closeUpTransition
+//    }
+//    
+//    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        closeUpTransition.presenting = true
+//        return closeUpTransition
+//    }
+//}
+//
 
 
 
@@ -484,7 +588,7 @@ extension ProfileViewController: PostCollectionViewProtocol{
 //          let sceneDetailViewController = sceneDetailNavigationController.viewControllers[0] as! SceneDetailViewController
 //        
         sceneDetailViewController.scene = scene
-        sceneDetailViewController.transitioningDelegate = self
+//        sceneDetailViewController.transitioningDelegate = self
         self.selectedThumbnailScene = scene
         self.selectedThumbnailItemInfo = selectedItemInfo
         self.presentViewController(sceneDetailViewController, animated: true, completion: nil)

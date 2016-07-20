@@ -26,6 +26,7 @@
 		986A03AF1D215A5900BA45E7 /* CropImageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A03AE1D215A5900BA45E7 /* CropImageUtil.swift */; };
 		986A03B31D223DA900BA45E7 /* EditableProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A03B21D223DA900BA45E7 /* EditableProfileViewController.swift */; };
 		986A03B91D2618E900BA45E7 /* MediaResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A03B81D2618E900BA45E7 /* MediaResponseViewController.swift */; };
+		986A03BB1D2777AC00BA45E7 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A03BA1D2777AC00BA45E7 /* Theme.swift */; };
 		986EB8121CC9B81B0012A198 /* ProfileNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986EB8111CC9B81B0012A198 /* ProfileNavigationController.swift */; };
 		986ED6091CD44BFE00101FEE /* ThemeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986ED6081CD44BFE00101FEE /* ThemeCollectionViewCell.swift */; };
 		987BA7CB1D046DCF0080F4DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 987BA7C91D046DCF0080F4DF /* Main.storyboard */; };
@@ -41,6 +42,8 @@
 		98AA1D0B1CBB5931002CF7E2 /* StyleSchemeConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA1D0A1CBB5931002CF7E2 /* StyleSchemeConstant.swift */; };
 		98AA1D0D1CBB5950002CF7E2 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA1D0C1CBB5950002CF7E2 /* TabBarController.swift */; };
 		98AA1D0F1CBB5BE0002CF7E2 /* UIButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA1D0E1CBB5BE0002CF7E2 /* UIButtonExtension.swift */; };
+		98AEC1C31D3D0CE100A9DAB6 /* ThemeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1C21D3D0CE100A9DAB6 /* ThemeImageView.swift */; };
+		98AEC1C51D3EC99B00A9DAB6 /* ThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1C41D3EC99B00A9DAB6 /* ThemeViewController.swift */; };
 		98E394261D03C24500EB158C /* CloseUpAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E394251D03C24500EB158C /* CloseUpAnimator.swift */; };
 		98E394291D03C5B900EB158C /* SceneDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E394281D03C5B900EB158C /* SceneDetailViewController.swift */; };
 		98E3942C1D04403800EB158C /* CloseUpCustomSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E3942B1D04403800EB158C /* CloseUpCustomSegue.swift */; };
@@ -66,6 +69,7 @@
 		986A03AE1D215A5900BA45E7 /* CropImageUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CropImageUtil.swift; sourceTree = "<group>"; };
 		986A03B21D223DA900BA45E7 /* EditableProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableProfileViewController.swift; sourceTree = "<group>"; };
 		986A03B81D2618E900BA45E7 /* MediaResponseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaResponseViewController.swift; sourceTree = "<group>"; };
+		986A03BA1D2777AC00BA45E7 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		986EB8111CC9B81B0012A198 /* ProfileNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileNavigationController.swift; sourceTree = "<group>"; };
 		986ED6081CD44BFE00101FEE /* ThemeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeCollectionViewCell.swift; sourceTree = "<group>"; };
 		987BA7CA1D046DCF0080F4DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -83,6 +87,8 @@
 		98AA1D0A1CBB5931002CF7E2 /* StyleSchemeConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleSchemeConstant.swift; sourceTree = "<group>"; };
 		98AA1D0C1CBB5950002CF7E2 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		98AA1D0E1CBB5BE0002CF7E2 /* UIButtonExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonExtension.swift; sourceTree = "<group>"; };
+		98AEC1C21D3D0CE100A9DAB6 /* ThemeImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeImageView.swift; sourceTree = "<group>"; };
+		98AEC1C41D3EC99B00A9DAB6 /* ThemeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeViewController.swift; sourceTree = "<group>"; };
 		98E394251D03C24500EB158C /* CloseUpAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseUpAnimator.swift; sourceTree = "<group>"; };
 		98E394281D03C5B900EB158C /* SceneDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDetailViewController.swift; sourceTree = "<group>"; };
 		98E3942B1D04403800EB158C /* CloseUpCustomSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseUpCustomSegue.swift; sourceTree = "<group>"; };
@@ -128,6 +134,14 @@
 				982D5F931D193ECE00D2DB72 /* AddThemeNavigationController.swift */,
 			);
 			name = "Add Theme";
+			sourceTree = "<group>";
+		};
+		986A03BC1D2777B400BA45E7 /* Theme Model */ = {
+			isa = PBXGroup;
+			children = (
+				986A03BA1D2777AC00BA45E7 /* Theme.swift */,
+			);
+			name = "Theme Model";
 			sourceTree = "<group>";
 		};
 		987BA7D01D04A4950080F4DF /* Scene Model */ = {
@@ -178,6 +192,7 @@
 				986A03B81D2618E900BA45E7 /* MediaResponseViewController.swift */,
 				982D5F8D1D13903600D2DB72 /* UIImgeViewExtension.swift */,
 				986A03AA1D2127B500BA45E7 /* UIImageExtension.swift */,
+				986A03BC1D2777B400BA45E7 /* Theme Model */,
 				987BA7D01D04A4950080F4DF /* Scene Model */,
 				98EE27A51CCAC4B500FC9864 /* Profile Page */,
 				9895F8EC1CBB440D00D7DA62 /* Assets.xcassets */,
@@ -212,8 +227,10 @@
 			children = (
 				9895F8E71CBB440D00D7DA62 /* ProfileViewController.swift */,
 				986EB8111CC9B81B0012A198 /* ProfileNavigationController.swift */,
+				98AEC1C21D3D0CE100A9DAB6 /* ThemeImageView.swift */,
 				986ED6081CD44BFE00101FEE /* ThemeCollectionViewCell.swift */,
 				984B77E41CD929CA00623F7D /* PostTableViewCell.swift */,
+				98AEC1C41D3EC99B00A9DAB6 /* ThemeViewController.swift */,
 				98E394251D03C24500EB158C /* CloseUpAnimator.swift */,
 				98108A0B1CFE3EFB0093E878 /* PostCollectionViewCell.swift */,
 				986A03B01D22245000BA45E7 /* Edit Profile */,
@@ -319,10 +336,13 @@
 				987BA7D51D04A9170080F4DF /* WeekScenes.swift in Sources */,
 				982D5F8E1D13903600D2DB72 /* UIImgeViewExtension.swift in Sources */,
 				986A03A71D2118B800BA45E7 /* CropCoverView.swift in Sources */,
+				98AEC1C51D3EC99B00A9DAB6 /* ThemeViewController.swift in Sources */,
 				987BA7DA1D05AC010080F4DF /* UtilityFunctions.swift in Sources */,
+				98AEC1C31D3D0CE100A9DAB6 /* ThemeImageView.swift in Sources */,
 				982D5F941D193ECE00D2DB72 /* AddThemeNavigationController.swift in Sources */,
 				98AA1D0B1CBB5931002CF7E2 /* StyleSchemeConstant.swift in Sources */,
 				982D5F9A1D1CBB6700D2DB72 /* CropAvatorPhotoViewController.swift in Sources */,
+				986A03BB1D2777AC00BA45E7 /* Theme.swift in Sources */,
 				98E394291D03C5B900EB158C /* SceneDetailViewController.swift in Sources */,
 				986ED6091CD44BFE00101FEE /* ThemeCollectionViewCell.swift in Sources */,
 				984B77E51CD929CA00623F7D /* PostTableViewCell.swift in Sources */,

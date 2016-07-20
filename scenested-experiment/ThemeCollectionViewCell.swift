@@ -10,7 +10,7 @@ import UIKit
 
 class ThemeCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var themeImage: UIImageView!
+    @IBOutlet weak var themeImage: ThemeImageView!
     
     @IBOutlet weak var themeName: UILabel!
     
@@ -28,5 +28,8 @@ class ThemeCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+    
+  
+    
 
 }

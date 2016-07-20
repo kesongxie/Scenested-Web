@@ -10,9 +10,9 @@ import UIKit
 
 class CloseUpCustomSegue: UIStoryboardSegue {
     override func perform() {
-        let profileViewController = (self.sourceViewController as! ProfileViewController)
-        let sceneDetailViewController = self.destinationViewController as! SceneDetailViewController
-        sceneDetailViewController.transitioningDelegate = profileViewController
-        profileViewController.presentViewController(sceneDetailViewController, animated: true, completion: nil)
+//        let profileViewController = (self.sourceViewController as! ProfileViewController)
+//        let sceneDetailViewController = self.destinationViewController as! SceneDetailViewController
+//        sceneDetailViewController.transitioningDelegate = profileViewController
+//        profileViewController.presentViewController(sceneDetailViewController, animated: true, completion: nil)
     }
 }

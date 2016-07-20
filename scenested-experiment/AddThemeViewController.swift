@@ -20,11 +20,9 @@ class AddThemeViewController: StrechableHeaderViewController {
     
     private var isKeyBoardActive: Bool = false
     
-    private var bottomInsetWhenKeyboardShows:CGFloat = 110
+    private var bottomInsetWhenKeyboardShows:CGFloat = 160
     
-    private var themeCoverAspectRatio:CGFloat = 1.2
-    
-    private var headerStretchingEffectEnable: Bool = true
+    private var themeCoverAspectRatio:CGFloat = 1
     
     @IBOutlet weak var themeCoverHeightConstraint: NSLayoutConstraint!
     
@@ -32,7 +30,7 @@ class AddThemeViewController: StrechableHeaderViewController {
     
     
     @IBAction func themeCoverTapped(sender: UITapGestureRecognizer) {
-        let alert = UIAlertController(title: "Add Cover for Theme", message: nil, preferredStyle: .ActionSheet)
+        let alert = UIAlertController(title: "Add Cover for New Theme", message: nil, preferredStyle: .ActionSheet)
         
         let chooseExistingAction = UIAlertAction(title: "Choose from Library", style: .Default, handler: { (action) -> Void in
             self.chooseFromLibarary()
@@ -52,7 +50,7 @@ class AddThemeViewController: StrechableHeaderViewController {
     }
     var themeCoverImage: UIImage?{
         didSet{
-            themeCoverImageView?.image = themeCoverImage
+            themeCoverImageView?.image = themeCoverImage?.normalizedImage()
             cameraIcon?.hidden = true
             print(themeCoverImage)
 
@@ -74,7 +72,7 @@ class AddThemeViewController: StrechableHeaderViewController {
         themeCoverHeightConstraint.constant = view.bounds.size.width / themeCoverAspectRatio
         
         if themeCoverImage != nil{
-            themeCoverImageView.image = themeCoverImage
+            themeCoverImageView.image =  themeCoverImage!.normalizedImage()
             cameraIcon.hidden = true
         }
     }
@@ -90,15 +88,17 @@ class AddThemeViewController: StrechableHeaderViewController {
     }
     
     
+    override func viewWillDisappear(animated: Bool) {
+        view.endEditing(true)
+    }
+    
+    
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         if isKeyBoardActive{
             view.endEditing(true)
         }
-//        if headerStretchingEffectEnable{
-            //super.scrollViewDidScroll(scrollView)
-        //}
-        
+        super.scrollViewDidScroll(scrollView)
     }
     
     func keyboardDidShow(notification: NSNotification){
@@ -111,25 +111,17 @@ class AddThemeViewController: StrechableHeaderViewController {
     }
     
     func keyBoardDidHide(notifcation: NSNotification){
-
         UIView.animateWithDuration(0.3, animations: {
             self.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             }, completion: { finished in
                 self.isKeyBoardActive = false
-//                self.headerStretchingEffectEnable = true
         })
     }
-    
-   
-    
 }
 
 extension AddThemeViewController: UITextFieldDelegate{
-//    func textFieldDidBeginEditing(textField: UITextField) {
-//        self.headerStretchingEffectEnable = false
-//    }
-//    
-//    func textFieldDidEndEditing(textField: UITextField) {
-//        self.headerStretchingEffectEnable = true
-//    }
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        themeNameTextField.resignFirstResponder()
+        return true
+    }
 }
