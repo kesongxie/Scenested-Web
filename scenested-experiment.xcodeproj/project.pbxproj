@@ -44,6 +44,9 @@
 		98AA1D0F1CBB5BE0002CF7E2 /* UIButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA1D0E1CBB5BE0002CF7E2 /* UIButtonExtension.swift */; };
 		98AEC1C31D3D0CE100A9DAB6 /* ThemeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1C21D3D0CE100A9DAB6 /* ThemeImageView.swift */; };
 		98AEC1C51D3EC99B00A9DAB6 /* ThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1C41D3EC99B00A9DAB6 /* ThemeViewController.swift */; };
+		98AEC1C71D40F12800A9DAB6 /* SceneTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1C61D40F12800A9DAB6 /* SceneTableViewCell.swift */; };
+		98AEC1CA1D421D7600A9DAB6 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1C91D421D7600A9DAB6 /* StringExtension.swift */; };
+		98AEC1CC1D424A4800A9DAB6 /* RichTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1CB1D424A4800A9DAB6 /* RichTextView.swift */; };
 		98E394261D03C24500EB158C /* CloseUpAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E394251D03C24500EB158C /* CloseUpAnimator.swift */; };
 		98E394291D03C5B900EB158C /* SceneDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E394281D03C5B900EB158C /* SceneDetailViewController.swift */; };
 		98E3942C1D04403800EB158C /* CloseUpCustomSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E3942B1D04403800EB158C /* CloseUpCustomSegue.swift */; };
@@ -89,6 +92,9 @@
 		98AA1D0E1CBB5BE0002CF7E2 /* UIButtonExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonExtension.swift; sourceTree = "<group>"; };
 		98AEC1C21D3D0CE100A9DAB6 /* ThemeImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeImageView.swift; sourceTree = "<group>"; };
 		98AEC1C41D3EC99B00A9DAB6 /* ThemeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeViewController.swift; sourceTree = "<group>"; };
+		98AEC1C61D40F12800A9DAB6 /* SceneTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneTableViewCell.swift; sourceTree = "<group>"; };
+		98AEC1C91D421D7600A9DAB6 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		98AEC1CB1D424A4800A9DAB6 /* RichTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RichTextView.swift; sourceTree = "<group>"; };
 		98E394251D03C24500EB158C /* CloseUpAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseUpAnimator.swift; sourceTree = "<group>"; };
 		98E394281D03C5B900EB158C /* SceneDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDetailViewController.swift; sourceTree = "<group>"; };
 		98E3942B1D04403800EB158C /* CloseUpCustomSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseUpCustomSegue.swift; sourceTree = "<group>"; };
@@ -183,10 +189,12 @@
 				9895F8E51CBB440D00D7DA62 /* AppDelegate.swift */,
 				987BA7D81D05ABB80080F4DF /* Macro */,
 				98AA1D0A1CBB5931002CF7E2 /* StyleSchemeConstant.swift */,
+				98AEC1C91D421D7600A9DAB6 /* StringExtension.swift */,
 				982D5F8F1D13B4D100D2DB72 /* UIViewControllerExtension.swift */,
 				98AA1D0C1CBB5950002CF7E2 /* TabBarController.swift */,
 				98AA1D0E1CBB5BE0002CF7E2 /* UIButtonExtension.swift */,
 				987BA7D61D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift */,
+				98AEC1CB1D424A4800A9DAB6 /* RichTextView.swift */,
 				982D5F951D1A236C00D2DB72 /* StrechableHeaderViewController.swift */,
 				982D5F971D1A347A00D2DB72 /* KeyboardInteration.swift */,
 				986A03B81D2618E900BA45E7 /* MediaResponseViewController.swift */,
@@ -201,6 +209,15 @@
 				9895F8F11CBB440D00D7DA62 /* Info.plist */,
 			);
 			path = "scenested-experiment";
+			sourceTree = "<group>";
+		};
+		98AEC1C81D4118CF00A9DAB6 /* Post */ = {
+			isa = PBXGroup;
+			children = (
+				98AEC1C41D3EC99B00A9DAB6 /* ThemeViewController.swift */,
+				98AEC1C61D40F12800A9DAB6 /* SceneTableViewCell.swift */,
+			);
+			name = Post;
 			sourceTree = "<group>";
 		};
 		98E394271D03C58300EB158C /* Scene Detail */ = {
@@ -230,7 +247,7 @@
 				98AEC1C21D3D0CE100A9DAB6 /* ThemeImageView.swift */,
 				986ED6081CD44BFE00101FEE /* ThemeCollectionViewCell.swift */,
 				984B77E41CD929CA00623F7D /* PostTableViewCell.swift */,
-				98AEC1C41D3EC99B00A9DAB6 /* ThemeViewController.swift */,
+				98AEC1C81D4118CF00A9DAB6 /* Post */,
 				98E394251D03C24500EB158C /* CloseUpAnimator.swift */,
 				98108A0B1CFE3EFB0093E878 /* PostCollectionViewCell.swift */,
 				986A03B01D22245000BA45E7 /* Edit Profile */,
@@ -324,7 +341,10 @@
 				982D5F921D19397E00D2DB72 /* AddThemeViewController.swift in Sources */,
 				986A03B31D223DA900BA45E7 /* EditableProfileViewController.swift in Sources */,
 				982D5F981D1A347A00D2DB72 /* KeyboardInteration.swift in Sources */,
+				98AEC1CC1D424A4800A9DAB6 /* RichTextView.swift in Sources */,
+				98AEC1CA1D421D7600A9DAB6 /* StringExtension.swift in Sources */,
 				98E394261D03C24500EB158C /* CloseUpAnimator.swift in Sources */,
+				98AEC1C71D40F12800A9DAB6 /* SceneTableViewCell.swift in Sources */,
 				986A03B91D2618E900BA45E7 /* MediaResponseViewController.swift in Sources */,
 				98AA1D0D1CBB5950002CF7E2 /* TabBarController.swift in Sources */,
 				982D5F8B1D1389A600D2DB72 /* EditProfileViewController.swift in Sources */,

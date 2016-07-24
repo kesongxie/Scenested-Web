@@ -23,6 +23,8 @@ struct StyleSchemeConstant{
     static let themeColor = UIColor(red: 127/255.0, green: 27/255.0, blue: 27/255.0, alpha: 1)
     static let themeMainTextColor = UIColor(red: 20 / 255.0, green: 20 / 255.0, blue: 20 / 255.0, alpha: 1)
     
+    static let linkColor = UIColor(red: 0 / 255.0, green: 53 / 255.0, blue: 105 / 255.0, alpha: 1)
+    static let linkColorWhenTapped = UIColor(red: 0 / 255.0, green: 53 / 255.0, blue: 105 / 255.0, alpha: 0.6)
     struct editProfileBtn{
         static let borderWidth = buttonStyle.borderWidth
         static let cornerRadius = buttonStyle.cornerRadius
@@ -73,6 +75,8 @@ struct StyleSchemeConstant{
         static let height: CGFloat = 400
         static let aspectRatio: CGFloat = 3.2
     }
+    
+    
     
     
     

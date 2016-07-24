@@ -119,7 +119,7 @@ class ProfileViewController: EditableProfileViewController {
 
         
         //the space between each item
-        static let lineSpace: CGFloat = 6
+        static let lineSpace: CGFloat = 8
         static let maxVisibleThemeCount: CGFloat = 2.6
         //the max number of theme that is allowed to display at the screen
         static let themeImageAspectRatio:CGFloat = 5 / 6
@@ -141,17 +141,17 @@ class ProfileViewController: EditableProfileViewController {
 
     
     
-    static let scene1 = Scene(id: 1, imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able to experience this year's #USOpen", postDate: "Sep 4, 2015")
-    static let scene2 = Scene(id: 3, imageUrl: "100_1288", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postDate: "May 02, 2015")
+    static let scene1 = Scene(id: 1, postUserName: "Kesong Xie ",imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able 😂 😙 #爱 to #experience this year's #USOpen@great great", postTime: "3h")
+    static let scene2 = Scene(id: 3, postUserName: "Kesong Xie", imageUrl: "100_1288", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postTime: "1d")
 
-    static let scene3 = Scene(id: 2, imageUrl: "thumb_1", themeName: "GUITAR", postText: "This is my first time to see a live acoustic guitar concert since I picked up guitar about five years ago. #TraceBundy", postDate: "May 17, 2014")
-    static let scene4 = Scene(id: 4, imageUrl: "canada", themeName: "TRAVEL", postText: "A nice trip with my family to Canada, see the great Fall", postDate: "May 17, 2014")
+    static let scene3 = Scene(id: 2, postUserName: "Kesong Xie", imageUrl: "thumb_1", themeName: "GUITAR", postText: "This is my first time to see a live acoustic guitar concert since I picked up guitar about five years ago. #TraceBundy", postTime: "3w")
+    static let scene4 = Scene(id: 4, postUserName: "Kesong Xie", imageUrl: "canada", themeName: "TRAVEL", postText: "A nice trip with my family to Canada, see the great Fall", postTime: "May 17, 2014")
 
-    static let scene5 = Scene(id: 5, imageUrl: "libarary", themeName: "PROGRAMMING", postText: "A beautiful sunset near the company where I was interned in during my freshman summer", postDate: "May 17, 2014")
+    static let scene5 = Scene(id: 5, postUserName: "Kesong Xie", imageUrl: "libarary", themeName: "PROGRAMMING", postText: "A beautiful sunset near the company where I was interned in during my freshman summer", postTime: "May 17, 2014")
     
-    static let scene6 = Scene(id: 6, imageUrl: "cover", themeName: "TENNIS", postText: "A friend of mine showed the a tennis park near the huston river, truly stunning", postDate: "May 17, 2014")
+    static let scene6 = Scene(id: 6, postUserName: "Kesong Xie", imageUrl: "cover", themeName: "TENNIS", postText: "A friend of mine showed the a tennis park near the huston river, truly stunning", postTime: "May 17, 2014")
     
-    static let scene7 = Scene(id: 7, imageUrl: "garden", themeName: "TENNIS", postText: "Roger and Dimitrov played an exihibition match in Madision Sqaure Garden",postDate: "May 17, 2014")
+    static let scene7 = Scene(id: 7, postUserName: "Kesong Xie", imageUrl: "garden", themeName: "TENNIS", postText: "Roger and Dimitrov played an exihibition match in Madision Sqaure Garden",postTime: "May 17, 2014")
 
      //post data source
     //each element in posts is posts from the same week, for example, post1 and post2 are from week 1, Jan 2015, post3 is from week 3, Jan, 2016
@@ -162,14 +162,16 @@ class ProfileViewController: EditableProfileViewController {
     static let weekScene4: WeekScenes = WeekScenes(scenes: [scene4], weekDisplayInfo: "WEEK 1ST, SEP · 2013")
     
 
-
+    var profileScenes:[Scene] = [scene1, scene2, scene3]
     
-    var profileScenes:[WeekScenes] = [
-                    weekScene1,
-                    weekScene2,
-                    weekScene3,
-                    weekScene4
-                ]
+    
+    
+//    var profileScenes:[WeekScenes] = [
+//                    weekScene1,
+//                    weekScene2,
+//                    weekScene3,
+//                    weekScene4
+//                ]
     
 //    var profileScenes:[WeekScenes] = []
     
@@ -377,7 +379,8 @@ class ProfileViewController: EditableProfileViewController {
             
             if let selectedThemeIndexPath = themesCollectionView.indexPathsForSelectedItems()?.first{
                 let selectedCell = themesCollectionView.cellForItemAtIndexPath(selectedThemeIndexPath) as! ThemeCollectionViewCell
-                themeVC.themeImage = selectedCell.themeImage.image
+               // themeVC.themeImage = selectedCell.themeImage.image
+                themeVC.themeScene = profileScenes
                 themeVC.themeName = selectedCell.themeName.text
             }
         }
