@@ -37,7 +37,8 @@ struct StyleSchemeConstant{
     struct followBtn{
         static let borderWidth = buttonStyle.borderWidth
         static let cornerRadius = buttonStyle.cornerRadius
-        static let borderColor = themeColor.CGColor
+        static let borderColor = UIColor(red: 200/255.0, green: 200/255.0, blue: 200/255.0, alpha: 1).CGColor
+
         static let backgroundColor = UIColor(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1)
         static let font = UIFont.systemFontOfSize(11, weight: UIFontWeightBold)
         static let titleColor = themeColor

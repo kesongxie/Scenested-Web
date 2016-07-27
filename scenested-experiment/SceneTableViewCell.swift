@@ -19,7 +19,7 @@ class SceneTableViewCell: UITableViewCell {
     }
     
     
-    @IBOutlet weak var postUserLabel: UILabel!
+    @IBOutlet weak var postUserNameLabel: UILabel!
     
     @IBOutlet weak var postPictureImageView: UIImageView!
     
@@ -74,11 +74,15 @@ class SceneTableViewCell: UITableViewCell {
         }
     }
     
-    var postUserName: String?{
+    var postUser: User?{
         didSet{
-            postUserLabel.text = postUserName
+            postUserNameLabel.text = postUser!.fullname
+            postUserImageView.image = UIImage(named: postUser!.avatorUrl)
         }
     }
+    
+    
+
     
     
     var postTimeText: String?{

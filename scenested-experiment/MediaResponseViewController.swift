@@ -108,18 +108,20 @@ class MediaResponseViewController: UIViewController {
         case .Restricted:
             return false
         case .Denied:
-            let alert = UIAlertController(title: "Authorization Needed", message: "Authorization needed in order to use the camera to capture a picture", preferredStyle: .Alert)
-            
-            let dontAllowAction = UIAlertAction(title: "Don't Allow", style: .Default, handler: nil)
-            let goToSettingAction = UIAlertAction(title: "Ok", style: .Default, handler: {
-                _ in
-                if let url = NSURL(string: UIApplicationOpenSettingsURLString){
-                    UIApplication.sharedApplication().openURL(url)
-                }
+            dispatch_async(dispatch_get_main_queue(), {
+                let alert = UIAlertController(title: "Authorization Needed", message: "Authorization needed in order to use the camera to capture a picture", preferredStyle: .Alert)
+                
+                let dontAllowAction = UIAlertAction(title: "Don't Allow", style: .Default, handler: nil)
+                let goToSettingAction = UIAlertAction(title: "Ok", style: .Default, handler: {
+                    _ in
+                    if let url = NSURL(string: UIApplicationOpenSettingsURLString){
+                        UIApplication.sharedApplication().openURL(url)
+                    }
+                })
+                alert.addAction(dontAllowAction)
+                alert.addAction(goToSettingAction)
+                self.presentViewController(alert, animated: true, completion: nil)
             })
-            alert.addAction(dontAllowAction)
-            alert.addAction(goToSettingAction)
-            self.presentViewController(alert, animated: true, completion: nil)
             return false
         }
     }

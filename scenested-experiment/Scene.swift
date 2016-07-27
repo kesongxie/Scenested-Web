@@ -10,20 +10,19 @@ import Foundation
 
 class Scene{
     let id: Int
-    let postUserName: String
+    let postUser: User
     let imageUrl: String
     let themeName: String
     let postText: String
     let postTime: String
     
-    init(id: Int, postUserName: String, imageUrl: String, themeName: String, postText: String, postTime: String){
+    init(id: Int, postUser: User, imageUrl: String, themeName: String, postText: String, postTime: String){
         self.id = id
-        self.postUserName = postUserName
+        self.postUser = postUser
         self.imageUrl = imageUrl
         self.themeName = themeName
         self.postText = postText
         self.postTime = postTime
-        
     }
     
     

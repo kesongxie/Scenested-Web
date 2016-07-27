@@ -9,7 +9,7 @@
 import UIKit
 
 class PostTableViewCell: UITableViewCell {
-
+    
     
     
     @IBOutlet weak var postUserImageView: UIImageView!{
@@ -18,6 +18,78 @@ class PostTableViewCell: UITableViewCell {
             postUserImageView.clipsToBounds = true
         }
     }
+    
+    
+    @IBOutlet weak var postUserNameLabel: UILabel!
+    
+    
+    @IBOutlet weak var themeNameLabel: UILabel!
+    
+    
+    
+    @IBOutlet weak var postTimeLabel: UILabel!
+    
+    @IBOutlet weak var descriptionTextView: UITextView!
+    
+    
+    
+    @IBOutlet weak var postPictureImageView: UIImageView!
+    
+    @IBOutlet weak var postPictureHeightConstraint: NSLayoutConstraint!
+    
+    
+    
+    
+    var scenePictureUrl: String?{
+        didSet{
+            if let url = scenePictureUrl{
+                postPictureImageView.image = UIImage(named: url)
+                if let picSize = postPictureImageView.image?.size{
+                    postPictureImageView.frame.size.width = UIScreen.mainScreen().bounds.size.width
+                    postPictureHeightConstraint.constant = postPictureImageView.bounds.size.width * picSize.height / picSize.width
+                }
+            }
+            
+        }
+    }
+    
+    
+    var themeName: String?{
+        didSet{
+            themeNameLabel.text = themeName
+        }
+    }
+    
+    var descriptionText: String?{
+        didSet{
+            descriptionTextView.setStyleText(descriptionText!)
+        }
+    }
+    
+    var postUser: User?{
+        didSet{
+            postUserNameLabel.text = postUser!.fullname
+            postUserImageView.image = UIImage(named: postUser!.avatorUrl)
+        }
+    }
+    
+    
+    var postTimeText: String?{
+        didSet{
+            postTimeLabel.text = postTimeText
+        }
+    }
+
+    
+    
+    
+    
+//    @IBOutlet weak var postUserImageView: UIImageView!{
+//        didSet{
+//            postUserImageView.layer.cornerRadius = postUserImageView.frame.size.width / 2
+//            postUserImageView.clipsToBounds = true
+//        }
+//    }
     
     
 

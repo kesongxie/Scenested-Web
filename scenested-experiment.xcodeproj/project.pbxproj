@@ -47,6 +47,11 @@
 		98AEC1C71D40F12800A9DAB6 /* SceneTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1C61D40F12800A9DAB6 /* SceneTableViewCell.swift */; };
 		98AEC1CA1D421D7600A9DAB6 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1C91D421D7600A9DAB6 /* StringExtension.swift */; };
 		98AEC1CC1D424A4800A9DAB6 /* RichTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1CB1D424A4800A9DAB6 /* RichTextView.swift */; };
+		98AEC1CE1D44F22300A9DAB6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1CD1D44F22300A9DAB6 /* User.swift */; };
+		98AEC1D11D45685B00A9DAB6 /* NearByTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1D01D45685B00A9DAB6 /* NearByTableViewCell.swift */; };
+		98AEC1D31D45687B00A9DAB6 /* NearByTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1D21D45687B00A9DAB6 /* NearByTableViewController.swift */; };
+		98AEC1D51D46628400A9DAB6 /* NSUserDefaultNameKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1D41D46628400A9DAB6 /* NSUserDefaultNameKey.swift */; };
+		98AEC1D71D46677000A9DAB6 /* AppConfigureConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AEC1D61D46677000A9DAB6 /* AppConfigureConstant.swift */; };
 		98E394261D03C24500EB158C /* CloseUpAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E394251D03C24500EB158C /* CloseUpAnimator.swift */; };
 		98E394291D03C5B900EB158C /* SceneDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E394281D03C5B900EB158C /* SceneDetailViewController.swift */; };
 		98E3942C1D04403800EB158C /* CloseUpCustomSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E3942B1D04403800EB158C /* CloseUpCustomSegue.swift */; };
@@ -95,6 +100,11 @@
 		98AEC1C61D40F12800A9DAB6 /* SceneTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneTableViewCell.swift; sourceTree = "<group>"; };
 		98AEC1C91D421D7600A9DAB6 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		98AEC1CB1D424A4800A9DAB6 /* RichTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RichTextView.swift; sourceTree = "<group>"; };
+		98AEC1CD1D44F22300A9DAB6 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		98AEC1D01D45685B00A9DAB6 /* NearByTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearByTableViewCell.swift; sourceTree = "<group>"; };
+		98AEC1D21D45687B00A9DAB6 /* NearByTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearByTableViewController.swift; sourceTree = "<group>"; };
+		98AEC1D41D46628400A9DAB6 /* NSUserDefaultNameKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaultNameKey.swift; sourceTree = "<group>"; };
+		98AEC1D61D46677000A9DAB6 /* AppConfigureConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppConfigureConstant.swift; sourceTree = "<group>"; };
 		98E394251D03C24500EB158C /* CloseUpAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseUpAnimator.swift; sourceTree = "<group>"; };
 		98E394281D03C5B900EB158C /* SceneDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDetailViewController.swift; sourceTree = "<group>"; };
 		98E3942B1D04403800EB158C /* CloseUpCustomSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseUpCustomSegue.swift; sourceTree = "<group>"; };
@@ -142,27 +152,23 @@
 			name = "Add Theme";
 			sourceTree = "<group>";
 		};
-		986A03BC1D2777B400BA45E7 /* Theme Model */ = {
+		986A03BC1D2777B400BA45E7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				986A03BA1D2777AC00BA45E7 /* Theme.swift */,
-			);
-			name = "Theme Model";
-			sourceTree = "<group>";
-		};
-		987BA7D01D04A4950080F4DF /* Scene Model */ = {
-			isa = PBXGroup;
-			children = (
+				98AEC1CD1D44F22300A9DAB6 /* User.swift */,
 				987BA7D21D04A4C30080F4DF /* Scene.swift */,
 				987BA7D41D04A9170080F4DF /* WeekScenes.swift */,
 			);
-			name = "Scene Model";
+			name = Model;
 			sourceTree = "<group>";
 		};
 		987BA7D81D05ABB80080F4DF /* Macro */ = {
 			isa = PBXGroup;
 			children = (
 				987BA7D91D05AC010080F4DF /* UtilityFunctions.swift */,
+				98AEC1D61D46677000A9DAB6 /* AppConfigureConstant.swift */,
+				98AEC1D41D46628400A9DAB6 /* NSUserDefaultNameKey.swift */,
 			);
 			name = Macro;
 			sourceTree = "<group>";
@@ -200,8 +206,8 @@
 				986A03B81D2618E900BA45E7 /* MediaResponseViewController.swift */,
 				982D5F8D1D13903600D2DB72 /* UIImgeViewExtension.swift */,
 				986A03AA1D2127B500BA45E7 /* UIImageExtension.swift */,
-				986A03BC1D2777B400BA45E7 /* Theme Model */,
-				987BA7D01D04A4950080F4DF /* Scene Model */,
+				986A03BC1D2777B400BA45E7 /* Model */,
+				98AEC1CF1D45682100A9DAB6 /* Search Page */,
 				98EE27A51CCAC4B500FC9864 /* Profile Page */,
 				9895F8EC1CBB440D00D7DA62 /* Assets.xcassets */,
 				987BA7C91D046DCF0080F4DF /* Main.storyboard */,
@@ -218,6 +224,15 @@
 				98AEC1C61D40F12800A9DAB6 /* SceneTableViewCell.swift */,
 			);
 			name = Post;
+			sourceTree = "<group>";
+		};
+		98AEC1CF1D45682100A9DAB6 /* Search Page */ = {
+			isa = PBXGroup;
+			children = (
+				98AEC1D01D45685B00A9DAB6 /* NearByTableViewCell.swift */,
+				98AEC1D21D45687B00A9DAB6 /* NearByTableViewController.swift */,
+			);
+			name = "Search Page";
 			sourceTree = "<group>";
 		};
 		98E394271D03C58300EB158C /* Scene Detail */ = {
@@ -332,6 +347,7 @@
 			files = (
 				98108A0C1CFE3EFB0093E878 /* PostCollectionViewCell.swift in Sources */,
 				9895F8E81CBB440D00D7DA62 /* ProfileViewController.swift in Sources */,
+				98AEC1D31D45687B00A9DAB6 /* NearByTableViewController.swift in Sources */,
 				987BA7CF1D049BC20080F4DF /* CloseUpTransitionProtocol.swift in Sources */,
 				986A03AF1D215A5900BA45E7 /* CropImageUtil.swift in Sources */,
 				982D5F9C1D1CC37700D2DB72 /* CropAvatorView.swift in Sources */,
@@ -343,11 +359,15 @@
 				982D5F981D1A347A00D2DB72 /* KeyboardInteration.swift in Sources */,
 				98AEC1CC1D424A4800A9DAB6 /* RichTextView.swift in Sources */,
 				98AEC1CA1D421D7600A9DAB6 /* StringExtension.swift in Sources */,
+				98AEC1D71D46677000A9DAB6 /* AppConfigureConstant.swift in Sources */,
 				98E394261D03C24500EB158C /* CloseUpAnimator.swift in Sources */,
+				98AEC1D11D45685B00A9DAB6 /* NearByTableViewCell.swift in Sources */,
+				98AEC1D51D46628400A9DAB6 /* NSUserDefaultNameKey.swift in Sources */,
 				98AEC1C71D40F12800A9DAB6 /* SceneTableViewCell.swift in Sources */,
 				986A03B91D2618E900BA45E7 /* MediaResponseViewController.swift in Sources */,
 				98AA1D0D1CBB5950002CF7E2 /* TabBarController.swift in Sources */,
 				982D5F8B1D1389A600D2DB72 /* EditProfileViewController.swift in Sources */,
+				98AEC1CE1D44F22300A9DAB6 /* User.swift in Sources */,
 				98E3942C1D04403800EB158C /* CloseUpCustomSegue.swift in Sources */,
 				9895F8E61CBB440D00D7DA62 /* AppDelegate.swift in Sources */,
 				982D5F961D1A236C00D2DB72 /* StrechableHeaderViewController.swift in Sources */,

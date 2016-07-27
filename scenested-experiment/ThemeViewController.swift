@@ -40,17 +40,14 @@ class ThemeViewController: UITableViewController{
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let sceneCell = tableView.dequeueReusableCellWithIdentifier(reusedIden, forIndexPath: indexPath) as! SceneTableViewCell
-        sceneCell.scenePictureUrl = themeScene![indexPath.row].imageUrl
-        sceneCell.themeName = themeScene![indexPath.row].themeName
+        let cell = tableView.dequeueReusableCellWithIdentifier(reusedIden, forIndexPath: indexPath) as! SceneTableViewCell
+        cell.scenePictureUrl = themeScene![indexPath.row].imageUrl
+        cell.themeName = themeScene![indexPath.row].themeName
         
-        sceneCell.descriptionText = themeScene![indexPath.row].postText
-        sceneCell.postUserName = themeScene![indexPath.row].postUserName
-        sceneCell.postTimeText = themeScene![indexPath.row].postTime
-        
-               
-        //tableView.setNeedsLayout()
-        return sceneCell
+        cell.descriptionText = themeScene![indexPath.row].postText
+        cell.postUser = themeScene![indexPath.row].postUser
+        cell.postTimeText = themeScene![indexPath.row].postTime
+        return cell
     }
     
     

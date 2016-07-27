@@ -38,5 +38,14 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
+	</array>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Share your themes and scenes with near-by friends and see what they are interested in</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Receive notification when comes across with people with similar themes</string>
 </dict>
 </plist>

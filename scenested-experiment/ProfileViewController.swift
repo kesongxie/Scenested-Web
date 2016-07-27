@@ -105,13 +105,17 @@ class ProfileViewController: EditableProfileViewController {
     
     private let isUserOwnProfile = true
     
+    
+    
+    
+    
     /* define the style constant for the theme slide  */
     private struct themeSlideConstant{
         struct sectionEdgeInset{
             static let top:CGFloat = 0
             static let left:CGFloat = 12
-            static let bottom:CGFloat = 14
-            static let right:CGFloat = 0
+            static let bottom:CGFloat = 0
+            static let right:CGFloat = 14
         }
         
         static let contentInsetWithAddThemeBox: UIEdgeInsets = UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
@@ -139,19 +143,19 @@ class ProfileViewController: EditableProfileViewController {
         Theme(id: 1, imageUrl: "theme1", themeName: "GUITAR", createdDate: "")
     ]
 
+    static let loggedInUser = User(id: 1, username: "kesongxie", fullname: "Kesong Xie", avatorUrl: "avator2", coverUrl: "")
     
-    
-    static let scene1 = Scene(id: 1, postUserName: "Kesong Xie ",imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able 😂 😙 #爱 to #experience this year's #USOpen@great great", postTime: "3h")
-    static let scene2 = Scene(id: 3, postUserName: "Kesong Xie", imageUrl: "100_1288", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postTime: "1d")
+    static let scene1 = Scene(id: 1, postUser: loggedInUser,imageUrl: "cover3", themeName: "TENNIS", postText: "Great to be able 😂 😙 #爱 to #experience this year's #USOpen@great great", postTime: "3h")
+    static let scene2 = Scene(id: 3, postUser: loggedInUser, imageUrl: "100_1288", themeName: "PROGRAMMING", postText: "This is my first hackathon at Lehman Collge", postTime: "1d")
 
-    static let scene3 = Scene(id: 2, postUserName: "Kesong Xie", imageUrl: "thumb_1", themeName: "GUITAR", postText: "This is my first time to see a live acoustic guitar concert since I picked up guitar about five years ago. #TraceBundy", postTime: "3w")
-    static let scene4 = Scene(id: 4, postUserName: "Kesong Xie", imageUrl: "canada", themeName: "TRAVEL", postText: "A nice trip with my family to Canada, see the great Fall", postTime: "May 17, 2014")
+    static let scene3 = Scene(id: 2, postUser: loggedInUser, imageUrl: "thumb_1", themeName: "GUITAR", postText: "This is my first time to see a live acoustic guitar concert since I picked up guitar about five years ago. #TraceBundy", postTime: "3w")
+    static let scene4 = Scene(id: 4, postUser: loggedInUser, imageUrl: "canada", themeName: "TRAVEL", postText: "A nice trip with my family to Canada, see the great Fall", postTime: "May 17, 2014")
 
-    static let scene5 = Scene(id: 5, postUserName: "Kesong Xie", imageUrl: "libarary", themeName: "PROGRAMMING", postText: "A beautiful sunset near the company where I was interned in during my freshman summer", postTime: "May 17, 2014")
+    static let scene5 = Scene(id: 5, postUser: loggedInUser, imageUrl: "libarary", themeName: "PROGRAMMING", postText: "A beautiful sunset near the company where I was interned in during my freshman summer", postTime: "May 17, 2014")
     
-    static let scene6 = Scene(id: 6, postUserName: "Kesong Xie", imageUrl: "cover", themeName: "TENNIS", postText: "A friend of mine showed the a tennis park near the huston river, truly stunning", postTime: "May 17, 2014")
+    static let scene6 = Scene(id: 6, postUser: loggedInUser, imageUrl: "cover", themeName: "TENNIS", postText: "A friend of mine showed the a tennis park near the huston river, truly stunning", postTime: "May 17, 2014")
     
-    static let scene7 = Scene(id: 7, postUserName: "Kesong Xie", imageUrl: "garden", themeName: "TENNIS", postText: "Roger and Dimitrov played an exihibition match in Madision Sqaure Garden",postTime: "May 17, 2014")
+    static let scene7 = Scene(id: 7, postUser: loggedInUser, imageUrl: "garden", themeName: "TENNIS", postText: "Roger and Dimitrov played an exihibition match in Madision Sqaure Garden",postTime: "May 17, 2014")
 
      //post data source
     //each element in posts is posts from the same week, for example, post1 and post2 are from week 1, Jan 2015, post3 is from week 3, Jan, 2016
@@ -220,7 +224,9 @@ class ProfileViewController: EditableProfileViewController {
             self.navigationItem.rightBarButtonItem = nil
         }
         
-        minTableHeaderHeight = (tableHeaderView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)).height
+        
+       
+        
     }
     
     func setUpTheme(){
@@ -267,9 +273,10 @@ class ProfileViewController: EditableProfileViewController {
             themeSliderFrameSet = true
         }
     
+        
+         minTableHeaderHeight = (tableHeaderView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)).height
         tableHeaderView.frame.size.height = minTableHeaderHeight//the minimum height for the tableheader view
 
-        
     }
     
     
@@ -298,6 +305,7 @@ class ProfileViewController: EditableProfileViewController {
         themeImageSize.height = themeImageSize.width / themeSlideConstant.themeImageAspectRatio
         //the height for the themeCollectionView
         themeSlideHeightConstraint.constant = themeImageSize.height + themeSlideConstant.sectionEdgeInset.top + themeSlideConstant.sectionEdgeInset.bottom + themeSlideConstant.precicitionOffset
+        
         
         
         if isUserOwnProfile{
@@ -515,21 +523,22 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
     //defines how many weeks the profile user has
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 0 //1 //profileScenes.count
+        return 1
     }
     
     //each section is a collection of the same week
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return profileScenes.count
     }
     
     //define the data source for a specific week
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        let cell = tableView.dequeueReusableCellWithIdentifier("postCell") as! PostTableViewCell
-       // cell.postCollectionViewDelegate = self
-       // cell.weekScenes = profileScenes[indexPath.section]
-//        cell.parentTableView = globalView
-        
+        let cell = tableView.dequeueReusableCellWithIdentifier("postCell", forIndexPath: indexPath) as! PostTableViewCell
+        cell.scenePictureUrl = profileScenes[indexPath.row].imageUrl
+        cell.themeName = profileScenes[indexPath.row].themeName
+        cell.descriptionText = profileScenes[indexPath.row].postText
+        cell.postUser = profileScenes[indexPath.row].postUser
+        cell.postTimeText = profileScenes[indexPath.row].postTime
         return cell
     }
     
