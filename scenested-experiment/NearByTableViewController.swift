@@ -14,11 +14,7 @@ let reuseIden = "NearByCell"
 
 class NearByTableViewController: UITableViewController {
 
-    
-//    static let user1 = User(id: 1, username: "nicholas", fullname: "Nicholas Tse", avatorUrl: "avator", coverUrl: "")
-    
-   // var nearbyUser:[User] = [user1]
-  //  let locationManager = CLLocationManager() //for region ranging and moonitoring
+
     
     let centralManger = CBCentralManager() //for bluetooth scanning
     
@@ -29,28 +25,17 @@ class NearByTableViewController: UITableViewController {
         self.tableView.rowHeight = UITableViewAutomaticDimension
         
         
-//        locationManager.delegate = self
-//        locationManager.requestAlwaysAuthorization()
 
-        // region Ranging
-       // locationManager.startRangingBeaconsInRegion(region)
-        
-        
-      //   let region = APPCLBeaconRegion
-         //beacon region monitoring, being able to monitor the region in background, once other device which served as a beacon is in foreground, then the delegate method will be revoked.
-      //  locationManager.startMonitoringForRegion(region)
-        
-        
         //bluetooth peripheral scan
-//        
-//        centralManger.delegate = self
-//        let cBUUID = CBUUID(NSUUID: NSUUID(UUIDString: APPUUID)!)
-//        
-//        
-//        centralManger.scanForPeripheralsWithServices([cBUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
-//        
-//        
-//        
+        
+        centralManger.delegate = self
+        let cBUUID = CBUUID(NSUUID: NSUUID(UUIDString: APPUUID)!)
+        
+        
+        centralManger.scanForPeripheralsWithServices([cBUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+        
+        
+        
         
         
         
@@ -160,35 +145,18 @@ class NearByTableViewController: UITableViewController {
 }
 
 
-extension NearByTableViewController: CLLocationManagerDelegate{
-//    func locationManager(manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], inRegion region: CLBeaconRegion) {
-//        for beacon in beacons{
-//            print(beacon)
-//        }
-//    }
+
+
+extension NearByTableViewController: CBCentralManagerDelegate{
     
-   
+    func centralManagerDidUpdateState(central: CBCentralManager) {
+        print("state updated")
+    }
+    
+    func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
+        print("the advertisment data is")
+        print(advertisementData)
+    }
+    
+    
 }
-
-
-
-//
-//extension NearByTableViewController: CBCentralManagerDelegate{
-//    
-//    func centralManagerDidUpdateState(central: CBCentralManager) {
-//        print("state updated")
-//    }
-//    
-//    
-//    
-//    
-//    func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
-//        //print(advertisementData)
-//    }
-//    
-//    
-//    
-//    
-//    
-//    
-//}

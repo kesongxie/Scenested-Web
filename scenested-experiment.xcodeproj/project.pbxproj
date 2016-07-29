@@ -192,12 +192,12 @@
 		9895F8E41CBB440D00D7DA62 /* scenested-experiment */ = {
 			isa = PBXGroup;
 			children = (
-				9895F8E51CBB440D00D7DA62 /* AppDelegate.swift */,
 				987BA7D81D05ABB80080F4DF /* Macro */,
 				98AA1D0A1CBB5931002CF7E2 /* StyleSchemeConstant.swift */,
 				98AEC1C91D421D7600A9DAB6 /* StringExtension.swift */,
 				982D5F8F1D13B4D100D2DB72 /* UIViewControllerExtension.swift */,
 				98AA1D0C1CBB5950002CF7E2 /* TabBarController.swift */,
+				9895F8E51CBB440D00D7DA62 /* AppDelegate.swift */,
 				98AA1D0E1CBB5BE0002CF7E2 /* UIButtonExtension.swift */,
 				987BA7D61D05A84E0080F4DF /* CloseUpEffectSelectedItemInfo.swift */,
 				98AEC1CB1D424A4800A9DAB6 /* RichTextView.swift */,
@@ -305,7 +305,12 @@
 				TargetAttributes = {
 					9895F8E11CBB440D00D7DA62 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = 6TRQE6Z3Y4;
+						DevelopmentTeam = 2ATYTS9SNC;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -502,6 +507,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "scenested-experiment/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kesongxie.scenested-experiment";
@@ -513,6 +519,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "scenested-experiment/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kesongxie.scenested-experiment";

@@ -27,10 +27,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var locationManager: CLLocationManager!
     
+    var centralManager: CBCentralManager!
+    
     var window: UIWindow?
     
-    var loggedInUserId: Int!
-    var loggedInUserName: String!
+    var loggedInUserId: Int?
+    var loggedInUserName: String?
+    
+    
+    var discoveredPeriperal: CBPeripheral?
+    var connectedPeriperal = [CBPeripheral]()
     
     func logginUser(){
         let userDefault = NSUserDefaults.standardUserDefaults()
@@ -59,15 +65,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         peripheralManager = CBPeripheralManager(delegate: self, queue: queue)
         blueToothPeripheralManager = CBPeripheralManager(delegate: self, queue: queue)
         locationManager = CLLocationManager()
-        locationManager.delegate = self
+        //locationManager.delegate = self
+       // locationManager.startMonitoringForRegion(APPCLBeaconRegion)
         
-
+        
+        centralManager = CBCentralManager()
+        centralManager.delegate = self
+        
         //initilize logged-in user data
         let userDefault = NSUserDefaults.standardUserDefaults()
-        loggedInUserName = userDefault.objectForKey("loggedInUserFullName") as! String
-        loggedInUserId = userDefault.objectForKey("loggedInUserFullId") as! Int
+        loggedInUserName = userDefault.objectForKey("loggedInUserFullName") as? String
+        loggedInUserId = userDefault.objectForKey("loggedInUserFullId") as? Int
         
-        locationManager.startMonitoringForRegion(APPCLBeaconRegion)
         return true
     }
 
@@ -100,37 +109,80 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 //MARK: App acts as source
 extension AppDelegate: CBPeripheralManagerDelegate{
+    
+    func peripheralManager(peripheral: CBPeripheralManager, didAddService service: CBService, error: NSError?) {
+        //
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     func startBcakgroundAdvertising(){
         peripheralManager.stopAdvertising()
         blueToothPeripheralManager.stopAdvertising()
         
         if !blueToothPeripheralManager.isAdvertising{
-            let localName = loggedInUserName
-            let serviceUUID = [ CBUUID(NSUUID:  NSUUID(UUIDString: APPUUID)! ) ]
+            let localName = loggedInUserName ?? "nil"
+            
+            let cBUUID = CBUUID(NSUUID:  NSUUID(UUIDString: APPUUID)! )
+            let serviceUUID = [ cBUUID ] //servies and chracteristic uuid
+            
+            
+            
+            //let userIdData = NSData(bytes: &loggedInUserId, length: sizeof(loggedInUserId.dynamicType))
+            
+//            var i2 = 0
+//            data.getBytes(&i2, length: sizeof(i2.dynamicType))
+//            
+            
+            //construct the characteristic
+            let characteristic = CBMutableCharacteristic(type: cBUUID, properties: CBCharacteristicProperties.Read, value: nil, permissions: CBAttributePermissions.Readable) //specify  the value to nil because it depends on which user is currently loggedin the App
+        
+            //construct the service
+            let service = CBMutableService(type: cBUUID, primary: true) //primary set to true beacause the id of the user unchanged regardlessly which device it references to
+            service.characteristics = [characteristic]
+            
+            
+            //add service to the peripheralManager
+            blueToothPeripheralManager.addService(service) //publish the service and chracteristic
+            
+            
+            
+            
             let blueToothAdvertisingData:[String: AnyObject] =
                 [
-                    CBAdvertisementDataLocalNameKey: localName,
-                    CBAdvertisementDataServiceUUIDsKey: serviceUUID
+                    CBAdvertisementDataServiceUUIDsKey: serviceUUID,
             ]
             blueToothPeripheralManager.startAdvertising(blueToothAdvertisingData)
+            print("start bluetooth advertising")
+        }else{
+            print("blue tooth advertising has already started")
         }
-        print("start background advertising")
+        
     }
     
     
     func startForegroundAdvertising(){
         //stop all the previous left-over advertising
-        peripheralManager?.stopAdvertising()
-        blueToothPeripheralManager?.stopAdvertising()
+//        peripheralManager?.stopAdvertising()
+//        blueToothPeripheralManager?.stopAdvertising()
+//        
+//        //initialize the beacon region
+//        if !peripheralManager.isAdvertising  {
+//            let region = CLBeaconRegion(proximityUUID: NSUUID(UUIDString: APPUUID)! , major:  UInt16(loggedInUserId), minor: 1, identifier: BeaconIdentifier) //major is the logged-in user's id
+//            let foregroundAdvertisingData = NSDictionary(dictionary: region.peripheralDataWithMeasuredPower(nil)) as? [String: AnyObject]
+//            peripheralManager.startAdvertising(foregroundAdvertisingData)
+//        }
+//        print("start foreground advertising")
         
-        //initialize the beacon region
-        if !peripheralManager.isAdvertising  {
-            let region = CLBeaconRegion(proximityUUID: NSUUID(UUIDString: APPUUID)! , major:  UInt16(loggedInUserId), minor: 1, identifier: BeaconIdentifier) //major is the logged-in user's id
-            let foregroundAdvertisingData = NSDictionary(dictionary: region.peripheralDataWithMeasuredPower(nil)) as? [String: AnyObject]
-            peripheralManager.startAdvertising(foregroundAdvertisingData)
-        }
-        print("start foreground advertising")
-
+        
+        startBcakgroundAdvertising()
     }
     
     func peripheralManagerDidStartAdvertising(peripheral: CBPeripheralManager, error: NSError?) {
@@ -181,11 +233,12 @@ extension AppDelegate: CBPeripheralManagerDelegate{
 extension AppDelegate: CLLocationManagerDelegate{
     func locationManager(manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], inRegion region: CLBeaconRegion) {
         for beacon in beacons{
-            print(beacon)
+//            print(beacon)
         }
     }
    
     func locationManager(manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        print("just enter a region")
         locationManager.startRangingBeaconsInRegion(region as! CLBeaconRegion)
         //The app is awaken for 10s
         //read the major of the beacon, check whether the user has similar theme as the current loggedin user, if it's yes, then send a push notification
@@ -193,6 +246,50 @@ extension AppDelegate: CLLocationManagerDelegate{
     
     func locationManager(manager: CLLocationManager, didExitRegion region: CLRegion) {
         print("just exit a region")
+    }
+}
+
+extension AppDelegate: CBCentralManagerDelegate{
+    func centralManagerDidUpdateState(central: CBCentralManager) {
+        print("central manager did update state")
+        let serviceUUID = [ CBUUID(NSUUID:  NSUUID(UUIDString: APPUUID)! ) ]
+        centralManager.scanForPeripheralsWithServices(serviceUUID, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+
+    }
+    
+    func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
+        print("did connect to peripheral")
+        //centralManager.cancelPeripheralConnection(peripheral)
+    }
+    
+    
+    func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
+        print("connection renounced")
+    }
+    
+    
+    
+    func centralManager(central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
+        print(error?.localizedDescription)
+    }
+    
+    
+    func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
+       
+        
+        if !connectedPeriperal.contains(peripheral){
+            connectedPeriperal.append(peripheral)
+            centralManager.connectPeripheral(connectedPeriperal.last!, options: nil)
+        }
+        
+       // centralManager.connectPeripheral(connectedPeriperal!, options: nil)
+
+        print("peripheral name is")
+        print(peripheral.name)
+        print("advertisment data is")
+        print(advertisementData)
+        print("rssi is")
+        print(RSSI)
     }
 }
 
