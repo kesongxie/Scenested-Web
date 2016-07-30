@@ -225,8 +225,10 @@
 	   */
 	  function autoload( $class, $dir = null ) {
 		if ( is_null( $dir ) )
-		  $dir = DOCUMENT_ROOT.'php_inc/';
-		foreach ( scandir( $dir ) as $file ) {
+		$dir = DOCUMENT_ROOT.'php_inc/';
+		$iosPushNotificationDir = DOCUMENT_ROOT.'iOSPushNotification/';
+		$dirs = array_merge(scandir( $dir ), scandir( $iosPushNotificationDir ));
+		foreach ( $dirs as $file ) {
 		  // directory?
 		  if ( is_dir( $dir.$file ) && substr( $file, 0, 1 ) !== '.' )
 			autoload( $class, $dir.$file.'/' );
@@ -238,6 +240,9 @@
 			}
 		  }
 		}
+
+		
+		
 	  }
 	  
 	  

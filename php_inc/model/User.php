@@ -81,8 +81,15 @@
 				return $scene->getSceneNumberForUser($this->user_id);
 			}
 			return false;
-			
 		}
+		
+		// public function getSimilarThemeWithUser($other_user_id){
+// 			$theme = new Theme();
+// 			//return true;
+// 			//return $theme->getSimilarThemeBetweenTwoUsers($user_id, $other_user_id);
+// 		}
+		
+		
 		
 		
 		
