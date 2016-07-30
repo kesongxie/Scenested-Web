@@ -211,13 +211,23 @@ button,input,textarea {
 
 
 .blue-action-button{
+	/* 
+color: #C22058;
+    border: 1px solid #A31244;
+ */
+    
 	color: #386D9E;
- 	border:1px solid #1B5E9C
+	border: 1px solid #1B5E9C
 }
 
 .blue-action-button:hover{
-	color: #25527C;
- 	border:1px solid #1C5B96;
+	/* 
+color: #B3164C;
+    border: 1px solid #A31244;
+    
+ */
+     color: #386D9E;
+	border: 1px solid #1B5E9C
 }
 
 .gray-action-button{

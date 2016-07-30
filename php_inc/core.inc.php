@@ -133,7 +133,7 @@
     	
     	$difference = time() - $timestamp;
     	if($shorter){
-   		   $periods = array("s", "m", "h", "d", "wk", "mon", "yr", "decade");
+   		   $periods = array("s", "m", "h", "d", "w", "mon", "yr", "decade");
    		}else{
    		   $periods = array("sec", "min", "hr", "day", "week", "mon", "year", "decade");
    		}

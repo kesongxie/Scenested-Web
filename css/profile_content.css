@@ -1,0 +1,376 @@
+/* starts profile user cover */
+#profile-whole-container > #profile-body-whole-container > .user-cover > .inner{
+	position:relative;
+	width:100%;
+/* 
+	max-height:240px;
+ */
+	overflow:hidden;
+	background:#1C3E5A;
+	border-bottom: 1px solid
+}
+
+#profile-whole-container > #profile-body-whole-container > .user-cover > .inner > .cover-image{
+	width:100%;
+	display: block;
+}
+/* ends profile user cover */
+
+
+/*  starts profile main content */
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper{
+	display:inline-block;	
+	vertical-align:top;
+	position:relative;
+}
+
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  #profile-avator-wrapper{
+ 	display:inline-block;
+	border:6px solid #fff;
+	border-radius:6px;
+	overflow:hidden;
+	position:relative;
+	background-color:#fff;
+}
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  #profile-avator-wrapper > #avator-edit-profile > #a-e-p-overlay{
+	position:absolute;
+	bottom:-40px;
+	width:100%;
+	height:40px;
+	background:#000;
+	opacity:0.6;
+	cursor:pointer;
+}
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  #profile-avator-wrapper > #avator-edit-profile >  #a-e-p-edit{
+	position:absolute;
+	bottom:-40px;
+	color:#fff;
+	font-size:12px;
+	font-weight:600;
+	margin:10px 0px;
+	cursor:pointer;
+	text-align:center;
+	width:100%;
+}
+
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper  #profile-left-content-inner-wrapper  #profile-name-wrapper > #profile-name{
+	font-weight:600;
+	font-size:22px;
+	/* color:#223D50; */
+	color:#080835;
+}
+
+
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper   #profile-statistic-wrapper{
+	margin:86px 0px 12px 4px;
+	font-size:0px;
+	width:340px;
+}
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper   #profile-statistic-wrapper  .statistic-block{
+	font-size:15px;
+	width:33.3333%;
+	text-align:center;
+}
+
+/* 
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper   #profile-statistic-wrapper  .statistic-block:nth-child(2){
+	margin:0px 20px;
+}
+ */
+
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper   #profile-statistic-wrapper  .statistic-block > .profile-data{
+ 	text-align:center;
+ 	color:#080835;
+ 	font-weight:600;
+}
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper   #profile-statistic-wrapper  .statistic-block > .profile-data-label{
+	color:#080835
+}
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper   #profile-short-bio{
+	margin-top:24px;
+}
+
+
+
+
+
+#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-right-content-wrapper{
+	display:inline-block;	
+	vertical-align:top;
+}
+
+
+
+
+
+
+
+
+/*  ends profile main content */
+
+
+/* large screen text align left*/
+@media(min-width:1124px){
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content{
+		text-align: left;
+    	margin-left: 0px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper > #profile-avator{
+		width:168px;
+		height:168px;
+	}
+	
+	#trigger-add-scene-button{
+		padding:0px 38px;
+	}
+	
+	
+
+/* 
+.post > .post-mid  > .post-image > .post-image-picture  .post-attached-img{
+		width:101%;
+		-webkit-transition: -webkit-transform 0.4s;
+		-ms-transition: -ms-transform 0.4s;
+		-o-transition: -o-transform 0.4s;
+		transition: transform 0.4s;
+	}
+
+
+	.post > .post-mid  > .post-image > .post-image-picture  .post-attached-img:hover{
+		transform:scale(1.03, 1.03);
+		-webkit-transform:scale(1.03, 1.03);
+		-ms-transform:scale(1.03, 1.03);
+		-o-transform:scale(1.03, 1.03);
+	}
+ */
+
+}
+
+/* smaller screen text align center */
+@media(max-width:1124px){
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content{
+/* 
+		text-align: center;
+ */
+    	margin-left: -100px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper > #profile-avator{
+		width:140px;
+		height:140px;
+	}
+	
+	#trigger-add-scene-button{
+		padding:0px 122px;
+	}
+
+}
+
+
+
+/*  profile css for desktop view */
+@media (min-width: 520px) {
+	#profile-whole-container{
+		min-width:882px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > .user-cover > .inner{
+		min-height:240px;
+	}
+
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper{
+		width:24%;
+		padding:20px;
+		min-width:270px;
+		text-align:left;
+		margin-right:10px;
+	}
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-right-content-wrapper{
+		width:50%;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper{
+		margin:-138px 0px 20px 36px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper{
+		margin-left:-4px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-avator-wrapper > #profile-avator{
+		display:block;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-name-wrapper > #profile-name{
+		font-size:24px;
+	}
+	
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data-label{
+		font-size: 16px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data{
+		font-size: 20px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-short-bio{
+		font-size:15px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-scene-label-wrapper{
+		font-size:15px;
+		margin-top:10px;
+	}
+	
+	
+	#edit-dialog-wrapper #edit-dialog-wrapper-inner{
+		width:512px;
+	}
+	
+	.post{
+		/* box-shadow:1px 1px 10px #D7D7D7; */
+		box-shadow: 1px 1px 10px #EDEDED;
+		max-width: 600px;
+	}
+	
+	
+}
+/*profile css for mobile view*/
+
+@media (max-width: 520px) {
+	#profile-whole-container > #profile-body-whole-container > .user-cover > .inner{
+		min-height:120px;
+	}
+
+	
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content{
+/* 
+		text-align: center;
+ */
+    	margin-left: 0px;
+	}
+
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper{
+		width:100%;
+/* 
+		text-align:center;
+ */
+	}
+	
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  #profile-avator-wrapper{
+		margin-left:0px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  #profile-avator-wrapper > #profile-avator{
+		height:120px;
+		width: 120px;
+		border-radius:4px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  #profile-name-wrapper > #profile-name{
+		font-size:18px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-right-content-wrapper{
+		width:100%;
+	}
+	
+
+	.post{
+		border-top:1px solid #D6D6D6;
+		margin-bottom:10px;
+	}
+	.post .date{
+		display:none;
+	}
+	
+	.post > .post-top > .post-user-info > .post-content-text{
+		font-size:14px;
+	}
+	
+	.post > .post-top > .post-user-info > .post-head-line > .head-additional-info{
+		font-size:14px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper{
+		margin:-70px 0px 0px 0px;
+		font-size:0px;
+	}
+	
+
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data-label{
+		font-size: 14px;
+	}
+	
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-statistic-wrapper > .statistic-block > .profile-data{
+		font-size: 15px;
+	}
+	
+	
+	
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper  > #profile-short-bio{
+		font-size:14px;
+	}
+	
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-left-content-wrapper > #profile-left-content-inner-wrapper > #profile-scene-label-wrapper{
+		font-size:14px;
+		margin-top:10px;
+	}
+	
+	#profile-whole-container > #profile-body-whole-container > #profile-main-content > #profile-right-content-wrapper{
+		margin-top:0px;
+	}
+		
+		
+	#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-avator-wrapper{
+		margin: -44px 0px 10px 20px;
+	}	
+		
+	#edit-dialog-wrapper > #edit-dialog-wrapper-inner > .segue-wrapper > .segue-main > #edit-avator-wrapper > #edit-avator-image-wrapper{
+		height:70px;
+		width:70px;
+		border: 4px solid #fff;
+	}	
+		
+	#edit-dialog-wrapper{
+		margin-top:0px;
+		height:100%;
+		background:#fff;
+	}
+	
+	#edit-dialog-wrapper #edit-dialog-wrapper-inner{
+		width:100%;
+		border-radius:0px;
+	}
+	
+	
+}
+
+.post > .post-top{
+	padding: 16px 14px;
+	position: relative;
+}
+
+
+.post > .post-top > .post-avator{
+	height: 44px;
+	width: 44px;
+	border-radius: 4px;	
+}
+

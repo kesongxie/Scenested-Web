@@ -10,6 +10,40 @@
 			$this->user_id = $user_id;
 		}
 		
+		public function registerUser($username, $password, $deviceToken){
+			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`username`,`password`, `deviceToken`) VALUES(?, ?, ?)");
+				$username = strtolower($username);
+				$password = password_hash($password_hash, PASSWORD_DEFAULT);
+				$stmt->bind_param('sss',$username, $password, $deviceToken);
+				if($stmt->execute()){
+					$stmt->close();
+					$user_id = $this->connection->insert_id;
+					return new User($user_id);
+				}
+			return false;
+		}
+		
+		public function getUserId(){
+			if($this->user_id !== null){
+				return $this->user_id;
+			}
+			return false;
+		}
+		
+		public function getUserName(){
+			if($this->user_id !== null){
+				return $this->getColumnById('username', $this->user_id);
+			}
+			return false;
+		}
+		
+		public function getDeviceToken(){
+			if($this->user_id !== null){
+				return $this->getColumnById('deviceToken', $this->user_id);
+			}
+			return false;
+		}
+		
 		public function getUserFullname(){
 			if($this->user_id !== null){
 				return $this->getColumnById('fullname', $this->user_id);
@@ -49,6 +83,9 @@
 			return false;
 			
 		}
+		
+		
+		
 		
 		
 	}		
