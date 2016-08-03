@@ -12,8 +12,6 @@
 			parent::__construct($this->table_name, $this->primary_key);
 		}
 		
-		
-		
 		public function getSimilarThemeBetweenTwoUsers($first_user_id, $second_user_id){
 			$query = "SELECT a.name 
 			   		  FROM theme a
@@ -30,6 +28,12 @@
 				return $themes;
 			}
  			return false;
+		}
+		
+		// $username is the user who triggered the notification(not the who is going to recieve the notification)
+		// $flatenSimilarThemeString is the common theme between two users
+		public static function getSimilarThemeNotificationBodyText($username, $flatenSimilarThemeString){
+			return $username." shares similar themes with you - ".$flatenSimilarThemeString;
 		}
 	
 		

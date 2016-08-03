@@ -1,5 +1,5 @@
 <?php
-	// include_once PHP_INC_PATH.'core.inc.php';
+	//include_once PHP_INC_PATH.'core.inc.php';
 
 	class User_Profile_Avator extends User_Media_Base{
 		private $table_name = "user_profile_avator";
@@ -15,9 +15,9 @@
 			$image_file = $this->getColumnByUserId('picture_url',$user_id); //include the wrapper folder directory
 			if($prefix && $image_file){
 				return U_IMGDIR.$prefix.'/'.$image_file;
-			}else{
-				return DEFAULT_PROFILE_IMAGE;
 			}
+			return false;
+
 		}
 		
 		// public function uploadProfilePicture($file, $x_position_ratio, $y_position_ratio, $user_id){
