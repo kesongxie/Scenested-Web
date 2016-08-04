@@ -6,6 +6,7 @@
 		const UserNameKey = "username";
 		const AvatorPathKey = "avator";
 		const CoverPathKey = "cover";
+		const FullNameKey = "fullname";
 		const BioKey = "bio";
 	}
 ?>

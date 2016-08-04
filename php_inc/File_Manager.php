@@ -80,18 +80,12 @@
 				$dst_w = $dst_dimension['large']['width'];
 				$dst_h = $dst_dimension['large']['height'];
 				
-				// $dst_w = COVER_PHOTO_MAX_WIDTH;
-// 				$dst_h = COVER_PHOTO_MAX_HEIGHT;
+				
 				crop_upload_file($file, $large_destination_path, $ratio_scale_assoc, $dst_w, $dst_h  );
-				
-				
-				// $dst_w = COVER_PHOTO_THUMB_WIDTH;
-// 				$dst_h = COVER_PHOTO_THUMB_HEIGHT;
-				
+
 				$dst_w = $dst_dimension['thumb']['width'];
 				$dst_h = $dst_dimension['thumb']['height'];
 				crop_upload_file($file, $min_destination_path, $ratio_scale_assoc, $dst_w, $dst_h  );
-				
 				
 				return $result.'/'.MEDIA_THUMBNAIL_PREFIX.$filename;
 				

@@ -1,6 +1,8 @@
 <?php
 	include_once $_SERVER['DOCUMENT_ROOT'].'/php_inc/core.inc.php';
 
+	
+
 	if(isset($_POST['username']) && isset($_POST['password'])){
 		$user = new User();
 		$registeredUser = $user->registerUser($_POST['username'], $_POST['password']);

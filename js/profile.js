@@ -270,7 +270,7 @@ $(document).ready(function(){
 			var avator_ds = new DataState(avatorFile);
 			var cover_ds = new DataState(coverFile);
 			var bio_ds = new DataState(bio);
-	
+			
 			dialog_wrapper.addClass('hdn');
 			var systemMessage = $('#system-message');
 			systemMessage.find('.text').text('Saving Profile...');

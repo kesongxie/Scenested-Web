@@ -9,11 +9,13 @@
 		const IdKey = "user_id";
 		const UserNameKey = "username";
 		const FullNameKey = "fullname";
+		const ProfileVisibleSettingKey = "profileVisible";
 		
 		//the column name that is not in the current table schema
 		const BioKey = "bio";
 		const AvatorKey = "avator";
 		const CoverKey = "cover";
+		
 		
 
 		public function __construct($user_id = null){
@@ -58,7 +60,7 @@
 			return false;
 		}
 		
-		public function getUserFullname(){
+		public function getUserFullName(){
 			if($this->user_id !== null){
 				return $this->getColumnById('fullname', $this->user_id);
 			}
@@ -133,13 +135,86 @@
 		}
 		
 		
+		public function updateUserFullName($fullname){
+			return $this->setColumnById(self::FullNameKey, $fullname, $this->user_id);
+		}
+		
+		// $visibleOption is either 0 or 1
+		public function updateProfileVisibleSetting($visibleOption){
+			return $this->setColumnById(self::ProfileVisibleSettingKey, $visibleOption, $this->user_id);
+		}
 		
 		
-		// public function getSimilarThemeWithUser($other_user_id){
-// 			$theme = new Theme();
-// 			//return true;
-// 			//return $theme->getSimilarThemeBetweenTwoUsers($user_id, $other_user_id);
-// 		}
+
+		public function saveUserProfile($paramInfo){
+			$images = $paramInfo["images"]; //an array of file, contains the images files $_FILES
+			
+			$coverFile = $images[User_Profile_Cover::CoverKey];
+ 			if ($this->saveUserProfileCover($coverFile, false) === false){
+ 				return false; //IOS Call don't need to crop cover
+ 			} 
+ 			
+			$avatorFile = $images[User_Profile_Avator::AvatorKey];
+			if ($this->saveUserProfileAvator($avatorFile, false) === false){
+				return false; //IOS Call don't need to crop avator
+			} 
+			
+			$userInfo = $paramInfo["userInfo"]; //contains infomation such as fullname, bio, and profile visible
+			//update profile visible setting
+			if($this->updateProfileVisibleSetting($userInfo[self::ProfileVisibleSettingKey]) === false){
+				return false;
+			}
+			
+			//update fullname
+			if ($this->updateUserFullName($userInfo[self::FullNameKey]) === false){
+				return false;
+			}
+			//update user bio
+			$bio = new User_Bio();
+			if($bio->updateBioForUser($userInfo[User_Bio::BioKey], $this->user_id) === false){
+				return false;
+			}
+			return true;
+		}
+		
+		
+		/*
+			@param $file
+				the file to be uploaded $_FILES["name"]
+			@param $cropAvator
+				specify whether the avator need to be cropped
+			@param $ratio_scale_assoc
+				when $cropAvator is true, this parameter must not be NULL
+				additional information for cropping image 
+				Required Keys 
+				image_container_scale_width, image_container_scale_height, adjusted_ratio_width, adjusted_ratio_height
+		*/
+		public function saveUserProfileCover($file, $cropCover, $ratio_scale_assoc = NULL){
+			if($cropCover === false){
+				//no need to crop avator image
+				$ratio_scale_assoc['image_container_scale_width'] = 1;
+				$ratio_scale_assoc['image_container_scale_height'] = 1;
+				$ratio_scale_assoc['adjusted_ratio_width'] = 0;
+				$ratio_scale_assoc['adjusted_ratio_height'] = 0;
+			}
+			$user_cover = new User_Profile_Cover();
+	 		$url = $user_cover->uploadCoverPicture($file, $ratio_scale_assoc, $this->user_id);
+			return $url;
+		}		
+		
+		public function saveUserProfileAvator($file, $cropAvator, $ratio_scale_assoc = NULL){
+			if($cropAvator === false){
+				//no need to crop avator image
+				$ratio_scale_assoc['image_container_scale_width'] = 1;
+				$ratio_scale_assoc['image_container_scale_height'] = 1;
+				$ratio_scale_assoc['adjusted_ratio_width'] = 0;
+				$ratio_scale_assoc['adjusted_ratio_height'] = 0;
+			}
+			$user_avator = new User_Profile_Avator();
+	 		$url = $user_avator->uploadAvatorPicture($file, $ratio_scale_assoc, $this->user_id);
+			return $url;
+		}		
+		
 		
 		
 		

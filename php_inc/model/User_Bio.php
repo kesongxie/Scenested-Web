@@ -4,6 +4,7 @@
 	class User_Bio extends Core_Table{
 		private $table_name = "user_bio";
 		private $primary_key = "user_bio_id";
+		const BioKey = "bio";
 	
 		public function __construct(){
 			parent::__construct($this->table_name, $this->primary_key);

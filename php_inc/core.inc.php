@@ -285,11 +285,5 @@
 		return array("resized_width1_percentage"=>$resized_width1_percentage*100, "resized_width2_percentage"=>$resized_width2_percentage*100);
 	}
 
-	
-	
-	
-	
-	
-		
-	
+
 ?>

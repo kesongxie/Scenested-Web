@@ -34,10 +34,13 @@
 			$scheme_obj = new Photo_Layout_Scheme();
 			$scene = $this->getAllColumnsById($scene_id);
 			$user_obj = new User($scene['user_id']);
-			$scene['user_full_name'] = $user_obj->getUserFullname();
+			
+			$scene['user_full_name'] = $user_obj->getUserName();
+			
 			$scene['post_user_avator_url'] = $user_obj->getUserAvatorUrl();
 			//photo
 			$scene_photo_obj = new Scene_Photo();
+			
 			$photoCollection = $scene_photo_obj->getScenePhotoCollection($scene_id);
 			
 			if($photoCollection !== false){

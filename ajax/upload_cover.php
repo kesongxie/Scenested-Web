@@ -8,8 +8,8 @@
 			exit();	
 		}	
 		if(isset($_POST['image_container_scale_width'], $_POST['image_container_scale_height'], $_POST['adjusted_ratio_width'], $_POST['adjusted_ratio_height'] ) ){
-				$user_cover = new User_Profile_Cover();
-	 			$url = $user_cover->uploadCoverPicture($_FILES['file'], $_POST);
+				$user = new User($_SESSION['id']);
+				$url = $user->saveUserProfileCover($_FILES['file'], true, $_POST);
 	 			echo ($url !== false) ? $url : '1';
 		}
 	}

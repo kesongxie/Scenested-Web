@@ -4,6 +4,8 @@
 	class User_Profile_Cover extends User_Media_Base{
 		private $table_name = "user_profile_cover";
 		private $primary_key = "user_profile_cover_id";
+		const CoverKey = "cover";
+
 		public function __construct(){
 			parent::__construct($this->table_name,$this->primary_key);
 		}
@@ -27,12 +29,16 @@
 		 	@param $file
 		 		the upload file $_FILES['file']
 		 	
-		 	@user_id
+		 	@param $useSessionUserId 
+		 		set to true if use the current session user id. When set to false, need to provide user id for method call
+		 	
+		 	@param $user_id
 		 		the current session's user id, $_SESSION['id']	
+		 		
+		 		
 		 */
 		
-		public function uploadCoverPicture($file, $ratio_scale_assoc){
-			$user_id = $_SESSION['id'];
+		public function uploadCoverPicture($file, $ratio_scale_assoc, $user_id){
 			$results = $this->getAllRowsMultipleColumnsByUserId(array($this->primary_key,'picture_url'), $user_id);	
 
 			$dst_dimension = array(

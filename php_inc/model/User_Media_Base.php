@@ -68,7 +68,7 @@
 			return $prefix;
 		}
 	
-		public function uploadProfileMediaForUser($file, $user_id, $ratio_scale_assoc,$dst_dimension, $thumb_return = true){
+		public function uploadProfileMediaForUser($file, $user_id, $ratio_scale_assoc, $dst_dimension, $thumb_return = true){
 			$prefix = $this->getUserMediaPrefixForUpload($user_id);
 			if($prefix !== false && $dst_dimension !== NULL){
 				$hash = $this->generateUniqueHash();
@@ -110,8 +110,11 @@
 				}
 			}
 			return false;	
-			
 		}
+
+
+
+
 		
 		
 		
