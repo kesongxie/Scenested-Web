@@ -1,8 +1,6 @@
 <?php
 	include_once $_SERVER['DOCUMENT_ROOT'].'/php_inc/core.inc.php';
 	
-	
-	
 	/*
 		 images =     {
         avator =         {
@@ -27,6 +25,8 @@
     };
 	
 	*/
+	
+
 	
 	$userInfo = json_decode($_POST["info"], true);
 	$paramInfo =[

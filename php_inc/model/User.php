@@ -9,7 +9,9 @@
 		const IdKey = "user_id";
 		const UserNameKey = "username";
 		const FullNameKey = "fullname";
-		const ProfileVisibleSettingKey = "profileVisible";
+		const EmailKey = "email";
+		const PasswordKey = "password";
+		const ProfileVisibleKey = "profileVisible";
 		
 		//the column name that is not in the current table schema
 		const BioKey = "bio";
@@ -25,17 +27,31 @@
 			}
 		}
 		
-		public function registerUser($username, $password){
-			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`username`,`password`, `created_time`) VALUES(?, ?, ?)");
-				$username = strtolower($username);
-				$password = @password_hash($password_hash, PASSWORD_DEFAULT);
+	
+		
+		
+		public function registerUser($paramInfo){
+			$userTextualInfo = $paramInfo["userTexttualInfo"];
+			if($userTextualInfo[User::UserNameKey] === false  || $userTextualInfo[User::PasswordKey] === false || $userTextualInfo[User::EmailKey] === false || $userTextualInfo[User::FullNameKey] === false){
+				return false;
+			}
+			$userMediaInfo = $paramInfo["userMediaInfo"];
+			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`username`, `password`, `email`, `fullname`, `created_time`) VALUES(?, ?, ?, ?, ?)");
+				$username = strtolower($userTextualInfo[User::UserNameKey]);
+				$password = @password_hash($userTextualInfo[User::PasswordKey], PASSWORD_DEFAULT);
+				$email = $userTextualInfo[User::EmailKey];
+				$fullname  = $userTextualInfo[User::FullNameKey];
 				$created_time = date('Y-m-d H:i:s');
-				$stmt->bind_param('sss',$username, $password, $created_time);
+				$stmt->bind_param('sssss', $username, $password, $email, $fullname, $created_time);
 				if($stmt->execute()){
 					$stmt->close();
 					$user_id = $this->connection->insert_id;
-					return new User($user_id);
+					//update the profile picture
+					$registeredUser = new User($user_id);
+					$registeredUser->saveUserProfileAvator($userMediaInfo[User_Profile_Avator::AvatorKey], false);
+					return $registeredUser;
 				}
+				echo $this->connection->error;
 			return false;
 		}
 		
@@ -53,12 +69,7 @@
 			return false;
 		}
 		
-		public function getDeviceToken(){
-			if($this->user_id !== null){
-				return $this->getColumnById('deviceToken', $this->user_id);
-			}
-			return false;
-		}
+		
 		
 		public function getUserFullName(){
 			if($this->user_id !== null){
@@ -141,7 +152,7 @@
 		
 		// $visibleOption is either 0 or 1
 		public function updateProfileVisibleSetting($visibleOption){
-			return $this->setColumnById(self::ProfileVisibleSettingKey, $visibleOption, $this->user_id);
+			return $this->setColumnById(self::ProfileVisibleKey, $visibleOption, $this->user_id);
 		}
 		
 		
@@ -161,7 +172,7 @@
 			
 			$userInfo = $paramInfo["userInfo"]; //contains infomation such as fullname, bio, and profile visible
 			//update profile visible setting
-			if($this->updateProfileVisibleSetting($userInfo[self::ProfileVisibleSettingKey]) === false){
+			if($this->updateProfileVisibleSetting($userInfo[self::ProfileVisibleKey]) === false){
 				return false;
 			}
 			

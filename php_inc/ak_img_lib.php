@@ -6,8 +6,6 @@
 		$exif = @exif_read_data($fileTmpName);
 		//fix the image orientation
 		//see http://sylvana.net/jpegcrop/exif_orientation.html
-		//var_dump($exif['Orientation']);
-		
 		if(!empty($exif['Orientation'])) {
 			switch($exif['Orientation']) {
 				case 8:
@@ -27,6 +25,18 @@
 	
 	function ak_img_resize($target, $newcopy, $w, $h, $ext) {
 		list($w_orig, $h_orig) = getimagesize($target);
+		$exif = @exif_read_data($target);
+		//if the image orientation is left or right, the width and height is vice versa
+		if(!empty($exif['Orientation'])) {
+			switch($exif['Orientation']) {
+				case 8:
+					list($src_h, $src_w, $extension) = getimagesize($target);
+					break;
+				case 6:
+					list($src_h, $src_w, $extension) = getimagesize($target);
+					break;
+			}
+		}
 		$scale_ratio = $w_orig / $h_orig;
 		if (($w / $h) > $scale_ratio) {
 			   $w = $h * $scale_ratio;
@@ -55,7 +65,21 @@
 		$image_container_scale_height = $ratio_scale_assoc['image_container_scale_height'];
 		$adjusted_ratio_width = $ratio_scale_assoc['adjusted_ratio_width'];
 		$adjusted_ratio_height = $ratio_scale_assoc['adjusted_ratio_height'];
+		
 		list($src_w, $src_h, $extension) = getimagesize($file['tmp_name']);
+		$exif = @exif_read_data($file['tmp_name']);
+		//if the image orientation is left or right, the width and height is vice versa
+		if(!empty($exif['Orientation'])) {
+			switch($exif['Orientation']) {
+				case 8:
+					list($src_h, $src_w, $extension) = getimagesize($file['tmp_name']);
+					break;
+				case 6:
+					list($src_h, $src_w, $extension) = getimagesize($file['tmp_name']);
+					break;
+			}
+		}
+		
 		$extension = getMediaFileExtension($file);
 		if ($extension == "gif"){ 
 		  $src_image = imagecreatefromgif($file['tmp_name']);
@@ -64,12 +88,9 @@
 		} else { 
 		  $src_image = imagecreatefromjpeg($file['tmp_name']);
 		}
-		
-		
-		
+
 		//fix the image orientation
 		fixImageOrientation($src_image, $file['tmp_name']);
-		
 		$dst_image = imagecreatetruecolor($dst_w, $dst_h); //create a black canvas, return image identifier
 		imagecopyresampled ($dst_image, $src_image, 0, 0, $src_w * $adjusted_ratio_width, $src_h * $adjusted_ratio_height , $dst_w ,  $dst_h ,  $src_w * $image_container_scale_width ,  $src_h * $image_container_scale_height);
 		imagejpeg($dst_image, $newcopy, 100);

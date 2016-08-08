@@ -8,5 +8,6 @@
 		const CoverPathKey = "cover";
 		const FullNameKey = "fullname";
 		const BioKey = "bio";
+		const ProfileVisibleKey = "profileVisible";
 	}
 ?>
