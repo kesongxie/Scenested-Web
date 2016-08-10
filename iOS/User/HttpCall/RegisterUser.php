@@ -8,12 +8,18 @@
 	];	
 	
 	$user = new User();
-	if($user->registerUser($paramInfo)){
+	$registeredUser = $user->registerUser($paramInfo);
+	
+	$respondInfo = [ "userId" => $registeredUser->getUserId()];
+	
+	if($registeredUser !== false){
 		echo json_encode([
+			"info" => $respondInfo,
 			"statusCode" => 200
 		]);
 	}else{
 		echo json_encode([
+			"info" => "",
 			"statusCode" => 500
 		]);
 	}

@@ -6,7 +6,7 @@
 		
 		
 		//the column name in the current table schema
-		const IdKey = "user_id";
+		const UserIdKey = "user_id";
 		const UserNameKey = "username";
 		const FullNameKey = "fullname";
 		const EmailKey = "email";
@@ -28,8 +28,6 @@
 		}
 		
 	
-		
-		
 		public function registerUser($paramInfo){
 			$userTextualInfo = $paramInfo["userTexttualInfo"];
 			if($userTextualInfo[User::UserNameKey] === false  || $userTextualInfo[User::PasswordKey] === false || $userTextualInfo[User::EmailKey] === false || $userTextualInfo[User::FullNameKey] === false){
@@ -54,6 +52,42 @@
 				echo $this->connection->error;
 			return false;
 		}
+		
+		//authenticate a user based upon email and corresponding password
+		public function authenticateUserWithEmailAndPassword($email, $password){
+			//get the password based email
+			$result = $this->getMultipleColumnsBySelector([self::PasswordKey, self::UserIdKey], self::EmailKey, $email);
+			if($result !== false){
+				if(@password_verify($password, $result[self::PasswordKey])){
+					return $result[self::UserIdKey];
+				}
+			}
+			return false;
+		}
+		
+		public function authenticateUserWithUserNameAndPassword($username, $password){
+			//get the password based username
+			$result = $this->getMultipleColumnsBySelector([self::PasswordKey, self::UserIdKey], self::UserNameKey, $username);
+			if($result !== false){
+				if(@password_verify($password, $result[self::PasswordKey])){
+					return $result[self::UserIdKey];
+				}
+			}
+			return false;
+		}
+		
+		
+		public function authenticateUserWithUserIdAndPassword($userId, $password){
+			//get the password based user id
+			$passwordHash = $this->getColumnBySelector(self::PasswordKey, self::UserIdKey, $userId);
+			if($passwordHash !== false){
+				if(@password_verify($password, $passwordHash)){
+					return true;
+				}
+			}
+			return false;
+		}
+		
 		
 		public function getUserId(){
 			if($this->user_id !== null){
@@ -226,6 +260,17 @@
 			return $url;
 		}		
 		
+		
+		/*
+			return true if exsists, false otherwise
+		*/
+		public function isUserForEmailExists($email){
+			return $this->isStringValueExistingForColumn(self::EmailKey, $email);
+		}
+		
+		public function isUserForUserNameExists($username){
+			return $this->isStringValueExistingForColumn(self::UserNameKey, $username);
+		}
 		
 		
 		

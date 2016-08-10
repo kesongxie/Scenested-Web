@@ -142,10 +142,64 @@
 			return false;
 		}
 		
+		/*
+			$value needs to be a string type
+		*/
+		public function isStringValueExistingForColumn($column, $value){
+			$column = $this->connection->escape_string($column);
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? LIMIT 1");
+			if($stmt){
+				$stmt->bind_param('s', $value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result->num_rows == 1){
+					 	$stmt->close();
+						return true;
+					 }
+				}
+			}
+			return false;
+		}
 		
+		public function getColumnBySelector($column, $selector_column, $selector_value){
+			$column = $this->connection->escape_string($column);
+			$selector_column = $this->connection->escape_string($selector_column);
+			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1 ");
+			if($stmt){
+				$stmt->bind_param('s', $selector_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$row = $result->fetch_assoc();
+						$stmt->close();
+						return $row[$column];
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
 		
-		
-		
+		public function getMultipleColumnsBySelector($column_array, $selector_column, $selector_value){
+			$selector_column = $this->connection->escape_string($selector_column);
+			$targets = implode('`,`',$column_array);
+			$targets = '`'.$targets.'`';
+			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1 ");
+			if($stmt){
+				$stmt->bind_param('s', $selector_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $row[0];
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
 		
 		
 		
@@ -427,48 +481,11 @@
 		
 		
 		
-		public function getColumnBySelector($column, $selector_column, $selector_value){
-			$column = $this->connection->escape_string($column);
-			$selector_column = $this->connection->escape_string($selector_column);
-			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1 ");
-			if($stmt){
-				$stmt->bind_param('s', $selector_value);
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows == 1){
-						$row = $result->fetch_assoc();
-						$stmt->close();
-						return $row[$column];
-					 }
-				}
-			}
-			echo $this->connection->error;
-			return false;
-		}
+	
 		
 		
 		
 		
-		public function getMultipleColumnsBySelector($column_array, $selector_column, $selector_value){
-			$selector_column = $this->connection->escape_string($selector_column);
-			$targets = implode('`,`',$column_array);
-			$targets = '`'.$targets.'`';
-			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1 ");
-			if($stmt){
-				$stmt->bind_param('s', $selector_value);
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows == 1){
-						$row = $result->fetch_all(MYSQLI_ASSOC);
-						$stmt->close();
-						return $row[0];
-					 }
-				}
-			}
-			echo $this->connection->error;
-		
-			return false;
-		}
 		
 		public function getMultipleColumnsByUserId($column_array, $user_id){
 			$targets = implode('`,`',$column_array);
@@ -819,25 +836,6 @@
 		
 		
 		
-		/*
-			$value needs to be a string type
-		*/
-		public function isStringValueExistingForColumn($value, $column){
-			$column = $this->connection->escape_string($column);
-			$primary_key = $this->table_name.'_id';
-			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? LIMIT 1");
-			if($stmt){
-				$stmt->bind_param('s', $value);
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result->num_rows == 1){
-					 	$stmt->close();
-						return true;
-					 }
-				}
-			}
-			return false;
-		}
 		
 		
 		

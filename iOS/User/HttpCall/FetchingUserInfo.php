@@ -1,11 +1,10 @@
 <?php
 	include_once $_SERVER['DOCUMENT_ROOT'].'/php_inc/core.inc.php';
 
-	$_POST['userId'] = 33;
 	if(isset($_POST['userId'])){
 		$user = new User($_POST['userId']);
-		$user_info = $user->getMultipleUserInfo([User::IdKey, User::UserNameKey, User::FullNameKey, User::BioKey, User::AvatorKey, User::CoverKey, User::ProfileVisibleKey]);
-		$respondInfo[HttpRequestResponse::UserIdKey] = $user_info[User::IdKey];
+		$user_info = $user->getMultipleUserInfo([User::UserIdKey, User::UserNameKey, User::FullNameKey, User::BioKey, User::AvatorKey, User::CoverKey, User::ProfileVisibleKey]);
+		$respondInfo[HttpRequestResponse::UserIdKey] = $user_info[User::UserIdKey];
 		$respondInfo[HttpRequestResponse::UserNameKey] = $user_info[User::UserNameKey];
 		$respondInfo[HttpRequestResponse::FullNameKey] = $user_info[User::FullNameKey];
 		$respondInfo[HttpRequestResponse::AvatorPathKey] = ($user_info[User::AvatorKey] === false) ? "": $user_info[User::AvatorKey];
@@ -16,14 +15,14 @@
 		
 		echo json_encode([
 		"info" => $respondInfo,
-		"statusCode" => "200"
+		"statusCode" => 200
 		]);
 			
 	
 	}else{
 		echo json_encode([
 		"info" => "",
-		"statusCode" => "500"
+		"statusCode" => 500
 		]);
 	}
 ?>
