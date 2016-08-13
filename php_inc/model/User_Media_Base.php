@@ -111,23 +111,44 @@
 			}
 			return false;	
 		}
-
-
-
-
+		
+		
+		public function uploadFeaturePhotoForUser($photoFile, $user_id, $feature_id, $dst_dimension, $thumb_return = true){
+			$userPrefix = $this->getUserMediaPrefixForUpload($user_id);
+			if($userPrefix !== false && $dst_dimension !== NULL){
+				$hash = $this->generateUniqueHash();
+				$picture_url = $this->uploadFeaturePhoto($photoFile, $userPrefix, $dst_dimension);
+				if($picture_url !== false){
+					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`feature_id`, `picture_url`,`upload_time`,`hash`) VALUES(?, ?, ?, ?,?)");
+					$time = date("Y-m-d H:i:s");
+					$stmt->bind_param('iisss', $user_id, $feature_id, $picture_url, $time, $hash);
+					if($stmt->execute()){
+						$stmt->close();
+						if($thumb_return === false){
+							$picture_url = convertThumbPathToOriginPath($picture_url);
+						}
+						return U_IMGDIR.$userPrefix.'/'.$picture_url;
+					}
+				}
+			}
+			return false;	
+		}
 		
 		
 		
-
-
 
 		public function uploadPostPhotos($photoFile, $user_media_prefix, $dst_dimension){
 			return $this->file_m->upload_post_photo($photoFile, $user_media_prefix, $dst_dimension);
 		}		
 		
-		public function uploadProfileMedia($file, $prefix, $ratio_scale_assoc, $dst_dimension){
-			return $this->file_m->upload_cropped_file($file, $prefix, $ratio_scale_assoc, $dst_dimension);
+		public function uploadProfileMedia($file, $user_media_prefix, $ratio_scale_assoc, $dst_dimension){
+			return $this->file_m->upload_cropped_file($file, $user_media_prefix, $ratio_scale_assoc, $dst_dimension);
 		}		
+		
+		public function uploadFeaturePhoto($photoFile, $user_media_prefix, $dst_dimension){
+			return $this->file_m->upload_photo($photoFile, $user_media_prefix, $dst_dimension);
+
+		}
 		
 		
 		
@@ -158,33 +179,33 @@
 			return false;	
 		}
 		
-		public function uploadCaptionableMediaForAssocColumn($file,$user_id, $caption, $hash, $assoc_name, $assoc_id){
-			$user_media_prefix = new User_Media_Prefix();
-			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
-			if($prefix === false){
-				$prefix = $user_media_prefix->createMediaPrefixForUser($user_id);
-			}
-			
-			if($prefix !== false){
-				$picture_url = $this->file_m->upload_File_To_Dir($file, $prefix);
-				if($picture_url !== false){
-					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`$assoc_name`,`user_id`,`picture_url`,`upload_time`,`caption`,`hash`) VALUES(?,?, ?, ?, ?,?)");
-					if($stmt){
-						$time = date("Y-m-d H:i:s");
-						$stmt->bind_param('iissss',$assoc_id, $user_id,$picture_url, $time, $caption, $hash);
-						if($stmt->execute()){
-							$stmt->close();
-							
-							return array('picture_url'=>$picture_url,'insert_id'=>$this->connection->insert_id);
-						}
-					}
-				}
-			}
-			echo $this->connection->error;
-			return false;	
-		}
-		
-		
+		// public function uploadCaptionableMediaForAssocColumn($file,$user_id, $caption, $hash, $assoc_name, $assoc_id){
+// 			$user_media_prefix = new User_Media_Prefix();
+// 			$prefix = $user_media_prefix->getUserMediaPrefix($user_id);
+// 			if($prefix === false){
+// 				$prefix = $user_media_prefix->createMediaPrefixForUser($user_id);
+// 			}
+// 			
+// 			if($prefix !== false){
+// 				$picture_url = $this->file_m->upload_File_To_Dir($file, $prefix);
+// 				if($picture_url !== false){
+// 					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`$assoc_name`,`user_id`,`picture_url`,`upload_time`,`caption`,`hash`) VALUES(?,?, ?, ?, ?,?)");
+// 					if($stmt){
+// 						$time = date("Y-m-d H:i:s");
+// 						$stmt->bind_param('iissss',$assoc_id, $user_id,$picture_url, $time, $caption, $hash);
+// 						if($stmt->execute()){
+// 							$stmt->close();
+// 							
+// 							return array('picture_url'=>$picture_url,'insert_id'=>$this->connection->insert_id);
+// 						}
+// 					}
+// 				}
+// 			}
+// 			echo $this->connection->error;
+// 			return false;	
+// 		}
+// 		
+// 		
 		
 		public function deleteMediaByPictureUrl($url, $user_id){
 			return $this->file_m->removeMediaFileForUser($url, $user_id);

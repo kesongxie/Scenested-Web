@@ -2,6 +2,35 @@
 	include_once 'core.inc.php';
 	
 	class File_Manager{
+		public function upload_photo($file, $user_media_prefix, $dst_dimension){
+			$fulldir = U_MEDAI_FOLDER_DIR.$user_media_prefix;
+			$randomFolderName = "";
+			if(!file_exists($fulldir)){
+				//create media folder for the user if it hasn't existed yet
+				mkdir($fulldir);	
+			}
+			//each files is wrapped in a random folder
+			do{
+				$randomFolderName = getRandomString(); //random wrapper folder for the media file
+				$randomFolderDir = $fulldir.'/'.$randomFolderName;
+			}while(file_exists($randomFolderDir));
+			if(mkdir($randomFolderDir)){
+				//upload file here 
+				$extension = getMediaFileExtension($file);
+				$filename = getRandomString().'.'.$extension; //rename the file
+				$large_destination_path = $randomFolderDir.'/'.$filename;
+				$thumb_destination_path = $randomFolderDir.'/'.MEDIA_THUMBNAIL_PREFIX.$filename;
+				$target_file = $file["tmp_name"];
+				$this->resizePhotoToUpload($target_file, $large_destination_path, $dst_dimension['large']['width'], $dst_dimension['large']['height'], $extension);
+				$this->resizePhotoToUpload($target_file, $thumb_destination_path, $dst_dimension['thumb']['width'], $dst_dimension['thumb']['height'], $extension);
+				return $randomFolderName.'/'.MEDIA_THUMBNAIL_PREFIX.$filename;
+			}
+			return false;
+		
+		}
+		
+		
+		
 		/*
 			@param user_media_prefix, the folder directory for the user's media, not the full path
 			@param dst_dimension, the dimension of the photos that need to be resized into 

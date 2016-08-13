@@ -12,6 +12,7 @@
 		const EmailKey = "email";
 		const PasswordKey = "password";
 		const ProfileVisibleKey = "profileVisible";
+		const ProfileFeatureKey = "profileFeature";
 		
 		//the column name that is not in the current table schema
 		const BioKey = "bio";
@@ -176,6 +177,11 @@
 				$user_info[self::CoverKey] = $this->getUserCoverUrl();
 				$extractFileds = array_diff($extractFileds, array(self::CoverKey));
 			} 
+			if(in_array(self::ProfileFeatureKey, $fields)){
+				$user_info[self::ProfileFeatureKey] = $this->getUserFeatures();
+				$extractFileds = array_diff($extractFileds, array(self::ProfileFeatureKey));
+			}
+			
 			return array_merge($user_info, $this->getMultipleColumnsById($extractFileds, $this->user_id));
 		}
 		
@@ -190,19 +196,59 @@
 		}
 		
 		
+		public function addUserFeature($paramInfo){
+			$images = $paramInfo["images"]; //an array of file, contains the images files $_FILES
+			$featureCoverFile = $images[User_Feature_Cover::FeatureCoverKey];
+ 			$userInfo = $paramInfo["userInfo"]; //contains infomation such as fullname, bio, and profile visible
+			$feature_name = $userInfo[Feature::KeyForFeatureName];
+			$feature = new Feature();
+			return $feature->addFeature($featureCoverFile, $this->user_id, $feature_name);
+		}
+		
+		public function getUserFeatures(){
+			$stmt = $this->connection->prepare(
+			"SELECT feature.feature_id, feature.name, User_Feature_Cover.picture_url, User_Feature_Cover.hash
+			FROM feature
+			LEFT JOIN User_Feature_Cover
+			ON feature.feature_id = User_Feature_Cover.feature_id
+			WHERE feature.user_id = ? ORDER BY feature.feature_id DESC"
+			);
+			$stmt->bind_param('i', $this->user_id);
+			if($stmt->execute()){
+				 $result = $stmt->get_result();
+				 if($result !== false && $result->num_rows > 0){
+					$rows = $result->fetch_all(MYSQLI_ASSOC);
+					$stmt->close();
+					
+					foreach($rows as &$row){
+						$row["picture_url"] = U_IMGDIR.$this->getUserMediaPrefix().'/'.$row["picture_url"];
+					}
+					return $rows;
+				 }
+			}
+		}
+		
+		
 
 		public function saveUserProfile($paramInfo){
 			$images = $paramInfo["images"]; //an array of file, contains the images files $_FILES
 			
-			$coverFile = $images[User_Profile_Cover::CoverKey];
- 			if ($this->saveUserProfileCover($coverFile, false) === false){
- 				return false; //IOS Call don't need to crop cover
- 			} 
+			
+			if(isset($images[User_Profile_Cover::CoverKey])){
+				$coverFile = $images[User_Profile_Cover::CoverKey];
+				if ($this->saveUserProfileCover($coverFile, false) === false){
+					//IOS Call don't need to crop cover
+					//failed
+					return false; 
+				} 
+ 			}
  			
-			$avatorFile = $images[User_Profile_Avator::AvatorKey];
-			if ($this->saveUserProfileAvator($avatorFile, false) === false){
-				return false; //IOS Call don't need to crop avator
-			} 
+ 			if(isset($images[User_Profile_Avator::AvatorKey])){
+				$avatorFile = $images[User_Profile_Avator::AvatorKey];
+				if ($this->saveUserProfileAvator($avatorFile, false) === false){
+					return false; //IOS Call don't need to crop avator
+				} 
+			}
 			
 			$userInfo = $paramInfo["userInfo"]; //contains infomation such as fullname, bio, and profile visible
 			//update profile visible setting
@@ -271,6 +317,8 @@
 		public function isUserForUserNameExists($username){
 			return $this->isStringValueExistingForColumn(self::UserNameKey, $username);
 		}
+		
+		
 		
 		
 		

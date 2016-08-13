@@ -9,5 +9,6 @@
 		const FullNameKey = "fullname";
 		const BioKey = "bio";
 		const ProfileVisibleKey = "profileVisible";
+		const ProfileFeatureKey = "profileFeature";
 	}
 ?>

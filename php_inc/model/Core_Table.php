@@ -162,12 +162,16 @@
 			return false;
 		}
 		
-		public function getColumnBySelector($column, $selector_column, $selector_value){
+		public function getColumnBySelector($column, $selector_column, $selector_value, $numericSelector = false){
 			$column = $this->connection->escape_string($column);
 			$selector_column = $this->connection->escape_string($selector_column);
 			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1 ");
 			if($stmt){
-				$stmt->bind_param('s', $selector_value);
+				if($numericSelector){
+					$stmt->bind_param('i', $selector_value);
+				}else{
+					$stmt->bind_param('s', $selector_value);
+				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){
@@ -180,6 +184,10 @@
 			echo $this->connection->error;
 			return false;
 		}
+		
+		
+		
+		
 		
 		public function getMultipleColumnsBySelector($column_array, $selector_column, $selector_value){
 			$selector_column = $this->connection->escape_string($selector_column);
@@ -201,7 +209,23 @@
 			return false;
 		}
 		
-		
+		public function checkStringColumnValueExistsForUser($column, $column_value, $user_id){
+			$column = $this->connection->escape_string($column);
+			$column_value = $this->connection->escape_string($column_value);
+			$primary_key = $this->table_name.'_id';
+			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? AND `user_id` = ? LIMIT 1 ");
+			if($stmt){
+				$stmt->bind_param('si', $column_value, $user_id);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$stmt->close();
+						return true;
+					 }
+				}
+			}
+			return false;
+		}
 		
 		
 		
@@ -509,23 +533,7 @@
 		
 		
 		
-		public function checkColumnValueExistForUser($column, $column_value, $user_id){
-			$column = $this->connection->escape_string($column);
-			$column_value = $this->connection->escape_string($column_value);
-			$primary_key = $this->table_name.'_id';
-			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? AND `user_id` = ? LIMIT 1 ");
-			if($stmt){
-				$stmt->bind_param('si', $column_value, $user_id);
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false && $result->num_rows == 1){
-						$stmt->close();
-						return true;
-					 }
-				}
-			}
-			return false;
-		}
+		
 		
 		public function checkNumericColumnValueExistForUser($column, $column_value, $user_id){
 			$column = $this->connection->escape_string($column);

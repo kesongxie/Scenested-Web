@@ -5,16 +5,16 @@
 	$_POST['come_across_user_id'] = 34;
 	//the requst user is the user to whom the final notification should forward
 	if(isset($_POST['request_user_id']) && isset($_POST['come_across_user_id']) ){
-		$theme = new Theme();
-		$similarThemes = $theme->getSimilarThemeBetweenTwoUsers($_POST['request_user_id'], $_POST['come_across_user_id']);	
-		if($similarThemes !== false){
+		$feature = new Feature();
+		$similarFeatures = $feature->getSimilarFeatureBetweenTwoUsers($_POST['request_user_id'], $_POST['come_across_user_id']);	
+		if($similarFeatures !== false){
 			$remoteNotification = new RemoteNotification();
-			//flaten similar theme string
-			$flatenSimilarThemeString = '';
-			foreach($similarThemes as $entry){
-				 $flatenSimilarThemeString .= $entry[Theme::KeyForThemeNameColomn].', ';
+			//flaten similar feature string
+			$flatenSimilarFeatureString = '';
+			foreach($similarFeatures as $entry){
+				 $flatenSimilarFeatureString .= $entry[Feature::KeyForFeatureNameColomn].', ';
 			}
-			$flatenSimilarThemeString = trim($flatenSimilarThemeString,', ');
+			$flatenSimilarFeatureString = trim($flatenSimilarFeatureString,', ');
 			
 			//schedule a push notification
 			$request_user = new User($_POST['request_user_id']);
@@ -25,10 +25,10 @@
 			
 			
 			//send notification for request user, and pass the user object for the come_across_user for including additional info in the push notification
-			$notifcationSentSuccessfullyToRequestUser = $remoteNotification->sendNotificationForSimilarThemes($flatenSimilarThemeString, $deviceTokenOfRequestUser, $come_across_user);
+			$notifcationSentSuccessfullyToRequestUser = $remoteNotification->sendNotificationForSimilarFeatures($flatenSimilarFeatureString, $deviceTokenOfRequestUser, $come_across_user);
 			
 			//send notification for come across user
-			$notifcationSentSuccessfullyToComeAcrossUser = $remoteNotification->sendNotificationForSimilarThemes($flatenSimilarThemeString, $deviceTokenOfComeAcrossUser, $request_user);
+			$notifcationSentSuccessfullyToComeAcrossUser = $remoteNotification->sendNotificationForSimilarFeatures($flatenSimilarFeatureString, $deviceTokenOfComeAcrossUser, $request_user);
 				
 			if($notifcationSentSuccessfullyToRequestUser && $notifcationSentSuccessfullyToComeAcrossUser){
 				$sendingStatus = json_encode([
