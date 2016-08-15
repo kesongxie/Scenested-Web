@@ -90,7 +90,7 @@
 				return false;
 		}
 		
-		public function getAllRowsMultipleColumnsBySelector($column_array, $selector_column, $selector_value, $asc = false){
+		public function getAllRowsMultipleColumnsBySelector($column_array, $selector_column, $selector_value, $numericSelector = false,   $asc = false){
 			$selector_column = $this->connection->escape_string($selector_column);
 			$columns = implode('`,`',$column_array);
 			$columns = '`'.$columns.'`';
@@ -101,7 +101,11 @@
 			}
 			$stmt = $this->connection->prepare($query);
 			if($stmt){
-				$stmt->bind_param('s', $selector_value);
+				if($numericSelector){
+					$stmt->bind_param('i', $selector_value);
+				}else{
+					$stmt->bind_param('s', $selector_value);
+				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows >= 1){
@@ -115,21 +119,21 @@
 			return false;
 		}
 		
-		public function getRowsNumberForNumericColumn($column, $column_value){
-			$column = $this->connection->escape_string($column);
-			$stmt = $this->connection->prepare("SELECT `$this->primary_key` FROM `$this->table_name` WHERE `$column` = ? ");
-			if($stmt){
-				$stmt->bind_param('i', $column_value);
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false){
-					 	$stmt->close();
-						return $result->num_rows;
-					 }
-				}
-			}
-			return false;
-		}
+	// 	public function getRowsNumberForNumericColumn($column, $column_value){
+// 			$column = $this->connection->escape_string($column);
+// 			$stmt = $this->connection->prepare("SELECT `$this->primary_key` FROM `$this->table_name` WHERE `$column` = ? ");
+// 			if($stmt){
+// 				$stmt->bind_param('i', $column_value);
+// 				if($stmt->execute()){
+// 					 $result = $stmt->get_result();
+// 					 if($result !== false){
+// 					 	$stmt->close();
+// 						return $result->num_rows;
+// 					 }
+// 				}
+// 			}
+// 			return false;
+// 		}
 		
 		
 		public function deleteRowById($id){
@@ -189,13 +193,17 @@
 		
 		
 		
-		public function getMultipleColumnsBySelector($column_array, $selector_column, $selector_value){
+		public function getMultipleColumnsBySelector($column_array, $selector_column, $selector_value, $numericSelector = false){
 			$selector_column = $this->connection->escape_string($selector_column);
 			$targets = implode('`,`',$column_array);
 			$targets = '`'.$targets.'`';
 			$stmt = $this->connection->prepare("SELECT $targets FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1 ");
 			if($stmt){
-				$stmt->bind_param('s', $selector_value);
+				if($numericSelector){
+					$stmt->bind_param('i', $selector_value);
+				}else{
+					$stmt->bind_param('s', $selector_value);
+				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){

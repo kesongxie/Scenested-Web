@@ -200,7 +200,7 @@
 			$images = $paramInfo["images"]; //an array of file, contains the images files $_FILES
 			$featureCoverFile = $images[User_Feature_Cover::FeatureCoverKey];
  			$userInfo = $paramInfo["userInfo"]; //contains infomation such as fullname, bio, and profile visible
-			$feature_name = $userInfo[Feature::KeyForFeatureName];
+			$feature_name = $userInfo[Feature::FeatureNameKey];
 			$feature = new Feature();
 			return $feature->addFeature($featureCoverFile, $this->user_id, $feature_name);
 		}
@@ -219,11 +219,17 @@
 				 if($result !== false && $result->num_rows > 0){
 					$rows = $result->fetch_all(MYSQLI_ASSOC);
 					$stmt->close();
-					
+					$features = array();
 					foreach($rows as &$row){
-						$row["picture_url"] = U_IMGDIR.$this->getUserMediaPrefix().'/'.$row["picture_url"];
+						$featureCoverUrl = U_IMGDIR.$this->getUserMediaPrefix().'/'.$row["picture_url"];
+						$coverHash = $row["hash"];
+						$featureName = $row["name"];
+						$feature["feature_id"] =  $row["feature_id"];
+						$feature["name"] = $row["name"];
+						$feature["photo"] = array("url" => $featureCoverUrl, "hash" => $coverHash);
+						array_push($features, $feature);
 					}
-					return $rows;
+					return $features;
 				 }
 			}
 		}
@@ -289,8 +295,7 @@
 				$ratio_scale_assoc['adjusted_ratio_height'] = 0;
 			}
 			$user_cover = new User_Profile_Cover();
-	 		$url = $user_cover->uploadCoverPicture($file, $ratio_scale_assoc, $this->user_id);
-			return $url;
+	 		return $user_cover->uploadCoverPicture($file, $ratio_scale_assoc, $this->user_id);
 		}		
 		
 		public function saveUserProfileAvator($file, $cropAvator, $ratio_scale_assoc = NULL){
@@ -302,8 +307,7 @@
 				$ratio_scale_assoc['adjusted_ratio_height'] = 0;
 			}
 			$user_avator = new User_Profile_Avator();
-	 		$url = $user_avator->uploadAvatorPicture($file, $ratio_scale_assoc, $this->user_id);
-			return $url;
+	 		return $user_avator->uploadAvatorPicture($file, $ratio_scale_assoc, $this->user_id);
 		}		
 		
 		

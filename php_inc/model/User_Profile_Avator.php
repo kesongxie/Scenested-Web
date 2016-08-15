@@ -11,14 +11,7 @@
 		}
 		
 		public function getLatestProfileImageForUser($user_id){
-			$user_media_prefix = new User_Media_Prefix();
-			$prefix = $user_media_prefix->getUserMediaPrefix($user_id); //folder for the given user
-			$image_file = $this->getColumnByUserId('picture_url',$user_id); //include the wrapper folder directory
-			if($prefix && $image_file){
-				return U_IMGDIR.$prefix.'/'.$image_file;
-			}
-			return false;
-
+			return $this->getPicture($user_id, "user_id");
 		}
 		
 		// public function uploadProfilePicture($file, $x_position_ratio, $y_position_ratio, $user_id){
@@ -65,8 +58,9 @@
 							"large" => array("width" => AVATOR_PHOTO_MAX_WIDTH, "height" => AVATOR_PHOTO_MAX_HEIGHT ),
 							"thumb" => array("width" => AVATOR_PHOTO_THUMB_WIDTH,"height" => AVATOR_PHOTO_THUMB_HEIGHT )
 							);
-			$upload = $this->uploadProfileMediaForUser($file, $user_id, $ratio_scale_assoc, $dst_dimension);
-			if($upload === false){
+							
+			$photoInfo = $this->uploadProfileMediaForUser($file, $user_id, $ratio_scale_assoc, $dst_dimension);
+			if($photoInfo === false){
 				return false;
 			}
 			//delete old images if applied
@@ -80,7 +74,7 @@
 					$this->deleteRowById($old_image_row_id);
 				}
 			}
-			return $upload;
+			return $photoInfo;
 		}
 	
 		public function loadProfilePhotoPreviewBlock($hash){

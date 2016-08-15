@@ -1,10 +1,9 @@
 <?php
 	include_once $_SERVER['DOCUMENT_ROOT'].'/php_inc/core.inc.php';
 
-
-	if(isset($_POST['userId'])){
-		$user = new User($_POST['userId']);
-		$respondInfo = $user->getUserFeatures();
+	if(isset($_REQUEST['featureId'])){
+		$feature = new Feature($_REQUEST['featureId']);
+		$respondInfo = $feature->getPosts();
 		
 		echo json_encode([
 		"info" => $respondInfo,

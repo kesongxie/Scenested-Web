@@ -2,9 +2,11 @@
 	include_once PHP_INC_PATH.'core.inc.php';
 	
 	class Feature extends Core_Table{
-		const KeyForFeatureName = "name";
 		private $table_name = "feature";
 		private $primary_key = "feature_id";
+		private $featureId;
+		
+// 		const KeyForFeatureName = "name";
 		const FeatureKey = "feature";
  		const FeatureIdKey = "featureId";
  		const FeatureNameKey = "featureName";
@@ -12,9 +14,20 @@
  		const FeatureCoverHashKey = "featureCoverHash";
 		
 	
-		public function __construct(){
+		public function __construct($featureId = NULL){
 			parent::__construct($this->table_name, $this->primary_key);
+			if($featureId != NULL){
+				$this->featureId = $featureId;
+			}
 		}
+		public function getPosts(){
+			if($this->featureId != NULL){
+				$post = new Post();
+				return $post->getPostsForFeature($this->featureId);
+			}
+		}
+		
+		
 		
 		public function getSimilarFeatureBetweenTwoUsers($first_user_id, $second_user_id){
 			$query = "SELECT a.name 
@@ -61,8 +74,8 @@
 					$feature = array(
 						self::FeatureIdKey => $feature_id,
 						self::FeatureNameKey => $feature_name,
-						self::FeatureCoverUrlKey => $fearturCoverInfo["featureCoverUrl"],
-						self::FeatureCoverHashKey => $fearturCoverInfo["featureCoverHash"]
+						"photo" => array("url" => $fearturCoverInfo["featureCoverUrl"],
+						  				 "hash" => $fearturCoverInfo["featureCoverHash"])
 					);
 					return array("status" => true, 
 							    self::FeatureKey => $feature,
@@ -73,7 +86,7 @@
 		}
 		
 		public function isFeatureExistsForUser($feature_name, $user_id){
-			return $this->checkStringColumnValueExistsForUser(self::KeyForFeatureName, $feature_name, $user_id);
+			return $this->checkStringColumnValueExistsForUser("name", $feature_name, $user_id);
 		}
 		
 		

@@ -14,6 +14,20 @@
 			$this->file_m = new File_Manager();
 		}
 		
+		
+
+		public function getPicture($selectorValue, $selectorColumn){
+			$photoInfo = $this->getMultipleColumnsBySelector(array('user_id', 'picture_url', 'hash'), $selectorColumn,  $selectorValue , true); //include the wrapper folder directory
+			if($photoInfo){
+				$user_media_prefix = new User_Media_Prefix();
+				$prefix = $user_media_prefix->getUserMediaPrefix($photoInfo["user_id"]); //folder for the given user
+				return array("url" => U_IMGDIR.$prefix.'/'.$photoInfo["picture_url"], "hash" => $photoInfo["hash"]);
+			}
+			return false;
+		}
+		
+		
+		
 		/*
 			@param $cropped
 				specify whether the uploading image need to be cropped or not
@@ -82,7 +96,7 @@
 						if($thumb_return === false){
 							$picture_url = convertThumbPathToOriginPath($picture_url);
 						}
-						return U_IMGDIR.$prefix.'/'.$picture_url;
+						return array("url" => U_IMGDIR.$prefix.'/'.$picture_url, "hash" => $hash);
 					}
 				}
 			}
