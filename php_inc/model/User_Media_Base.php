@@ -103,23 +103,23 @@
 			return false;	
 		}
 		
-		
-		
-		public function uploadPostPhotoForUser($photoFile, $user_id, $user_scene_id, $dst_dimension, $thumb_return = true){
+		public function uploadPostPhotoForUser($photoFile, $user_id, $post_id, $dst_dimension, $thumb_return = true){
 			$prefix = $this->getUserMediaPrefixForUpload($user_id);
 			if($prefix !== false && $dst_dimension !== NULL){
 				$hash = $this->generateUniqueHash();
+				list($width, $height) = getimagesize($photoFile["tmp_name"]);
+				$aspectRatio = $width / $height;
 				$picture_url = $this->uploadPostPhotos($photoFile, $prefix, $dst_dimension);
 				if($picture_url !== false){
-					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`scene_id`, `picture_url`,`upload_time`,`hash`) VALUES(?, ?, ?, ?,?)");
+					$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`user_id`,`post_id`, `picture_url`,`aspect_ratio`,`upload_time`, `hash`) VALUES(?, ?, ?, ?, ?,?)");
 					$time = date("Y-m-d H:i:s");
-					$stmt->bind_param('iisss',$user_id,$user_scene_id, $picture_url, $time, $hash);
+					$stmt->bind_param('iisdss',$user_id,$post_id, $picture_url, $aspectRatio, $time, $hash);
 					if($stmt->execute()){
 						$stmt->close();
 						if($thumb_return === false){
 							$picture_url = convertThumbPathToOriginPath($picture_url);
 						}
-						return U_IMGDIR.$prefix.'/'.$picture_url;
+						return array("url" => U_IMGDIR.$prefix.'/'.$picture_url, "hash" => $hash, "aspectRatio" => $aspectRatio);
 					}
 				}
 			}

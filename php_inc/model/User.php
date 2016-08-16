@@ -205,6 +205,12 @@
 			return $feature->addFeature($featureCoverFile, $this->user_id, $feature_name);
 		}
 		
+		public function sharePost($paramInfo){
+			$post = new Post();
+			return $post->addPost($paramInfo["images"], $paramInfo["userInfo"]);
+		}
+		
+		
 		public function getUserFeatures(){
 			$stmt = $this->connection->prepare(
 			"SELECT feature.feature_id, feature.name, User_Feature_Cover.picture_url, User_Feature_Cover.hash
