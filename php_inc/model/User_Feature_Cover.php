@@ -3,7 +3,7 @@
 
 	class User_Feature_Cover extends User_Media_Base{
 		private $table_name = "user_feature_cover";
-		private $primary_key = "user_profile_cover_id";
+		private $primary_key = "user_feature_cover_id";
 		const FeatureCoverKey = "featureCover";
 
 		public function __construct(){
@@ -14,7 +14,17 @@
 			return $this->getPicture($feature_id, "feature_id");
 		}
 		
-		
+		public function deleteCoverForFeature($feature_id, $user_id){
+			$multiplePhotoInfo = $this->getAllRowsMultipleColumnsBySelector(array('user_feature_cover_id', 'picture_url'), "feature_id", $feature_id, true);
+			if($multiplePhotoInfo !== false){
+				foreach($multiplePhotoInfo as $photoInfo){
+					$this->deleteRowForUserById($user_id, $photoInfo["user_feature_cover_id"]);
+					$this->deleteMediaByPictureUrl($photoInfo["picture_url"], $user_id);
+				}
+				return true;
+			}
+			return false;
+		}
 		/* 
 			@param $ratio_scale_assoc
 				the $_POST form the client side script, including image_container_scale_width, image_container_scale_height, 
@@ -59,13 +69,11 @@
 // 		
 		
 		function uploadFeatureCoverPicture($file, $user_id, $feature_id){
-			$results = $this->getAllRowsMultipleColumnsByUserId(array($this->primary_key,'picture_url'), $user_id);	
-			
+			$results = $this->getAllRowsMultipleColumnsBySelector(array($this->primary_key,'picture_url'), 'feature_id', $feature_id, true);
 			$dst_dimension = array(
 				"large" => array("width" => FEATURE_PHOTO_MAX_WIDTH, "height" => FEATURE_PHOTO_MAX_HEIGHT ),
 				"thumb" => array("width" => FEATURE_PHOTO_THUMB_WIDTH,"height" => FEATURE_PHOTO_THUMB_HEIGHT )
 				);
-				
 			$featureCoverUrl = $this->uploadFeaturePhotoForUser($file, $user_id, $feature_id, $dst_dimension);
 			$featureCoverHash = $this->getColumnBySelector('hash', 'feature_id', $feature_id, true);
 			

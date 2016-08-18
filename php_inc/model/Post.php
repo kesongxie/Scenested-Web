@@ -19,7 +19,7 @@
 		*/
 		public function getPostsForFeature($featureId){
 			$column_array = array("post_id", "user_id", "text", "feature_id", "created_time");
-			$posts = $this->getAllRowsMultipleColumnsBySelector($column_array, "feature_id", $featureId, $numericSelector = true);
+			$posts = $this->getAllRowsMultipleColumnsBySelector($column_array, "feature_id", $featureId, true);
 			// {"post_id":2,"user_id":107,"text":"US Open 2015 final","feature_id":114,"created_time":"2016-08-12 00:00:00"}
 			
 			$post_photo = new Post_Photo();
@@ -29,7 +29,12 @@
 				}
 				return array("posts" => $posts);
 			}
-			return false;
+			return array("posts" => array());
+		}
+		
+		public function getPostIdListInFeature($featureId){
+			$posts = $this->getAllRowsColumnBySelector('post_id', "feature_id", $featureId, true);
+			return $posts;
 		}
 		
 		public function addPost($photoFiles, $textualParamInfo){
@@ -61,5 +66,15 @@
 			}
 			return array("status" => false, self::PostKey => false, "errorCode" => 3); //unknown error
 		}
+		
+		public function deletePost($postId, $userId){
+			if($this->deleteRowForUserById($userId, $postId)){
+				$post_photo = new Post_Photo();
+				return $post_photo->deletePostPhotoForUserByPostId($userId, $postId);
+			}
+			return false;
+		}
+		
+		
 	}		
 ?>

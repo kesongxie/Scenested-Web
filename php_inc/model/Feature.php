@@ -89,9 +89,21 @@
 			return $this->checkStringColumnValueExistsForUser("name", $feature_name, $user_id);
 		}
 		
-		
-		
-				
-		
+		public function deleteFeature($featureId, $userId){
+			if($this->deleteRowForUserById($userId, $featureId)){
+				//delete feature picture
+				$feature_cover = new User_Feature_Cover();
+				$feature_cover->deleteCoverForFeature($featureId, $userId);
+				$post = new Post();
+				$postIdList = $post->getPostIdListInFeature($featureId);
+				if($postIdList){
+					foreach($postIdList as $postId){
+						$post->deletePost($postId["post_id"], $userId);
+					}
+				}
+				return true;
+			}
+			return false;
+		}
 	}		
 ?>

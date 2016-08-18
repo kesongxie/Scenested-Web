@@ -118,23 +118,7 @@
 			echo $this->connection->error;
 			return false;
 		}
-		
-	// 	public function getRowsNumberForNumericColumn($column, $column_value){
-// 			$column = $this->connection->escape_string($column);
-// 			$stmt = $this->connection->prepare("SELECT `$this->primary_key` FROM `$this->table_name` WHERE `$column` = ? ");
-// 			if($stmt){
-// 				$stmt->bind_param('i', $column_value);
-// 				if($stmt->execute()){
-// 					 $result = $stmt->get_result();
-// 					 if($result !== false){
-// 					 	$stmt->close();
-// 						return $result->num_rows;
-// 					 }
-// 				}
-// 			}
-// 			return false;
-// 		}
-		
+
 		
 		public function deleteRowById($id){
 			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$this->primary_key` = ? LIMIT 1");
@@ -220,8 +204,7 @@
 		public function checkStringColumnValueExistsForUser($column, $column_value, $user_id){
 			$column = $this->connection->escape_string($column);
 			$column_value = $this->connection->escape_string($column_value);
-			$primary_key = $this->table_name.'_id';
-			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? AND `user_id` = ? LIMIT 1 ");
+			$stmt = $this->connection->prepare("SELECT `$this->primary_key` FROM `$this->table_name` WHERE `$column` = ? AND `user_id` = ? LIMIT 1 ");
 			if($stmt){
 				$stmt->bind_param('si', $column_value, $user_id);
 				if($stmt->execute()){
@@ -234,6 +217,18 @@
 			}
 			return false;
 		}
+		
+		public function deleteRowForUserById($user_id, $id){
+			
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$this->primary_key` = ?  AND `user_id`=? LIMIT 1");
+			$stmt->bind_param('ii', $id, $user_id);
+			if($stmt->execute()){
+				$stmt->close();
+				return true;
+			}
+			return false;
+		}
+		
 		
 		
 		
@@ -289,16 +284,7 @@
 			return false;
 		}
 		
-		public function deleteRowForUserById($user_id, $id){
-			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$primary_key` = ?  AND `user_id`=? LIMIT 1");
-			$stmt->bind_param('ii', $id, $user_id);
-			if($stmt->execute()){
-				$stmt->close();
-				return true;
-			}
-			return false;
-		}
-		
+	
 	
 		
 	
