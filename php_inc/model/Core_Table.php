@@ -219,7 +219,6 @@
 		}
 		
 		public function deleteRowForUserById($user_id, $id){
-			
 			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$this->primary_key` = ?  AND `user_id`=? LIMIT 1");
 			$stmt->bind_param('ii', $id, $user_id);
 			if($stmt->execute()){
