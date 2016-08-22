@@ -105,5 +105,20 @@
 			}
 			return false;
 		}
+		
+		public function getUserFeatureString($userId){
+			$featureString = "";
+			$features = $this->getAllRowsColumnBySelector('name', 'user_id', $userId);
+			if($features !== false){
+				foreach($features as $feature){
+					$featureString .= $feature["name"].', ';
+				}
+			}
+			$featureString = trim($featureString, " ,");
+			return $featureString;
+		}
+		
+		
+		
 	}		
 ?>

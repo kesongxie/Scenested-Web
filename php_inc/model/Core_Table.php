@@ -57,12 +57,13 @@
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){
-						$row = $result->fetch_all(MYSQLI_ASSOC);
+						$row = $result->fetch_assoc();
 						$stmt->close();
-						return $row[0];
+						return $row;
 					 }
 				}
 			}
+			echo $this->connection->error;
 			return false;
 		}
 		
@@ -217,6 +218,26 @@
 			}
 			return false;
 		}
+		
+		// $column_array is a dictionary using the column name as the key and column value as value
+		public function isRowExsitedForTwoColumns($fristColumnName, $fristColumnValue, $firstColumnType, $secondColumnName, $secondColumnValue, $secondColumnType){
+			$stmt = $this->connection->prepare("SELECT `$this->primary_key` FROM `$this->table_name` WHERE `$fristColumnName` = ? AND `$secondColumnName` = ? LIMIT 1 ");
+			if($stmt){
+				$stmt->bind_param($firstColumnType.$secondColumnType, $fristColumnValue, $secondColumnValue);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows == 1){
+						$stmt->close();
+						$row = $result->fetch_assoc();
+						return $row[$this->primary_key];
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+			
+		}
+		
 		
 		public function deleteRowForUserById($user_id, $id){
 			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$this->primary_key` = ?  AND `user_id`=? LIMIT 1");

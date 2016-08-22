@@ -18,7 +18,7 @@
 		const BioKey = "bio";
 		const AvatorKey = "avator";
 		const CoverKey = "cover";
-		
+		const UserPostLikes = "postLike";
 		
 
 		public function __construct($user_id = null){
@@ -113,7 +113,7 @@
 			return false;
 		}
 		
-		public function getUserAvatorUrl(){
+		public function getUserAvator(){
 			if($this->user_id !== null){
 				$avator = new User_Profile_Avator();
 				return $avator->getLatestProfileImageForUser($this->user_id);
@@ -170,7 +170,7 @@
 				 $extractFileds = array_diff($extractFileds, array(self::BioKey));
 			}
 			if(in_array(self::AvatorKey, $fields)){
-				$user_info[self::AvatorKey] = $this->getUserAvatorUrl();
+				$user_info[self::AvatorKey] = $this->getUserAvator();
 				$extractFileds = array_diff($extractFileds, array(self::AvatorKey));
 			} 
 			if(in_array(self::CoverKey, $fields)){
@@ -180,6 +180,10 @@
 			if(in_array(self::ProfileFeatureKey, $fields)){
 				$user_info[self::ProfileFeatureKey] = $this->getUserFeatures();
 				$extractFileds = array_diff($extractFileds, array(self::ProfileFeatureKey));
+			}
+			if(in_array(self::UserPostLikes, $fields)){
+				$user_info[self::UserPostLikes] = $this->getUserPostLikes();
+				$extractFileds = array_diff($extractFileds, array(self::UserPostLikes));
 			}
 			
 			return array_merge($user_info, $this->getMultipleColumnsById($extractFileds, $this->user_id));
@@ -244,8 +248,6 @@
 
 		public function saveUserProfile($paramInfo){
 			$images = $paramInfo["images"]; //an array of file, contains the images files $_FILES
-			
-			
 			if(isset($images[User_Profile_Cover::CoverKey])){
 				$coverFile = $images[User_Profile_Cover::CoverKey];
 				if ($this->saveUserProfileCover($coverFile, false) === false){
@@ -277,7 +279,8 @@
 			if($bio->updateBioForUser($userInfo[User_Bio::BioKey], $this->user_id) === false){
 				return false;
 			}
-			return true;
+			return $this->getMultipleUserInfo([User::UserNameKey, User::FullNameKey, User::BioKey, User::AvatorKey, User::CoverKey, User::ProfileVisibleKey]);
+
 		}
 		
 		
@@ -339,10 +342,21 @@
 		}
 		
 		
+		//get the user's feature as string
+		public function getUserFeatureString(){
+			$feature = new Feature();
+			return $feature->getUserFeatureString($this->user_id);
+		}
 		
+		public function getUserPostLikes(){
+			$postLike = new Post_Like();
+			return $postLike->getPostLikeListForUser($this->user_id);
+		}
 		
-		
-		
+		public function LikePost($postId){
+			$postLike = new Post_Like();
+			return $postLike->likePostForUser($postId, $this->user_id);
+		}
 		
 	}		
 ?>

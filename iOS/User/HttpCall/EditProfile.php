@@ -9,8 +9,10 @@
 		"images" => $_FILES
 	];	
 	$user = new User($paramInfo["userInfo"]["userId"]);
-	if($user->saveUserProfile($paramInfo)){
+	$userInfo = $user->saveUserProfile($paramInfo);
+	if($userInfo !== false){
 		echo json_encode([
+			"userInfo" => $userInfo,
 			"statusCode" => 200
 		]);
 	}else{

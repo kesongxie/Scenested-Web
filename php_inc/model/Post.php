@@ -14,6 +14,11 @@
 		}
 		
 		
+		public function getPostUserIdByPostId($postId){
+			return $this->getColumnById('user_id',$postId);
+		}
+		
+		
 		/*
 			return all the post for a specific feature
 		*/
@@ -24,10 +29,13 @@
 			
 			$post_photo = new Post_Photo();
 			$post_like = new Post_Like();
+			$post_comment = new Post_Comment();
+
 			if($posts !== false){
 				foreach($posts as &$post){
 					$post["post_photo"] = $post_photo->getPostPhotoCollection($post["post_id"]);
-					$post["post_like"] = $post_like->getLikeUserInfoForPost($post["post_id"]);
+					$post["post_like"] = $post_like->getPostLikeListForPost($post["post_id"]);
+					$post["post_comment"] = $post_comment->getPostCommentListForPost($post["post_id"]);
 				}
 				return array("posts" => $posts);
 			}
@@ -77,6 +85,10 @@
 			return false;
 		}
 		
+		public function getFreshPostLikeById($postId){
+			$postLike = new Post_Like();
+			return $postLike->getLikeUserInfoForPost($postId); 
+		}
 		
 	}		
 ?>

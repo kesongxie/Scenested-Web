@@ -3,7 +3,7 @@
 
 	if(isset($_REQUEST['postId'])){
 		$post_like = new Post_Like();
-		$respondInfo = $post_like->getLikeUserInfoForPost($_REQUEST['postId']);
+		$respondInfo = $post_like->getPostLikeIdListForPost($_REQUEST['postId']);
 		
 		echo json_encode([
 		"info" => $respondInfo,
