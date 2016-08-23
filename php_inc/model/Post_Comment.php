@@ -18,12 +18,12 @@
 			}
 			$view = ($postUserId == $commentInfo["comment_user_id"])? '1': '0';
 			$like_time = date("Y-m-d H:i:s");
-			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`post_id`, `post_user_id`, `comment_user_id`, `text`, `comment_time`, `view`) VALUES (?, ?, ?, ?, ?, ?) ");
+			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`post_id`, `post_user_id`, `comment_user_id`, `comment_text`, `comment_time`, `view`) VALUES (?, ?, ?, ?, ?, ?) ");
 			$stmt->bind_param('iiisss', $commentInfo["postId"], $postUserId, $commentInfo["comment_user_id"], $commentInfo["text"], $like_time, $view );
 			if($stmt->execute()){
 				$post_comment_id = $this->connection->insert_id;
 				$stmt->close();	
-				return $this->getMultipleColumnsById(array('post_comment_id', 'comment_time', 'comment_user_id'), $post_comment_id);
+				return $this->getMultipleColumnsById(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), $post_comment_id);
 			}
 			echo $this->connection->error;
 			return false;
@@ -44,7 +44,7 @@
 
 		
 		public function getPostCommentListForPost($post_id){
-			$postCommentList = $this->getAllRowsMultipleColumnsBySelector(array('post_comment_id', 'comment_time', 'comment_user_id'), 'post_id', $post_id, true);
+			$postCommentList = $this->getAllRowsMultipleColumnsBySelector(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), 'post_id', $post_id, true);
 			return $postCommentList !== false ? $postCommentList: array(); 
 		}
 
