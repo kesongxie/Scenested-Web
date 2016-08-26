@@ -80,7 +80,7 @@
 		
 		public function authenticateUserWithUserIdAndPassword($userId, $password){
 			//get the password based user id
-			$passwordHash = $this->getColumnBySelector(self::PasswordKey, self::UserIdKey, $userId);
+			$passwordHash = $this->getColumnBySelector(self::PasswordKey, self::UserIdKey, $userId, 'i');
 			if($passwordHash !== false){
 				if(@password_verify($password, $passwordHash)){
 					return true;
@@ -89,6 +89,15 @@
 			return false;
 		}
 		
+		
+		public function getUserIdByUserName($username){
+			return $this->getColumnBySelector($this->primary_key, 'username', $username, 's');
+		}
+		
+		
+		public function getFullUserInfo(){
+			return $this->getMultipleUserInfo([User::UserIdKey, User::UserNameKey, User::FullNameKey, User::BioKey, User::AvatorKey, User::CoverKey, User::ProfileVisibleKey, User::ProfileFeatureKey, User::UserPostLikes]);
+		}
 		
 		public function getUserId(){
 			if($this->user_id !== null){
@@ -185,7 +194,6 @@
 				$user_info[self::UserPostLikes] = $this->getUserPostLikes();
 				$extractFileds = array_diff($extractFileds, array(self::UserPostLikes));
 			}
-			
 			return array_merge($user_info, $this->getMultipleColumnsById($extractFileds, $this->user_id));
 		}
 		
@@ -279,7 +287,7 @@
 			if($bio->updateBioForUser($userInfo[User_Bio::BioKey], $this->user_id) === false){
 				return false;
 			}
-			return $this->getMultipleUserInfo([User::UserNameKey, User::FullNameKey, User::BioKey, User::AvatorKey, User::CoverKey, User::ProfileVisibleKey]);
+			return $this->getMultipleUserInfo([User::UserIdKey, User::UserNameKey, User::FullNameKey, User::BioKey, User::AvatorKey, User::CoverKey, User::ProfileVisibleKey]);
 
 		}
 		
@@ -356,6 +364,21 @@
 		public function LikePost($postId){
 			$postLike = new Post_Like();
 			return $postLike->likePostForUser($postId, $this->user_id);
+		}
+		
+		
+		public function loadMentionedUserInfoFromText($text){
+			$mentionedList = retrieveMentionUsernameFromText($text); //an array of username that is mentioned in the text
+			$mentioned = new Post_Comment_Mentioned();
+			$userInfoList = array();	
+			foreach($mentionedList as $mentionedUserName){
+				$mentionedUserId = $this->getUserIdByUserName($mentionedUserName);
+				if($mentionedUserId !== false){
+					$user = new User($mentionedUserId);
+					 array_push($userInfoList, $user->getFullUserInfo());
+				}
+			}
+			return $userInfoList;
 		}
 		
 	}		

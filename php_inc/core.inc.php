@@ -276,6 +276,32 @@
 		return preg_replace_callback('/(.?)(#|@)(\w+)(\W?)/', 'replacer', $text );
 	}
 
+
+
+
+	// function usernameReplacer($matches){
+// 		// if($matches[1] != '' && ($matches[1] == '@')){
+// // 			return $matches[0]; 
+// // 		}else{
+// // 			if($matches[4] != '' && ($matches[4] == '@')){
+// // 				return $matches[0];
+// // 			}else{
+// // 				return $matches[1].'<span class="hash-tag plain-lk">'.$matches[2].$matches[3].'</span>'.$matches[4];
+// // 			}
+// // 		}
+// 
+// 
+// 		var_dump($matches[3]);
+// 	}
+	
+	//@amazin@what
+	function retrieveMentionUsernameFromText($text){
+		//preg_replace_callback('/(.?)(#|@)(\w+)/', 'usernameReplacer', $text );
+		 preg_match_all ('/(.?)(#|@)(\w+)/' , $text,  $matches );
+		 return $matches[3]; 
+	}
+
+
 	
 	function getWidthsPercentageWithEqualHeightOfTwoImages($width1, $height1, $width2, $height2, $container_width){
 		$resized_width1 = ($height2 * $container_width )/$width2;

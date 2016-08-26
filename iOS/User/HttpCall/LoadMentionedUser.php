@@ -1,10 +1,10 @@
 <?php
 	include_once $_SERVER['DOCUMENT_ROOT'].'/php_inc/core.inc.php';
 
-
-	if(isset($_POST['userId'])){
-		$user = new User($_POST['userId']);
-		$respondInfo = $user->getFullUserInfo();
+	if(isset($_REQUEST['text'])){
+		$user = new User();
+		$respondInfo = $user->loadMentionedUserInfoFromText($_REQUEST['text']);
+		
 		echo json_encode([
 		"info" => $respondInfo,
 		"statusCode" => 200

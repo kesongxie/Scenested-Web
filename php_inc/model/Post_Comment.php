@@ -17,46 +17,74 @@
 				return false;
 			}
 			$view = ($postUserId == $commentInfo["comment_user_id"])? '1': '0';
-			$like_time = date("Y-m-d H:i:s");
+			$comment_time = date("Y-m-d H:i:s");
 			$stmt = $this->connection->prepare("INSERT INTO `$this->table_name` (`post_id`, `post_user_id`, `comment_user_id`, `comment_text`, `comment_time`, `view`) VALUES (?, ?, ?, ?, ?, ?) ");
-			$stmt->bind_param('iiisss', $commentInfo["postId"], $postUserId, $commentInfo["comment_user_id"], $commentInfo["text"], $like_time, $view );
+			$stmt->bind_param('iiisss', $commentInfo["postId"], $postUserId, $commentInfo["comment_user_id"], $commentInfo["text"], $comment_time, $view );
 			if($stmt->execute()){
 				$post_comment_id = $this->connection->insert_id;
 				$stmt->close();	
-				return $this->getMultipleColumnsById(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), $post_comment_id);
+				//retrive the mentioned list 
+				$mentionedList = retrieveMentionUsernameFromText($commentInfo["text"]); //an array of username that is mentioned in the text
+				$user = new User();
+				$mentioned = new Post_Comment_Mentioned();
+				
+				foreach($mentionedList as $mentionedUserName){
+					$mentionedUserId = $user->getUserIdByUserName($mentionedUserName);
+					if($mentionedUserId !== false){
+						$mentionedInfo["postId"] = $commentInfo["postId"];
+						$mentionedInfo["mentionedUserId"] = $mentionedUserId;
+						$mentionedInfo["commentUserId"] =  $commentInfo["comment_user_id"];
+						$mentionedInfo["postCommentId"] = $post_comment_id;
+						$mentioned->insertCommentMentioned($mentionedInfo);
+					}
+				}
+				$comment =  $this->getMultipleColumnsById(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), $post_comment_id);
+				$taggedUserIdList = array();
+				$mentionedUserIdList = $mentioned->getMentionedUserIdListByCommentId($post_comment_id);
+				if($mentionedUserIdList !== false){
+					foreach($mentionedUserIdList as $mentionedUserId){
+						array_push($taggedUserIdList, $mentionedUserId['mentioned_user_id']);
+					}
+				}
+				$comment["mentionedUserIdList"] = $taggedUserIdList;
+				return $comment;
 			}
 			echo $this->connection->error;
 			return false;
 		}
 
-
-
-		
-		
-	// 	return a post_like_id if succeed, so that it can be used from unLikePost
-// 		public function hasUserCommentPostAlready($post_id, $comment_user_id){
-// 			return $this->isRowExsitedForTwoColumns('post_id', $post_id, 'i', 'comment_user_id', $comment_user_id, 'i');
-// 		}
-// 		
-		
-		
-
-
-		
 		public function getPostCommentListForPost($post_id){
 			$postCommentList = $this->getAllRowsMultipleColumnsBySelector(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), 'post_id', $post_id, true);
+			if($postCommentList !== false){
+				$mentioned = new Post_Comment_Mentioned();
+				foreach($postCommentList as &$comment){
+					$taggedUserIdList = array();
+					$mentionedUserIdList = $mentioned->getMentionedUserIdListByCommentId($comment['post_comment_id']);
+					if($mentionedUserIdList !== false){
+						foreach($mentionedUserIdList as $mentionedUserId){
+							array_push($taggedUserIdList, $mentionedUserId['mentioned_user_id']);
+						}
+					}
+					$comment["mentionedUserIdList"] = $taggedUserIdList;
+				}
+			}
 			return $postCommentList !== false ? $postCommentList: array(); 
 		}
 
 		
-// 		public function getPostLikeListForUser($userId){
-// 			$postLikeList = $this->getAllRowsMultipleColumnsBySelector(array('post_like_id', 'post_id'), 'liked_user_id', $userId, true);
-// 			return $postLikeList !== false ? $postLikeList: array(); 
-// 		}
-// 		
-// 		
-// 		
+		public function deleteComment($postCommentId){
+			if($this->deleteRowById($postCommentId)){
+				$mentioend = new Post_Comment_Mentioned();
+				return $mentioend->deleteMentionedByPostCommentId($postCommentId);	
+			}
+			
+			
+		}
 		
+		public function deleteCommentInPost($postId){
+			$mentioend = new Post_Comment_Mentioned();
+			return $this->deleteRowBySelector("post_id", $postId, 'i') && $mentioend->deleteMentionedByPostId($postId);
+		}
 		
 	}		
 ?>

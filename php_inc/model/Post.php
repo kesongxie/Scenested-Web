@@ -43,7 +43,7 @@
 		}
 		
 		public function getPostIdListInFeature($featureId){
-			$posts = $this->getAllRowsColumnBySelector('post_id', "feature_id", $featureId, true);
+			$posts = $this->getAllRowsColumnBySelector('post_id', "feature_id", $featureId, 'i', true);
 			return $posts;
 		}
 		
@@ -80,6 +80,8 @@
 		public function deletePost($postId, $userId){
 			if($this->deleteRowForUserById($userId, $postId)){
 				$post_photo = new Post_Photo();
+				$this->deleteCommentInPost($postId);
+				$this->deleteLikesInPost($postId);
 				return $post_photo->deletePostPhotoForUserByPostId($userId, $postId);
 			}
 			return false;
@@ -88,6 +90,16 @@
 		public function getFreshPostLikeById($postId){
 			$postLike = new Post_Like();
 			return $postLike->getLikeUserInfoForPost($postId); 
+		}
+		
+		public function deleteCommentInPost($postId){
+			$comment = new Post_Comment();
+			return $comment->deleteCommentInPost($postId);
+		}
+		
+		public function deleteLikesInPost($postId){
+			$postLike = new Post_Like();
+			return $postLike->deleteLikesInPost($postId);
 		}
 		
 	}		

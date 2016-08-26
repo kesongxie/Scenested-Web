@@ -68,7 +68,7 @@
 		}
 		
 		
-		public function getAllRowsColumnBySelector($column, $selector_column, $selector_value, $asc = false){
+		public function getAllRowsColumnBySelector($column, $selector_column, $selector_value, $selectorType = 'i', $asc = false){
 				$column = $this->connection->escape_string($column);
 				$selector_column = $this->connection->escape_string($selector_column);
 				$query = "SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? ";
@@ -77,7 +77,7 @@
 				}
 				$stmt = $this->connection->prepare($query);
 				if($stmt){
-					$stmt->bind_param('s', $selector_value);
+					$stmt->bind_param($selectorType, $selector_value);
 					if($stmt->execute()){
 						 $result = $stmt->get_result();
 						 if($result !== false && $result->num_rows >= 1){
@@ -131,6 +131,24 @@
 			return false;
 		}
 		
+		//satisfy both columns in the same time
+		public function deleteRowByIdWithSelector($id, $selector_column, $selector_value, $isNumericSelector = false){
+			$selector_column = $this->connection->escape_string($selector_column);
+			$selector_value = $this->connection->escape_string($selector_value);
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$this->primary_key` = ?  AND `$selector_column` = ? LIMIT 1");
+			if($isNumericSelector){
+				$stmt->bind_param('ii', $id, $selector_value);
+			}else{
+				$stmt->bind_param('is', $id, $selector_value);
+			}
+			if($stmt->execute()){
+				$stmt->close();
+				return true;
+			}
+			return false;
+		}
+		
+		
 		/*
 			$value needs to be a string type
 		*/
@@ -151,16 +169,12 @@
 			return false;
 		}
 		
-		public function getColumnBySelector($column, $selector_column, $selector_value, $numericSelector = false){
+		public function getColumnBySelector($column, $selector_column, $selector_value, $selectorType){
 			$column = $this->connection->escape_string($column);
 			$selector_column = $this->connection->escape_string($selector_column);
 			$stmt = $this->connection->prepare("SELECT `$column` FROM `$this->table_name` WHERE `$selector_column` = ? LIMIT 1 ");
 			if($stmt){
-				if($numericSelector){
-					$stmt->bind_param('i', $selector_value);
-				}else{
-					$stmt->bind_param('s', $selector_value);
-				}
+				$stmt->bind_param($selectorType, $selector_value);
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
 					 if($result !== false && $result->num_rows == 1){
@@ -250,52 +264,11 @@
 		}
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		public function deleteRowByUserId($id){
-			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `user_id` = ? ");
+		public function deleteRowBySelector($selector_column, $selector_value, $selectorType = 'i'){
+			$selector_column = $this->connection->escape_string($selector_column);
+			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? ");
 			if($stmt){
-				$stmt->bind_param('i', $id);
+				$stmt->bind_param($selectorType, $selector_value);	
 				if($stmt->execute()){
 					$stmt->close();
 					return true;
@@ -303,6 +276,23 @@
 			}
 			return false;
 		}
+		
+		
+		
+		
+		
+		
+		// public function deleteRowByUserId($id){
+// 			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `user_id` = ? ");
+// 			if($stmt){
+// 				$stmt->bind_param('i', $id);
+// 				if($stmt->execute()){
+// 					$stmt->close();
+// 					return true;
+// 				}
+// 			}
+// 			return false;
+// 		}
 		
 	
 	
@@ -313,18 +303,6 @@
 			$selector_value is the value of the unique identifier
 			this function requires $selector_column to be of none numeric type, such as string
 		*/
-		public function deleteRowBySelector($selector_column, $selector_value){
-			$selector_column = $this->connection->escape_string($selector_column);
-			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? ");
-			if($stmt){
-				$stmt->bind_param('s', $selector_value);
-				if($stmt->execute()){
-					$stmt->close();
-					return true;
-				}
-			}
-			return false;
-		}
 		
 		public function deleteRowBySelectorForUser($selector_column, $selector_value, $user_id, $all = false){
 			$selector_column = $this->connection->escape_string($selector_column);
@@ -344,18 +322,18 @@
 		}
 			
 		
-		public function deleteRowByNumericSelector($selector_column, $selector_value){
-			$selector_column = $this->connection->escape_string($selector_column);
-			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? ");
-			if($stmt){
-				$stmt->bind_param('i', $selector_value);
-				if($stmt->execute()){
-					$stmt->close();
-					return true;
-				}
-			}
-			return false;
-		}
+		//public function deleteRowByNumericSelector($selector_column, $selector_value){
+		// 	$selector_column = $this->connection->escape_string($selector_column);
+// 			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `$selector_column` = ? ");
+// 			if($stmt){
+// 				$stmt->bind_param('i', $selector_value);
+// 				if($stmt->execute()){
+// 					$stmt->close();
+// 					return true;
+// 				}
+// 			}
+// 			return false;
+// 		}
 		
 		
 		

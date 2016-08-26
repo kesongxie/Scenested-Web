@@ -77,8 +77,10 @@
 			return $this->deleteRowById($post_like_id);
 		}
 		
-
-
+		
+		public function deleteLikesInPost($postId){
+			return $this->deleteRowBySelector("post_id", $postId, 'i');
+		}
 		
 		public function getPostLikeListForPost($post_id){
 			$postLikeIdList = $this->getAllRowsMultipleColumnsBySelector(array('post_like_id', 'like_time', 'liked_user_id'), 'post_id', $post_id, true);

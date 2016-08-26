@@ -108,7 +108,7 @@
 		
 		public function getUserFeatureString($userId){
 			$featureString = "";
-			$features = $this->getAllRowsColumnBySelector('name', 'user_id', $userId);
+			$features = $this->getAllRowsColumnBySelector('name', 'user_id', $userId, 'i');
 			if($features !== false){
 				foreach($features as $feature){
 					$featureString .= $feature["name"].', ';
