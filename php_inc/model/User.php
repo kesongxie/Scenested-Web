@@ -245,6 +245,8 @@
 						$feature["feature_id"] =  $row["feature_id"];
 						$feature["name"] = $row["name"];
 						$feature["photo"] = array("url" => $featureCoverUrl, "hash" => $coverHash);
+						$post = new Post();
+						$feature["postCount"] =  $post->getPostCountForFeature($row["feature_id"]);
 						array_push($features, $feature);
 					}
 					return $features;
@@ -369,7 +371,6 @@
 		
 		public function loadMentionedUserInfoFromText($text){
 			$mentionedList = retrieveMentionUsernameFromText($text); //an array of username that is mentioned in the text
-			$mentioned = new Post_Comment_Mentioned();
 			$userInfoList = array();	
 			foreach($mentionedList as $mentionedUserName){
 				$mentionedUserId = $this->getUserIdByUserName($mentionedUserName);
@@ -380,6 +381,30 @@
 			}
 			return $userInfoList;
 		}
+		
+		public function getMentionedUserIdListFromText($text){
+			$mentionedList = retrieveMentionUsernameFromText($text); //an array of username that is mentioned in the text
+			$idList = array();		
+			foreach($mentionedList as $mentionedUserName){
+				$mentionedUserId = $this->getUserIdByUserName($mentionedUserName);
+				if($mentionedUserId !== false){
+					array_push($idList, $mentionedUserId);
+				}
+			}
+			return $idList;
+			
+		}
+		
+		public function getMentionedUserInfoListFromText($text){
+			$idList = $this->getMentionedUserIdListFromText($text);
+			$userInfoList = array();
+			foreach($idList as $userId){
+				$user = new User($userId);
+				array_push($userInfoList, $user->getFullUserInfo());
+			}
+			return $userInfoList; 
+		}
+		
 		
 	}		
 ?>

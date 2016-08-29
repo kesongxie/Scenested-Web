@@ -297,7 +297,7 @@
 	//@amazin@what
 	function retrieveMentionUsernameFromText($text){
 		//preg_replace_callback('/(.?)(#|@)(\w+)/', 'usernameReplacer', $text );
-		 preg_match_all ('/(.?)(#|@)(\w+)/' , $text,  $matches );
+		 preg_match_all ('/(.?)(@)(\w+)/' , $text,  $matches );
 		 return $matches[3]; 
 	}
 

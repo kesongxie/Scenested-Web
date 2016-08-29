@@ -75,7 +75,7 @@
 				"thumb" => array("width" => FEATURE_PHOTO_THUMB_WIDTH,"height" => FEATURE_PHOTO_THUMB_HEIGHT )
 				);
 			$featureCoverUrl = $this->uploadFeaturePhotoForUser($file, $user_id, $feature_id, $dst_dimension);
-			$featureCoverHash = $this->getColumnBySelector('hash', 'feature_id', $feature_id, true);
+			$featureCoverHash = $this->getColumnBySelector('hash', 'feature_id', $feature_id, 'i');
 			
 			if($featureCoverUrl === false){
 				return false;

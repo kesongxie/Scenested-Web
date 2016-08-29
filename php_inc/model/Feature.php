@@ -72,8 +72,8 @@
 					$this->deleteRowById($feature_id);
 				}else{
 					$feature = array(
-						self::FeatureIdKey => $feature_id,
-						self::FeatureNameKey => $feature_name,
+						"feature_id" => $feature_id,
+						"name" => $feature_name,
 						"photo" => array("url" => $fearturCoverInfo["featureCoverUrl"],
 						  				 "hash" => $fearturCoverInfo["featureCoverHash"])
 					);

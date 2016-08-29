@@ -23,19 +23,21 @@
 			return all the post for a specific feature
 		*/
 		public function getPostsForFeature($featureId){
-			$column_array = array("post_id", "user_id", "text", "feature_id", "created_time");
+			$column_array = array("post_id", "user_id", "text", "created_time");
 			$posts = $this->getAllRowsMultipleColumnsBySelector($column_array, "feature_id", $featureId, true);
 			// {"post_id":2,"user_id":107,"text":"US Open 2015 final","feature_id":114,"created_time":"2016-08-12 00:00:00"}
 			
 			$post_photo = new Post_Photo();
 			$post_like = new Post_Like();
 			$post_comment = new Post_Comment();
+			$user = new User();
 
 			if($posts !== false){
 				foreach($posts as &$post){
 					$post["post_photo"] = $post_photo->getPostPhotoCollection($post["post_id"]);
 					$post["post_like"] = $post_like->getPostLikeListForPost($post["post_id"]);
 					$post["post_comment"] = $post_comment->getPostCommentListForPost($post["post_id"]);
+					$post["mentionedUserInfoList"] = $user->getMentionedUserInfoListFromText($post["text"]);
 				}
 				return array("posts" => $posts);
 			}
@@ -46,6 +48,12 @@
 			$posts = $this->getAllRowsColumnBySelector('post_id', "feature_id", $featureId, 'i', true);
 			return $posts;
 		}
+		
+		public function getPostCountForFeature($featureId){
+			return $this->getNumberOfRowsBySelector('feature_id', $featureId, 'i');
+		}
+		
+		
 		
 		public function addPost($photoFiles, $textualParamInfo){
 			if(!isset($photoFiles) || sizeof($photoFiles) < 1){
@@ -62,12 +70,13 @@
 				if($postPhotoInfo === false){
 					$this->deleteRowById($post_id);
 				}else{
+					$user = new User();
 					$post = array(
-						"postId" => $post_id,
-						"postText" => $textualParamInfo["postText"],
-						"photo" => $postPhotoInfo,
-						"featureId" =>  $textualParamInfo["featureId"],
-						"createdTime" => $created_time
+						"post_id" => $post_id,
+						"text" => $textualParamInfo["postText"],
+						"post_photo" => $postPhotoInfo,
+						"created_time" => $created_time,
+						"mentionedUserInfoList" => $user->getMentionedUserInfoListFromText($textualParamInfo["postText"])
 					);
 					return array("status" => true, 
 							    self::PostKey => $post,

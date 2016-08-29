@@ -277,27 +277,23 @@
 			return false;
 		}
 		
+		public function getNumberOfRowsBySelector($selector_name, $selector_value, $selector_type){
+			$selector_name = $this->connection->escape_string($selector_name);
+			$stmt = $this->connection->prepare("SELECT `$this->primary_key` FROM `$this->table_name` WHERE `$selector_name` = ? ");
+			if($stmt){
+				$stmt->bind_param($selector_type, $selector_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false){
+					 	$stmt->close();
+						return $result->num_rows;
+					 }
+				}
+			}
+			return false;
+		}
 		
 		
-		
-		
-		
-		// public function deleteRowByUserId($id){
-// 			$stmt = $this->connection->prepare("DELETE FROM `$this->table_name` WHERE `user_id` = ? ");
-// 			if($stmt){
-// 				$stmt->bind_param('i', $id);
-// 				if($stmt->execute()){
-// 					$stmt->close();
-// 					return true;
-// 				}
-// 			}
-// 			return false;
-// 		}
-		
-	
-	
-		
-	
 		
 		/*	$selector_column is the unique identifier that is in each row
 			$selector_value is the value of the unique identifier
@@ -644,23 +640,6 @@
 		
 		
 		
-		public function getRowsNumberForStringColumn($column, $column_value){
-			$column = $this->connection->escape_string($column);
-			$primary_key = $this->table_name.'_id';
-			$stmt = $this->connection->prepare("SELECT `$primary_key` FROM `$this->table_name` WHERE `$column` = ? ");
-			if($stmt){
-				$stmt->bind_param('s', $column_value);
-				if($stmt->execute()){
-					 $result = $stmt->get_result();
-					 if($result !== false){
-					 	$stmt->close();
-						return $result->num_rows;
-					 }
-				}
-			}
-			return false;
-		}
-		
 		
 		public function getColumnRowsGreaterThanSelector($column,$selector_column, $selector_value,  $limit = -1, $asc = false ){
 			$column = $this->connection->escape_string($column);
@@ -888,7 +867,7 @@
 		
 		public function getRowIdByHashkey($key){
 			$primary_key = $this->table_name.'_id';
-			return $this->getColumnBySelector($primary_key, 'hash', $key);
+			return $this->getColumnBySelector($primary_key, 'hash', $key, 's');
 		}
 		
 		

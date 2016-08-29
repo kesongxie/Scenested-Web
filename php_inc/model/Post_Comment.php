@@ -24,12 +24,10 @@
 				$post_comment_id = $this->connection->insert_id;
 				$stmt->close();	
 				//retrive the mentioned list 
-				$mentionedList = retrieveMentionUsernameFromText($commentInfo["text"]); //an array of username that is mentioned in the text
-				$user = new User();
 				$mentioned = new Post_Comment_Mentioned();
-				
-				foreach($mentionedList as $mentionedUserName){
-					$mentionedUserId = $user->getUserIdByUserName($mentionedUserName);
+				$user = new User();
+				$mentionedUserIdList = $user->getMentionedUserIdListFromText($commentInfo["text"]);
+				foreach($mentionedUserIdList as $mentionedUserId){
 					if($mentionedUserId !== false){
 						$mentionedInfo["postId"] = $commentInfo["postId"];
 						$mentionedInfo["mentionedUserId"] = $mentionedUserId;
@@ -38,15 +36,16 @@
 						$mentioned->insertCommentMentioned($mentionedInfo);
 					}
 				}
+				
 				$comment =  $this->getMultipleColumnsById(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), $post_comment_id);
-				$taggedUserIdList = array();
-				$mentionedUserIdList = $mentioned->getMentionedUserIdListByCommentId($post_comment_id);
-				if($mentionedUserIdList !== false){
-					foreach($mentionedUserIdList as $mentionedUserId){
-						array_push($taggedUserIdList, $mentionedUserId['mentioned_user_id']);
-					}
-				}
-				$comment["mentionedUserIdList"] = $taggedUserIdList;
+			// 	$taggedUserIdList = array();
+// 				$mentionedUserIdList = $mentioned->getMentionedUserIdListByCommentId($post_comment_id);
+// 				if($mentionedUserIdList !== false){
+// 					foreach($mentionedUserIdList as $mentionedUserId){
+// 						array_push($taggedUserIdList, $mentionedUserId['mentioned_user_id']);
+// 					}
+// 				}
+				$comment["mentionedUserInfoList"] = $user->getMentionedUserInfoListFromText($commentInfo["text"]);
 				return $comment;
 			}
 			echo $this->connection->error;

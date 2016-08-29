@@ -233,7 +233,7 @@
 			if($source_from == 'e'){
 				include_once MODEL_PATH.'Event_Photo.php';
 				$evt_pht = new Event_Photo();
-				$event_id = $evt_pht->getColumnBySelector('event_id','hash',$hash);
+				$event_id = $evt_pht->getColumnBySelector('event_id','hash',$hash, 's');
 				if($event_id !== false){
 					include_once MODEL_PATH.'Event.php';
 					$evt = new Event(null, false);
