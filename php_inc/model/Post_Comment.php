@@ -53,7 +53,7 @@
 		}
 
 		public function getPostCommentListForPost($post_id){
-			$postCommentList = $this->getAllRowsMultipleColumnsBySelector(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), 'post_id', $post_id, true);
+			$postCommentList = $this->getAllRowsMultipleColumnsBySelector(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), 'post_id', $post_id, 'i');
 			if($postCommentList !== false){
 				$mentioned = new Post_Comment_Mentioned();
 				foreach($postCommentList as &$comment){
@@ -85,5 +85,8 @@
 			return $this->deleteRowBySelector("post_id", $postId, 'i') && $mentioend->deleteMentionedByPostId($postId);
 		}
 		
+		public function getPostCommentCountForPost($postId){
+			return $this->getNumberOfRowsBySelector('post_id', $postId, 'i');
+		}
 	}		
 ?>

@@ -20,10 +20,18 @@
 				$this->featureId = $featureId;
 			}
 		}
-		public function getPosts(){
+		
+		
+		
+		/*
+			 postIdOffset is the last loaded post's id, if it's not set, load from the beginning of the feature
+        	 the numberOfRequestedRow is the number of maximum row the request should return,i f it's not set, load all the post
+
+		*/
+		public function getPosts($postIdOffset, $numberOfRequestedRow){
 			if($this->featureId != NULL){
 				$post = new Post();
-				return $post->getPostsForFeature($this->featureId);
+				return $post->getPostsForFeature($this->featureId, $postIdOffset, $numberOfRequestedRow);
 			}
 		}
 		
@@ -74,6 +82,7 @@
 					$feature = array(
 						"feature_id" => $feature_id,
 						"name" => $feature_name,
+						"postCount" => 0,
 						"photo" => array("url" => $fearturCoverInfo["featureCoverUrl"],
 						  				 "hash" => $fearturCoverInfo["featureCoverHash"])
 					);

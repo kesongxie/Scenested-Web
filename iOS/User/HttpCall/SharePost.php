@@ -2,7 +2,6 @@
 	include_once $_SERVER['DOCUMENT_ROOT'].'/php_inc/core.inc.php';
 
 
-	//$_POST["info"] contains textual info
 	if(!isset($_FILES) || !isset($_POST)){
 		exit();
 	}
@@ -23,12 +22,14 @@
 			echo json_encode([
 				"statusCode" => 200,
 				"post" => $result["post"],
+				"postCountInFeature" => $result["postCountInFeature"],
 				"errorCode" => false
 			]);
 		}else{
 			echo json_encode([
 				"statusCode" => 200,
 				"post" => false,
+				"postCountInFeature" => $result["postCountInFeature"],
 				"errorCode" => $result['errorCode']
 			]);
 		}

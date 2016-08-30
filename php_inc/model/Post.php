@@ -22,11 +22,9 @@
 		/*
 			return all the post for a specific feature
 		*/
-		public function getPostsForFeature($featureId){
+		public function getPostsForFeature($featureId, $postIdOffset, $numberOfRequestedRow){
 			$column_array = array("post_id", "user_id", "text", "created_time");
-			$posts = $this->getAllRowsMultipleColumnsBySelector($column_array, "feature_id", $featureId, true);
-			// {"post_id":2,"user_id":107,"text":"US Open 2015 final","feature_id":114,"created_time":"2016-08-12 00:00:00"}
-			
+			$posts = $this->getLessRowsMultipleColumnsBySelectorWithOffSetAndLimit($column_array, "feature_id", $featureId, 'i', 'post_id', $postIdOffset, $numberOfRequestedRow);
 			$post_photo = new Post_Photo();
 			$post_like = new Post_Like();
 			$post_comment = new Post_Comment();
@@ -34,12 +32,15 @@
 
 			if($posts !== false){
 				foreach($posts as &$post){
-					$post["post_photo"] = $post_photo->getPostPhotoCollection($post["post_id"]);
-					$post["post_like"] = $post_like->getPostLikeListForPost($post["post_id"]);
-					$post["post_comment"] = $post_comment->getPostCommentListForPost($post["post_id"]);
-					$post["mentionedUserInfoList"] = $user->getMentionedUserInfoListFromText($post["text"]);
-				}
-				return array("posts" => $posts);
+					$post["postPhoto"] = $post_photo->getPostPhotoCollection($post["post_id"]);
+ 				//	$post["post_like"] = $post_like->getPostLikeListForPost($post["post_id"]);
+ 				//	$post["post_comment"] = $post_comment->getPostCommentListForPost($post["post_id"]);
+ 					$post["postLikeCount"] = $post_like->getPostLikeCountForPost($post["post_id"]);
+ 					$post["postCommentCount"] = $post_comment->getPostCommentCountForPost($post["post_id"]);
+ 					$post["mentionedUserInfoList"] = $user->getMentionedUserInfoListFromText($post["text"]);
+ 				}
+ 				$lastRowIndex = sizeof($posts) -1;
+				return array("posts" => $posts, "lastRowPostId" => $posts[$lastRowIndex]["post_id"]);
 			}
 			return array("posts" => array());
 		}
@@ -74,26 +75,34 @@
 					$post = array(
 						"post_id" => $post_id,
 						"text" => $textualParamInfo["postText"],
-						"post_photo" => $postPhotoInfo,
+						"postPhoto" => $postPhotoInfo,
 						"created_time" => $created_time,
+						"postLikeCount" => 0,
+ 					 	"postCommentCount" => 0,
 						"mentionedUserInfoList" => $user->getMentionedUserInfoListFromText($textualParamInfo["postText"])
 					);
+					 $postCount = $this->getPostCountForFeature($textualParamInfo["featureId"]);
 					return array("status" => true, 
-							    self::PostKey => $post,
+							    "post" => $post,
+							    "postCountInFeature" => $postCount,
 					 			"errorCode" => false);
 				}
 			}
-			return array("status" => false, self::PostKey => false, "errorCode" => 3); //unknown error
+			return array("status" => false, "post" => false,  "postCountInFeature" => $postCount, "errorCode" => 3); //unknown error
 		}
 		
-		public function deletePost($postId, $userId){
+		//return the total number of post on feature when succeed, false otherwise
+		public function deletePost($postId, $userId, $featureId){
 			if($this->deleteRowForUserById($userId, $postId)){
 				$post_photo = new Post_Photo();
 				$this->deleteCommentInPost($postId);
 				$this->deleteLikesInPost($postId);
-				return $post_photo->deletePostPhotoForUserByPostId($userId, $postId);
-			}
-			return false;
+				$post_photo->deletePostPhotoForUserByPostId($userId, $postId);
+				$postCount = $this->getPostCountForFeature($featureId);
+				return array("status" => true, 
+							    "postCountInFeature" => $postCount);
+				}
+			return array("status" => false);
 		}
 		
 		public function getFreshPostLikeById($postId){

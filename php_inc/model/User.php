@@ -341,9 +341,9 @@
 			return $this->isStringValueExistingForColumn(self::UserNameKey, $username);
 		}
 		
-		public function deletePost($postId){
+		public function deletePost($postId, $featureId){
 			$post = new Post();
-			return $post->deletePost($postId, $this->user_id);
+			return $post->deletePost($postId, $this->user_id, $featureId);
 		}
 		
 		public function deleteFeature($featureId){

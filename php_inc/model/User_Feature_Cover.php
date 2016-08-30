@@ -15,7 +15,7 @@
 		}
 		
 		public function deleteCoverForFeature($feature_id, $user_id){
-			$multiplePhotoInfo = $this->getAllRowsMultipleColumnsBySelector(array('user_feature_cover_id', 'picture_url'), "feature_id", $feature_id, true);
+			$multiplePhotoInfo = $this->getAllRowsMultipleColumnsBySelector(array('user_feature_cover_id', 'picture_url'), "feature_id", $feature_id, 'i');
 			if($multiplePhotoInfo !== false){
 				foreach($multiplePhotoInfo as $photoInfo){
 					$this->deleteRowForUserById($user_id, $photoInfo["user_feature_cover_id"]);
@@ -69,7 +69,7 @@
 // 		
 		
 		function uploadFeatureCoverPicture($file, $user_id, $feature_id){
-			$results = $this->getAllRowsMultipleColumnsBySelector(array($this->primary_key,'picture_url'), 'feature_id', $feature_id, true);
+			$results = $this->getAllRowsMultipleColumnsBySelector(array($this->primary_key,'picture_url'), 'feature_id', $feature_id, 'i');
 			$dst_dimension = array(
 				"large" => array("width" => FEATURE_PHOTO_MAX_WIDTH, "height" => FEATURE_PHOTO_MAX_HEIGHT ),
 				"thumb" => array("width" => FEATURE_PHOTO_THUMB_WIDTH,"height" => FEATURE_PHOTO_THUMB_HEIGHT )

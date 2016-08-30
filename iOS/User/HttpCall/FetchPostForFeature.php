@@ -1,16 +1,15 @@
 <?php
 	include_once $_SERVER['DOCUMENT_ROOT'].'/php_inc/core.inc.php';
 
-	if(isset($_REQUEST['featureId'])){
+	
+	if(isset($_REQUEST['featureId'], $_REQUEST['numberOfRequestedRow'])){
 		$feature = new Feature($_REQUEST['featureId']);
-		$respondInfo = $feature->getPosts();
-		
+		$postIdOffset = isset($_REQUEST['postIdOffset'])? $_REQUEST['postIdOffset']: false;
+		$respondInfo = $feature->getPosts($postIdOffset, $_REQUEST['numberOfRequestedRow']);
 		echo json_encode([
 		"info" => $respondInfo,
 		"statusCode" => 200
 		]);
-			
-	
 	}else{
 		echo json_encode([
 		"info" => "",

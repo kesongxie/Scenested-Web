@@ -29,7 +29,7 @@
 		}
 		
 		public function getPostPhotoCollection($post_id){
-			$photosInfo = $this->getAllRowsMultipleColumnsBySelector(array('post_photo_id','picture_url', 'user_id', 'hash', 'aspect_ratio'), 'post_id', $post_id, true, true);
+			$photosInfo = $this->getAllRowsMultipleColumnsBySelector(array('post_photo_id','picture_url', 'user_id', 'hash', 'aspect_ratio'), 'post_id', $post_id, 'i', true);
 			$media_prefix = new User_Media_Prefix();
 			if($photosInfo !== false){
 				$photos = array();
@@ -50,7 +50,7 @@
 		
 		
 		public function deletePostPhotoForUserByPostId($user_id, $post_id){
-			$photos = $this->getAllRowsMultipleColumnsBySelector(array('post_photo_id','picture_url'), 'post_id', $post_id, true, true);
+			$photos = $this->getAllRowsMultipleColumnsBySelector(array('post_photo_id','picture_url'), 'post_id', $post_id, 'i', true);
 			if($photos !== false){
 				foreach($photos as $photo){
 					if($this->deleteRowForUserById($user_id, $photo["post_photo_id"])){

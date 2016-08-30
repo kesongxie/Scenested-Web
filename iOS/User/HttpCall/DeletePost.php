@@ -2,11 +2,11 @@
 	include_once $_SERVER['DOCUMENT_ROOT'].'/php_inc/core.inc.php';
 
 
-	if(isset($_REQUEST['userId']) && isset($_REQUEST['postId'])){
+	if(isset($_REQUEST['userId'], $_REQUEST['postId'], $_REQUEST['featureId'])){
 		$user = new User($_REQUEST['userId']);
-		$respondInfo = $user->deletePost($_REQUEST['postId']);
+		$respondInfo = $user->deletePost($_REQUEST['postId'], $_REQUEST['featureId']);
 		echo json_encode([
-		"info" => ["status"=> $respondInfo],
+		"info" => $respondInfo,
 		"statusCode" => 200
 		]);
 			

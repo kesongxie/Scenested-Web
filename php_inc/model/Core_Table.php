@@ -91,7 +91,7 @@
 				return false;
 		}
 		
-		public function getAllRowsMultipleColumnsBySelector($column_array, $selector_column, $selector_value, $numericSelector = false,   $asc = false){
+		public function getAllRowsMultipleColumnsBySelector($column_array, $selector_column, $selector_value, $selector_type,   $asc = false){
 			$selector_column = $this->connection->escape_string($selector_column);
 			$columns = implode('`,`',$column_array);
 			$columns = '`'.$columns.'`';
@@ -102,10 +102,72 @@
 			}
 			$stmt = $this->connection->prepare($query);
 			if($stmt){
-				if($numericSelector){
-					$stmt->bind_param('i', $selector_value);
+				$stmt->bind_param($selector_type, $selector_value);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $rows;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		//offset column should be a numeric type 
+		public function getGreaterRowsMultipleColumnsBySelectorWithOffSetAndLimit($column_array, $selector_column, $selector_value, $selector_type, $offsetColumn, $offset, $limit, $asc = false){
+			$selector_column = $this->connection->escape_string($selector_column);
+			$offsetColumn = $this->connection->escape_string($offsetColumn);
+			$columns = implode('`,`',$column_array);
+			$columns = '`'.$columns.'`';
+			$query = "SELECT $columns From `$this->table_name` where `$selector_column` = ? AND `$offsetColumn` > ? ";
+			if(!$asc){
+				$query.="ORDER BY `$this->primary_key` DESC ";
+			}
+			$query .= "LIMIT ?";
+			
+			$stmt = $this->connection->prepare($query);
+			if($stmt){
+				$selector_type = $selector_type.'ii';
+				$stmt->bind_param($selector_type, $selector_value, $offset, $limit);
+				if($stmt->execute()){
+					 $result = $stmt->get_result();
+					 if($result !== false && $result->num_rows >= 1){
+						$rows = $result->fetch_all(MYSQLI_ASSOC);
+						$stmt->close();
+						return $rows;
+					 }
+				}
+			}
+			echo $this->connection->error;
+			return false;
+		}
+		
+		
+		public function getLessRowsMultipleColumnsBySelectorWithOffSetAndLimit($column_array, $selector_column, $selector_value, $selector_type, $offsetColumn, $offset = false, $limit, $asc = false){
+			$selector_column = $this->connection->escape_string($selector_column);
+			$offsetColumn = $this->connection->escape_string($offsetColumn);
+			$columns = implode('`,`',$column_array);
+			$columns = '`'.$columns.'`';
+			$query = "SELECT $columns From `$this->table_name` where `$selector_column` = ? ";
+			if($offset !== false){
+				 $query.= "AND `$offsetColumn` < ? ";
+			}
+			if(!$asc){
+				$query.="ORDER BY `$this->primary_key` DESC ";
+			}
+			$query .= "LIMIT ?";
+			
+			$stmt = $this->connection->prepare($query);
+			if($stmt){
+				if($offset !== false){
+					$selector_type = $selector_type.'ii';
+					$stmt->bind_param($selector_type, $selector_value, $offset, $limit);
 				}else{
-					$stmt->bind_param('s', $selector_value);
+					$selector_type = $selector_type.'i';
+					$stmt->bind_param($selector_type, $selector_value, $limit);
 				}
 				if($stmt->execute()){
 					 $result = $stmt->get_result();
@@ -119,6 +181,9 @@
 			echo $this->connection->error;
 			return false;
 		}
+		
+		
+		
 
 		
 		public function deleteRowById($id){
