@@ -36,38 +36,59 @@
 						$mentioned->insertCommentMentioned($mentionedInfo);
 					}
 				}
-				
-				$comment =  $this->getMultipleColumnsById(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), $post_comment_id);
-			// 	$taggedUserIdList = array();
-// 				$mentionedUserIdList = $mentioned->getMentionedUserIdListByCommentId($post_comment_id);
-// 				if($mentionedUserIdList !== false){
-// 					foreach($mentionedUserIdList as $mentionedUserId){
-// 						array_push($taggedUserIdList, $mentionedUserId['mentioned_user_id']);
-// 					}
-// 				}
-				$comment["mentionedUserInfoList"] = $user->getMentionedUserInfoListFromText($commentInfo["text"]);
+				$comment = $this->getMultipleColumnsById(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), $post_comment_id);
+				$commentUser = new User($comment["comment_user_id"]);
+				unset($comment["comment_user_id"]);
+				$comment["commentUserInfo"] = $commentUser->getFullUserInfo();
+				$comment["mentionedUserInfoList"] = $user->getMentionedUserInfoListFromText($comment["comment_text"]);
 				return $comment;
 			}
 			echo $this->connection->error;
 			return false;
 		}
 
-		public function getPostCommentListForPost($post_id){
-			$postCommentList = $this->getAllRowsMultipleColumnsBySelector(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), 'post_id', $post_id, 'i');
-			if($postCommentList !== false){
-				$mentioned = new Post_Comment_Mentioned();
-				foreach($postCommentList as &$comment){
-					$taggedUserIdList = array();
-					$mentionedUserIdList = $mentioned->getMentionedUserIdListByCommentId($comment['post_comment_id']);
-					if($mentionedUserIdList !== false){
-						foreach($mentionedUserIdList as $mentionedUserId){
-							array_push($taggedUserIdList, $mentionedUserId['mentioned_user_id']);
-						}
-					}
-					$comment["mentionedUserIdList"] = $taggedUserIdList;
+		// public function getPostCommentListForPost($post_id){
+// 			$postCommentList = $this->getAllRowsMultipleColumnsBySelector(array('post_comment_id', 'comment_time', 'comment_user_id', 'comment_text'), 'post_id', $post_id, 'i');
+// 			if($postCommentList !== false){
+// 				$mentioned = new Post_Comment_Mentioned();
+// 				foreach($postCommentList as &$comment){
+// 					$taggedUserIdList = array();
+// 					$mentionedUserIdList = $mentioned->getMentionedUserIdListByCommentId($comment['post_comment_id']);
+// 					if($mentionedUserIdList !== false){
+// 						foreach($mentionedUserIdList as $mentionedUserId){
+// 							array_push($taggedUserIdList, $mentionedUserId['mentioned_user_id']);
+// 						}
+// 					}
+// 					$comment["mentionedUserIdList"] = $taggedUserIdList;
+// 				}
+// 			}
+// 			return $postCommentList !== false ? $postCommentList: array(); 
+// 		}
+
+		public function getCommentInfoForPost($postId){
+			$stmt = $this->connection->prepare(
+			"SELECT post_comment.post_comment_id, post_comment.comment_time, post_comment.comment_text, post_comment.comment_user_id
+			from post_comment
+			LEFT JOIN user
+			ON post_comment.comment_user_id = user.user_id
+			WHERE post_comment.post_id = ? ORDER BY post_comment.post_comment_id DESC");
+			$stmt->bind_param("i", $postId);
+			if($stmt->execute()){
+				 $result = $stmt->get_result();
+				 if($result !== false && $result->num_rows > 0){
+					$multipleCommentInfo = $result->fetch_all(MYSQLI_ASSOC);
+					$stmt->close();	
+					 foreach($multipleCommentInfo as &$commentInfo){
+						$user = new User($commentInfo["comment_user_id"]);
+						unset($commentInfo["comment_user_id"]);
+						$commentInfo["mentionedUserInfoList"] = $user->getMentionedUserInfoListFromText($commentInfo["comment_text"]);
+						$commentInfo["commentUserInfo"] = $user->getFullUserInfo();
+ 					}
+					return $multipleCommentInfo;
 				}
 			}
-			return $postCommentList !== false ? $postCommentList: array(); 
+			echo $this->connection->error;
+			return array();
 		}
 
 		

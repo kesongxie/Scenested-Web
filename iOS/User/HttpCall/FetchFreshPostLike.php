@@ -1,10 +1,12 @@
 <?php
 	include_once $_SERVER['DOCUMENT_ROOT'].'/php_inc/core.inc.php';
 
-
 	if(isset($_REQUEST['postId'])){
 		$post = new Post();
-		$respondInfo = $post->getFreshPostLikeById($_REQUEST['postId']);
+		$respondInfo = $post->getLikeInfoForPost($_REQUEST['postId']);
+		
+		
+		
 		echo json_encode([
 		"info" => $respondInfo,
 		"statusCode" => 200

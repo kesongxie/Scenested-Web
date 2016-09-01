@@ -10,35 +10,31 @@
 		
 		
 		/*
-			returns an array of like user infomation for a specific post
+			returns an array of like infomation for a specific post
 		*/
-		// public function getLikeInfoForPost($post_id){
-// 			$stmt = $this->connection->prepare(
-// 			"SELECT post_like.post_like_id, post_like.like_time
-// 			from post_like
-// 			LEFT JOIN user
-// 			ON post_like.liked_user_id = user.user_id
-// 			WHERE post_like.post_id = ?");
-// 			$stmt->bind_param("i", $post_id);
-// 			if($stmt->execute()){
-// 				 $result = $stmt->get_result();
-// 				 if($result !== false && $result->num_rows > 0){
-// 					$multipleLikeUserInfo = $result->fetch_all(MYSQLI_ASSOC);
-// 					$stmt->close();	
-// 					// foreach($multipleLikeUserInfo as &$likeUserInfo){
-// // 						$likeUser = new User($likeUserInfo["like_user_id"]);
-// // 						$likeUserInfo["like_user_avator"] = $likeUser->getUserAvator();
-// // 						$likeUserInfo["like_user_feature_string"] = $likeUser->getUserFeatureString();
-// // 					}
-// 
-// // user.fullname as `like_user_fullname`
-// 					return $multipleLikeUserInfo;
-// 				}
-// 			}
-// 			return array();
-// 			
-// 			
-// 		}
+		public function getLikeInfoForPost($post_id){
+			$stmt = $this->connection->prepare(
+			"SELECT post_like.post_like_id, post_like.like_time, post_like.liked_user_id
+			from post_like
+			LEFT JOIN user
+			ON post_like.liked_user_id = user.user_id
+			WHERE post_like.post_id = ? ORDER BY post_like.post_like_id DESC");
+			$stmt->bind_param("i", $post_id);
+			if($stmt->execute()){
+				 $result = $stmt->get_result();
+				 if($result !== false && $result->num_rows > 0){
+					$multipleLikeUserInfo = $result->fetch_all(MYSQLI_ASSOC);
+					$stmt->close();	
+					 foreach($multipleLikeUserInfo as &$likeUserInfo){
+						$likeUser = new User($likeUserInfo["liked_user_id"]);
+						unset($likeUserInfo["liked_user_id"]);
+						$likeUserInfo["likeUserInfo"] = $likeUser->getFullUserInfo();
+ 					}
+					return $multipleLikeUserInfo;
+				}
+			}
+			return array();
+		}
 
 		//if the user has already liked, delete the like, insert otherwise
 		public function toggleLikePostForUser($post_id, $like_user_id){
@@ -62,7 +58,7 @@
 				if($stmt->execute()){
 					$stmt->close();
 					$postLikeId = $this->connection->insert_id;
-					return $this->getMultipleColumnsById(array('post_like_id', 'like_time', 'liked_user_id'), $postLikeId);
+					return array("post_like_id" => $postLikeId);
 				}
 			return false;
 		}

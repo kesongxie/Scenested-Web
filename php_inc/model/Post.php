@@ -105,10 +105,18 @@
 			return array("status" => false);
 		}
 		
-		public function getFreshPostLikeById($postId){
+		public function getLikeInfoForPost($postId){
 			$postLike = new Post_Like();
-			return $postLike->getLikeUserInfoForPost($postId); 
+			return $postLike->getLikeInfoForPost($postId); 
 		}
+		
+		public function getCommentInfoForPost($postId){
+			$postComment = new Post_Comment();
+			return $postComment->getCommentInfoForPost($postId); 
+		}
+		
+		
+		
 		
 		public function deleteCommentInPost($postId){
 			$comment = new Post_Comment();
