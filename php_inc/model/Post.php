@@ -92,15 +92,13 @@
 		}
 		
 		//return the total number of post on feature when succeed, false otherwise
-		public function deletePost($postId, $userId, $featureId){
+		public function deletePost($postId, $userId){
 			if($this->deleteRowForUserById($userId, $postId)){
 				$post_photo = new Post_Photo();
 				$this->deleteCommentInPost($postId);
 				$this->deleteLikesInPost($postId);
 				$post_photo->deletePostPhotoForUserByPostId($userId, $postId);
-				$postCount = $this->getPostCountForFeature($featureId);
-				return array("status" => true, 
-							    "postCountInFeature" => $postCount);
+				return array("status" => true);
 				}
 			return array("status" => false);
 		}
