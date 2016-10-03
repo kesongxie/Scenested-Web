@@ -146,6 +146,14 @@
 			return false;
 		}
 		
+		public function getDeviceToken(){
+			if($this->user_id !== null){
+				$deviceToken = new Device_Token();
+				return $deviceToken->getDeviceTokenForUser($this->user_id);
+			}
+			return false;
+		}
+		
 		
 		public function getUserMediaPrefix(){
 			if($this->user_id !== null){
@@ -206,6 +214,12 @@
 		public function updateProfileVisibleSetting($visibleOption){
 			return $this->setColumnById(self::ProfileVisibleKey, $visibleOption, $this->user_id);
 		}
+		
+		public function updateDeviceToken($deviceToken){
+			$devieToken = new Device_Token();
+			return $devieToken->updateTokenForUser($deviceToken, $this->user_id);	
+		}
+		
 		
 		
 		public function addUserFeature($paramInfo){

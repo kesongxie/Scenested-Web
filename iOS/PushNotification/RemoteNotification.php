@@ -44,7 +44,7 @@
 			
 			
 		*/
-		public static function sendNotificationToDevice($deviceToken, $notificationInfo, $respondInfo){
+		public static function sendNotificationToDevice($deviceToken, $notificationAlertContent, $respondInfo){
 			//replace this with the name of the file that you placed by your php script file, containing your private key and certificate that you generated
 			$stream = stream_context_create();
 			stream_context_set_option($stream, 'ssl', 'local_cert', self::PushCertAndKeyPemFile);
@@ -55,9 +55,9 @@
 			if ($connection){
 				$payload = json_encode([
 								'aps'=>[
-										'alert' => $notificationInfo[self::InfoMessageKey],
+										'alert' => $notificationAlertContent,
 										'sound' => 'default',
-										'badge' => 1
+										'badge' => 2
 										],
 								'respondInfo' => $respondInfo
 							]);
@@ -81,18 +81,24 @@
 			$react_to_user: Of whom this notification is about
 		*/
 		
-		public function sendNotificationForSimilarThemes($flatenSimilarThemeString, $sendToDeviceToken, $react_to_user){
-			$react_to_user_info = $react_to_user->getMultipleUserInfo([User::IdKey, User::UserNameKey, User::FullNameKey, User::BioKey, User::AvatorKey, User::CoverKey]);
-			$notificationBody[RemoteNotification::InfoMessageKey] = Theme::getSimilarThemeNotificationBodyText($react_to_user_info[User::UserNameKey], $flatenSimilarThemeString);
+		public function sendNotificationForSimilarFeatures($flatenSimilarFeaturesString, $sendToDeviceToken, $react_to_user){
+			$react_to_user_info = $react_to_user->getFullUserInfo();
+			$notificationAlertContent 
+			= [ 
+			"title" => "Near By",
+			"body" => Feature::getSimilarFeatureNotificationBodyText($react_to_user_info[User::FullNameKey] ,$flatenSimilarFeaturesString)
+			];
 			
 			//additional info for reacting
-			$respondInfo[RemoteNotification::InfoRespondUserIdKey] = $react_to_user_info[User::IdKey];
-			$respondInfo[RemoteNotification::InfoRespondUserNameKey] = $react_to_user_info[User::UserNameKey];
-			$respondInfo[RemoteNotification::InfoRespondAvatorPathKey] = $react_to_user_info[User::AvatorKey];
-			$respondInfo[RemoteNotification::InfoRespondCoverPathKey] = $react_to_user_info[User::CoverKey];
-			$respondInfo[RemoteNotification::InfoRespondCoverBio] = $react_to_user_info[User::BioKey];
+			$respondInfo = $react_to_user_info;
+			
+			// $respondInfo[RemoteNotification::InfoRespondUserIdKey] = $react_to_user_info[User::IdKey];
+// 			$respondInfo[RemoteNotification::InfoRespondUserNameKey] = $react_to_user_info[User::UserNameKey];
+// 			$respondInfo[RemoteNotification::InfoRespondAvatorPathKey] = $react_to_user_info[User::AvatorKey];
+// 			$respondInfo[RemoteNotification::InfoRespondCoverPathKey] = $react_to_user_info[User::CoverKey];
+// 			$respondInfo[RemoteNotification::InfoRespondCoverBio] = $react_to_user_info[User::BioKey];
 
-			return self::sendNotificationToDevice($sendToDeviceToken, $notificationBody, $respondInfo);
+			return self::sendNotificationToDevice($sendToDeviceToken, $notificationAlertContent, $respondInfo);
 		
 		}
 		

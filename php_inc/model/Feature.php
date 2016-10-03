@@ -6,7 +6,7 @@
 		private $primary_key = "feature_id";
 		private $featureId;
 		
-// 		const KeyForFeatureName = "name";
+ 		const KeyForFeatureName = "name";
 		const FeatureKey = "feature";
  		const FeatureIdKey = "featureId";
  		const FeatureNameKey = "featureName";
@@ -57,8 +57,8 @@
 		
 		// $username is the user who triggered the notification(not the who is going to recieve the notification)
 		// $flatenSimilarFeatureString is the common features between two users
-		public static function getSimilarFeatureNotificationBodyText($username, $flatenSimilarFeatureString){
-			return $username." shares similar features with you - ".$flatenSimilarFeatureString;
+		public static function getSimilarFeatureNotificationBodyText($fullname, $flatenSimilarFeatureString){
+			return $fullname. " shares similar feature with you - ".$flatenSimilarFeatureString;
 		}
 	
 		public function addFeature($photoFiles, $user_id, $feature_name){
